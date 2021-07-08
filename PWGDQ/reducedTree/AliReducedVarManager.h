@@ -308,7 +308,18 @@ class AliReducedVarManager : public TObject {
     kNDsplusToK0sKplusSelected,       // Ds+          -> K0s K+
     kNDsminusToK0sKminusSelected,     // Ds-          -> K0s K-    
     kNtracksTotal,      // total number of tracks               
-    kNtracksSelected,   // number of selected tracks            
+    kNtracksSelected,   // number of selected tracks
+    kNtracks2Selected,  // number of selected tracks in 2. array 
+    kNtracks2SelectedGood,  // number of selected tracks in 1. and 2. array - number of selected "good" tracks in 2. array (TODO:which description is correct?)
+    knTracks_toward, // number of selected "good" tracks in second array in toward region
+    knTracks_transverse, // number of selected "good" tracks in second array in transverse region
+    knTracks_away, // number of selected "good" tracks in second array in transverse region
+    kNJpsi_toward,
+    kNJpsi_transverse,
+    kNJpsi_away,
+    kNJpsi_towardMC,
+    kNJpsi_transverseMC,
+    kNJpsi_awayMC,
     kNtracksPosAnalyzed,// number of positive tracks passing analysis cuts      
     kNtracksNegAnalyzed,// number of negative tracks passing analysis cuts      
     kNtracksPiPlusAnalyzed,     // number of pi plus selected tracks
