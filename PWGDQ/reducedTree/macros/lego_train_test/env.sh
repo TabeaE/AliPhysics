@@ -1,0 +1,55 @@
+export ALIROOT_VERSION=''
+export ROOT_VERSION=''
+export GEANT_VERSION=''
+#export PERIOD_NAME='LHC11h_AOD_145_goodPID'
+#export REFERENCE_PRODUCTION='FILTER_Pb-Pb_145_LHC11h'
+export PERIOD_NAME='LHC10f_pass2'
+export REFERENCE_PRODUCTION='LHC10d(2)'
+export TEST_FILES_NO='3'
+export SPLIT_MAX_INPUT_FILE_NUMBER='500'
+export MAX_MERGE_FILES='500'
+export TTL='86400'
+export DEBUG_LEVEL='10'
+export EXCLUDE_FILES='EventStat_temp.root'
+export FRIEND_CHAIN_NAMES=''
+export FRIEND_CHAIN_LIBRARIES=''
+export ADDITIONAL_PACKAGES=''
+export OUTPUT_FILES='dstTreeSW.root,dstTree.root,JPSI.root,JPSISDD.root,JPSI0_10.root,JPSI10_40.root,JPSI40_90.root,JPSIHMV0.root,JPSIHMSPD.root,JPSIHM.root,Improver.root,AnalysisResults.root,LMEEoutput.root'
+export PP='true'
+export AOD='0' # 0=ESD, 2=AOD
+export SUBSELECTION=''
+export ADDTASK_NEEDS_ALIEN='1'
+export GEN_MACRO_PATH=''
+export GEN_PARAMETERS=''
+export GEN_LIBRARIES=''
+export GEN_TOTAL_EVENTS='0'
+export TEST_ONLY_FULL_TRAIN='1'
+export FILE_PATTERN='AliESDs.root'
+export RUNNO='126432'
+
+#export TEST_DIR='/alice/sim/2016/LHC16g1a/245353'
+#export TEST_DIR='/alice/sim/2017/LHC17id20b1/258499'
+
+# anchored to 16d
+#export TEST_DIR='/alice/sim/2018/LHC18d8/258962'
+#export TEST_DIR='/alice/data/2018/LHC18m/000290323/pass2'
+export TEST_DIR='/alice/data/2018/LHC18c/000285957/pass2_CENT'
+#to run test on data: desactivate mc handlers in handlers.C + change first argument of task physics selection and pid response to kFALSE
+
+# anchored to 16o
+# export TEST_DIR='/alice/sim/2017/LHC17d16/264035'
+# anchored to 16p
+# export TEST_DIR='/alice/sim/2017/LHC17d18/264277'
+
+
+export ALIEN_JDL_LPMPARENTPID='147749701'
+export ALIEN_JDL_LPMMETADATA='LPMParentPID=147749701;LPMRunNumber=170387;LPMProductionType=RAW;LPMRAWPassID=3;LPMRawPass=2;LPMInteractionType=PbPb;LPMProductionTag=LHC11h;LPMAnchorRun=170387;LPMAnchorProduction=LHC11h;LPMAnchorYear=2011'
+export ALIEN_JDL_LPMRUNNUMBER='170387'
+export ALIEN_JDL_LPMPRODUCTIONTYPE='RAW'
+export ALIEN_JDL_LPMRAWPASSID='3'
+export ALIEN_JDL_LPMRAWPASS='2'
+export ALIEN_JDL_LPMINTERACTIONTYPE='PbPb'
+export ALIEN_JDL_LPMPRODUCTIONTAG='LHC11h'
+export ALIEN_JDL_LPMANCHORRUN='170387'
+export ALIEN_JDL_LPMANCHORPRODUCTION='LHC11h'
+export ALIEN_JDL_LPMANCHORYEAR='2011'

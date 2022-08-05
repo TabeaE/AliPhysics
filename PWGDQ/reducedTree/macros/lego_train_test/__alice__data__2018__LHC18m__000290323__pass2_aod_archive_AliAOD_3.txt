@@ -1,0 +1,3 @@
+/home/glegras/alice/data/__alice__data__2018__LHC18m__000290323__pass2_aod_archive_AliAOD_3/001/aod_archive.zip#AliAOD.root
+/home/glegras/alice/data/__alice__data__2018__LHC18m__000290323__pass2_aod_archive_AliAOD_3/002/aod_archive.zip#AliAOD.root
+/home/glegras/alice/data/__alice__data__2018__LHC18m__000290323__pass2_aod_archive_AliAOD_3/003/aod_archive.zip#AliAOD.root

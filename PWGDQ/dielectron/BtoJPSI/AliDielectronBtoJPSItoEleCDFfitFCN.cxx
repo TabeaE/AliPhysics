@@ -216,82 +216,82 @@ void AliDielectronBtoJPSItoEleCDFfitFCN::PrintStatus()
 	//
 	printf("\n");
 	// background param
-	printf("actual value of fWeightRes------------------------------------->> | %f \n", GetResWeight());
-	printf("actual value of fPos ------------------------------------------>> | %f \n", GetFPlus());
-	printf("actual value of fNeg ------------------------------------------>> | %f \n", GetFMinus());
-	printf("actual value of fSym ------------------------------------------>> | %f \n", GetFSym()); 
-	printf("actual value of fSym1 ----------------------------------------->> | %f \n", GetFSym1()); 
-	printf("actual value of fOneOvLamPlus --------------------------------->> | %f \n", GetLamPlus());
-	printf("actual value of fOneOvLamMinus -------------------------------->> | %f \n", GetLamMinus());
-	printf("actual value of fOneOvLamSym ---------------------------------->> | %f \n", GetLamSym());
-	printf("actual value of fOneOvLamSym1 --------------------------------->> | %f \n", GetLamSym1());
-	printf("actual value of fFractionJpsiFromBeauty ----------------------->> | %f \n", GetFractionJpsiFromBeauty());
-	printf("actual value of fFsig ----------------------------------------->> | %f \n", GetFsig());
+/*	printf("Actual value of fWeightRes------------------------------------->> | %f \n", GetResWeight());
+	printf("Actual value of fPos ------------------------------------------>> | %f \n", GetFPlus());
+	printf("Actual value of fNeg ------------------------------------------>> | %f \n", GetFMinus());
+	printf("Actual value of fSym ------------------------------------------>> | %f \n", GetFSym()); 
+	printf("Actual value of fSym1 ----------------------------------------->> | %f \n", GetFSym1()); 
+	printf("Actual value of fOneOvLamPlus --------------------------------->> | %f \n", GetLamPlus());
+	printf("Actual value of fOneOvLamMinus -------------------------------->> | %f \n", GetLamMinus());
+	printf("Actual value of fOneOvLamSym ---------------------------------->> | %f \n", GetLamSym());
+	printf("Actual value of fOneOvLamSym1 --------------------------------->> | %f \n", GetLamSym1());
+*/	printf("Actual value of fFractionJpsiFromBeauty ----------------------->> | %f \n", GetFractionJpsiFromBeauty());
+	printf("Actual value of fFsig ----------------------------------------->> | %f \n", GetFsig());
 
-	if(fCrystalBallParam){
-		printf("actual value of fCrystalBallMmean ----------------------------->> | %f \n", GetCrystalBallMmean());
-		printf("actual value of fCrystalBallNexp ------------------------------>> | %f \n", GetCrystalBallNexp());
-		printf("actual value of fCrystalBallSigma ----------------------------->> | %f \n", GetCrystalBallSigma());
-		printf("actual value of fCrystalBallAlpha ----------------------------->> | %f \n", GetCrystalBallAlpha());
-		printf("actual value of fCrystalBallNorm  ----------------------------->> | %f \n", GetCrystalBallNorm());
+/*	if(fCrystalBallParam){
+		printf("Actual value of fCrystalBallMmean ----------------------------->> | %f \n", GetCrystalBallMmean());
+		printf("Actual value of fCrystalBallNexp ------------------------------>> | %f \n", GetCrystalBallNexp());
+		printf("Actual value of fCrystalBallSigma ----------------------------->> | %f \n", GetCrystalBallSigma());
+		printf("Actual value of fCrystalBallAlpha ----------------------------->> | %f \n", GetCrystalBallAlpha());
+		printf("Actual value of fCrystalBallNorm  ----------------------------->> | %f \n", GetCrystalBallNorm());
 	}else{
-		printf("actual value of fMpv ------------------------------------------>> | %f \n", GetCrystalBallMmean());
-		printf("actual value of fConstRovL ------------------------------------>> | %f \n", GetCrystalBallNexp());
-		printf("actual value of fSigmaL --------------------------------------->> | %f \n", GetCrystalBallSigma());
-		printf("actual value of fSigmaR --------------------------------------->> | %f \n", GetCrystalBallAlpha());
+		printf("Actual value of fMpv ------------------------------------------>> | %f \n", GetCrystalBallMmean());
+		printf("Actual value of fConstRovL ------------------------------------>> | %f \n", GetCrystalBallNexp());
+		printf("Actual value of fSigmaL --------------------------------------->> | %f \n", GetCrystalBallSigma());
+		printf("Actual value of fSigmaR --------------------------------------->> | %f \n", GetCrystalBallAlpha());
 	}
 
 	// back Mass func
         if(fExponentialParam){
-		printf("actual value of normBkg ----------------------------------------->> | %f \n", GetBkgInvMassNorm());
-		printf("actual value of meanBkg ----------------------------------------->> | %f \n", GetBkgInvMassMean());
-		printf("actual value of slopeBkg ---------------------------------------->> | %f \n", GetBkgInvMassSlope());
-		printf("actual value of constBkg ---------------------------------------->> | %f \n", GetBkgInvMassConst());
+		printf("Actual value of normBkg ----------------------------------------->> | %f \n", GetBkgInvMassNorm());
+		printf("Actual value of meanBkg ----------------------------------------->> | %f \n", GetBkgInvMassMean());
+		printf("Actual value of slopeBkg ---------------------------------------->> | %f \n", GetBkgInvMassSlope());
+		printf("Actual value of constBkg ---------------------------------------->> | %f \n", GetBkgInvMassConst());
         }else{
-		printf("actual value of m^{0} ------------------------------------------->> | %f \n", GetBkgInvMassNorm());
-		printf("actual value of m^{1} ------------------------------------------->> | %f \n", GetBkgInvMassMean());
-		printf("actual value of m^{2} ------------------------------------------->> | %f \n", GetBkgInvMassSlope());
-		printf("actual value of m^{3} ------------------------------------------->> | %f \n", GetBkgInvMassConst());
-		printf("actual value of m^{4} ------------------------------------------->> | %f \n", GetPolyn4());
-		printf("actual value of m^{5} ------------------------------------------->> | %f \n", GetPolyn5());
+		printf("Actual value of m^{0} ------------------------------------------->> | %f \n", GetBkgInvMassNorm());
+		printf("Actual value of m^{1} ------------------------------------------->> | %f \n", GetBkgInvMassMean());
+		printf("Actual value of m^{2} ------------------------------------------->> | %f \n", GetBkgInvMassSlope());
+		printf("Actual value of m^{3} ------------------------------------------->> | %f \n", GetBkgInvMassConst());
+		printf("Actual value of m^{4} ------------------------------------------->> | %f \n", GetPolyn4());
+		printf("Actual value of m^{5} ------------------------------------------->> | %f \n", GetPolyn5());
         }
 
 	// resolution func (First-First)
-	printf("actual value of norm1Gauss (FF) --------------------------------->> | %f \n", GetNormGaus1ResFunc(2));
-	printf("actual value of norm2Gauss (FF) --------------------------------->> | %f \n", GetNormGaus2ResFunc(2));
-        printf("actual value of fMean1Res (FF) ---------------------------------->> | %f \n", GetResMean1(2));
-        printf("actual value of fSigma1Res (FF) --------------------------------->> | %f \n", GetResSigma1(2));
-        printf("actual value of fMean2Res (FF) ---------------------------------->> | %f \n", GetResMean2(2));
-        printf("actual value of fSigma2Res (FF) --------------------------------->> | %f \n", GetResSigma2(2));
+	printf("Actual value of norm1Gauss (FF) --------------------------------->> | %f \n", GetNormGaus1ResFunc(2));
+	printf("Actual value of norm2Gauss (FF) --------------------------------->> | %f \n", GetNormGaus2ResFunc(2));
+        printf("Actual value of fMean1Res (FF) ---------------------------------->> | %f \n", GetResMean1(2));
+        printf("Actual value of fSigma1Res (FF) --------------------------------->> | %f \n", GetResSigma1(2));
+        printf("Actual value of fMean2Res (FF) ---------------------------------->> | %f \n", GetResMean2(2));
+        printf("Actual value of fSigma2Res (FF) --------------------------------->> | %f \n", GetResSigma2(2));
         
-        printf("actual value of alfaRes (FF) ------------------------------------>> | %f \n", GetResAlfa(2));
-        printf("actual value of lambdaRes (FF) ---------------------------------->> | %f \n", GetResLambda(2)); 
-        printf("actual value of normExpRes (FF) --------------------------------->> | %f \n", GetResNormExp(2)); 
+        printf("Actual value of alfaRes (FF) ------------------------------------>> | %f \n", GetResAlfa(2));
+        printf("Actual value of lambdaRes (FF) ---------------------------------->> | %f \n", GetResLambda(2)); 
+        printf("Actual value of normExpRes (FF) --------------------------------->> | %f \n", GetResNormExp(2)); 
        
         // resolution func (First-Second)
-        printf("actual value of norm1Gauss (FS) --------------------------------->> | %f \n", GetNormGaus1ResFunc(1));
-        printf("actual value of norm2Gauss (FS) --------------------------------->> | %f \n", GetNormGaus2ResFunc(1));
-        printf("actual value of fMean1Res (FS) ---------------------------------->> | %f \n", GetResMean1(1));
-        printf("actual value of fSigma1Res (FS) --------------------------------->> | %f \n", GetResSigma1(1));
-        printf("actual value of fMean2Res (FS) ---------------------------------->> | %f \n", GetResMean2(1));
-        printf("actual value of fSigma2Res (FS) --------------------------------->> | %f \n", GetResSigma2(1));
+        printf("Actual value of norm1Gauss (FS) --------------------------------->> | %f \n", GetNormGaus1ResFunc(1));
+        printf("Actual value of norm2Gauss (FS) --------------------------------->> | %f \n", GetNormGaus2ResFunc(1));
+        printf("Actual value of fMean1Res (FS) ---------------------------------->> | %f \n", GetResMean1(1));
+        printf("Actual value of fSigma1Res (FS) --------------------------------->> | %f \n", GetResSigma1(1));
+        printf("Actual value of fMean2Res (FS) ---------------------------------->> | %f \n", GetResMean2(1));
+        printf("Actual value of fSigma2Res (FS) --------------------------------->> | %f \n", GetResSigma2(1));
         
-        printf("actual value of alfaRes (FS) ------------------------------------>> | %f \n", GetResAlfa(1));
-        printf("actual value of lambdaRes (FS) ---------------------------------->> | %f \n", GetResLambda(1));    
-        printf("actual value of normExpRes (FS) --------------------------------->> | %f \n", GetResNormExp(1));    
+        printf("Actual value of alfaRes (FS) ------------------------------------>> | %f \n", GetResAlfa(1));
+        printf("Actual value of lambdaRes (FS) ---------------------------------->> | %f \n", GetResLambda(1));    
+        printf("Actual value of normExpRes (FS) --------------------------------->> | %f \n", GetResNormExp(1));    
         
         // resolution func (Second-Second) 
-        printf("actual value of norm1Gauss (SS) --------------------------------->> | %f \n", GetNormGaus1ResFunc(0));
-        printf("actual value of norm2Gauss (SS) --------------------------------->> | %f \n", GetNormGaus2ResFunc(0));
-        printf("actual value of fMean1Res (SS) ---------------------------------->> | %f \n", GetResMean1(0));
-        printf("actual value of fSigma1Res (SS) --------------------------------->> | %f \n", GetResSigma1(0));
-        printf("actual value of fMean2Res (SS) ---------------------------------->> | %f \n", GetResMean2(0));
-        printf("actual value of fSigma2Res (SS) --------------------------------->> | %f \n", GetResSigma2(0));
+        printf("Actual value of norm1Gauss (SS) --------------------------------->> | %f \n", GetNormGaus1ResFunc(0));
+        printf("Actual value of norm2Gauss (SS) --------------------------------->> | %f \n", GetNormGaus2ResFunc(0));
+        printf("Actual value of fMean1Res (SS) ---------------------------------->> | %f \n", GetResMean1(0));
+        printf("Actual value of fSigma1Res (SS) --------------------------------->> | %f \n", GetResSigma1(0));
+        printf("Actual value of fMean2Res (SS) ---------------------------------->> | %f \n", GetResMean2(0));
+        printf("Actual value of fSigma2Res (SS) --------------------------------->> | %f \n", GetResSigma2(0));
         
-        printf("actual value of alfaRes (SS) ------------------------------------>> | %f \n", GetResAlfa(0));
-        printf("actual value of lambdaRes (SS) ---------------------------------->> | %f \n", GetResLambda(0));    
-        printf("actual value of normExpRes (SS) --------------------------------->> | %f \n", GetResNormExp(0));    
-
+        printf("Actual value of alfaRes (SS) ------------------------------------>> | %f \n", GetResAlfa(0));
+        printf("Actual value of lambdaRes (SS) ---------------------------------->> | %f \n", GetResLambda(0));    
+        printf("Actual value of normExpRes (SS) --------------------------------->> | %f \n", GetResNormExp(0));    
+*/
         printf("\n");
 	// integrals constants
 	printf("Actual value of normalization integral for MassSig ---------------->> | %f \n", GetIntegralMassSig());

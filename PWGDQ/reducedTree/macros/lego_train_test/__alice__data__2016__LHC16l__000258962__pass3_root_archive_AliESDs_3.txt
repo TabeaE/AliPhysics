@@ -1,0 +1,3 @@
+/home/glegras/alice/data/__alice__data__2016__LHC16l__000258962__pass3_root_archive_AliESDs_3/16000258962019.100/root_archive.zip#AliESDs.root
+/home/glegras/alice/data/__alice__data__2016__LHC16l__000258962__pass3_root_archive_AliESDs_3/16000258962019.1000/root_archive.zip#AliESDs.root
+/home/glegras/alice/data/__alice__data__2016__LHC16l__000258962__pass3_root_archive_AliESDs_3/16000258962019.10000/root_archive.zip#AliESDs.root

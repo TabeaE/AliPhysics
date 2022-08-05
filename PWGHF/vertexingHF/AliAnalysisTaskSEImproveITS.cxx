@@ -17,7 +17,7 @@
 #include <TClonesArray.h>
 #include <TGraph.h>
 #include <TFile.h>
-#include <TList.h>
+#include <TList.h> 
 #include <TNtuple.h>
 
 #include "AliVertex.h"
@@ -434,8 +434,8 @@ AliAnalysisTaskSEImproveITS::AliAnalysisTaskSEImproveITS(const char *name,
    fUpdateSecVertCovMat(kTRUE),
    fUpdateSTCovMatrix(kTRUE),
    fUpdatePulls(kTRUE),
-   fMimicData(kFALSE),
-   fIsAOD        (kTRUE),
+   fMimicData(kTRUE),
+   fIsAOD        (kFALSE),
    fSmearOnlySignal(kFALSE),
    fMCs         (0),
    fDebugOutput (0),
@@ -1195,30 +1195,30 @@ void AliAnalysisTaskSEImproveITS::UserExec(Option_t*) {
     TClonesArray *array2Prong=static_cast<TClonesArray*>(ev->GetList()->FindObject("D0toKpi"));
     if (array2Prong) {
       for (Int_t icand=0;icand<array2Prong->GetEntriesFast();++icand) {
-	AliAODRecoDecayHF2Prong *decay=static_cast<AliAODRecoDecayHF2Prong*>(array2Prong->At(icand));
-	vHF->GetProng(ev,decay,0); // needed to fill fAODMap in AliAnalysisVertexingHF
-	if(fSmearOnlySignal && AliVertexingHFUtils::IsCandidateInjected(decay,ev,mcHeader,fMCs)==kFALSE) continue;
-	vHF->FillRecoCand(ev,(AliAODRecoDecayHF2Prong*)decay);
+        AliAODRecoDecayHF2Prong *decay=static_cast<AliAODRecoDecayHF2Prong*>(array2Prong->At(icand));
+        vHF->GetProng(ev,decay,0); // needed to fill fAODMap in AliAnalysisVertexingHF
+        if(fSmearOnlySignal && AliVertexingHFUtils::IsCandidateInjected(decay,ev,mcHeader,fMCs)==kFALSE) continue;
+        vHF->FillRecoCand(ev,(AliAODRecoDecayHF2Prong*)decay);
       }
     }
     // Dstar->Kpipi
     TClonesArray *arrayCascade=static_cast<TClonesArray*>(ev->GetList()->FindObject("Dstar"));
     if (arrayCascade) {
       for (Int_t icand=0;icand<arrayCascade->GetEntriesFast();++icand) {
-	AliAODRecoCascadeHF *decayDstar=static_cast<AliAODRecoCascadeHF*>(arrayCascade->At(icand));
-	vHF->GetProng(ev,decayDstar,0); // needed to fill fAODMap in AliAnalysisVertexingHF
-	if(fSmearOnlySignal && AliVertexingHFUtils::IsCandidateInjected(decayDstar,ev,mcHeader,fMCs)==kFALSE) continue;
-	vHF->FillRecoCasc(ev,((AliAODRecoCascadeHF*)decayDstar),kTRUE);
+        AliAODRecoCascadeHF *decayDstar=static_cast<AliAODRecoCascadeHF*>(arrayCascade->At(icand));
+        vHF->GetProng(ev,decayDstar,0); // needed to fill fAODMap in AliAnalysisVertexingHF
+        if(fSmearOnlySignal && AliVertexingHFUtils::IsCandidateInjected(decayDstar,ev,mcHeader,fMCs)==kFALSE) continue;
+        vHF->FillRecoCasc(ev,((AliAODRecoCascadeHF*)decayDstar),kTRUE);
       }
     }
     // Three prong
     TClonesArray *array3Prong=static_cast<TClonesArray*>(ev->GetList()->FindObject("Charm3Prong"));
     if (array3Prong) {
       for (Int_t icand=0;icand<array3Prong->GetEntriesFast();++icand) {
-	AliAODRecoDecayHF3Prong *decay=static_cast<AliAODRecoDecayHF3Prong*>(array3Prong->At(icand));
-	vHF->GetProng(ev,decay,0); // needed to fill fAODMap in AliAnalysisVertexingHF
-	if(fSmearOnlySignal && AliVertexingHFUtils::IsCandidateInjected(decay,ev,mcHeader,fMCs)==kFALSE) continue;
-	vHF->FillRecoCand(ev,(AliAODRecoDecayHF3Prong*)decay);
+        AliAODRecoDecayHF3Prong *decay=static_cast<AliAODRecoDecayHF3Prong*>(array3Prong->At(icand));
+        vHF->GetProng(ev,decay,0); // needed to fill fAODMap in AliAnalysisVertexingHF
+        if(fSmearOnlySignal && AliVertexingHFUtils::IsCandidateInjected(decay,ev,mcHeader,fMCs)==kFALSE) continue;
+        vHF->FillRecoCand(ev,(AliAODRecoDecayHF3Prong*)decay);
       }
     }
   
@@ -1226,10 +1226,10 @@ void AliAnalysisTaskSEImproveITS::UserExec(Option_t*) {
     // Smear all tracks
     if (fImproveTracks) {
       for(Int_t itrack=0;itrack<ev->GetNumberOfTracks();++itrack) {
-	AliAODTrack * trk = static_cast<AliAODTrack*>(ev->GetTrack(itrack));
-	if(!trk) AliFatal("Not a standard AOD");
-	if(fSmearOnlySignal && AliVertexingHFUtils::IsTrackInjected(trk,mcHeader,fMCs)==kFALSE) continue;
-	SmearTrack(trk,bz);
+        AliAODTrack * trk = static_cast<AliAODTrack*>(ev->GetTrack(itrack));
+        if(!trk) AliFatal("Not a standard AOD");
+        if(fSmearOnlySignal && AliVertexingHFUtils::IsTrackInjected(trk,mcHeader,fMCs)==kFALSE) continue;
+        SmearTrack(trk,bz);
       }
     }
 
@@ -1240,114 +1240,114 @@ void AliAnalysisTaskSEImproveITS::UserExec(Option_t*) {
     // D0->Kpi
     if (array2Prong) {
       for (Int_t icand=0;icand<array2Prong->GetEntriesFast();++icand) {
-	AliAODRecoDecayHF2Prong *decay=static_cast<AliAODRecoDecayHF2Prong*>(array2Prong->At(icand));
-	
-	if(fSmearOnlySignal && AliVertexingHFUtils::IsCandidateInjected(decay,ev,mcHeader,fMCs)==kFALSE) continue;
-	if(!vHF->FillRecoCand(ev,(AliAODRecoDecayHF2Prong*)decay))continue;
-	
-	// recalculate vertices
-	AliVVertex *oldSecondaryVertex=decay->GetSecondaryVtx();
-		
-	AliExternalTrackParam et1; et1.CopyFromVTrack(static_cast<AliAODTrack*>(decay->GetDaughter(0)));
-	AliExternalTrackParam et2; et2.CopyFromVTrack(static_cast<AliAODTrack*>(decay->GetDaughter(1)));
-	
-	TObjArray ta12;
-	
-	ta12.Add(&et1); ta12.Add(&et2); 
-	AliESDVertex *v12 =RecalculateVertex(oldSecondaryVertex,&ta12 ,bz);
-	
-	
-	// update secondary vertex
-	Double_t pos[3];
-	Double_t covpos[6];
-	v12->GetXYZ(pos);
-	v12->GetCovMatrix(covpos);
-	decay->GetSecondaryVtx()->SetPosition(pos[0],pos[1],pos[2]);
-	if(fUpdateSecVertCovMat) decay->GetSecondaryVtx()->SetCovMatrix(covpos);
-	decay->GetSecondaryVtx()->SetChi2perNDF(v12->GetChi2toNDF()); 
-	
-	// update d0 
-	Double_t d0z0[2],covd0z0[3];
-	Double_t d0[2],d0err[2];
-	et1.PropagateToDCA(primaryVertex,bz,100.,d0z0,covd0z0);
-	d0[0]=d0z0[0];
-	d0err[0] = TMath::Sqrt(covd0z0[0]);
-	et2.PropagateToDCA(primaryVertex,bz,100.,d0z0,covd0z0);
-	d0[1]=d0z0[0];
-	d0err[1] = TMath::Sqrt(covd0z0[0]);   
-	decay->Setd0Prongs(2,d0);
-	decay->Setd0errProngs(2,d0err);
-	// 
-	
-	
-	Double_t xdummy=0.,ydummy=0.;
-	Double_t dca;
-	dca=et1.GetDCA(&et2,bz,xdummy,ydummy);
-	decay->SetDCA(dca);
-	
-	
-	
-	Double_t px[2],py[2],pz[2];
-	for (Int_t i=0;i<2;++i) {
-	  AliExternalTrackParam et;
-	  et.CopyFromVTrack(static_cast<AliAODTrack*>(decay->GetDaughter(i)));
-	  et.PropagateToDCA(v12,bz,100.,d0z0,covd0z0);
-	  px[i]=et.Px();
-	  py[i]=et.Py();
-	  pz[i]=et.Pz();
-	}
-	decay->SetPxPyPzProngs(2,px,py,pz);
-	delete v12;
-      }
-    }
-    
-    
-    // Dstar->Kpipi
-    if (arrayCascade) {
-      for (Int_t icand=0;icand<arrayCascade->GetEntriesFast();++icand) {
-	AliAODRecoCascadeHF *decayDstar=static_cast<AliAODRecoCascadeHF*>(arrayCascade->At(icand));
-	if(fSmearOnlySignal && AliVertexingHFUtils::IsCandidateInjected(decayDstar,ev,mcHeader,fMCs)==kFALSE) continue;
-	if(!vHF->FillRecoCasc(ev,((AliAODRecoCascadeHF*)decayDstar),kTRUE))continue;
-	//Get D0 from D*
-	AliAODRecoDecayHF2Prong* decay=(AliAODRecoDecayHF2Prong*)decayDstar->Get2Prong();
-	
-	// recalculate vertices
-	//AliVVertex *oldSecondaryVertex=decay->GetSecondaryVtx();
-	
-	//soft pion
-	AliExternalTrackParam et3; et3.CopyFromVTrack(static_cast<AliAODTrack*>(decayDstar->GetBachelor()));
-	
-	//track D0
-	AliNeutralTrackParam *trackD0 = new AliNeutralTrackParam(decay);
-	
-	//!!!!TODO: covariance matrix
-	
-	// update d0 
-	Double_t d0z0[2],covd0z0[3];
-	Double_t d01[2],d01err[2];
-	
-	//the D*
-	et3.PropagateToDCA(primaryVertex,bz,100.,d0z0,covd0z0);
-	d01[0]=d0z0[0];
-	d01err[0] = TMath::Sqrt(covd0z0[0]); 
-	trackD0->PropagateToDCA(primaryVertex,bz,100.,d0z0,covd0z0);
-	d01[1]=d0z0[0];
-	d01err[1] = TMath::Sqrt(covd0z0[0]);  
-	decayDstar->Setd0Prongs(2,d01);
-	decayDstar->Setd0errProngs(2,d01err);
+        AliAODRecoDecayHF2Prong *decay=static_cast<AliAODRecoDecayHF2Prong*>(array2Prong->At(icand));
         
-	// delete v12;
-	delete trackD0; trackD0=NULL;
-	
-	// a run for D*
-	Double_t px1[2],py1[2],pz1[2];
-	for (Int_t i=0;i<2;++i) {
-	  const AliAODTrack *t1=static_cast<AliAODTrack*>(decayDstar->GetDaughter(i));
-	  px1[i]=t1->Px();
-	  py1[i]=t1->Py();
-	  pz1[i]=t1->Pz();
-	}
-	decayDstar->SetPxPyPzProngs(2,px1,py1,pz1);
+        if(fSmearOnlySignal && AliVertexingHFUtils::IsCandidateInjected(decay,ev,mcHeader,fMCs)==kFALSE) continue;
+        if(!vHF->FillRecoCand(ev,(AliAODRecoDecayHF2Prong*)decay))continue;
+        
+        // recalculate vertices
+        AliVVertex *oldSecondaryVertex=decay->GetSecondaryVtx();
+          
+        AliExternalTrackParam et1; et1.CopyFromVTrack(static_cast<AliAODTrack*>(decay->GetDaughter(0)));
+        AliExternalTrackParam et2; et2.CopyFromVTrack(static_cast<AliAODTrack*>(decay->GetDaughter(1)));
+        
+        TObjArray ta12;
+        
+        ta12.Add(&et1); ta12.Add(&et2); 
+        AliESDVertex *v12 =RecalculateVertex(oldSecondaryVertex,&ta12 ,bz);
+        
+        
+        // update secondary vertex
+        Double_t pos[3];
+        Double_t covpos[6];
+        v12->GetXYZ(pos);
+        v12->GetCovMatrix(covpos);
+        decay->GetSecondaryVtx()->SetPosition(pos[0],pos[1],pos[2]);
+        if(fUpdateSecVertCovMat) decay->GetSecondaryVtx()->SetCovMatrix(covpos);
+        decay->GetSecondaryVtx()->SetChi2perNDF(v12->GetChi2toNDF()); 
+        
+        // update d0 
+        Double_t d0z0[2],covd0z0[3];
+        Double_t d0[2],d0err[2];
+        et1.PropagateToDCA(primaryVertex,bz,100.,d0z0,covd0z0);
+        d0[0]=d0z0[0];
+        d0err[0] = TMath::Sqrt(covd0z0[0]);
+        et2.PropagateToDCA(primaryVertex,bz,100.,d0z0,covd0z0);
+        d0[1]=d0z0[0];
+        d0err[1] = TMath::Sqrt(covd0z0[0]);   
+        decay->Setd0Prongs(2,d0);
+        decay->Setd0errProngs(2,d0err);
+        // 
+        
+        
+        Double_t xdummy=0.,ydummy=0.;
+        Double_t dca;
+        dca=et1.GetDCA(&et2,bz,xdummy,ydummy);
+        decay->SetDCA(dca);
+        
+        
+        
+        Double_t px[2],py[2],pz[2];
+        for (Int_t i=0;i<2;++i) {
+          AliExternalTrackParam et;
+          et.CopyFromVTrack(static_cast<AliAODTrack*>(decay->GetDaughter(i)));
+          et.PropagateToDCA(v12,bz,100.,d0z0,covd0z0);
+          px[i]=et.Px();
+          py[i]=et.Py();
+          pz[i]=et.Pz();
+        }
+        decay->SetPxPyPzProngs(2,px,py,pz);
+        delete v12;
+            }
+          }
+          
+          
+          // Dstar->Kpipi
+          if (arrayCascade) {
+            for (Int_t icand=0;icand<arrayCascade->GetEntriesFast();++icand) {
+        AliAODRecoCascadeHF *decayDstar=static_cast<AliAODRecoCascadeHF*>(arrayCascade->At(icand));
+        if(fSmearOnlySignal && AliVertexingHFUtils::IsCandidateInjected(decayDstar,ev,mcHeader,fMCs)==kFALSE) continue;
+        if(!vHF->FillRecoCasc(ev,((AliAODRecoCascadeHF*)decayDstar),kTRUE))continue;
+        //Get D0 from D*
+        AliAODRecoDecayHF2Prong* decay=(AliAODRecoDecayHF2Prong*)decayDstar->Get2Prong();
+        
+        // recalculate vertices
+        //AliVVertex *oldSecondaryVertex=decay->GetSecondaryVtx();
+        
+        //soft pion
+        AliExternalTrackParam et3; et3.CopyFromVTrack(static_cast<AliAODTrack*>(decayDstar->GetBachelor()));
+        
+        //track D0
+        AliNeutralTrackParam *trackD0 = new AliNeutralTrackParam(decay);
+        
+        //!!!!TODO: covariance matrix
+        
+        // update d0 
+        Double_t d0z0[2],covd0z0[3];
+        Double_t d01[2],d01err[2];
+        
+        //the D*
+        et3.PropagateToDCA(primaryVertex,bz,100.,d0z0,covd0z0);
+        d01[0]=d0z0[0];
+        d01err[0] = TMath::Sqrt(covd0z0[0]); 
+        trackD0->PropagateToDCA(primaryVertex,bz,100.,d0z0,covd0z0);
+        d01[1]=d0z0[0];
+        d01err[1] = TMath::Sqrt(covd0z0[0]);  
+        decayDstar->Setd0Prongs(2,d01);
+        decayDstar->Setd0errProngs(2,d01err);
+              
+        // delete v12;
+        delete trackD0; trackD0=NULL;
+        
+        // a run for D*
+        Double_t px1[2],py1[2],pz1[2];
+        for (Int_t i=0;i<2;++i) {
+          const AliAODTrack *t1=static_cast<AliAODTrack*>(decayDstar->GetDaughter(i));
+          px1[i]=t1->Px();
+          py1[i]=t1->Py();
+          pz1[i]=t1->Pz();
+        }
+        decayDstar->SetPxPyPzProngs(2,px1,py1,pz1);
 	
       }
     }
@@ -1356,81 +1356,81 @@ void AliAnalysisTaskSEImproveITS::UserExec(Option_t*) {
     // Three prong
     if (array3Prong) {
       for (Int_t icand=0;icand<array3Prong->GetEntriesFast();++icand) {
-	AliAODRecoDecayHF3Prong *decay=static_cast<AliAODRecoDecayHF3Prong*>(array3Prong->At(icand));
-	if(fSmearOnlySignal && AliVertexingHFUtils::IsCandidateInjected(decay,ev,mcHeader,fMCs)==kFALSE) continue;
-	if(!vHF->FillRecoCand(ev,(AliAODRecoDecayHF3Prong*)decay))continue;
-	
-	// recalculate vertices
-	AliVVertex *oldSecondaryVertex=decay->GetSecondaryVtx();
-	AliExternalTrackParam et1; et1.CopyFromVTrack(static_cast<AliAODTrack*>(decay->GetDaughter(0)));
-	AliExternalTrackParam et2; et2.CopyFromVTrack(static_cast<AliAODTrack*>(decay->GetDaughter(1)));
-	AliExternalTrackParam et3; et3.CopyFromVTrack(static_cast<AliAODTrack*>(decay->GetDaughter(2)));
-	TObjArray ta123,ta12,ta23;
-	ta123.Add(&et1);ta123.Add(&et2);ta123.Add(&et3);
-	ta12. Add(&et1);ta12 .Add(&et2);
-	ta23 .Add(&et2);ta23 .Add(&et3);
-	AliESDVertex *v123=RecalculateVertex(oldSecondaryVertex,&ta123,bz);
-	AliESDVertex *v12 =RecalculateVertex(oldSecondaryVertex,&ta12 ,bz);
-	AliESDVertex *v23 =RecalculateVertex(oldSecondaryVertex,&ta23 ,bz);
-	
-	// update secondary vertex
-	Double_t pos[3];
-	Double_t covpos[6];
-	v123->GetXYZ(pos);
-	v123->GetCovMatrix(covpos);
-	decay->GetSecondaryVtx()->SetPosition(pos[0],pos[1],pos[2]);
-	if(fUpdateSecVertCovMat) decay->GetSecondaryVtx()->SetCovMatrix(covpos);
-	decay->GetSecondaryVtx()->SetChi2perNDF(v123->GetChi2toNDF()); 
-	
-	// update d0 for all progs
-	Double_t d0z0[2],covd0z0[3];
-	Double_t d0[3],d0err[3];
-	et1.PropagateToDCA(primaryVertex,bz,100.,d0z0,covd0z0);
-	d0[0]=d0z0[0];
-	d0err[0] = TMath::Sqrt(covd0z0[0]);
-	et2.PropagateToDCA(primaryVertex,bz,100.,d0z0,covd0z0);
-	d0[1]=d0z0[0];
-	d0err[1] = TMath::Sqrt(covd0z0[0]);
-	et3.PropagateToDCA(primaryVertex,bz,100.,d0z0,covd0z0);
-	d0[2]=d0z0[0];
-	d0err[2] = TMath::Sqrt(covd0z0[0]);
-	decay->Setd0Prongs   (3,d0   );
-	decay->Setd0errProngs(3,d0err);
-	// TODO: setter missing
-	
-	// update dca for prong combinations
-	Double_t xdummy=0.,ydummy=0.;
-	Double_t dca[3];
-	dca[0]=et1.GetDCA(&et2,bz,xdummy,ydummy);
-	dca[1]=et3.GetDCA(&et2,bz,xdummy,ydummy);
-	dca[2]=et1.GetDCA(&et3,bz,xdummy,ydummy);
-	decay->SetDCAs(3,dca);
-	
-	// update sigmavertex = dispersion
-	Float_t sigmaV=v123->GetDispersion(); 
-	decay->SetSigmaVert(sigmaV); 
-	// update dist12 and dist23
-	primaryVertex->GetXYZ(pos);
-	decay->SetDist12toPrim(TMath::Sqrt((v12->GetX()-pos[0])*(v12->GetX()-pos[0])
-					   +(v12->GetY()-pos[1])*(v12->GetY()-pos[1])
-					   +(v12->GetZ()-pos[2])*(v12->GetZ()-pos[2])));
-	decay->SetDist23toPrim(TMath::Sqrt((v23->GetX()-pos[0])*(v23->GetX()-pos[0])
-					   +(v23->GetY()-pos[1])*(v23->GetY()-pos[1])
-					   +(v23->GetZ()-pos[2])*(v23->GetZ()-pos[2])));
-	
-	
-	Double_t px[3],py[3],pz[3];
-	for (Int_t i=0;i<3;++i) {
-	  AliExternalTrackParam et;
-	  et.CopyFromVTrack(static_cast<AliAODTrack*>(decay->GetDaughter(i)));
-	  et.PropagateToDCA(v123,bz,100.,d0z0,covd0z0);
-	  px[i]=et.Px();
-	  py[i]=et.Py();
-	  pz[i]=et.Pz();
-	}
-	decay->SetPxPyPzProngs(3,px,py,pz);
-	
-	delete v123;delete v12;delete v23;
+        AliAODRecoDecayHF3Prong *decay=static_cast<AliAODRecoDecayHF3Prong*>(array3Prong->At(icand));
+        if(fSmearOnlySignal && AliVertexingHFUtils::IsCandidateInjected(decay,ev,mcHeader,fMCs)==kFALSE) continue;
+        if(!vHF->FillRecoCand(ev,(AliAODRecoDecayHF3Prong*)decay))continue;
+        
+        // recalculate vertices
+        AliVVertex *oldSecondaryVertex=decay->GetSecondaryVtx();
+        AliExternalTrackParam et1; et1.CopyFromVTrack(static_cast<AliAODTrack*>(decay->GetDaughter(0)));
+        AliExternalTrackParam et2; et2.CopyFromVTrack(static_cast<AliAODTrack*>(decay->GetDaughter(1)));
+        AliExternalTrackParam et3; et3.CopyFromVTrack(static_cast<AliAODTrack*>(decay->GetDaughter(2)));
+        TObjArray ta123,ta12,ta23;
+        ta123.Add(&et1);ta123.Add(&et2);ta123.Add(&et3);
+        ta12. Add(&et1);ta12 .Add(&et2);
+        ta23 .Add(&et2);ta23 .Add(&et3);
+        AliESDVertex *v123=RecalculateVertex(oldSecondaryVertex,&ta123,bz);
+        AliESDVertex *v12 =RecalculateVertex(oldSecondaryVertex,&ta12 ,bz);
+        AliESDVertex *v23 =RecalculateVertex(oldSecondaryVertex,&ta23 ,bz);
+        
+        // update secondary vertex
+        Double_t pos[3];
+        Double_t covpos[6];
+        v123->GetXYZ(pos);
+        v123->GetCovMatrix(covpos);
+        decay->GetSecondaryVtx()->SetPosition(pos[0],pos[1],pos[2]);
+        if(fUpdateSecVertCovMat) decay->GetSecondaryVtx()->SetCovMatrix(covpos);
+        decay->GetSecondaryVtx()->SetChi2perNDF(v123->GetChi2toNDF()); 
+        
+        // update d0 for all progs
+        Double_t d0z0[2],covd0z0[3];
+        Double_t d0[3],d0err[3];
+        et1.PropagateToDCA(primaryVertex,bz,100.,d0z0,covd0z0);
+        d0[0]=d0z0[0];
+        d0err[0] = TMath::Sqrt(covd0z0[0]);
+        et2.PropagateToDCA(primaryVertex,bz,100.,d0z0,covd0z0);
+        d0[1]=d0z0[0];
+        d0err[1] = TMath::Sqrt(covd0z0[0]);
+        et3.PropagateToDCA(primaryVertex,bz,100.,d0z0,covd0z0);
+        d0[2]=d0z0[0];
+        d0err[2] = TMath::Sqrt(covd0z0[0]);
+        decay->Setd0Prongs   (3,d0   );
+        decay->Setd0errProngs(3,d0err);
+        // TODO: setter missing
+        
+        // update dca for prong combinations
+        Double_t xdummy=0.,ydummy=0.;
+        Double_t dca[3];
+        dca[0]=et1.GetDCA(&et2,bz,xdummy,ydummy);
+        dca[1]=et3.GetDCA(&et2,bz,xdummy,ydummy);
+        dca[2]=et1.GetDCA(&et3,bz,xdummy,ydummy);
+        decay->SetDCAs(3,dca);
+        
+        // update sigmavertex = dispersion
+        Float_t sigmaV=v123->GetDispersion(); 
+        decay->SetSigmaVert(sigmaV); 
+        // update dist12 and dist23
+        primaryVertex->GetXYZ(pos);
+        decay->SetDist12toPrim(TMath::Sqrt((v12->GetX()-pos[0])*(v12->GetX()-pos[0])
+                  +(v12->GetY()-pos[1])*(v12->GetY()-pos[1])
+                  +(v12->GetZ()-pos[2])*(v12->GetZ()-pos[2])));
+        decay->SetDist23toPrim(TMath::Sqrt((v23->GetX()-pos[0])*(v23->GetX()-pos[0])
+                  +(v23->GetY()-pos[1])*(v23->GetY()-pos[1])
+                  +(v23->GetZ()-pos[2])*(v23->GetZ()-pos[2])));
+        
+        
+        Double_t px[3],py[3],pz[3];
+        for (Int_t i=0;i<3;++i) {
+          AliExternalTrackParam et;
+          et.CopyFromVTrack(static_cast<AliAODTrack*>(decay->GetDaughter(i)));
+          et.PropagateToDCA(v123,bz,100.,d0z0,covd0z0);
+          px[i]=et.Px();
+          py[i]=et.Py();
+          pz[i]=et.Pz();
+        }
+        decay->SetPxPyPzProngs(3,px,py,pz);
+        
+        delete v123;delete v12;delete v23;
       }
     }
     delete vHF;
@@ -1481,7 +1481,6 @@ void AliAnalysisTaskSEImproveITS::SmearTrack(AliVTrack *track,Double_t bz) {
 
 
   Double_t *covar=const_cast<Double_t*>(et.GetCovariance());
-
   // Get MC info
   Int_t imc=track->GetLabel();
   if (imc<=0) return;
@@ -1725,7 +1724,6 @@ void AliAnalysisTaskSEImproveITS::SmearTrack(AliVTrack *track,Double_t bz) {
        dd0mrpn=sd0mrpn-sd0mrpo;
        d0rpn =d0rpmc+dd0rpn+dd0mrpn;
     }
-    
   Double_t dpt1o =pt1o-pt1mc;
   Double_t dpt1n =dpt1o *(spt1o >0. ? (spt1n /spt1o ) : 1.);
   Double_t pt1n  =pt1mc+dpt1n;
@@ -1797,7 +1795,7 @@ void AliAnalysisTaskSEImproveITS::SmearTrack(AliVTrack *track,Double_t bz) {
     // Mark the track as "improved" with a trick (this is done with a trick using layer 7 (ie the 8th))
     UChar_t itsClusterMap = esdtrack->GetITSClusterMap();
     SETBIT(itsClusterMap,7);
-    esdtrack->SetITSClusterMap(itsClusterMap);
+    esdtrack->SetITSClusterMap(itsClusterMap);int clsmap=(Int_t) esdtrack->GetITSClusterMap();
   }
 
 

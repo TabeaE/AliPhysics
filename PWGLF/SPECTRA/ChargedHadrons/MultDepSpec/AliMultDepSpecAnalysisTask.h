@@ -140,6 +140,8 @@ protected:
 
   Hist<TH2D> fHist_multPtSpec_trk_inter{}; //!<! reference for interim step of unfolding
 
+  Hist::Hist<TH2D> fHist_multPtSpec_trk_inter{}; //!<! reference for interim step of unfolding
+
   // QA histograms
   Log<TH1I> fHist_trainInfo{};         //!<! train metadata string as bin lable and number of compute jobs as bin content
   Log<TH1I> fHist_runStatistics{};     //!<! number of measured events per run

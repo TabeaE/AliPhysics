@@ -200,20 +200,20 @@ fUseMultiplicity(kTRUE), fUseMBFractions(kFALSE), fDoInterpolation(kTRUE) {
     };
 
     if ("pp" == fstCollisionSystem) {
-        fAllSystematicFlags.push_back(
-                                      AliMCSpectraWeights::SysFlag::kBylinkinUpper);
-        fAllSystematicFlags.push_back(
-                                      AliMCSpectraWeights::SysFlag::kBylinkinLower);
+//        fAllSystematicFlags.push_back(
+//                                      AliMCSpectraWeights::SysFlag::kBylinkinUpper);
+//        fAllSystematicFlags.push_back(
+//                                      AliMCSpectraWeights::SysFlag::kBylinkinLower);
         fAllSystematicFlags.push_back(AliMCSpectraWeights::SysFlag::kHagedorn);
 //        fAllSystematicFlags.push_back(
 //                                      AliMCSpectraWeights::SysFlag::kHagedornUpper);
 //        fAllSystematicFlags.push_back(
 //                                      AliMCSpectraWeights::SysFlag::kHagedornLower);
     } else if ("ppb" == fstCollisionSystem) {
-        fAllSystematicFlags.push_back(
-                                      AliMCSpectraWeights::SysFlag::kBylinkinUpper);
-        fAllSystematicFlags.push_back(
-                                      AliMCSpectraWeights::SysFlag::kBylinkinLower);
+//        fAllSystematicFlags.push_back(
+//                                      AliMCSpectraWeights::SysFlag::kBylinkinUpper);
+//        fAllSystematicFlags.push_back(
+//                                      AliMCSpectraWeights::SysFlag::kBylinkinLower);
         fAllSystematicFlags.push_back(AliMCSpectraWeights::SysFlag::kHagedorn);
 //        fAllSystematicFlags.push_back(
 //                                      AliMCSpectraWeights::SysFlag::kHagedornUpper);

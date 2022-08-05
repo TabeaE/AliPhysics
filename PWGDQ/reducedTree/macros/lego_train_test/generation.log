@@ -1,0 +1,110 @@
+   ------------------------------------------------------------------
+  | Welcome to ROOT 6.24/06                        https://root.cern |
+  | (c) 1995-2021, The ROOT Team; conception: R. Brun, F. Rademakers |
+  | Built for linuxx8664gcc on Sep 04 2021, 05:38:00                 |
+  | From tags/v6-24-06@v6-24-06                                      |
+  | With c++ (GCC) 10.2.0                                            |
+  | Try '.help', '.demo', '.license', '.credits', '.quit'/'.q'       |
+   ------------------------------------------------------------------
+
+
+Processing generate.C...
+Connecting to AliEn...
+>>>>>>> Read train configuration
+Collection name='TObjArray', class='TObjArray', size=16
+ ====================================================================
+# Analysis task:                Multiplicity
+# Supported data types:         ESD, AOD, MC
+# Extra libraries:              
+# Extra dependencies:           
+# Macro to configure deps:      Multiplicity_Config.C
+# Macro connecting this task:   $ALICE_PHYSICS/OADB/COMMON/MULTIPLICITY/macros/AddTaskMultSelection.C
+# Arguments to run the macro:   kFALSE
+ ====================================================================
+# Analysis task:                PhysSel
+# Supported data types:         ESD, AOD, MC
+# Extra libraries:              
+# Extra dependencies:           
+# Macro to configure deps:      PhysSel_Config.C
+# Macro connecting this task:   $ALICE_PHYSICS/OADB/macros/AddTaskPhysicsSelection.C
+# Arguments to run the macro:   kFALSE, kTRUE
+ ====================================================================
+# Analysis task:                PIDresponse
+# Supported data types:         ESD, AOD, MC
+# Extra libraries:              
+# Extra dependencies:           
+# Macro to configure deps:      PIDresponse_Config.C
+# Macro connecting this task:   $ALICE_ROOT/ANALYSIS/macros/AddTaskPIDResponse.C
+# Arguments to run the macro:   kFALSE,kTRUE,kTRUE,"pass2"
+ ====================================================================
+# Analysis task:                Iarsene_reducedTrees
+# Supported data types:         ESD, AOD, MC
+# Extra libraries:              
+# Extra dependencies:           Multiplicity,PhysSel,PIDresponse
+# Macro to configure deps:      Iarsene_reducedTrees_Config.C
+# Macro connecting this task:   $ALICE_PHYSICS/PWGDQ/reducedTree/macros/AddTask_TrainTreeAnalysis.C
+# Arguments to run the macro:   kFALSE, "LHC16l", 3, kTRUE, "glegras_dst030822", "~/alice/AliPhysics/PWGDQ/reducedTree/macros/lego_train_test"
+I-AliAnalysisAlien::SetDefaultOutputs: Plugin will use the output files taken from analysis manager
+
+>>>> Test files are taken from: __alice__data__2018__LHC18c__000285957__pass2_CENT_root_archive_AliESDs_3.txt
+E-AddESDHandler: inputHandler is NOT null. ESD handler was NOT added !!!
+Set OutputFileName : 
+ LMEEoutput.root:MultSelection
+
+(AliMultSelectionTask *) 0x8d8a100
+I-AliAnalysisTaskCfg::ExecuteMacro: Macro AddTaskMultSelection added 1 tasks to the manager
+I-AliPhysicsSelectionTask::AliPhysicsSelectionTask: Physics Event Selection enabled.
+(AliPhysicsSelectionTask *) 0x50ba320
+I-AliAnalysisTaskCfg::ExecuteMacro: Macro AddTaskPhysicsSelection added 1 tasks to the manager
+========================================================================================
+PIDResponse: Initialising AliAnalysisTaskPIDResponse
+========================================================================================
+(AliAnalysisTaskPIDResponse *) 0x931d680
+I-AliAnalysisTaskCfg::ExecuteMacro: Macro AddTaskPIDResponse added 1 tasks to the manager
+reducedEventType: 3
+AddTask_glegras__dst() trigger choice set to 4 (LHC16l)
+(AliAnalysisTask *) 0xaeaf990
+(AliAnalysisTask *) 0xaeaf990
+I-AliAnalysisTaskCfg::ExecuteMacro: Macro AddTask_TrainTreeAnalysis added 1 tasks to the manager
+I-AliAnalysisManager::PrintStatus: System information will be collected each 100 events
+=== TOP CONTAINER:
+Container: cAUTO_INPUT     DATA TYPE: TChain
+= Not connected to a data producer
+ = Client tasks indented below:
+______________________________________________________________________________
+   task: taskMultSelection  ACTIVE=0 POST_LOOP=0
+      INPUT #0: TChain <-  [cAUTO_INPUT]
+      OUTPUT #0: TTree ->  [NO CONTAINER]
+      OUTPUT #1: TList ->  [cListMultSelection]
+      Container: cListMultSelection     DATA TYPE: TList
+       = Filename: LMEEoutput.root  folder: MultSelection
+______________________________________________________________________________
+   task: AliPhysicsSelectionTask  ACTIVE=0 POST_LOOP=0
+      INPUT #0: TChain <-  [cAUTO_INPUT]
+      OUTPUT #0: TTree ->  [NO CONTAINER]
+      OUTPUT #1: TList ->  [cstatsout]
+      Container: cstatsout     DATA TYPE: TList
+       = Filename: EventStat_temp.root
+______________________________________________________________________________
+   task: PIDResponseTask  ACTIVE=0 POST_LOOP=0
+      INPUT #0: TChain <-  [cAUTO_INPUT]
+      OUTPUT #0: TTree ->  [NO CONTAINER]
+______________________________________________________________________________
+   task: DSTTreeMaker  ACTIVE=0 POST_LOOP=0
+      INPUT #0: TChain <-  [cAUTO_INPUT]
+      OUTPUT #0: TTree ->  [NO CONTAINER]
+      OUTPUT #1: AliReducedBaseEvent ->  [ReducedEventDQ]
+      OUTPUT #2: TTree ->  [dstTree]
+      OUTPUT #3: TList ->  [EventStats]
+      Exchange container: ReducedEventDQ     DATA TYPE: AliReducedBaseEvent
+      Container: dstTree     DATA TYPE: TTree
+       = Filename: dstTree.root
+      Container: EventStats     DATA TYPE: TList
+       = Filename: dstTree.root
+W-TClass::Init: no dictionary for class pair<TString,double> is available
+W-TClass::Init: no dictionary for class pair<TString,TString> is available
+I-AliAnalysisAlien::WriteAnalysisFile: 
+#####   Analysis manager: train wrote to file <lego_train.root>
+
+I-AliAnalysisAlien::WriteAnalysisMacro: 
+#####   Analysis macro to run on worker nodes <lego_train.C> written
