@@ -53,6 +53,7 @@ class AliReducedPairInfo : public AliReducedBaseTrack {
   void SetPseudoProper(Float_t lpsproper) {fPsProper = lpsproper;}
   void SetPointingAngle(Float_t pa) {fPointingAngle = pa;}
   void SetChisquare(Float_t chi2) {fChisquare = chi2;}
+  void SetMCMap(UShort_t MCMap) {fMCMap = MCMap;}
   
   // getters
   Char_t   CandidateId()         const {return fCandidateId;}
@@ -63,7 +64,7 @@ class AliReducedPairInfo : public AliReducedBaseTrack {
   Float_t  Energy()              const;
   Float_t  Rapidity()            const;
   Float_t  Lxy()                 const {return fLxy;}
-  Float_t  PsProper()                 const {return fPsProper;}
+  Float_t  PsProper()            const {return fPsProper;}
   Float_t  DecayRadius()         const {return fLxy;}
   Float_t  PointingAngle()       const {return fPointingAngle;}
   Float_t  Chi2()                const {return fChisquare;}
@@ -73,6 +74,7 @@ class AliReducedPairInfo : public AliReducedBaseTrack {
   Bool_t   IsPureV0ALambda()     const {return (fQualityFlags&(UInt_t(1)<<3));}
   Bool_t   IsPureV0Gamma()       const {return (fQualityFlags&(UInt_t(1)<<4));}
   UInt_t   QualityFlags()        const {return fQualityFlags;}
+  Int_t    MCMap()             const {return fMCMap;}
   
  protected:
   Char_t  fCandidateId;         // candidate type (K0s, Lambda, J/psi, phi, etc)
@@ -85,10 +87,11 @@ class AliReducedPairInfo : public AliReducedBaseTrack {
   Float_t fPsProper;                 // pseudo-proper decay length (pair candidates) or radius of the secondary vertex for V0s 
   Float_t fPointingAngle;       // angle between the pair momentum vector and the secondary vertex position vector
   Float_t fChisquare;           // chi2 for the legs matching
+  UShort_t fMCMap;               //Bit 0 : is it real MC Jpsi (are both electrons from the same Jpsi?) // Bit 1: is this Jpsi from B?
   
   AliReducedPairInfo& operator= (const AliReducedPairInfo &c);
 
-  ClassDef(AliReducedPairInfo, 2);
+  ClassDef(AliReducedPairInfo, 3);
 };
 
 //_______________________________________________________________________________

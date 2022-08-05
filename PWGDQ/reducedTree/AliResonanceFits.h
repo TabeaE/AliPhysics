@@ -31,7 +31,8 @@
        argument is an identifier of the variable. If the reducedTree framework is used, then it is convenient to use the variables from 
        AliReducedVarManager. The index argument is the index of the corresponding dimension in the THnF. 
        At the initialization time, there is a check whether the mass variable is defined, by looking in the list of all defined var's
-       and comparing them to fMassVariable. If a match is not found, then the the whole procedure fails. By default, fMassVariable is AliReducedVarManager::kMass, so if one is using reducedTree conventions then this is simple. 
+       and comparing them to fMassVariable. If a match is not found, then the the whole procedure fails.
+       By default, fMassVariable is AliReducedVarManager::kMass, so if one is using reducedTree conventions then this is simple. 
        Otherwise, a custom mass variable can be specified via: SetMassVariable().
        
        Pt variable:
@@ -87,6 +88,7 @@
 #include <THn.h>
 #include <TF1.h>
 #include <TFitResult.h>
+#include <TCanvas.h>
 
 class TMinuit;
 class TH1;
@@ -175,6 +177,7 @@ class AliResonanceFits : public TObject {
   void SetUseSignificantZero(Bool_t option) {fgOptionUseSignificantZero = option; fMatchingIsDone = kFALSE;}
   void SetScaleSummedBkg(Bool_t option) {fOptionScaleSummedBkg = option; fMatchingIsDone = kFALSE;}
   void SetDebugMode(Bool_t option) {fOptionDebug=option; fMatchingIsDone = kFALSE;}
+  void SetSignalFromMC(Bool_t option) {fOptionSignalFromMC=option; fMatchingIsDone = kFALSE;}
   
   // set various ranges
   void SetMassFitRange(Double_t min, Double_t max) {fgMassFitRange[0] = min+1.0e-6; fgMassFitRange[1] = max-1.0e-6; fUserEnabledMassFitRange = kTRUE; fMatchingIsDone = kFALSE;}
@@ -196,6 +199,9 @@ class AliResonanceFits : public TObject {
      if(fBkgFitFunction) delete fBkgFitFunction;
      fBkgFitFunction = (TF1*)fitFunc->Clone("BkgFitFunction");
   }
+  void SetSignalFitFunction(TF1* fitFunc) {if(fSignalFitFunc) delete fSignalFitFunc;
+   fSignalFitFunc = (TF1*)fitFunc->Clone("SignalFitFunction");  
+}
     void SetBkgFitOption(TString option){fBkgFitOption = option;}
   
   Bool_t Process();
@@ -272,6 +278,7 @@ class AliResonanceFits : public TObject {
              Bool_t      fOptionScaleSummedBkg;       // if true, run the matching procedure on the summed S+B and bkg (default is false)
              Bool_t      fOptionDebug;                       // if true, construct all possible distributions
              
+   Bool_t fOptionSignalFromMC;
    // Matching / fit ranges
    // NOTE: Mass and pt ranges used for matching / fitting can in principle be different (a sub-interval only) wrt ranges in fVarLimits
    //            If the dedicated setter function are not called by user, these ranges will be made same as in fVarLimits at Initialize() time
@@ -313,6 +320,8 @@ class AliResonanceFits : public TObject {
    TMinuit* fMinuitFitter;                    // used if fit option is required
    ///////////////////////////////////////////////////
    TF1*      fResidualFitFunc;            // fit function used to fit the combinatorial bkg subtracted minv distribution
+   static TF1*      fSignalFitFunc;            // fit function used to fit the combinatorial bkg subtracted minv distribution
+   
     TString fBkgFitOption;              //String used to define fit options for the background function
     
    ////////////////////////////////////////////////////
@@ -333,6 +342,8 @@ class AliResonanceFits : public TObject {
    void FitInvMass();
    void FitResidualBkg();
    static Double_t GlobalFitFunction(Double_t *x, Double_t* par);
+   static Double_t GlobalFitFunctionCrystalBall(Double_t *x, Double_t* par);
+
 
    ClassDef(AliResonanceFits, 6);
 };

@@ -224,7 +224,7 @@ class AliReducedVarManager : public TObject {
     kInstLumi,           // instantaneous interaction rate
     kDetectorMask,      // detector mask
     kNumberOfDetectors, // number of active detectors
-    kBC,                // bunch crossing     
+    kBC,                // bunch crossing
     kTimeStamp,         // time stamp of the event
     kTimeRelativeSOR,   // time relative to the start of run, in minutes
     kTimeRelativeSORfraction,   // time relative to the start of runs, expressed as fraction of the whole run duration 
@@ -251,6 +251,9 @@ class AliReducedVarManager : public TObject {
     kVtxX,              // vtx X                      
     kVtxY,              // vtx Y                      
     kVtxZ,              // vtx Z 
+    kVtxXMC,              // vtx X MC                     
+    kVtxYMC,              // vtx Y MC                   
+    kVtxZMC,              // vtx Z MC
     kVtxXtpc,           // vtx X from tpc
     kVtxYtpc,           // vtx Y from tpc
     kVtxZtpc,           // vtx Z from tpc
@@ -318,7 +321,9 @@ class AliReducedVarManager : public TObject {
     kNDsplusToK0sKplusSelected,       // Ds+          -> K0s K+
     kNDsminusToK0sKminusSelected,     // Ds-          -> K0s K-    
     kNtracksTotal,      // total number of tracks               
-    kNtracksSelected,   // number of selected tracks            
+    kNtracksSelected,   // number of selected tracks  
+    kNtracks1Selected,  // number of selected tracks (electrons)
+    kNtracks2Selected,  // number of selected tracks (not electrons)      
     kNtracksPosAnalyzed,// number of positive tracks passing analysis cuts      
     kNtracksNegAnalyzed,// number of negative tracks passing analysis cuts      
     kNtracksPiPlusAnalyzed,     // number of pi plus selected tracks
@@ -343,6 +348,11 @@ class AliReducedVarManager : public TObject {
     kSPDntrackletsOuterEta,
     kSPDntrackletsEtaBin,
     kSPDnTracklets10EtaVtxCorr = kSPDntrackletsEtaBin + 32,
+    kNGlobalTracks,                     // Filled only when event is accepted, else -999
+                                        // Max. 8 possible cutsets
+    kNGlobalTracksToward = kNGlobalTracks + 9,
+    kNGlobalTracksTransverse = kNGlobalTracksToward + 9,
+    kNGlobalTracksAway = kNGlobalTracksTransverse + 9,
     kVZEROTotalMult,
     kVZEROATotalMult,
     kVZEROCTotalMult,
@@ -470,13 +480,23 @@ class AliReducedVarManager : public TObject {
     kINT7orCentTriggered,
     kINT7orSemiCentTriggered,
     kHighMultV0Triggered,
+    kHighMultSPDTriggered,
     kEMCEGATriggered,
     kEMCEGAHighTriggered,
     kEtaBinForSPDtracklets,
     kMCNch,                                  // number of primary charged particles in the MC, in |eta|<1
+    kMCNch09,                           // number of primary charged particles in the MC, in |eta|<0.9, 
+                                        // filled only if MC event is accepted (nch09>0, zvtx<10)
+                                        // Second variable is the same only if MC event is triggered and accepted, else -999
+                                        // Third variable is the same only if MC event is triggered and accepted (nch09>0, zvtx<10),
+                                        // and the reconstructed event is accepted, else -999
+    kMCNch09Toward=kMCNch09+3,
+    kMCNch09Away,
+    kMCNch09Transverse,
     kMCNchNegSide,                     // number of primary charged particles in the MC, in -1<eta<0
     kMCNchPosSide,                     // number of primary charged particles in the MC, in 0<eta<1
     kMCNchSPDacc,                       // number of primary charged particles in the MC, in |eta|<1 but limited to the SPD acceptance
+    kMCNJpsi,                           // number of Jpsi in the event in |y|<0.9
     kDiffNchSPDtrklts,
     kDiffNchSPDaccSPDtrklts,
     kRelDiffNchSPDtrklts,
@@ -484,7 +504,10 @@ class AliReducedVarManager : public TObject {
     kRelDiff2NchSPDtrklts,
     kRelDiff2NchSPDaccSPDtrklts,
     kSPDntrackletsInCurrentEtaBin,
-    kNEventVars,                               // number of event variables  
+    kPtLeading,
+    kPhiLeading = kPtLeading + 9,       // 8 possible cutsets
+    kEtaLeading = kPhiLeading + 9,
+    kNEventVars = kEtaLeading + 9,                               // number of event variables  
     // Particle variables --------------------------------------
     // Common pair/track variables
     kPt=kNEventVars,
@@ -552,6 +575,7 @@ class AliReducedVarManager : public TObject {
     kPairLxyz,          
     kPseudoProperDecayTime,
     kPseudoProperDecayTimeMC,
+    kPseudoProperTimeError,
     kPairOpeningAngle,  
     kPairPointingAngle, 
     kPairCosPointingAngle,
@@ -589,6 +613,7 @@ class AliReducedVarManager : public TObject {
     kPairLegPtMC,                                // MC truth pair leg pt
     kPairLegPtMCSum=kPairLegPtMC+2,               // sum of the MC truth leg pt's
     kPairLegEMCALmatchedEnergy,                   // pair leg EMCal cluster energy
+    kPairMCMap,                                   // Is the pair really from one only Jpsi? Is this Jpsi from B?
 
     // Track-only variables -------------------------------------
     kPtTPC=kPairLegEMCALmatchedEnergy+2,

@@ -327,10 +327,15 @@ void AliDielectronBtoJPSItoEleCDFfitHandler::CdfFCN(Int_t & /* npar */,
 	f = fLikely->EvaluateLikelihood(fX,fM,fPt, fType,fNcand);
 
 	t.Stop();
+	AliInfo(Form("Real time spent to calculate function == %f \n", t.RealTime()));
+	AliInfo(Form("CPU time spent to calculate function == %f \n", t.CpuTime()));
+	AliInfo(Form("Actual value of the AliDielectronBtoJPSItoEleCDFfitFCN function == %f \n", f));
+/*
 	AliDebug(2,Form("Real time spent to calculate function == %f \n", t.RealTime()));
 	AliDebug(2,Form("CPU time spent to calculate function == %f \n", t.CpuTime()));
 	AliDebug(2,Form("Actual value of the AliDielectronBtoJPSItoEleCDFfitFCN function == %f \n", f));
 
+*/
 	return;
 }
 //_______________________________________________________________________________________

@@ -156,7 +156,7 @@ inline Float_t AliReducedBaseTrack::Eta() const {
   if(eta>1.0e-6) 
     return -1.0*TMath::Log(eta);
   else 
-    return 0.0;
+    return 1e3;
 }
 
 //_______________________________________________________________________________
@@ -166,9 +166,9 @@ inline Float_t AliReducedBaseTrack::Rapidity(Float_t massAssumption) const {
   //
   Float_t e = Energy(massAssumption);
   Float_t factor = e-Pz();
-  if(TMath::Abs(factor)<1.0e-6) return 0.0;
+  if(TMath::Abs(factor)<1.0e-6) return 1e3;
   factor = (e+Pz())/factor;
-  if(factor<1.0e-6) return 0.0;
+  if(factor<1.0e-6) return -1e3;
   return 0.5*TMath::Log(factor);
 }
 

@@ -1166,7 +1166,7 @@ inline void AliDielectronVarManager::FillVarESDtrack(const AliESDtrack *particle
   values[AliDielectronVarManager::kKinkIndex0]    = particle->GetKinkIndex(0);
 
   Float_t impactParXY, impactParZ;
-  particle->GetImpactParameters(impactParXY, impactParZ);
+  particle->GetImpactParameters(impactParXY, impactParZ); 
   values[AliDielectronVarManager::kImpactParXY]   = impactParXY;
   values[AliDielectronVarManager::kImpactParZ]    = impactParZ;
   values[AliDielectronVarManager::kImpactParXYsigma]   = -1.;
@@ -1209,10 +1209,10 @@ inline void AliDielectronVarManager::FillVarESDtrack(const AliESDtrack *particle
         if (mc->CheckParticleSource(trkLbl, AliDielectronSignalMC::kSecondary)) values[AliDielectronVarManager::kMCLegSource] +=8;
         if (mc->CheckParticleSource(trkLbl, AliDielectronSignalMC::kSecondaryFromWeakDecay)) values[AliDielectronVarManager::kMCLegSource] +=16;
         if (mc->CheckParticleSource(trkLbl, AliDielectronSignalMC::kSecondaryFromMaterial)) values[AliDielectronVarManager::kMCLegSource] +=32;
-	if (mc->CheckParticleSource(trkLbl, AliDielectronSignalMC::kFromBGEvent)) values[AliDielectronVarManager::kMCLegSource] +=64;
-	if (mc->CheckParticleSource(trkLbl, AliDielectronSignalMC::kFinalStateFromBGEvent)) values[AliDielectronVarManager::kMCLegSource] +=128;
-	if (mc->CheckParticleSource(trkLbl, AliDielectronSignalMC::kFinalStateFromPileUp)) values[AliDielectronVarManager::kMCLegSource] +=256;
-	if (mc->CheckParticleSource(trkLbl, AliDielectronSignalMC::kFinalStateFromNoPileUp)) values[AliDielectronVarManager::kMCLegSource] +=512;
+      	if (mc->CheckParticleSource(trkLbl, AliDielectronSignalMC::kFromBGEvent)) values[AliDielectronVarManager::kMCLegSource] +=64;
+      	if (mc->CheckParticleSource(trkLbl, AliDielectronSignalMC::kFinalStateFromBGEvent)) values[AliDielectronVarManager::kMCLegSource] +=128;
+	      if (mc->CheckParticleSource(trkLbl, AliDielectronSignalMC::kFinalStateFromPileUp)) values[AliDielectronVarManager::kMCLegSource] +=256;
+	      if (mc->CheckParticleSource(trkLbl, AliDielectronSignalMC::kFinalStateFromNoPileUp)) values[AliDielectronVarManager::kMCLegSource] +=512;
       }
 
       if (Req(kPdgCode))           values[AliDielectronVarManager::kPdgCode]           =mc->GetMCTrack(particle)->PdgCode();
@@ -1233,16 +1233,20 @@ inline void AliDielectronVarManager::FillVarESDtrack(const AliESDtrack *particle
     values[AliDielectronVarManager::kNumberOfDaughters]=mc->NumberOfDaughters(particle);
   } //if(mc->HasMC())
 
+  
 
-  values[AliDielectronVarManager::kITSsignal]   =   particle->GetITSsignal();
+  values[AliDielectronVarManager::kITSsignal]   =   particle->GetITSsignal();  
+
   Double_t itsdEdx[4];
-  particle->GetITSdEdxSamples(itsdEdx);
+  particle->GetITSdEdxSamples(itsdEdx);  
+
 
   values[AliDielectronVarManager::kITSsignalSSD1]   =   itsdEdx[0];
   values[AliDielectronVarManager::kITSsignalSSD2]   =   itsdEdx[1];
   values[AliDielectronVarManager::kITSsignalSDD1]   =   itsdEdx[2];
   values[AliDielectronVarManager::kITSsignalSDD2]   =   itsdEdx[3];
-  values[AliDielectronVarManager::kITSclusterMap]   =   particle->GetITSClusterMap();
+  values[AliDielectronVarManager::kITSclusterMap]   =   particle->GetITSClusterMap();  
+
   values[AliDielectronVarManager::kITSLayerFirstCls] = -1.;
 
   for (Int_t iC=0; iC<6; iC++) {
@@ -1250,10 +1254,11 @@ inline void AliDielectronVarManager::FillVarESDtrack(const AliESDtrack *particle
       values[AliDielectronVarManager::kITSLayerFirstCls] = iC;
       break;
     }
-  }
+  }  
 
 
-  values[AliDielectronVarManager::kTrackLength]   = particle->GetIntegratedLength();
+  values[AliDielectronVarManager::kTrackLength]   = particle->GetIntegratedLength();  
+
   //dEdx information
   Double_t mom = particle->GetP();
   const AliExternalTrackParam *in=particle->GetInnerParam();
@@ -1263,7 +1268,8 @@ inline void AliDielectronVarManager::FillVarESDtrack(const AliESDtrack *particle
     ysignedIn=particle->Charge()*in->GetY();
   }
   values[AliDielectronVarManager::kPIn]=mom;
-  values[AliDielectronVarManager::kYsignedIn]=ysignedIn;
+  values[AliDielectronVarManager::kYsignedIn]=ysignedIn;  
+
   const AliExternalTrackParam *out=particle->GetOuterParam();
   if(out) values[AliDielectronVarManager::kPOut] = out->GetP();
   else values[AliDielectronVarManager::kPOut] = mom;
@@ -1271,8 +1277,10 @@ inline void AliDielectronVarManager::FillVarESDtrack(const AliESDtrack *particle
     Double_t localCoord[3]={0.0};
     Bool_t localCoordGood = out->GetXYZAt(298.0, ((AliESDEvent*)fgEvent)->GetMagneticField(), localCoord);
     values[AliDielectronVarManager::kTRDphi] = (localCoordGood && TMath::Abs(localCoord[0])>1.0e-6 && TMath::Abs(localCoord[1])>1.0e-6 ? TMath::ATan2(localCoord[1], localCoord[0]) : -999.);
-  }
-  if(mc->HasMC() && fgTRDpidEff[0][0]) {
+  }  
+
+  if(mc->HasMC() && fgTRDpidEff[0][0]) {  
+
     Int_t runNo = (fgEvent ? fgEvent->GetRunNumber() : -1);
     Float_t centrality=-1.0;
     AliCentrality *esdCentrality = (fgEvent ? fgEvent->GetCentrality() : 0x0);
@@ -1286,27 +1294,32 @@ inline void AliDielectronVarManager::FillVarESDtrack(const AliESDtrack *particle
   values[AliDielectronVarManager::kTPCsignal]=particle->GetTPCsignal();
   values[AliDielectronVarManager::kTPCsignalTunedOnData]=particle->GetTPCsignalTunedOnData();
 
-  values[AliDielectronVarManager::kTOFsignal]=particle->GetTOFsignal();
+  values[AliDielectronVarManager::kTOFsignal]=particle->GetTOFsignal();  
+
 
   Double_t l = particle->GetIntegratedLength();  // cm
   Double_t t = particle->GetTOFsignal();
   Double_t t0 = fgPIDResponse->GetTOFResponse().GetTimeZero(); // ps
+  
 
   if( (l < 360. || l > 800.) || (t <= 0.) || (t0 >999990.0) ) {
-	values[AliDielectronVarManager::kTOFbeta]=0.0;
+    values[AliDielectronVarManager::kTOFbeta]=0.0;
   }
-  else {
-	t -= t0; // subtract the T0
-	l *= 0.01;  // cm ->m
-	t *= 1e-12; //ps -> s
+  else { 
+    t -= t0; // subtract the T0
+    l *= 0.01;  // cm ->m
+    t *= 1e-12; //ps -> s
 
-	Double_t v = l / t;
-	Float_t beta = v / TMath::C();
-	values[AliDielectronVarManager::kTOFbeta]=beta;
-  }
+    Double_t v = l / t;
+    Float_t beta = v / TMath::C();
+    values[AliDielectronVarManager::kTOFbeta]=beta;
+  }  
+
   values[AliDielectronVarManager::kTOFPIDBit]=(particle->GetStatus()&AliESDtrack::kTOFpid? 1: 0);
-
-  values[AliDielectronVarManager::kTOFmismProb] = fgPIDResponse->GetTOFMismatchProbability(particle);
+  
+  //TO BE CHECKED values[AliDielectronVarManager::kTOFmismProb] = fgPIDResponse->GetTOFMismatchProbability(particle);
+  if(!mc->HasMC()) values[AliDielectronVarManager::kTOFmismProb] = fgPIDResponse->GetTOFMismatchProbability(particle);
+  //
 
   // nsigma to Electron band
   // TODO: for the moment we set the bethe bloch parameters manually
@@ -1354,6 +1367,7 @@ inline void AliDielectronVarManager::FillVarESDtrack(const AliESDtrack *particle
   values[AliDielectronVarManager::kOneOverLegEff] = (values[AliDielectronVarManager::kLegEff]>0.0 ? 1./values[AliDielectronVarManager::kLegEff] : 0.0);
   //restore TPC signal if it was changed
   if (esdTrack) esdTrack->SetTPCsignal(origdEdx,esdTrack->GetTPCsignalSigma(),esdTrack->GetTPCsignalN());
+  
 
   //fill info from AliVTrdTrack
   if(Req(kTRDonlineA)||Req(kTRDonlineLayerMask)||Req(kTRDonlinePID)||Req(kTRDonlinePt)||Req(kTRDonlineStack)||Req(kTRDonlineTrackInTime)||Req(kTRDonlineSector)||Req(kTRDonlineFlagsTiming)||Req(kTRDonlineLabel)||Req(kTRDonlineNTracklets)||Req(kTRDonlineFirstLayer))
@@ -1374,7 +1388,8 @@ inline void AliDielectronVarManager::FillVarESDtrack(const AliESDtrack *particle
     values[kTPCActiveLength] = particle->GetLengthInActiveZone(mode, 2., 220., fgEvent->GetMagneticField());
     values[kTPCGeomLength] = values[kTPCActiveLength] / ( 130 - TMath::Power( TMath::Abs( particle->GetSigned1Pt() ),1.5 ) );
     values[AliDielectronVarManager::kInTRDacceptance] = TMath::Abs( values[AliDielectronVarManager::kTRDeta] )<0.85 && (  (values[AliDielectronVarManager::kCharge]<0&&(  values[AliDielectronVarManager::kPhi]<1.32 || (values[AliDielectronVarManager::kPhi]>1.98 && values[AliDielectronVarManager::kPhi]<4.10)||  ( values[AliDielectronVarManager::kPhi]>5.12  && values[AliDielectronVarManager::kPhi]<5.48  && TMath::Abs( values[AliDielectronVarManager::kTRDeta] )>0.155 )  || values[AliDielectronVarManager::kPhi]>5.48 )) ||   (values[AliDielectronVarManager::kCharge]>0&&(  values[AliDielectronVarManager::kPhi]<1.52 || (values[AliDielectronVarManager::kPhi]>2.20 && values[AliDielectronVarManager::kPhi]<4.32)||  ( values[AliDielectronVarManager::kPhi]>5.32  && values[AliDielectronVarManager::kPhi]<5.68  && TMath::Abs( values[AliDielectronVarManager::kTRDeta]  )>0.155 )  || values[AliDielectronVarManager::kPhi]>5.68 )) )  ? 1: 0;
-  }
+  }  
+
 
 }
 
@@ -1383,9 +1398,9 @@ inline void AliDielectronVarManager::FillVarAODTrack(const AliAODTrack *particle
   //
   // Fill track information available for histogramming into an array
   //
-
   // Fill common AliVParticle interface information
   FillVarVParticle(particle, values);
+
   Double_t tpcNcls=particle->GetTPCNcls();
 
   if(Req(kQnDeltaPhiTrackTPCrpH2))   values[AliDielectronVarManager::kQnDeltaPhiTrackTPCrpH2]  = TVector2::Phi_mpi_pi(values[AliDielectronVarManager::kPhi] - values[AliDielectronVarManager::kQnTPCrpH2]);
@@ -1415,7 +1430,6 @@ inline void AliDielectronVarManager::FillVarAODTrack(const AliAODTrack *particle
   if(Req(kTRDchi2))        values[AliDielectronVarManager::kTRDchi2]       = (particle->GetTRDntrackletsPID()!=0.?particle->GetTRDchi2():-1);
   if(Req(kTRDchi2Trklt))   values[AliDielectronVarManager::kTRDchi2Trklt]  = (particle->GetTRDntrackletsPID()>0 ? particle->GetTRDchi2() / particle->GetTRDntrackletsPID() : -1.);
   if(Req(kTRDsignal))      values[AliDielectronVarManager::kTRDsignal]     = particle->GetTRDsignal();
-
   if(Req(kNclsSITS) || Req(kNclsSFracITS) || Req(kNclsSMapITS) || Req(kClsS1ITS) || Req(kClsS2ITS) || Req(kClsS3ITS) || Req(kClsS4ITS) || Req(kClsS5ITS) || Req(kClsS6ITS)){
     Double_t itsNclsS = 0.;
     values[AliDielectronVarManager::kClsS1ITS]=0;
@@ -1463,7 +1477,6 @@ inline void AliDielectronVarManager::FillVarAODTrack(const AliAODTrack *particle
       if(n>=threshold) values[AliDielectronVarManager::kTPCclsSegments] += 1.0;
     }
   }
-
   values[AliDielectronVarManager::kTPCclsIRO]=0.;
   if(Req(kTPCclsIRO)) {
     n=0;
@@ -1493,7 +1506,6 @@ inline void AliDielectronVarManager::FillVarAODTrack(const AliAODTrack *particle
 
   values[AliDielectronVarManager::kTPCsignalN]    = 0;
   values[AliDielectronVarManager::kTPCsignalNfrac]= 0;
-
   // Fill AliAODTrack interface information
   //
   Int_t v0Index=-1;
@@ -1505,23 +1517,33 @@ inline void AliDielectronVarManager::FillVarAODTrack(const AliAODTrack *particle
   values[AliDielectronVarManager::kV0Index0]      = v0Index;
   values[AliDielectronVarManager::kKinkIndex0]    = kinkIndex;
 
+
   Double_t d0z0[2]={-999.0,-999.0};
   Double_t dcaRes[3] = {-999.,-999.,-999.};
+
   if(Req(kImpactParXY) || Req(kImpactParZ) || Req(kImpactParXYsigma) || Req(kImpactParZsigma) || Req(kImpactParXYres) || Req(kImpactParZres) || Req(kLogDCAXY) || Req(kLogDCAZ)) GetDCA(particle, d0z0, dcaRes);
   values[AliDielectronVarManager::kImpactParXY]   = d0z0[0];
   values[AliDielectronVarManager::kImpactParZ]    = d0z0[1];
+
   values[AliDielectronVarManager::kImpactParXYsigma] = -999.0;
   values[AliDielectronVarManager::kImpactParZsigma] = -999.0;
   values[AliDielectronVarManager::kImpactParXYres] = -999.0;
   values[AliDielectronVarManager::kImpactParZres] = -999.0;
+
   if(dcaRes[0]>0.) values[AliDielectronVarManager::kImpactParXYsigma] = d0z0[0]/TMath::Sqrt(dcaRes[0]);
+
   if(dcaRes[2]>0.) values[AliDielectronVarManager::kImpactParZsigma]  = d0z0[1]/TMath::Sqrt(dcaRes[2]);
+
   if(dcaRes[0]>0.) values[AliDielectronVarManager::kImpactParXYres] = TMath::Sqrt(dcaRes[0]);
+
   if(dcaRes[2]>0.) values[AliDielectronVarManager::kImpactParZres]  = TMath::Sqrt(dcaRes[2]);
 
+
   if(TMath::Abs(d0z0[0])>0)  values[AliDielectronVarManager::kLogDCAXY]  = TMath::Log(TMath::Abs(d0z0[0]));
+
   else                       values[AliDielectronVarManager::kLogDCAXY]  = 0;
   if(TMath::Abs(d0z0[1])>0)  values[AliDielectronVarManager::kLogDCAZ]   = TMath::Log(TMath::Abs(d0z0[1]));
+
   else                       values[AliDielectronVarManager::kLogDCAZ]   = 0;
 
 
@@ -1662,7 +1684,6 @@ inline void AliDielectronVarManager::FillVarAODTrack(const AliAODTrack *particle
     //restore TPC signal if it was changed
     pid->SetTPCsignal(origdEdx);
   }
-  
   values[AliDielectronVarManager::kTPCsignalTunedOnData]=particle->GetTPCsignalTunedOnData();
 
   //EMCAL PID information
@@ -1686,7 +1707,6 @@ inline void AliDielectronVarManager::FillVarAODTrack(const AliAODTrack *particle
   values[AliDielectronVarManager::kHasCocktailGrandMother]=0;
 
   values[AliDielectronVarManager::kNumberOfDaughters]=-1;
-
   AliDielectronMC *mc=AliDielectronMC::Instance();
   AliAODMCParticle *mcParticle = 0x0;
   if (mc->HasMC()){
@@ -1733,7 +1753,6 @@ inline void AliDielectronVarManager::FillVarAODTrack(const AliAODTrack *particle
     values[AliDielectronVarManager::kLegEff] = GetSingleLegEff(values);
     values[AliDielectronVarManager::kOneOverLegEff] = (values[AliDielectronVarManager::kLegEff]>0.0 ? 1./values[AliDielectronVarManager::kLegEff] : 0.0);
   }
-
   //fill info from AliVTrdTrack
   if(Req(kTRDonlineA)||Req(kTRDonlineLayerMask)||Req(kTRDonlinePID)||Req(kTRDonlinePt)||Req(kTRDonlineStack)||Req(kTRDonlineSector)||Req(kTRDonlineTrackInTime)||Req(kTRDonlineFlagsTiming)||Req(kTRDonlineLabel)||Req(kTRDonlineNTracklets)||Req(kTRDonlineFirstLayer))
     FillVarVTrdTrack(particle,values);
@@ -4154,7 +4173,8 @@ inline void AliDielectronVarManager::SetEventData(const Double_t data[AliDielect
 
 //______________________________________________________________________________
 inline Bool_t AliDielectronVarManager::GetDCA(const AliAODTrack *track, Double_t* d0z0, Double_t* covd0z0)
-{
+{    
+
   if(track->TestBit(AliAODTrack::kIsDCA)){
     d0z0[0]=track->DCA();
     d0z0[1]=track->ZAtDCA();
@@ -4164,8 +4184,8 @@ inline Bool_t AliDielectronVarManager::GetDCA(const AliAODTrack *track, Double_t
 
   Bool_t ok=kFALSE;
   if(fgEvent) {
-    AliExternalTrackParam etp; etp.CopyFromVTrack(track);
 
+    AliExternalTrackParam etp; etp.CopyFromVTrack(track);
     Float_t xstart = etp.GetX();
     if(xstart>3.) {
       d0z0[0]=-999.;
@@ -4181,6 +4201,7 @@ inline Bool_t AliDielectronVarManager::GetDCA(const AliAODTrack *track, Double_t
     d0z0[0]=-999.;
     d0z0[1]=-999.;
   }
+
   return ok;
 }
 
