@@ -1797,7 +1797,7 @@ void AliCFTaskVertexingHF::UserCreateOutputObjects()
   fHistEventsProcessed->GetXaxis()->SetBinLabel(9,"Candidates from OOB pile-up");
 
     // TList for output
-  if (fConfiguration==kRT) {
+  //if (fConfiguration==kRT) {
     fOutputRT = new TList();
     fOutputRT->SetOwner();
     fOutputRT->SetName("OutputHistos");
@@ -1831,7 +1831,7 @@ void AliCFTaskVertexingHF::UserCreateOutputObjects()
   PostData(3,fCorrelation) ;
 
     // TList for output
-  if (fConfiguration==kRT) PostData(6,fOutputRT);
+  /*if (fConfiguration==kRT)*/ PostData(6,fOutputRT);
 }
 
 
