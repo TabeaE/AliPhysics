@@ -44,7 +44,7 @@ AliReducedBaseEvent::AliReducedBaseEvent() :
   for(Int_t i=0; i<16; ++i) fCentrality[i]=-1.;
   fNtracks[0]=0; fNtracks[1]=0;
   for(Int_t i=0; i<8; i++) fNGlobalTracks[i]=0;
-  for(Int_t i=0; i<24; i++) fNTracksRegions[i]=0;
+  for(Int_t i=0; i<48; i++) fNTracksRegions[i]=0;
   for(Int_t i=0; i<24; i++) fLeading[i]=0.;
   fNV0candidates[0]=0; fNV0candidates[1]=0;
 }
@@ -75,7 +75,7 @@ AliReducedBaseEvent::AliReducedBaseEvent(const Char_t* /*name*/, Int_t trackOpti
   for(Int_t i=0; i<16; ++i) fCentrality[i]=-1.;
   fNtracks[0]=0; fNtracks[1]=0;
   for(Int_t i=0; i<8; i++) fNGlobalTracks[i]=0;
-  for(Int_t i=0; i<24; i++) fNTracksRegions[i]=0;
+  for(Int_t i=0; i<48; i++) fNTracksRegions[i]=0;
   for(Int_t i=0; i<24; i++) fLeading[i]=0.;
   fNV0candidates[0]=0; fNV0candidates[1]=0;
   
@@ -126,7 +126,7 @@ void AliReducedBaseEvent::CopyEventHeader(const AliReducedBaseEvent* other) {
    fNtracks[0] = other->fNtracks[0];
    fNtracks[1] = other->fNtracks[1]; 
    for(Int_t i=0; i<8; i++) fNGlobalTracks[i] = other->fNGlobalTracks[i];
-   for(Int_t i=0; i<24; i++) fNTracksRegions[i] = other->fNTracksRegions[i];
+   for(Int_t i=0; i<48; i++) fNTracksRegions[i] = other->fNTracksRegions[i];
    for(Int_t i=0; i<24; i++) fLeading[i] = other->fLeading[i];
    fNV0candidates[0] = other->fNV0candidates[0];
 }
@@ -145,7 +145,7 @@ void AliReducedBaseEvent::ClearEvent() {
   for(Int_t i=0;i<7;++i) fCentrality[i] = -9999.0;
   fNtracks[0] = 0; fNtracks[1] = 0; 
   for(Int_t i=0; i<8; i++) fNGlobalTracks[i] = 0;
-  for(Int_t i=0; i<24; i++) fNTracksRegions[i] = 0;
+  for(Int_t i=0; i<48; i++) fNTracksRegions[i] = 0;
   for(Int_t i=0; i<24; i++) fLeading[i] = 0.;
   fNV0candidates[0] = 0; fNV0candidates[1] = 0;
   for(Int_t i=0; i<3; ++i) {fVtx[i]=-9999.;}

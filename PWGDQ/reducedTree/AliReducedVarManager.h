@@ -195,6 +195,10 @@ class AliReducedVarManager : public TObject {
   
   static const Float_t fgkParticleMass[kNSpecies];
   static const Float_t fgkPairMass[AliReducedPairInfo::kNMaxCandidateTypes];
+
+  enum Ncuts {
+    kNMaxCutsGlobalTracks=8
+  };
   
   enum Variables {
     kNothing = -1,
@@ -350,10 +354,10 @@ class AliReducedVarManager : public TObject {
     kSPDnTracklets10EtaVtxCorr = kSPDntrackletsEtaBin + 32,
     kNGlobalTracks,                     // Filled only when event is accepted, else -999
                                         // Max. 8 possible cutsets
-    kNGlobalTracksToward = kNGlobalTracks + 9,
-    kNGlobalTracksTransverse = kNGlobalTracksToward + 9,
-    kNGlobalTracksAway = kNGlobalTracksTransverse + 9,
-    kVZEROTotalMult,
+    kNGlobalTracksToward = kNGlobalTracks + kNMaxCutsGlobalTracks,   //regions to Jpsi/randomphi and regions to leading pt
+    kNGlobalTracksTransverse = kNGlobalTracksToward + 2*kNMaxCutsGlobalTracks,
+    kNGlobalTracksAway = kNGlobalTracksTransverse + 2*kNMaxCutsGlobalTracks,
+    kVZEROTotalMult = kNGlobalTracksAway + 2*kNMaxCutsGlobalTracks,
     kVZEROATotalMult,
     kVZEROCTotalMult,
     kVZEROTotalMultFromChannels,
@@ -491,12 +495,13 @@ class AliReducedVarManager : public TObject {
                                         // Third variable is the same only if MC event is triggered and accepted (nch09>0, zvtx<10),
                                         // and the reconstructed event is accepted, else -999
     kMCNch09Toward=kMCNch09+3,
-    kMCNch09Away,
-    kMCNch09Transverse,
-    kMCNchNegSide,                     // number of primary charged particles in the MC, in -1<eta<0
+    kMCNch09Away=kMCNch09Toward+2,       //regions to Jpsi/randomphi and regions to leading pt (leading pt chosen with cutset 1)
+    kMCNch09Transverse=kMCNch09Away+2,
+    kMCNchNegSide=kMCNch09Transverse+2,                     // number of primary charged particles in the MC, in -1<eta<0
     kMCNchPosSide,                     // number of primary charged particles in the MC, in 0<eta<1
     kMCNchSPDacc,                       // number of primary charged particles in the MC, in |eta|<1 but limited to the SPD acceptance
     kMCNJpsi,                           // number of Jpsi in the event in |y|<0.9
+    kPhiJpsiMCTruth,                    // keep it to define MCTruth regions
     kDiffNchSPDtrklts,
     kDiffNchSPDaccSPDtrklts,
     kRelDiffNchSPDtrklts,
@@ -505,14 +510,14 @@ class AliReducedVarManager : public TObject {
     kRelDiff2NchSPDaccSPDtrklts,
     kSPDntrackletsInCurrentEtaBin,
     kPtLeading,
-    kPhiLeading = kPtLeading + 9,       // 8 possible cutsets
-    kEtaLeading = kPhiLeading + 9,
-    kNEventVars = kEtaLeading + 9,                               // number of event variables  
+    kPhiLeading = kPtLeading + kNMaxCutsGlobalTracks,       // 8 possible cutsets
+    kEtaLeading = kPhiLeading + kNMaxCutsGlobalTracks,
+    kNEventVars = kEtaLeading + kNMaxCutsGlobalTracks,                               // number of event variables  
     // Particle variables --------------------------------------
     // Common pair/track variables
     kPt=kNEventVars,
     kPtMC,
-    kPt_weight,
+    kPt_weight = kPtMC + 2,    //kPTMC + 1 is filled for every MC Jpsi, kPtMC only when the particle is detected
     kPtMCfromLegs,             // MC truth pt computed using the decay leg kinematics
     kP,      
     kPMC,

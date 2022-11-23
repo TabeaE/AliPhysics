@@ -75,8 +75,10 @@ public:
   void AddEventCut(AliReducedInfoCut* cut) {fEventCuts.Add(cut);}
   void SetWriteFilteredTracks(Bool_t option=kTRUE) {fWriteFilteredTracks=option;}
   void SetWriteFilteredPairs(Bool_t option=kTRUE) {fWriteFilteredPairs=option;}
+  void SetWriteFilteredTracksCandidatesOnly(Bool_t option=kTRUE) {fWriteFilteredTracksCandidatesOnly=option;}
   void SetRejectEmptyEvents(Bool_t option=kTRUE) {fRejectEmptyEvents=option;}
   void SetMCJpsiPtWeights(TH1F* weights) {fMCJpsiPtWeights = weights;}
+  void SetReweightCut(Int_t ncut){fReweightCut = ncut;}
   
   void SetBuildCandidatePairs(AliReducedPairInfo::CandidateType type) {fBuildCandidatePairs=kTRUE; fCandidateType=type;}
   void SetBuildCandidateLikePairs(Bool_t option=kTRUE) {fBuildCandidateLikePairs=option;}
@@ -94,10 +96,14 @@ public:
   void AddCandidateLeg2PrefilterCut(AliReducedInfoCut* cut) {fLeg2PrefilterCuts.Add(cut);}
   void AddCandidateLeg1PairPrefilterCut(AliReducedInfoCut* cut) {fLeg1PairPrefilterCuts.Add(cut);}
   void AddCandidateLeg2PairPrefilterCut(AliReducedInfoCut* cut) {fLeg2PairPrefilterCuts.Add(cut);}
+
   void AddMixingHandler(AliMixingHandler* handler) {fMixingHandlerMult.Add(handler);}
-  void SetMultBinsMixing(int nBins, Int_t* bins) {fNMultBinsMixing = nBins; for(int i = 0;i<nBins+1;i++) fMultBinsMixing[i] = bins[i];}
+  void SetMultBinsMixing(int nBins, Float_t* bins) {fNMultBinsMixing = nBins; for(int i = 0;i<nBins+1;i++) fMultBinsMixing[i] = bins[i];}
   void SetJpsiMassDist(TF1* massDist) {fJpsiMassDist = massDist;}
   void SetMCTruthJpsi2eeOnly(Bool_t option) {fMCTruthJpsi2eeOnly = option;}
+  void SetRegionsToMCTruth(Bool_t option) {fRegionsToMCTruth = option;}
+  void SetDefaultRandomPhi(Bool_t option) {fDefaultRandomPhi = option;}
+  void SetMinPtLeading(float minpt) {fMinPtLeading = minpt;}
   
   void SetRunOverMC(Bool_t option) {fOptionRunOverMC = option;};
   // getters
@@ -115,8 +121,8 @@ public:
   Bool_t GetComputeMult() const {return fComputeMult;};
   Bool_t GetRunEventMixing() const {return fOptionRunMixing;}
   Bool_t GetRunEventMixingMult() const {return fOptionRunMixingMult;}
-  int GetNMultBinsMixing() const {return (fOptionRunMixingMult ? fNMultBinsMixing : 0);}
-  int GetMultBinsMixing(int i) const {return (fOptionRunMixingMult ? fMultBinsMixing[i] : 0);}
+  Int_t GetNMultBinsMixing() const {return (fOptionRunMixingMult ? fNMultBinsMixing : 0);}
+  Float_t GetMultBinsMixing(int i) const {return (fOptionRunMixingMult ? fMultBinsMixing[i] : 0);}
   Int_t GetCandidateType() const {return fCandidateType;}
   Bool_t GetRunCandidatePrefilter() const {return fRunCandidatePrefilter;}
   Int_t GetNCandidateLegCuts() const {return fLeg1Cuts.GetEntries();}
@@ -158,17 +164,21 @@ protected:
    AliHistogramManager* fHistosManager;   // Histogram manager
    AliMixingHandler*    fMixingHandler;       // mixing handler
    TList                fMixingHandlerMult;       // mixing handlers in multiplicity bins
-   Int_t                fMultBinsMixing[1000];  // Multiplicity bins for mixing in multiplicity bins
+   Float_t                fMultBinsMixing[1000];  // Multiplicity bins for mixing in multiplicity bins
    Int_t                fNMultBinsMixing;   // Number of multiplicity bins for mixing in multiplicity bins
    
    TList fEventCuts;               // array of event cuts used for filtering
    TList fTrackCuts;               // array of track cuts used for filtering
    Bool_t fWriteFilteredTracks;   // filter the track list
+   Bool_t fWriteFilteredTracksCandidatesOnly; // Write only the tracks associated to a pair candidate
    TList fPairCuts;                  // array of pair cuts used for filtering
    Bool_t fWriteFilteredPairs;   // filter the pair list
    Bool_t fRejectEmptyEvents;     // if true, do not write events without tracks or pairs
    Bool_t fMCTruthJpsi2eeOnly;    //if true, store only MCtruth for Jpsi which decay into dielectron
-   
+   Bool_t fRegionsToMCTruth;    //if true, the regions are defined relative to true particles, else they are defined relative to measured tracks
+   Bool_t fDefaultRandomPhi;    //if true, when regions are calculated relative to Jpsi and there is no Jpsi, we choose a random phi, else we take phi leading
+   Float_t fMinPtLeading;
+
    TF1* fJpsiMassDist;            // Real jpsi mass distribution (Crystal-ball)
 
    Bool_t fComputeMult;            //if true, count the tracks to compute true and measured multiplicity
@@ -207,6 +217,7 @@ protected:
    //  For each selection, a separate histogram directory will be created
    TList fJpsiMotherMCcuts;
    TH1F*  fMCJpsiPtWeights;            //! weights vs pt to reject events depending on the jpsi true pt (needed to re-weights jpsi Pt distribution)
+   Int_t fReweightCut;                //The number of the MC cut on which the weights should be applied (ex: only on prompt Jpsi)
    Bool_t fSkipMCEvent; // if true MC event is skipped
    // Selection on the MC truth of the electrons from the jpsi decay
    //  Tipically, here one can specify the kinematic selection on the electrons from jpsi decay

@@ -5,35 +5,14 @@
 #include "TF1.h"
 
 
-void Setup(AliReducedAnalysisFilterTrees* processor, Bool_t ispp/*=kTRUE*/, TString prod /*="LHC10h"*/);
+void Setup(AliReducedAnalysisFilterTrees* processor, Bool_t ispp/*=kTRUE*/, TString prod /*="LHC10h"*/, Bool_t isInjected);
 void SetupHistogramManager(AliReducedAnalysisFilterTrees* task, Bool_t ispp/*=kTRUE*/,  TString prod /*="LHC10h"*/);
 void SetupMixingHandler(AliReducedAnalysisFilterTrees* task);
 void DefineHistograms(AliReducedAnalysisFilterTrees* task, Bool_t ispp/*=kTRUE*/, TString prod /*="LHC10h"*/);
 
 
-Double_t V0cut(Double_t *x, Double_t *par){
-    double runNo = x[0];
-
-    if (runNo<=254604) return 560.;
-    if (runNo<=255079) return 530.;
-    if (runNo<=256504) return 500.;
-    if (runNo<=257850) return 450.;
-    if (runNo<=264076) return 400.;
-    if (runNo<=272151) return 570.;
-    if (runNo<=273824) return 480.;
-    if (runNo<=275515) return 540.;
-    if (runNo<=279879) return 520.;
-    if (runNo<=285980) return 500.;
-    if (runNo<=290323) return 580.;
-    if (runNo<=292012) return 570.;
-    if (runNo<=292192) return 560.;
-    return 540.;
-
-}
-
-
 //__________________________________________________________________________________________
-AliAnalysisTask* AddTask_glegras_FilterTrees(Bool_t isAliRoot=kTRUE, Int_t runMode=1, Bool_t isMC = kFALSE, Bool_t isInjected = kFALSE, Bool_t ispp = kTRUE, TString prod="LHC10h"){    
+AliAnalysisTask* AddTask_glegras_FilterTrees(Bool_t isAliRoot=kTRUE, Int_t runMode=1, Bool_t isMC = kTRUE, Bool_t isInjected = kTRUE, Bool_t ispp = kTRUE, TString prod="LHC10h"){    
    //
    // isAliRoot=kTRUE for ESD/AOD analysis in AliROOT, kFALSE for root analysis on reduced trees
    // runMode=1 (AliAnalysisTaskReducedEventProcessor::kUseOnTheFlyReducedEvents)
@@ -45,8 +24,9 @@ AliAnalysisTask* AddTask_glegras_FilterTrees(Bool_t isAliRoot=kTRUE, Int_t runMo
 
   AliReducedAnalysisFilterTrees* filterTask = new AliReducedAnalysisFilterTrees("FilterTrees","filter DST trees");
   filterTask->Init();
-  filterTask->SetFilteredTreeWritingOption(AliReducedAnalysisTaskSE::kBaseEventsWithBaseTracks);
-  filterTask->SetWriteFilteredTracks(kFALSE);
+  filterTask->SetFilteredTreeWritingOption(AliReducedAnalysisTaskSE::kBaseEventsWithFullTracks);
+  filterTask->SetWriteFilteredTracks(kTRUE);
+  filterTask->SetWriteFilteredTracksCandidatesOnly(kTRUE);
   filterTask->SetWriteFilteredPairs(kFALSE);
   filterTask->SetBuildCandidatePairs(AliReducedPairInfo::kJpsiToEE);
   filterTask->SetBuildCandidateLikePairs(kTRUE);
@@ -57,19 +37,22 @@ AliAnalysisTask* AddTask_glegras_FilterTrees(Bool_t isAliRoot=kTRUE, Int_t runMo
   filterTask->SetComputeMult(kTRUE);
   filterTask->SetRunOverMC(isMC);
   filterTask->SetMCTruthJpsi2eeOnly(kTRUE);
+  if (isMC) filterTask->SetRegionsToMCTruth(kFALSE);
+  filterTask->SetDefaultRandomPhi(kTRUE);
 
 
   if (isMC && isInjected) {
     TF1* fPtJpsi = new TF1("fPtJpsi","[0]*x/pow(1+(x/[1])*(x/[1]),[2])",0,30);
     fPtJpsi->SetParameters(1,4.09,3.04); // arxiv:2108.01906
     TFile* filePtWeights = new TFile("/gluster1/glegras/InjectedJpsiPtWeights.root","read");
-    TH1F* hpt; filePtWeights->GetObject("Pt",hpt);
+    TH1F* hpt; filePtWeights->GetObject("Pt_prompt",hpt);
     if(!hpt) {
        filePtWeights = new TFile("~/alice/AliPhysics/PWGDQ/reducedTree/macros/InjectedJpsiPtWeights.root","read");
-       filePtWeights->GetObject("Pt",hpt);
+       //filePtWeights->GetObject("Pt_prompt", hpt); //Only if ML
+       filePtWeights->GetObject("Pt_inclusive", hpt); //standard
     }
     TH1F* hPtWeights = new TH1F("hPtWeights","Weights for rescaling injected Jpsi",hpt->GetNbinsX(),hpt->GetBinLowEdge(1),hpt->GetBinCenter(hpt->GetNbinsX())+hpt->GetBinCenter(hpt->GetNbinsX())/2-hpt->GetBinLowEdge(hpt->GetNbinsX())/2);
-    for (int n=1;n<hpt->GetNbinsX()+1;n++) hPtWeights->SetBinContent(n,fPtJpsi->Eval(hPtWeights->GetBinCenter(n))/hpt->GetBinContent(n));
+    for (int n = 1; n < hpt->GetNbinsX()+1; n++) hPtWeights->SetBinContent(n, fPtJpsi->Eval(hPtWeights->GetBinCenter(n))/hpt->GetBinContent(n));
     hPtWeights->Scale(1./hPtWeights->GetMaximum());
 
     filterTask->SetMCJpsiPtWeights(hPtWeights); //only if MC and injected Jpsi
@@ -85,7 +68,7 @@ AliAnalysisTask* AddTask_glegras_FilterTrees(Bool_t isAliRoot=kTRUE, Int_t runMo
   if(!filterTask->GetJpsiMassDist()) cout<<"No jpsi mass distribution setup"<<endl;
 
 
-  Setup(filterTask, ispp, prod);
+  Setup(filterTask, ispp, prod, isInjected);
   // initialize an AliAnalysisTask which will wrapp the AliReducedAnalysisFilterTrees such that it can be run in an aliroot analysis train (e.g. LEGO, local analysis etc)
   AliAnalysisTaskReducedEventProcessor* task = new AliAnalysisTaskReducedEventProcessor("ReducedEventAnalysisManager", runMode, kTRUE);
   task->AddTask(filterTask);
@@ -154,9 +137,30 @@ AliAnalysisTask* AddTask_glegras_FilterTrees(Bool_t isAliRoot=kTRUE, Int_t runMo
   return task;
 }
 
+//______________________________________________________________
+Double_t V0cut(Double_t *x, Double_t *par){
+    double runNo = x[0];
+
+    if (runNo<=254604) return 560.;
+    if (runNo<=255079) return 530.;
+    if (runNo<=256504) return 500.;
+    if (runNo<=257850) return 450.;
+    if (runNo<=264076) return 400.;
+    if (runNo<=272151) return 570.;
+    if (runNo<=273824) return 480.;
+    if (runNo<=275515) return 540.;
+    if (runNo<=279879) return 520.;
+    if (runNo<=285980) return 500.;
+    if (runNo<=290323) return 580.;
+    if (runNo<=292012) return 570.;
+    if (runNo<=292192) return 560.;
+    return 540.;
+
+}
+
 
 //_________________________________________________________________
-void Setup(AliReducedAnalysisFilterTrees* processor, Bool_t ispp/*=kTRUE*/, TString prod /*="LHC10h"*/) {
+void Setup(AliReducedAnalysisFilterTrees* processor, Bool_t ispp/*=kTRUE*/, TString prod /*="LHC10h"*/, Bool_t isInjected) {
   //
   // Configure the analysis task
   // Setup histograms, handlers, cuts, etc.
@@ -175,57 +179,153 @@ void Setup(AliReducedAnalysisFilterTrees* processor, Bool_t ispp/*=kTRUE*/, TStr
   if (!isMC) evCut1->AddCut(AliReducedVarManager::kVZEROTotalMult, 0., fV0cut, kTRUE, AliReducedVarManager::kRunNo, 0., 0., kTRUE, AliReducedVarManager::kHighMultV0Triggered, 0.5, 1.5);
   processor->AddEventCut(evCut1);
 
-  //Set track cuts for multiplicity info
+  processor->SetMinPtLeading(5.0);
+
+  // --------------------------------- Set track cuts for multiplicity info ------------------------------------------
 
   // Measured track cuts (max. 8 cuts) - names should not be included one in the other
+  // Standard cut
   AliReducedTrackCut* measMultCut = new AliReducedTrackCut("standardCut","Cut for measured mult");
   measMultCut->AddCut(AliReducedVarManager::kPt, 0.15, 1e5);
   measMultCut->AddCut(AliReducedVarManager::kEta, -0.9, 0.9);
   measMultCut->AddCut(AliReducedVarManager::kCharge, -0.1, 0.1, kTRUE);
-  if(isMC) measMultCut->SetTrackFilterBit(8); //SPDAny requirement
+  if(isMC) {
+    measMultCut->SetTrackFilterBit(8); // Hadron standard
+    if (!isInjected) measMultCut->SetTrackFilterBit(16); // TPC chi2
+  }
   else {
-    measMultCut->SetTrackFilterBit(6); // Hadron standard for gsidata
-    //measMultCut->SetTrackFilterBit(14); // tight DCA
-    //measMultCut->SetTrackFilterBit(17); // additional quality
+    measMultCut->SetTrackFilterBit(7); // Hadron standard 
+    measMultCut->SetTrackFilterBit(15); // TPC Nclusters 
+    measMultCut->SetTrackFilterBit(16); // TPC chi2 
   }
   //measMultCut->SetTrackFilterBit(6); //for gsi data
   processor->AddMeasuredMultTrackCut(measMultCut);
 
+  // No DCA Cut
   AliReducedTrackCut* measMultCutNoDCA = new AliReducedTrackCut("noDCACut","Cut for measured mult without DCA");
   measMultCutNoDCA->AddCut(AliReducedVarManager::kPt, 0.15, 1e5);
   measMultCutNoDCA->AddCut(AliReducedVarManager::kEta, -0.9, 0.9);
   measMultCutNoDCA->AddCut(AliReducedVarManager::kCharge, -0.1, 0.1, kTRUE);
-  if(isMC) measMultCutNoDCA->SetTrackFilterBit(8); //SPDAny recquirement
-  else measMultCutNoDCA->SetTrackFilterBit(24); //SPDAny recquirement
-  //measMultCutNoDCA->SetTrackFilterBit(6); //for gsi data
+  if(isMC) {
+    measMultCutNoDCA->SetTrackFilterBit(8); // Hadron standard
+    measMultCutNoDCA->SetTrackFilterBit(16); // TPC chi2
+  } 
+  else {
+    measMultCutNoDCA->SetTrackFilterBit(26); //Hadron standard no DCA
+    //measMultCutNoDCA->SetTrackFilterBit(15); // TPC Nclusters 
+    //measMultCutNoDCA->SetTrackFilterBit(16); // TPC chi2
+  }
   //processor->AddMeasuredMultTrackCut(measMultCutNoDCA);
 
+  // Pt > 0.2
+  AliReducedTrackCut* measMultCutPt02 = new AliReducedTrackCut("Pt02","Cut for measured mult"); 
+  measMultCutPt02->AddCut(AliReducedVarManager::kPt, 0.2, 1e5);
+  measMultCutPt02->AddCut(AliReducedVarManager::kEta, -0.9, 0.9);
+  measMultCutPt02->AddCut(AliReducedVarManager::kCharge, -0.1, 0.1, kTRUE);
+  if(ispp && isMC) {
+    measMultCutPt02->SetTrackFilterBit(8); // Hadron standard
+    measMultCutPt02->SetTrackFilterBit(16); // TPC chi2
+  }
+  if(ispp && !isMC) {
+    measMultCutPt02->SetTrackFilterBit(7);  // Hadron standard
+    measMultCutPt02->SetTrackFilterBit(15); // TPC Nclusters
+    measMultCutPt02->SetTrackFilterBit(16); // TPC chi2
+  }
+  //else measMultCutPt->SetTrackFilterBit(3); //charged tracks with TPC cluster recquirement
+  //processor->AddMeasuredMultTrackCut(measMultCutPt02);
 
-/*
-  AliReducedTrackCut* measMultCutPt = new AliReducedTrackCut("Pt02","Cut for measured mult"); 
-  measMultCutPt->AddCut(AliReducedVarManager::kPt, 0.2, 1e5);
-  measMultCutPt->AddCut(AliReducedVarManager::kEta, -0.9, 0.9);
-  measMultCutPt->AddCut(AliReducedVarManager::kCharge, -0.1, 0.1, kTRUE);
-  if(ispp || isMC) measMultCutPt->SetTrackFilterBit(8); //SPDAny recquirement
-  else measMultCutPt->SetTrackFilterBit(3); //charged tracks with TPC cluster recquirement
-  processor->AddMeasuredMultTrackCut(measMultCutPt);
+  // Pt > 0.1
+  AliReducedTrackCut* measMultCutPt01 = new AliReducedTrackCut("Pt01","Cut for measured mult"); 
+  measMultCutPt01->AddCut(AliReducedVarManager::kPt, 0.1, 1e5);
+  measMultCutPt01->AddCut(AliReducedVarManager::kEta, -0.9, 0.9);
+  measMultCutPt01->AddCut(AliReducedVarManager::kCharge, -0.1, 0.1, kTRUE);
+  if(ispp && isMC) {
+    measMultCutPt01->SetTrackFilterBit(8); // Hadron standard
+    measMultCutPt01->SetTrackFilterBit(16); // TPC chi2
+  }
+  if(ispp && !isMC) {
+    measMultCutPt01->SetTrackFilterBit(7); // Hadron standard
+    measMultCutPt01->SetTrackFilterBit(15); // TPC Nclusters
+    measMultCutPt01->SetTrackFilterBit(16); // TPC chi2
 
+  }
+  //else measMultCutPt->SetTrackFilterBit(3); //charged tracks with TPC cluster recquirement
+  //processor->AddMeasuredMultTrackCut(measMultCutPt01);
+
+  // No SPDany requirement
   AliReducedTrackCut* measMultCutnoSPDAny = new AliReducedTrackCut("noSPDAny","Cut for measured mult"); 
   measMultCutnoSPDAny->AddCut(AliReducedVarManager::kPt, 0.15, 1e5);
   measMultCutnoSPDAny->AddCut(AliReducedVarManager::kEta, -0.9, 0.9);
   measMultCutnoSPDAny->AddCut(AliReducedVarManager::kCharge, -0.1, 0.1, kTRUE);
-  if(ispp || isMC) measMultCutnoSPDAny->SetTrackFilterBit(7); 
-  else measMultCutnoSPDAny->SetTrackFilterBit(3); //charged tracks with TPC cluster recquirement
-  processor->AddMeasuredMultTrackCut(measMultCutnoSPDAny);
+  if(ispp && isMC) {
+    measMultCutnoSPDAny->SetTrackFilterBit(7); // Hadron standard no SPDany
+    measMultCutnoSPDAny->SetTrackFilterBit(16); //TPC chi2
+  }
+  if(ispp && !isMC) {
+    measMultCutnoSPDAny->SetTrackFilterBit(6); // Hadron standard no SPDany
+    measMultCutnoSPDAny->SetTrackFilterBit(15); // TPC Nclusters
+    measMultCutnoSPDAny->SetTrackFilterBit(16); // TPC chi2
+  }  
+  //else measMultCutnoSPDAny->SetTrackFilterBit(3); //charged tracks with TPC cluster recquirement
+  //processor->AddMeasuredMultTrackCut(measMultCutnoSPDAny);
 
-  AliReducedTrackCut* measMultCutnoSPDAnyPt = new AliReducedTrackCut("cut4","Cut for measured mult"); 
-  measMultCutnoSPDAnyPt->AddCut(AliReducedVarManager::kPt, 0.2, 1e5);
-  measMultCutnoSPDAnyPt->AddCut(AliReducedVarManager::kEta, -0.9, 0.9);
-  measMultCutnoSPDAnyPt->AddCut(AliReducedVarManager::kCharge, -0.1, 0.1, kTRUE);
-  if(ispp || isMC) measMultCutnoSPDAnyPt->SetTrackFilterBit(7);
-  else measMultCutnoSPDAnyPt->SetTrackFilterBit(3); //charged tracks with TPC cluster recquirement
-  processor->AddMeasuredMultTrackCut(measMultCutnoSPDAnyPt);
-*/
+  // Tight DCA cut
+  AliReducedTrackCut* measMultCutTightDCA = new AliReducedTrackCut("TightDCA","Cut for measured mult");
+  measMultCutTightDCA->AddCut(AliReducedVarManager::kPt, 0.15, 1e5);
+  measMultCutTightDCA->AddCut(AliReducedVarManager::kEta, -0.9, 0.9);
+  measMultCutTightDCA->AddCut(AliReducedVarManager::kCharge, -0.1, 0.1, kTRUE);
+  if(isMC) {
+    measMultCutTightDCA->SetTrackFilterBit(8); // Hadron standard
+    measMultCutTightDCA->SetTrackFilterBit(15); // Tight DCA
+    measMultCutTightDCA->SetTrackFilterBit(16); // TPC chi2
+  } 
+  else {
+    measMultCutTightDCA->SetTrackFilterBit(7); // Hadron standard 
+    measMultCutTightDCA->SetTrackFilterBit(15); // TPC Nclusters 
+    measMultCutTightDCA->SetTrackFilterBit(16); // TPC chi2
+    measMultCutTightDCA->SetTrackFilterBit(14); // Tight DCA cut
+  }
+  //measMultCut->SetTrackFilterBit(6); //for gsi data
+  //processor->AddMeasuredMultTrackCut(measMultCutTightDCA);
+
+  // Track quality cut 1
+  AliReducedTrackCut* measMultCutQuality1 = new AliReducedTrackCut("Quality1","Cut for measured mult");
+  measMultCutQuality1->AddCut(AliReducedVarManager::kPt, 0.15, 1e5);
+  measMultCutQuality1->AddCut(AliReducedVarManager::kEta, -0.9, 0.9);
+  measMultCutQuality1->AddCut(AliReducedVarManager::kCharge, -0.1, 0.1, kTRUE);
+  if(isMC) {
+    measMultCutQuality1->SetTrackFilterBit(8); // Hadron standard
+    measMultCutQuality1->SetTrackFilterBit(16); // TPC chi2
+    measMultCutQuality1->SetTrackFilterBit(17); // Quality cut 1
+  } 
+  else {
+    measMultCutQuality1->SetTrackFilterBit(7); // Hadron standard 
+    measMultCutQuality1->SetTrackFilterBit(15); // TPC Nclusters 
+    measMultCutQuality1->SetTrackFilterBit(16); // TPC chi2
+    measMultCutQuality1->SetTrackFilterBit(17); // Quality cut 1
+  }
+  //measMultCut->SetTrackFilterBit(6); //for gsi data
+  //processor->AddMeasuredMultTrackCut(measMultCutQuality1);
+
+  // Track quality cut 2
+  AliReducedTrackCut* measMultCutQuality2 = new AliReducedTrackCut("Quality2","Cut for measured mult");
+  measMultCutQuality2->AddCut(AliReducedVarManager::kPt, 0.15, 1e5);
+  measMultCutQuality2->AddCut(AliReducedVarManager::kEta, -0.9, 0.9);
+  measMultCutQuality2->AddCut(AliReducedVarManager::kCharge, -0.1, 0.1, kTRUE);
+  if(isMC) {
+    measMultCutQuality2->SetTrackFilterBit(8); // Hadron standard
+    measMultCutQuality2->SetTrackFilterBit(16); // TPC chi2
+    measMultCutQuality2->SetTrackFilterBit(20); // Quality cut 2
+  }
+  else {
+    measMultCutQuality2->SetTrackFilterBit(7); // Hadron standard 
+    measMultCutQuality2->SetTrackFilterBit(15); // TPC Nclusters 
+    measMultCutQuality2->SetTrackFilterBit(16); // TPC chi2
+    measMultCutQuality2->SetTrackFilterBit(20); // Quality cut 2
+  }
+  //measMultCut->SetTrackFilterBit(6); //for gsi data
+  //processor->AddMeasuredMultTrackCut(measMultCutQuality2);
+
 
   // MC cut on true multiplicity  
   AliReducedTrackCut* trueMultCut = new AliReducedTrackCut("trueMult","Cut for true mult");
@@ -236,16 +336,23 @@ void Setup(AliReducedAnalysisFilterTrees* processor, Bool_t ispp/*=kTRUE*/, TStr
 
   processor->AddTrueMultTrackCut(trueMultCut);
 
-  // Set track cuts
+
+
+
+  // ----------------------------------------- Set track cuts  on electrons ---------------------------------------
+
   AliReducedTrackCut* standardCut = new AliReducedTrackCut("standard","");
   standardCut->AddCut(AliReducedVarManager::kPt, 1.,100.);
   standardCut->AddCut(AliReducedVarManager::kEta, -0.9,0.9);
   standardCut->AddCut(AliReducedVarManager::kDcaXY, -1.0,1.0);
   standardCut->AddCut(AliReducedVarManager::kDcaZ, -3.0,3.0);
   standardCut->AddCut(AliReducedVarManager::kTPCncls, 70.,160.0);
-  standardCut->AddCut(AliReducedVarManager::kTPCnSig+AliReducedVarManager::kElectron, -3.0, 3.0);
-  standardCut->AddCut(AliReducedVarManager::kTPCnSig+AliReducedVarManager::kProton, 3.0, 30000.0);
-  standardCut->AddCut(AliReducedVarManager::kTPCnSig+AliReducedVarManager::kPion, 3.0, 30000.0);
+  standardCut->AddCut(AliReducedVarManager::kTPCnSig+AliReducedVarManager::kElectron, -3.0, 3.0); //standard
+  standardCut->AddCut(AliReducedVarManager::kTPCnSig+AliReducedVarManager::kProton, 3.0, 30000.0); //standard
+  standardCut->AddCut(AliReducedVarManager::kTPCnSig+AliReducedVarManager::kPion, 3.0, 30000.0); //standard
+  //standardCut->AddCut(AliReducedVarManager::kTPCnSig+AliReducedVarManager::kElectron, -4.0, 4.0); //ML
+  //standardCut->AddCut(AliReducedVarManager::kTPCnSig+AliReducedVarManager::kProton, 2.5, 30000.0); //ML
+  //standardCut->AddCut(AliReducedVarManager::kTPCnSig+AliReducedVarManager::kPion, 2.5, 30000.0); //ML
   standardCut->SetRejectKinks();
   standardCut->SetRequestITSrefit();
   standardCut->SetRequestTPCrefit();
@@ -262,6 +369,9 @@ void Setup(AliReducedAnalysisFilterTrees* processor, Bool_t ispp/*=kTRUE*/, TStr
   prefTrackCut1->SetRequestTPCrefit();
   if(ispp && isMC) prefTrackCut1->SetTrackFilterBit(2); //electron prefilter
   if(ispp && !isMC) prefTrackCut1->SetTrackFilterBit(1); //electron prefilter
+  if (!isMC) {
+    prefTrackCut1->AddCut(AliReducedVarManager::kTPCnSig+AliReducedVarManager::kElectron, -3.0, 3.0);
+  }
   prefTrackCut1->SetRejectPureMC(kTRUE);
   processor->AddCandidateLeg1PrefilterCut(prefTrackCut1);  
   
@@ -278,23 +388,45 @@ void Setup(AliReducedAnalysisFilterTrees* processor, Bool_t ispp/*=kTRUE*/, TStr
   AliReducedTrackCut* jpsiMCCut = new AliReducedTrackCut("jpsiCutMC","Rapidity JpsiSelection");
   jpsiMCCut->AddCut(AliReducedVarManager::kPt, 0.0, 100.0);
   jpsiMCCut->AddCut(AliReducedVarManager::kRap, -0.9, 0.9);
-  //jpsiMCCut->AddCut(AliReducedVarManager::kPdgMC, 442.5, 443.5); 
-  //jpsiMCCut->AddCut(AliReducedVarManager::kPdgMC+1, 442.5, 443.5, kTRUE);
+  jpsiMCCut->AddCut(AliReducedVarManager::kPdgMC, 442.5, 443.5); 
+  jpsiMCCut->AddCut(AliReducedVarManager::kPdgMC+1, 442.5, 443.5, kTRUE);
   jpsiMCCut->SetRejectPureMC(kFALSE);
+
+  AliReducedTrackCut* jpsiMCCutPrompt = new AliReducedTrackCut("jpsiCutMCPrompt","Rapidity JpsiSelection");
+  jpsiMCCutPrompt->AddCut(AliReducedVarManager::kPt, 0.0, 100.0);
+  jpsiMCCutPrompt->AddCut(AliReducedVarManager::kRap, -0.9, 0.9);
+  jpsiMCCutPrompt->AddCut(AliReducedVarManager::kPdgMC, 442.5, 443.5); 
+  jpsiMCCutPrompt->AddCut(AliReducedVarManager::kPdgMC+1, 442.5, 443.5, kTRUE);
+  jpsiMCCutPrompt->SetMCFilterBit(2);
+  jpsiMCCutPrompt->SetRejectPureMC(kFALSE);
+
+  AliReducedTrackCut* jpsiMCCutNonPrompt = new AliReducedTrackCut("jpsiCutMCNonPrompt","Rapidity JpsiSelection");
+  jpsiMCCutNonPrompt->AddCut(AliReducedVarManager::kPt, 0.0, 100.0);
+  jpsiMCCutNonPrompt->AddCut(AliReducedVarManager::kRap, -0.9, 0.9);
+  jpsiMCCutNonPrompt->AddCut(AliReducedVarManager::kPdgMC, 442.5, 443.5); 
+  jpsiMCCutNonPrompt->AddCut(AliReducedVarManager::kPdgMC+1, 442.5, 443.5, kTRUE);
+  jpsiMCCutNonPrompt->SetMCFilterBit(1);
+  jpsiMCCutNonPrompt->SetRejectPureMC(kFALSE);
+
+
   AliReducedTrackCut* electronMCCut = new AliReducedTrackCut("standardMC","Pt electron Selection");
-  processor->AddJpsiMotherMCCut(jpsiMCCut,electronMCCut);
-  
+  processor->AddJpsiMotherMCCut(jpsiMCCut, electronMCCut);
+  processor->AddJpsiMotherMCCut(jpsiMCCutPrompt, electronMCCut);
+  processor->AddJpsiMotherMCCut(jpsiMCCutNonPrompt, electronMCCut);
+  //if (isInjected) processor->SetReweightCut(1); // ML - Only Reweighting on prompt Jpsi
+  if (isInjected) processor->SetReweightCut(0); // Standard - Reweighting on inclusive Jpsi
+
   AliReducedTrackCut* jpsiMCCutEta = (AliReducedTrackCut*) jpsiMCCut->Clone("jpsiCutMCEta");
   AliReducedTrackCut* electronMCCutEta = new AliReducedTrackCut("standardMCEta","Eta electron Selection");
   electronMCCutEta->AddCut(AliReducedVarManager::kEta, -0.9, 0.9);
-  //processor->AddJpsiMotherMCCut(jpsiMCCutEta,electronMCCutEta);
+  //processor->AddJpsiMotherMCCut(jpsiMCCutEta, electronMCCutEta);
 
 
   AliReducedTrackCut* jpsiMCCutEtaPt = (AliReducedTrackCut*) jpsiMCCut->Clone("jpsiCutMCEtaPt");
   AliReducedTrackCut* electronMCCutEtaPt = new AliReducedTrackCut("standardMCEtaPt","Eta and Pt electron Selection");
   electronMCCutEtaPt->AddCut(AliReducedVarManager::kEta, -0.9, 0.9);
   electronMCCutEtaPt->AddCut(AliReducedVarManager::kPt, 1., 1e5);
-  //processor->AddJpsiMotherMCCut(jpsiMCCutEtaPt,electronMCCutEtaPt);
+  //processor->AddJpsiMotherMCCut(jpsiMCCutEtaPt, electronMCCutEtaPt);
 
   
   SetupMixingHandler(processor);
@@ -320,7 +452,7 @@ void SetupMixingHandler(AliReducedAnalysisFilterTrees* task) {
    //
    // setup the mixing handler
    AliMixingHandler* handler = task->GetMixingHandler();  
-   handler->SetPoolDepth(200);
+   handler->SetPoolDepth(100);
    handler->SetMixingThreshold(1.0);
    handler->SetDownscaleEvents(1.0);
    handler->SetDownscaleTracks(1);
@@ -328,21 +460,25 @@ void SetupMixingHandler(AliReducedAnalysisFilterTrees* task) {
    const Int_t nZbinLimits = 2;
    Float_t zLims[nZbinLimits] = {-10., /*  -8.,  -6.,  -4.,  -2., 0.,  2.,  4.,  6.,  8., */10. };
    //r(Int_t i=0;i<=10;++i) zLims[nZbinLimits] = i
-   
-  handler->AddMixingVariable(AliReducedVarManager::kVtxZ, nZbinLimits, zLims); 
+   const int nMultBins = 8; Float_t multBins[nMultBins+1] = {0,10,20,30,40,50,60,70,150};
+
+  //handler->AddMixingVariable(AliReducedVarManager::kVtxZ, nZbinLimits, zLims);
+  handler->AddMixingVariable(AliReducedVarManager::kNGlobalTracks, nMultBins+1, multBins); 
   TString histClassNames = handler->GetHistClassNames();
   TObjArray* histClassArr = histClassNames.Tokenize(";");
 
-  task->SetRunEventMixingMult(kTRUE);
+  if (!task->GetRunOverMC()) task->SetRunEventMixingMult(kTRUE);
 
-  const int nMultBins = 8; Int_t multBins[nMultBins+1] = {0,10,20,30,40,50,60,70,150};
-  task->SetMultBinsMixing(nMultBins,multBins);
-  for (int i = 0; i<nMultBins;i++){
+  
+  task->SetMultBinsMixing(nMultBins, multBins);
+  for (int i = 0; i < nMultBins; i++){
     AliMixingHandler* handlerMult = (AliMixingHandler*) handler->Clone();
+    handlerMult->SetPoolDepth(200);
+    if (i == 0) handlerMult->SetPoolDepth(5000);
     TString histNamesMult = "";
     for (int j = 0; j<histClassArr->GetEntries(); j++) {
         histNamesMult += histClassArr->At(j)->GetName();
-        histNamesMult += Form("_%d_%d;",multBins[i],multBins[i+1]-1);
+        histNamesMult += Form("_%d_%d;", (int) multBins[i],(int) multBins[i+1]-1);
     }
     handlerMult->SetHistClassNames(histNamesMult);   
     handlerMult->SetHistogramManager(task->GetHistogramManager());
@@ -363,8 +499,8 @@ void DefineHistograms(AliReducedAnalysisFilterTrees* task, Bool_t ispp/*=kTRUE*/
   TString runNumbers = ""; const char* fileRuns; const char* fileRuns2;
   int nRuns = 0;
   if(ispp) {
-    fileRuns = "/home/glegras/alice/data/runLists/runsMC.txt";
-    fileRuns2 = "/gluster1/glegras/runsMC.txt";
+    fileRuns = "/home/glegras/alice/data/runLists/list_all.txt";
+    fileRuns2 = "/gluster1/glegras/list_all.txt";
   }
   else {
     fileRuns = "/home/glegras/alice/data/runLists/runspPb.txt";
@@ -389,27 +525,38 @@ void DefineHistograms(AliReducedAnalysisFilterTrees* task, Bool_t ispp/*=kTRUE*/
    
   TString histClasses = "";
   //histClasses += "Event_BeforeCuts;";
-  histClasses += "Event_AfterCuts;";
-
+  histClasses += "Event_INELGT0;";
+  histClasses += "Event_INELGT0_MB;";
   histClasses += "Event_NoVtxRec;";
   histClasses += "Event_NoVtxzCut;";
+  histClasses += "Event_AfterCuts;";
 
+  bool isMC = task->GetRunOverMC();
 
 
   int nEstimators = (task->GetComputeMult() ? task->GetNMeasMultCuts() : 0);
 
   for (int icut = 0; icut<nEstimators; icut++) {
-    histClasses += Form("EventMult_%s_NoVtxRec;",task->GetMeasMultcutName(icut));
-    histClasses += Form("EventMult_%s_NoVtxzCut;",task->GetMeasMultcutName(icut));
-    histClasses += Form("EventMult_%s_Inclusive;",task->GetMeasMultcutName(icut));
-    histClasses += Form("EventMult_%s_MB;",task->GetMeasMultcutName(icut));
-    histClasses += Form("EventMult_%s_HM;",task->GetMeasMultcutName(icut));
+    if(isMC) histClasses += Form("EventMult_%s_INELGT0;", task->GetMeasMultcutName(icut));
+    if(isMC) histClasses += Form("EventMult_%s_INELGT0_MB;", task->GetMeasMultcutName(icut));
+    if(!isMC) histClasses += Form("EventMult_%s_NoVtxRec;", task->GetMeasMultcutName(icut));
+    if(!isMC) histClasses += Form("EventMult_%s_NoVtxzCut;", task->GetMeasMultcutName(icut));
+    
+    if(!isMC) histClasses += Form("EventMult_%s_Inclusive;", task->GetMeasMultcutName(icut));
+    histClasses += Form("EventMult_%s_MB;", task->GetMeasMultcutName(icut));
+    if(!isMC) histClasses += Form("EventMult_%s_HM;", task->GetMeasMultcutName(icut));
+
+    if(!isMC) histClasses += Form("EventMultRegions_%s_Inclusive;",task->GetMeasMultcutName(icut));
+    histClasses += Form("EventMultRegions_%s_MB;",task->GetMeasMultcutName(icut));
+    if(!isMC) histClasses += Form("EventMultRegions_%s_HM;",task->GetMeasMultcutName(icut));
+
+    if(!isMC) histClasses += Form("EventMultRegions2Leading_%s_Inclusive;",task->GetMeasMultcutName(icut));
+    histClasses += Form("EventMultRegions2Leading_%s_MB;",task->GetMeasMultcutName(icut));
+    if(!isMC) histClasses += Form("EventMultRegions2Leading_%s_HM;",task->GetMeasMultcutName(icut));
   }
 
   histClasses += "CorrelMult;";
 
-  histClasses += "Multiplicity_Regions;";
-  bool isMC=task->GetRunOverMC();
   
   //histClasses += "EventTag_BeforeCuts;";   
   //histClasses += "EventTag_AfterCuts;";   
@@ -460,7 +607,7 @@ void DefineHistograms(AliReducedAnalysisFilterTrees* task, Bool_t ispp/*=kTRUE*/
       if(task->GetRunEventMixingMult()) {
         int nBins = task->GetNMultBinsMixing();
         for (int j = 0; j<nBins; j++) {
-          int lowMult = task->GetMultBinsMixing(j);int highMult = task->GetMultBinsMixing(j+1)-1;
+          int lowMult = (int) task->GetMultBinsMixing(j); int highMult = (int) task->GetMultBinsMixing(j+1)-1;
           histClasses += Form("PairMEPM_%s%s_%d_%d;PairMEPP_%s%s_%d_%d;PairMEMM_%s%s_%d_%d;",
           task->GetCandidateLegCutName(i,1), (task->IsAsymmetricDecayChannel() ? Form("_%s", task->GetCandidateLegCutName(i,2)) : ""),
           lowMult,highMult,
@@ -478,10 +625,14 @@ void DefineHistograms(AliReducedAnalysisFilterTrees* task, Bool_t ispp/*=kTRUE*/
   }
 
   if(isMC) {
-    for (int i=0; i<task->GetNJpsiMotherMCCuts();i++) 
+    for (int i=0; i<task->GetNJpsiMotherMCCuts();i++) {
+      histClasses += Form("PureMCTRUTH_BeforeSelection_%s;", task->GetJpsiMotherMCcutName(i));
       histClasses += Form("PureMCTRUTH_AfterSelection_%s;", task->GetJpsiMotherMCcutName(i));
-    
-    //histClasses += Form("PureMCTRUTH_DetectedDaughters_%s;", task->GetJpsiMotherMCcutName(task->GetNJpsiMotherMCCuts()-1));
+      for (int jcut = 0; jcut<task->GetNMeasMultCuts(); jcut ++) 
+        histClasses += Form("JpsiPtMultCorrel_%s_%s;", task->GetMeasMultcutName(jcut), task->GetJpsiMotherMCcutName(i));
+      //histClasses += Form("PureMCTRUTH_DetectedDaughters_%s;", task->GetJpsiMotherMCcutName(task->GetNJpsiMotherMCCuts()-1));
+    }
+    histClasses += "DeltaPhi_JpsiTruth_JpsiCandidate;";
   } 
    
  
@@ -665,17 +816,20 @@ void DefineHistograms(AliReducedAnalysisFilterTrees* task, Bool_t ispp/*=kTRUE*/
         man->AddHistClass(classStr.Data());
         cout << classStr.Data() << endl;
         man->AddHistogram(classStr.Data(),"NGlobalTracks","Number of global tracks per event",kFALSE, nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracks + icut);
-        man->AddHistogram(classStr.Data(),"NGlobalTracks_V0Mult","Number of global tracks per event vs V0 Mult",kTRUE, 800, 0, 800, AliReducedVarManager::kVZEROTotalMult, nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracks + icut);
-        man->AddHistogram(classStr.Data(),"Multiplicity","Multiplicity in |#eta|<0.9",kFALSE, nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09);
-        man->AddHistogram(classStr.Data(),"Multiplicity_NGlobalTracks_TProfile","Mean multiplicity in |#eta|<0.9 vs global tracks (in |#eta|<0.9)",kTRUE,nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracks + icut,nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09);
-        man->AddHistogram(classStr.Data(),"Multiplicity_NGlobalTracks","Multiplicity in |#eta|<0.9 vs global tracks (in |#eta|<0.9)",kFALSE,nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracks + icut,nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09);
-        man->AddHistogram(classStr.Data(),"NGlobalTracks_SPDNtracklets","Global tracks (in |#eta|<0.9) vs SPDNtracklets",kFALSE,nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracks + icut,nMultBins, minMult, maxMult,AliReducedVarManager::kSPDntracklets);
+        man->AddHistogram(classStr.Data(),"NGlobalTracks_V0Mult","Mean Number of global tracks per event vs V0 Mult",kTRUE, 800, 0, 800, AliReducedVarManager::kVZEROTotalMult, nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracks + icut);
+        if (isMC) {
+          man->AddHistogram(classStr.Data(),"Multiplicity","Multiplicity in |#eta|<0.9",kFALSE, nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09);
+          man->AddHistogram(classStr.Data(),"Multiplicity_NGlobalTracks_TProfile","Mean multiplicity in |#eta|<0.9 vs global tracks (in |#eta|<0.9)",kTRUE,nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracks + icut,nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09);
+          man->AddHistogram(classStr.Data(),"Multiplicity_NGlobalTracks","Multiplicity in |#eta|<0.9 vs global tracks (in |#eta|<0.9)",kFALSE,nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracks + icut,nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09);
+        }
+        man->AddHistogram(classStr.Data(),"SPDNtracklets_NGlobalTracks","SPDNtracklets vs Global tracks (in |#eta|<0.9)",kFALSE,nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracks + icut,nMultBins, minMult, maxMult,AliReducedVarManager::kSPDntracklets);
         man->AddHistogram(classStr.Data(),"NGlobalTracks_vtxz_TProfile","Mean number of global tracks (in |#eta|<0.9) vs vtxz",kTRUE,100,-10.,10.,AliReducedVarManager::kVtxZ,nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracks + icut);
         man->AddHistogram(classStr.Data(),"NGlobalTracks_vtxz","Global tracks (in |#eta|<0.9) vs vtxz",kFALSE,100,-10.,10.,AliReducedVarManager::kVtxZ,nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracks + icut);
         man->AddHistogram(classStr.Data(),"NGlobalTracks_RunNumber_TProfile","Mean number of global tracks (in |#eta|<0.9) vs Run number",kTRUE,runNBins, runHistRange[0], runHistRange[1], AliReducedVarManager::kRunNo,nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracks + icut);
         //man->AddHistogram(classStr.Data(),"NGlobalTracks_RunNumber_vtxz_TProfile","Mean number of global tracks (in |#eta|<0.9) vs Run number vs vtxz",kTRUE,runNBins, runHistRange[0], runHistRange[1], AliReducedVarManager::kRunNo,100,-10.,10.,AliReducedVarManager::kVtxZ,nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracks + icut);
         //man->AddHistogram(classStr.Data(),"NGlobalTracks_RunNumber_vtxz","Global tracks (in |#eta|<0.9) vs Run number vs vtxz",kFALSE,runNBins, runHistRange[0], runHistRange[1], AliReducedVarManager::kRunNo,100,-10.,10.,AliReducedVarManager::kVtxZ,nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracks + icut);
         man->AddHistogram(classStr.Data(),"NGlobalTracks_RunID_TProfile","Mean number of global tracks (in |#eta|<0.9) vs Run ID",kTRUE, nRuns, 0, nRuns, AliReducedVarManager::kRunID,nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracks + icut);
+        man->AddHistogram(classStr.Data(),"NGlobalTracks_RunID","Number of global tracks (in |#eta|<0.9) vs Run ID",kFALSE, nRuns, 0, nRuns, AliReducedVarManager::kRunID,nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracks + icut);
         man->AddHistogram(classStr.Data(),"NGlobalTracks_RunID_vtxz_TProfile","Mean number of global tracks (in |#eta|<0.9) vs Run ID vs vtxz",kTRUE, nRuns, 0, nRuns, AliReducedVarManager::kRunID,100,-10.,10.,AliReducedVarManager::kVtxZ,nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracks + icut);
         continue;
       }
@@ -688,51 +842,57 @@ void DefineHistograms(AliReducedAnalysisFilterTrees* task, Bool_t ispp/*=kTRUE*/
       continue;
     }
 
+    for (int icut = 0; icut<task->GetNMeasMultCuts(); icut++) {
+      const char* cutName = task->GetMeasMultcutName(icut);
+      if(classStr.Contains(Form("EventMultRegions_%s",cutName))) {
+        man->AddHistClass(classStr.Data());
+        cout << classStr.Data() << endl;
+        man->AddHistogram(classStr.Data(),"NGlobalTracksToward","Number of global tracks (Toward) in |#eta|<0.9",kFALSE, nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracksToward + icut);
+        man->AddHistogram(classStr.Data(),"NGlobalTracksTransverse","Number of global tracks (Transverse) in |#eta|<0.9",kFALSE, nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracksTransverse + icut);
+        man->AddHistogram(classStr.Data(),"NGlobalTracksAway","Number of global tracks (Away) in |#eta|<0.9",kFALSE, nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracksAway + icut);
+        man->AddHistogram(classStr.Data(),"NGlobalTracks_NGlobalTracksToward","Number of global tracks (all regions) vs Number of global tracks (Toward) in |#eta|<0.9",kFALSE, nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracksToward + icut, nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracks + icut);
+        man->AddHistogram(classStr.Data(),"NGlobalTracks_NGlobalTracksTransverse","Number of global tracks (all regions) vs Number of global tracks (Transverse) in |#eta|<0.9",kFALSE, nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracksTransverse + icut, nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracks + icut);
+        man->AddHistogram(classStr.Data(),"NGlobalTracks_NGlobalTracksAway","Number of global tracks (all regions) vs Number of global tracks (Away) in |#eta|<0.9",kFALSE, nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracksAway + icut, nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracks + icut);
+        if (isMC) {
+          man->AddHistogram(classStr.Data(),"MultiplicityToward","Multiplicity (toward) in |#eta|<0.9",kFALSE, nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09Toward);
+          man->AddHistogram(classStr.Data(),"Multiplicity_NGlobalTracks_Toward_TProfile","Mean multiplicity in |#eta|<0.9 vs global tracks (toward) (in |#eta|<0.9)",kTRUE,nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksToward + icut,nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09Toward);
+          man->AddHistogram(classStr.Data(),"Multiplicity_NGlobalTracks_Toward","Multiplicity in |#eta|<0.9 vs global tracks (toward) (in |#eta|<0.9)",kFALSE,nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracksToward + icut,nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09Toward);
+          man->AddHistogram(classStr.Data(),"MultiplicityTransverse","Multiplicity (Transverse) in |#eta|<0.9",kFALSE, nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09Transverse);
+          man->AddHistogram(classStr.Data(),"Multiplicity_NGlobalTracks_Transverse_TProfile","Mean multiplicity in |#eta|<0.9 vs global tracks (Transverse) (in |#eta|<0.9)",kTRUE,nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksTransverse + icut,nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09Transverse);
+          man->AddHistogram(classStr.Data(),"Multiplicity_NGlobalTracks_Transverse","Multiplicity in |#eta|<0.9 vs global tracks (Transverse) (in |#eta|<0.9)",kFALSE,nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracksTransverse + icut,nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09Transverse);
+          man->AddHistogram(classStr.Data(),"MultiplicityAway","Multiplicity (Away) in |#eta|<0.9",kFALSE, nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09Away);
+          man->AddHistogram(classStr.Data(),"Multiplicity_NGlobalTracks_Away_TProfile","Mean multiplicity in |#eta|<0.9 vs global tracks (Away) (in |#eta|<0.9)",kTRUE,nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksAway + icut,nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09Away);
+          man->AddHistogram(classStr.Data(),"Multiplicity_NGlobalTracks_Away","Multiplicity in |#eta|<0.9 vs global tracks (Away) (in |#eta|<0.9)",kFALSE,nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracksAway + icut,nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09Away);
+        }
+        continue;
+      }
+    }
 
-    if(classStr.Contains("Multiplicity_Regions")) {
-      man->AddHistClass(classStr.Data());
-      cout << classStr.Data() << endl;
-      //Toward region 
-      man->AddHistogram(classStr.Data(),"NGlobalTracksToward","Number of Toward global tracks per event",kFALSE, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksToward);
-      man->AddHistogram(classStr.Data(),"MultiplicityToward","Multiplicity Toward in |#eta|<0.9",kFALSE, nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09Toward);
-      man->AddHistogram(classStr.Data(),"MultiplicityToward_NGlobalTracksToward_TProfile","Mean Toward multiplicity in |#eta|<0.9 vs Toward global tracks (in |#eta|<0.9)",kTRUE, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksToward, nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09Toward);
-      man->AddHistogram(classStr.Data(),"MultiplicityToward_NGlobalTrackTowards","Multiplicity in |#eta|<0.9 vs global tracks (in |#eta|<0.9)",kFALSE, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksToward, nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09Toward);
-      man->AddHistogram(classStr.Data(),"NGlobalTracksToward_vtxz_TProfile","Mean number of Toward global tracks (in |#eta|<0.9) vs vtxz",kTRUE,100,-10.,10.,AliReducedVarManager::kVtxZ, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksToward);
-      man->AddHistogram(classStr.Data(),"NGlobalTracksToward_vtxz","Toward Global tracks (in |#eta|<0.9) vs vtxz",kFALSE,100,-10.,10.,AliReducedVarManager::kVtxZ, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksToward);
-      man->AddHistogram(classStr.Data(),"NGlobalTracksToward_RunNumber_TProfile","Mean number of Toward global tracks (in |#eta|<0.9) vs Run number",kTRUE,runNBins, runHistRange[0], runHistRange[1], AliReducedVarManager::kRunNo, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksToward);
-      man->AddHistogram(classStr.Data(),"NGlobalTracksToward_RunNumber_vtxz_TProfile","Mean number of Toward global tracks (in |#eta|<0.9) vs Run number vs vtxz",kTRUE,runNBins, runHistRange[0], runHistRange[1], AliReducedVarManager::kRunNo,100,-10.,10.,AliReducedVarManager::kVtxZ, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksToward);
-      //man->AddHistogram(classStr.Data(),"NGlobalTracksToward_RunNumber_vtxz","Global tracks (in |#eta|<0.9) vs Run number vs vtxz",kFALSE,runNBins, runHistRange[0], runHistRange[1], AliReducedVarManager::kRunNo,100,-10.,10.,AliReducedVarManager::kVtxZ, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksToward);
-      man->AddHistogram(classStr.Data(),"NGlobalTracksToward_RunID_TProfile","Mean number of Toward global tracks (in |#eta|<0.9) vs Run ID",kTRUE,nRuns, 0, nRuns, AliReducedVarManager::kRunID, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksToward);
-      man->AddHistogram(classStr.Data(),"NGlobalTracksToward_RunID_vtxz_TProfile","Mean number of Toward global tracks (in |#eta|<0.9) vs Run ID vs vtxz",kTRUE,nRuns, 0, nRuns, AliReducedVarManager::kRunID,100,-10.,10.,AliReducedVarManager::kVtxZ, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksToward);
+    for (int icut = 0; icut<task->GetNMeasMultCuts(); icut++) {
+      const char* cutName = task->GetMeasMultcutName(icut);
+      if(classStr.Contains(Form("EventMultRegions2Leading_%s",cutName))) {
+        man->AddHistClass(classStr.Data());
+        cout << classStr.Data() << endl;
+        man->AddHistogram(classStr.Data(),"NGlobalTracksTowardLeading","Number of global tracks (toward relative to leading) per event",kFALSE, nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracksToward + AliReducedVarManager::kNMaxCutsGlobalTracks + icut);
+        man->AddHistogram(classStr.Data(),"NGlobalTracksTransverseLeading","Number of global tracks (Transverse relative to leading) per event",kFALSE, nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracksTransverse + AliReducedVarManager::kNMaxCutsGlobalTracks + icut);
+        man->AddHistogram(classStr.Data(),"NGlobalTracksAwayLeading","Number of global tracks (Away relative to leading) per event",kFALSE, nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracksAway + AliReducedVarManager::kNMaxCutsGlobalTracks + icut);
+        man->AddHistogram(classStr.Data(),"NGlobalTracks_NGlobalTracksTowardLeading","Number of global tracks (all regions) vs Number of global tracks (Toward relative to leading) in |#eta|<0.9",kFALSE, nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracksToward + AliReducedVarManager::kNMaxCutsGlobalTracks + icut, nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracks + icut);
+        man->AddHistogram(classStr.Data(),"NGlobalTracks_NGlobalTracksTransverseLeading","Number of global tracks (all regions) vs Number of global tracks (Transverse relative to leading) in |#eta|<0.9",kFALSE, nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracksTransverse + AliReducedVarManager::kNMaxCutsGlobalTracks + icut, nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracks + icut);
+        man->AddHistogram(classStr.Data(),"NGlobalTracks_NGlobalTracksAwayLeading","Number of global tracks (all regions) vs Number of global tracks (Away relative to leading) in |#eta|<0.9",kFALSE, nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracksAway + AliReducedVarManager::kNMaxCutsGlobalTracks + icut, nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracks + icut);
+        if (isMC) {
+          man->AddHistogram(classStr.Data(),"MultiplicityTowardLeading","Multiplicity (toward relative to leading) in |#eta|<0.9",kFALSE, nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09Toward + 1);
+          man->AddHistogram(classStr.Data(),"Multiplicity_NGlobalTracks_TowardLeading_TProfile","Mean multiplicity in |#eta|<0.9 vs global tracks (toward relative to leading) (in |#eta|<0.9)",kTRUE,nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksToward + AliReducedVarManager::kNMaxCutsGlobalTracks + icut,nMultBins, minMult, maxMult, AliReducedVarManager::kMCNch09Toward + 1);
+          man->AddHistogram(classStr.Data(),"Multiplicity_NGlobalTracks_TowardLeading","Multiplicity in |#eta|<0.9 vs global tracks (toward relative to leading) (in |#eta|<0.9)",kFALSE,nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracksToward + AliReducedVarManager::kNMaxCutsGlobalTracks + icut,nMultBins, minMult, maxMult, AliReducedVarManager::kMCNch09Toward + 1);
+          man->AddHistogram(classStr.Data(),"MultiplicityTransverseLeading","Multiplicity (Transverse relative to leading) in |#eta|<0.9",kFALSE, nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09Transverse + 1);
+          man->AddHistogram(classStr.Data(),"Multiplicity_NGlobalTracks_TransverseLeading_TProfile","Mean multiplicity in |#eta|<0.9 vs global tracks (Transverse relative to leading) (in |#eta|<0.9)",kTRUE,nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksTransverse + AliReducedVarManager::kNMaxCutsGlobalTracks + icut,nMultBins, minMult, maxMult, AliReducedVarManager::kMCNch09Transverse + 1);
+          man->AddHistogram(classStr.Data(),"Multiplicity_NGlobalTracks_TransverseLeading","Multiplicity in |#eta|<0.9 vs global tracks (Transverse relative to leading) (in |#eta|<0.9)",kFALSE,nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracksTransverse + AliReducedVarManager::kNMaxCutsGlobalTracks + icut,nMultBins, minMult, maxMult, AliReducedVarManager::kMCNch09Transverse + 1);
+          man->AddHistogram(classStr.Data(),"MultiplicityAwayLeading","Multiplicity (Away relative to leading) in |#eta|<0.9",kFALSE, nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09Away + 1);
+          man->AddHistogram(classStr.Data(),"Multiplicity_NGlobalTracks_AwayLeading_TProfile","Mean multiplicity in |#eta|<0.9 vs global tracks (Away relative to leading) (in |#eta|<0.9)",kTRUE,nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksAway + AliReducedVarManager::kNMaxCutsGlobalTracks + icut,nMultBins, minMult, maxMult, AliReducedVarManager::kMCNch09Away + 1);
+          man->AddHistogram(classStr.Data(),"Multiplicity_NGlobalTracks_AwayLeading","Multiplicity in |#eta|<0.9 vs global tracks (Away relative to leading) (in |#eta|<0.9)",kFALSE,nMultBins, minMult, maxMult, AliReducedVarManager::kNGlobalTracksAway + AliReducedVarManager::kNMaxCutsGlobalTracks + icut,nMultBins, minMult, maxMult, AliReducedVarManager::kMCNch09Away + 1);
 
-
-      //Transverse region 
-      man->AddHistogram(classStr.Data(),"NGlobalTracksTransverse","Number of Transverse global tracks per event",kFALSE, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksTransverse);
-      man->AddHistogram(classStr.Data(),"MultiplicityTransverse","Multiplicity Transverse in |#eta|<0.9",kFALSE, nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09Transverse);
-      man->AddHistogram(classStr.Data(),"MultiplicityTransverse_NGlobalTracksTransverse_TProfile","Mean Transverse multiplicity in |#eta|<0.9 vs Transverse global tracks (in |#eta|<0.9)",kTRUE, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksTransverse, nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09Transverse);
-      man->AddHistogram(classStr.Data(),"MultiplicityTransverse_NGlobalTrackTransverses","Multiplicity in |#eta|<0.9 vs global tracks (in |#eta|<0.9)",kFALSE, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksTransverse, nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09Transverse);
-      man->AddHistogram(classStr.Data(),"NGlobalTracksTransverse_vtxz_TProfile","Mean number of Transverse global tracks (in |#eta|<0.9) vs vtxz",kTRUE,100,-10.,10.,AliReducedVarManager::kVtxZ, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksTransverse);
-      man->AddHistogram(classStr.Data(),"NGlobalTracksTransverse_vtxz","Transverse Global tracks (in |#eta|<0.9) vs vtxz",kFALSE,100,-10.,10.,AliReducedVarManager::kVtxZ, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksTransverse);
-      man->AddHistogram(classStr.Data(),"NGlobalTracksTransverse_RunNumber_TProfile","Mean number of Transverse global tracks (in |#eta|<0.9) vs Run number",kTRUE,runNBins, runHistRange[0], runHistRange[1], AliReducedVarManager::kRunNo, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksTransverse);
-      man->AddHistogram(classStr.Data(),"NGlobalTracksTransverse_RunNumber_vtxz_TProfile","Mean number of Transverse global tracks (in |#eta|<0.9) vs Run number vs vtxz",kTRUE,runNBins, runHistRange[0], runHistRange[1], AliReducedVarManager::kRunNo,100,-10.,10.,AliReducedVarManager::kVtxZ, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksTransverse);
-      //man->AddHistogram(classStr.Data(),"NGlobalTracksTransverse_RunNumber_vtxz","Global tracks (in |#eta|<0.9) vs Run number vs vtxz",kFALSE,runNBins, runHistRange[0], runHistRange[1], AliReducedVarManager::kRunNo,100,-10.,10.,AliReducedVarManager::kVtxZ, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksTransverse);      
-      man->AddHistogram(classStr.Data(),"NGlobalTracksTransverse_RunID_TProfile","Mean number of Transverse global tracks (in |#eta|<0.9) vs Run ID",kTRUE,nRuns, 0, nRuns, AliReducedVarManager::kRunID, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksTransverse);
-      man->AddHistogram(classStr.Data(),"NGlobalTracksTransverse_RunID_vtxz_TProfile","Mean number of Transverse global tracks (in |#eta|<0.9) vs Run ID vs vtxz",kTRUE,nRuns, 0, nRuns, AliReducedVarManager::kRunID,100,-10.,10.,AliReducedVarManager::kVtxZ, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksTransverse);
-      
-      //Away region 
-      man->AddHistogram(classStr.Data(),"NGlobalTracksAway","Number of Away global tracks per event",kFALSE, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksAway);
-      man->AddHistogram(classStr.Data(),"MultiplicityAway","Multiplicity Away in |#eta|<0.9",kFALSE, nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09Away);
-      man->AddHistogram(classStr.Data(),"MultiplicityAway_NGlobalTracksAway_TProfile","Mean Away multiplicity in |#eta|<0.9 vs Away global tracks (in |#eta|<0.9)",kTRUE, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksAway, nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09Away);
-      man->AddHistogram(classStr.Data(),"MultiplicityAway_NGlobalTrackAways","Multiplicity in |#eta|<0.9 vs global tracks (in |#eta|<0.9)",kFALSE, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksAway, nMultBins, minMult, maxMult,AliReducedVarManager::kMCNch09Away);
-      man->AddHistogram(classStr.Data(),"NGlobalTracksAway_vtxz_TProfile","Mean number of Away global tracks (in |#eta|<0.9) vs vtxz",kTRUE,100,-10.,10.,AliReducedVarManager::kVtxZ, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksAway);
-      man->AddHistogram(classStr.Data(),"NGlobalTracksAway_vtxz","Away Global tracks (in |#eta|<0.9) vs vtxz",kFALSE,100,-10.,10.,AliReducedVarManager::kVtxZ, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksAway);
-      man->AddHistogram(classStr.Data(),"NGlobalTracksAway_RunNumber_TProfile","Mean number of Away global tracks (in |#eta|<0.9) vs Run number",kTRUE,runNBins, runHistRange[0], runHistRange[1], AliReducedVarManager::kRunNo, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksAway);
-      man->AddHistogram(classStr.Data(),"NGlobalTracksAway_RunNumber_vtxz_TProfile","Mean number of Away global tracks (in |#eta|<0.9) vs Run number vs vtxz",kTRUE,runNBins, runHistRange[0], runHistRange[1], AliReducedVarManager::kRunNo,100,-10.,10.,AliReducedVarManager::kVtxZ, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksAway);
-      //man->AddHistogram(classStr.Data(),"NGlobalTracksAway_RunNumber_vtxz","Global tracks (in |#eta|<0.9) vs Run number vs vtxz",kFALSE,runNBins, runHistRange[0], runHistRange[1], AliReducedVarManager::kRunNo,100,-10.,10.,AliReducedVarManager::kVtxZ, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksAway);
-      man->AddHistogram(classStr.Data(),"NGlobalTracksAway_RunID_TProfile","Mean number of Away global tracks (in |#eta|<0.9) vs Run ID",kTRUE,nRuns, 0, nRuns, AliReducedVarManager::kRunID, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksAway);
-      man->AddHistogram(classStr.Data(),"NGlobalTracksAway_RunID_vtxz_TProfile","Mean number of Away global tracks (in |#eta|<0.9) vs Run ID vs vtxz",kTRUE,nRuns, 0, nRuns, AliReducedVarManager::kRunID,100,-10.,10.,AliReducedVarManager::kVtxZ, nMultBins, minMult, maxMult,AliReducedVarManager::kNGlobalTracksAway);
-
-      continue;
+        }
+        continue;
+      }
     }
 
     // Track histograms
@@ -807,8 +967,8 @@ void DefineHistograms(AliReducedAnalysisFilterTrees* task, Bool_t ispp/*=kTRUE*/
       man->AddHistogram(classStr.Data(), "DCAz", "DCAz", kFALSE, 200, -5.0, 5.0, AliReducedVarManager::kDcaZ);
       man->AddHistogram(classStr.Data(), "DCAz_Pt", "DCAz", kFALSE, 100, -3.0, 3.0, AliReducedVarManager::kDcaZ, 50, 0.0, 5.0, AliReducedVarManager::kPt);
       man->AddHistogram(classStr.Data(), "DCAz_TimeFromSOR", "<DCAz> vs time from SOR", kTRUE, 90, 0., 450., AliReducedVarManager::kTimeRelativeSOR, 200, -5.0, 5.0, AliReducedVarManager::kDcaZ);
-      man->AddHistogram(classStr.Data(),"DCAxy_Eta_MultVZERO_NTracksTPCoutFromPileup_prof","",kTRUE, 10, 0., 40000., AliReducedVarManager::kVZEROTotalMult, 22,-2000., 20000., AliReducedVarManager::kNTracksTPCoutFromPileup, 20,-1.0,1.0, AliReducedVarManager::kEta, "","","", AliReducedVarManager::kDcaXY);
-      man->AddHistogram(classStr.Data(),"DCAz_Eta_MultVZERO_NTracksTPCoutFromPileup_prof","",kTRUE, 10, 0., 40000., AliReducedVarManager::kVZEROTotalMult, 22,-2000., 20000., AliReducedVarManager::kNTracksTPCoutFromPileup, 20,-1.0,1.0, AliReducedVarManager::kEta, "","","", AliReducedVarManager::kDcaZ);
+      //man->AddHistogram(classStr.Data(),"DCAxy_Eta_MultVZERO_NTracksTPCoutFromPileup_prof","",kTRUE, 10, 0., 40000., AliReducedVarManager::kVZEROTotalMult, 22,-2000., 20000., AliReducedVarManager::kNTracksTPCoutFromPileup, 20,-1.0,1.0, AliReducedVarManager::kEta, "","","", AliReducedVarManager::kDcaXY);
+      //man->AddHistogram(classStr.Data(),"DCAz_Eta_MultVZERO_NTracksTPCoutFromPileup_prof","",kTRUE, 10, 0., 40000., AliReducedVarManager::kVZEROTotalMult, 22,-2000., 20000., AliReducedVarManager::kNTracksTPCoutFromPileup, 20,-1.0,1.0, AliReducedVarManager::kEta, "","","", AliReducedVarManager::kDcaZ);
       man->AddHistogram(classStr.Data(), "NsigmaTPC", "Nsigma TPC", kFALSE, 200, -3.0, 3.0, AliReducedVarManager::kTPCnSig);
       man->AddHistogram(classStr.Data(), "NsigmaTPC_P", "Nsigma TPC vs p", kFALSE, 50, -3.0, 3.0, AliReducedVarManager::kTPCnSig,50,1.,10., AliReducedVarManager::kP);
 
@@ -882,7 +1042,7 @@ void DefineHistograms(AliReducedAnalysisFilterTrees* task, Bool_t ispp/*=kTRUE*/
       man->AddHistClass(classStr.Data());
       cout << classStr.Data() << endl;
       man->AddHistogram(classStr.Data(), "PairType", "Pair type", kFALSE, 4, -0.5, 3.5, AliReducedVarManager::kPairType);
-      man->AddHistogram(classStr.Data(), "Mass", "Invariant mass", kFALSE,500, 0.0, 5.0, AliReducedVarManager::kMass);
+      man->AddHistogram(classStr.Data(), "Mass", "Invariant mass", kFALSE, 5000, 0.0, 5.0, AliReducedVarManager::kMass);
       // man->AddHistogram(classStr.Data(), "Multip", "Invariant mass vs multiplicity", kFALSE, 150, 0., 150., AliReducedVarManager::kNtracksSelected, kNMassBins, 0.0, 5.0, AliReducedVarManager::kMass);
       man->AddHistogram(classStr.Data(), "Pt", "", kFALSE, 100, 0.0, 10.0, AliReducedVarManager::kPt);
       man->AddHistogram(classStr.Data(), "Rapidity", "Rapidity", kFALSE, 300, -1.5, 1.5, AliReducedVarManager::kRap);
@@ -913,22 +1073,50 @@ void DefineHistograms(AliReducedAnalysisFilterTrees* task, Bool_t ispp/*=kTRUE*/
       continue;
     }   // end if for Pair classes of histograms 
 
-    for(int cutMode=0; cutMode<4*nEstimators;cutMode++) {
-      if(classStr.Contains(Form("pp_13TeV_Data_cutMode_%d",100+cutMode))) {
+    for (int icut = 0; icut < task->GetNMeasMultCuts(); icut++) {
+      const char* cutName = task->GetMeasMultcutName(icut);
+      if(classStr.Contains(Form("JpsiPtMultCorrel_%s", cutName))) {
+        man->AddHistClass(classStr.Data());
+        cout << classStr.Data() << endl;
+        Double_t ptbins[10] = {0., 1., 2., 3., 4., 5., 6., 8., 12., 100.};
+        Double_t* binsPt = ptbins;
+        Double_t multbins[nMultBinspp]; for (int b = 0; b <= nMultBinspp; b++) {multbins[b] = minMultpp+b*(maxMultpp-minMultpp)/nMultBinspp;}
+        Double_t* binsMult = multbins; 
+        man->AddHistogram(classStr.Data(), "multPtSpec_trk_meas", "Pt spectrum vs measured multiplicity", kFALSE,  nMultBinspp, binsMult, AliReducedVarManager::kNGlobalTracks+icut, 9, binsPt, AliReducedVarManager::kPt); //2D unfolding
+        if(isMC) {
+          man->AddHistogram(classStr.Data(), "multCorrel_prim", "True Pt spectrum vs measured multiplicity", kFALSE,  nMultBinspp, binsMult, AliReducedVarManager::kNGlobalTracks+icut,  9, binsPt, AliReducedVarManager::kPtMC);
+          man->AddHistogram(classStr.Data(), "ptCorrel_prim", "True Pt spectrum vs measured pt spectrum", kFALSE, 9, binsPt, AliReducedVarManager::kPt, 9, binsPt, AliReducedVarManager::kPtMC); 
+          man->AddHistogram(classStr.Data(), "multPtSpec_prim_gen", "True Pt spectrum (all generated) vs true multiplicity", kFALSE,  nMultBinspp, binsMult, AliReducedVarManager::kMCNch09, 9, binsPt, AliReducedVarManager::kPtMC+1);
+          man->AddHistogram(classStr.Data(), "multPtSpec_prim_gen_meas", "True Pt spectrum (all generated) vs meas multiplicity", kFALSE,  nMultBinspp, binsMult, AliReducedVarManager::kNGlobalTracks+icut, 9, binsPt, AliReducedVarManager::kPtMC+1);
+          man->AddHistogram(classStr.Data(), "multPtSpec_prim_meas", "True Pt spectrum vs true multiplicity", kFALSE,  nMultBinspp, binsMult, AliReducedVarManager::kMCNch09, 9, binsPt, AliReducedVarManager::kPtMC);
+          man->AddHistogram(classStr.Data(), "multPtSpec_trk_inter", "Pt measured spectrum vs true multiplicity", kFALSE,  nMultBinspp, binsMult, AliReducedVarManager::kMCNch09, 9, binsPt, AliReducedVarManager::kPt);
+        }
+        continue;
+      }
+    }
+
+    if(classStr.Contains("DeltaPhi_JpsiTruth_JpsiCandidate")) {
+      man->AddHistClass(classStr.Data());
+      cout << classStr.Data() << endl;
+      man->AddHistogram(classStr.Data(), "DeltaPhi", "Delta phi between true Jpsi and best Jpsi candidate", kFALSE,  400, 0., 2*M_PI, AliReducedVarManager::kPhiJpsiMCTruth);
+    }
+
+    for(int cutMode = 0; cutMode < 4*nEstimators; cutMode++) {
+      if(classStr.Contains(Form("pp_13TeV_Data_cutMode_%d", 100+cutMode))) {
         man->AddHistClass(classStr.Data());
         cout << classStr.Data() << endl;
         man->AddHistogram(classStr.Data(), "multDist_evt_meas", "Measured multiplicity distribution", kFALSE,  nMultBinspp, minMultpp, maxMultpp, AliReducedVarManager::kNGlobalTracks+cutMode/4);
-        man->AddHistogram(classStr.Data(), "multPtSpec_trk_meas", "Pt spectrum vs measured multiplicity", kFALSE,  nMultBinspp, minMultpp, maxMultpp, AliReducedVarManager::kNGlobalTracks+cutMode/4, 100, 0., 10., AliReducedVarManager::kPt); //2D unfolding
+        //man->AddHistogram(classStr.Data(), "multPtSpec_trk_meas", "Pt spectrum vs measured multiplicity", kFALSE,  nMultBinspp, minMultpp, maxMultpp, AliReducedVarManager::kNGlobalTracks+cutMode/4, 100, 0., 10., AliReducedVarManager::kPt); //2D unfolding
       }
       if(classStr.Contains(Form("pp_13TeV_MC_cutMode_%d",100+cutMode))) {
         man->AddHistClass(classStr.Data());
         cout << classStr.Data() << endl;
         man->AddHistogram(classStr.Data(), "multDist_evt_meas", "Measured multiplicity distribution", kFALSE,  nMultBinspp, minMultpp, maxMultpp, AliReducedVarManager::kNGlobalTracks+cutMode/4);
-        man->AddHistogram(classStr.Data(), "multPtSpec_trk_meas", "Pt spectrum vs measured multiplicity", kFALSE,  nMultBinspp, minMultpp, maxMultpp, AliReducedVarManager::kNGlobalTracks+cutMode/4, 100, 0., 10., AliReducedVarManager::kPt); //2D unfolding
+        //man->AddHistogram(classStr.Data(), "multPtSpec_trk_meas", "Pt spectrum vs measured multiplicity", kFALSE,  nMultBinspp, minMultpp, maxMultpp, AliReducedVarManager::kNGlobalTracks+cutMode/4, 100, 0., 10., AliReducedVarManager::kPt); //2D unfolding
         man->AddHistogram(classStr.Data(), "multDist_evt_gen", "True multiplicity distribution", kFALSE,  nMultBinspp, minMultpp, maxMultpp, AliReducedVarManager::kMCNch09);
         man->AddHistogram(classStr.Data(), "multDist_evt_gen_trig", "True multiplicity distribution after trigger", kFALSE,  nMultBinspp, minMultpp, maxMultpp, AliReducedVarManager::kMCNch09+1);
         man->AddHistogram(classStr.Data(), "multCorrel_evt", "True multiplicity vs measured multiplicity", kFALSE,  nMultBinspp, minMultpp, maxMultpp, AliReducedVarManager::kNGlobalTracks+cutMode/4,  nMultBinspp, minMultpp, maxMultpp, AliReducedVarManager::kMCNch09+2); 
-        man->AddHistogram(classStr.Data(), "multCorrel_prim", "True Pt spectrum vs measured multiplicity", kFALSE,  nMultBinspp, minMultpp, maxMultpp, AliReducedVarManager::kNGlobalTracks+cutMode/4,  nMultBinspp, minMultpp, maxMultpp, AliReducedVarManager::kMCNch09); //2D unfolding - not used - filling is false
+        /*man->AddHistogram(classStr.Data(), "multCorrel_prim", "True Pt spectrum vs measured multiplicity", kFALSE,  nMultBinspp, minMultpp, maxMultpp, AliReducedVarManager::kNGlobalTracks+cutMode/4,  nMultBinspp, minMultpp, maxMultpp, AliReducedVarManager::kMCNch09); //2D unfolding - not used - filling is false
         man->AddHistogram(classStr.Data(), "ptCorrel_prim", "True Pt spectrum vs measured pt spectrum", kFALSE, 100, 0., 10., AliReducedVarManager::kPt, 100, 0., 10., AliReducedVarManager::kPtMC); //pt bins should be changed
         man->AddHistogram(classStr.Data(), "multPtSpec_prim_gen", "True Pt spectrum (all generated primaries) vs true multiplicity", kFALSE,  nMultBinspp, minMultpp, maxMultpp, AliReducedVarManager::kMCNch09, 100, 0., 10., AliReducedVarManager::kPtMC); //pt bins should be changed
         man->AddHistogram(classStr.Data(), "multPtSpec_prim_gen_evtloss", "True Pt spectrum (generated primaries from rejected events) vs true multiplicity", kFALSE,  nMultBinspp, minMultpp, maxMultpp, AliReducedVarManager::kMCNch09, 100, 0., 10., AliReducedVarManager::kPtMC); //pt bins should be changed
@@ -938,6 +1126,7 @@ void DefineHistograms(AliReducedAnalysisFilterTrees* task, Bool_t ispp/*=kTRUE*/
         man->AddHistogram(classStr.Data(), "multPtSpec_trk_sec_meas", "True Pt spectrum secondaries vs measured multiplicity", kFALSE,  nMultBinspp, minMultpp, maxMultpp, AliReducedVarManager::kNGlobalTracks+cutMode/4, 100, 0., 10., AliReducedVarManager::kPt); //pt bins should be changed
         man->AddHistogram(classStr.Data(), "multPtSpec_trk_meas_evtcont", "True Pt spectrum (from contaminated events) vs measured multiplicity", kFALSE,  nMultBinspp, minMultpp, maxMultpp, AliReducedVarManager::kNGlobalTracks+cutMode/4, 100, 0., 10., AliReducedVarManager::kPt); //pt bins should be changed
         man->AddHistogram(classStr.Data(), "multPtSpec_trk_inter", "Pt measured spectrum vs true multiplicity", kFALSE,  nMultBinspp, minMultpp, maxMultpp, AliReducedVarManager::kMCNch09, 100, 0., 10., AliReducedVarManager::kPt); //pt bins should be changed
+      */
       }
 
       if(classStr.Contains(Form("pPb_5TeV_Data_cutMode_%d",100+cutMode))) {
