@@ -294,7 +294,6 @@ UInt_t AliPhysicsSelection::IsCollisionCandidate(const AliVEvent* event){
     if (!Initialize(event)) AliFatal(Form("Could not initialize for run %d", event->GetRunNumber()));
   }
   
-  std::cout<<"Is Collision Candidate?"<<std::endl;
   // check event type; should be PHYSICS = 7 for data and 0 for MC
   Int_t eventType = event->GetHeader()->GetEventType();
   if (fMC) {
@@ -305,7 +304,7 @@ UInt_t AliPhysicsSelection::IsCollisionCandidate(const AliVEvent* event){
   
   UInt_t accept = 0;
   Int_t nColl = fCollTrigClasses.GetEntries();
-  Int_t nBG   = fBGTrigClasses.GetEntries();std::cout<<"ncoll & nBG "<<nColl<<"  "<<nBG<<std::endl;
+  Int_t nBG   = fBGTrigClasses.GetEntries();
   for (Int_t i=0; i<nColl+nBG; i++) {
     const char* triggerClass = i<nColl ? fCollTrigClasses.At(i)->GetName() : fBGTrigClasses.At(i-nColl)->GetName();
     AliDebug(AliLog::kDebug+1, Form("Processing trigger class %s", triggerClass));
@@ -315,8 +314,7 @@ UInt_t AliPhysicsSelection::IsCollisionCandidate(const AliVEvent* event){
     
     Int_t triggerLogic = 0;
     UInt_t singleTriggerResult = CheckTriggerClass(event, triggerClass, triggerLogic);
-    std::cout<<"trigger class: "<<triggerClass<<"  "<<triggerLogic<<std::endl;
-    if (!singleTriggerResult) continue;std::cout<<fPSOADB->GetHardwareTrigger(triggerLogic)<<"  "<<fPSOADB->GetOfflineTrigger(triggerLogic)<<std::endl;
+    if (!singleTriggerResult) continue;
     Bool_t onlineDecision  = EvaluateTriggerLogic(event, triggerAnalysis, fPSOADB->GetHardwareTrigger(triggerLogic), kFALSE);
     Bool_t offlineDecision = EvaluateTriggerLogic(event, triggerAnalysis, fPSOADB->GetOfflineTrigger(triggerLogic), kTRUE);
     triggerAnalysis->FillHistograms(event,onlineDecision,offlineDecision);
@@ -867,7 +865,6 @@ FormulaAndBits& AliPhysicsSelection::FindForumla(const char* triggerLogic) {
 
     R5TFormula formula(Form("dummy_name_%zu", fTriggerToFormula->size()), trg_logic_formated.c_str());
 
-    std::cout<<"test: "<<triggerLogic<<"  "<<trg_logic_formated.c_str()<<std::endl;
     if (formula.Compile() > 0) {
       AliFatal(Form("Could not evaluate trigger logic %s (evaluated to %s)",
 		    triggerLogic, trg_logic_formated.c_str()));

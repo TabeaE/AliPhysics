@@ -101,6 +101,7 @@ class AliResonanceFits : public TObject {
   enum Constants {
      kBkgMixedEvent,    // opposite-sign mixed event bkg
      kBkgLikeSign,         // same-event like-sign bkg
+     kBkgLikeSignAndResidualFit,
      kBkgMixedEventAndResidualFit,   // fit of residual bkg with a user function for bkg and MC signal shape for signal
      kBkgFitFunction,     // fit of the SE-OS with a user function for bkg and MC signal shape for signal
      kMatchSEOS,          // match to same-event opposite-sign outside signal region (side bands)

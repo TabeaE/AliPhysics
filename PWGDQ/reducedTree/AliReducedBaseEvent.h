@@ -82,7 +82,7 @@ class AliReducedBaseEvent : public TObject {
   Int_t     NTracks1()                        const {return (fTracks ? fTracks->GetEntries() : 0);}
   Int_t     NTracks2()                        const {return (fTracks2 ? fTracks2->GetEntries() : 0);}
   Int_t     NGlobalTracks(Int_t icut = 0)            const {return fNGlobalTracks[icut];}
-  Int_t     NTracksRegions(Int_t iRegion, Int_t icut = 0)    const {return ((iRegion>=0 && iRegion<=2) ? fNTracksRegions[8*iRegion+icut] : 0);} 
+  Int_t     NTracksRegions(Int_t iRegion, bool regionToJpsi = true, Int_t icut = 0)    const {return ((iRegion>=0 && iRegion<=2) ? fNTracksRegions[16*iRegion+8*(!regionToJpsi)+icut] : 0);} 
   Float_t   GetLeadingPt(Int_t icut = 0)    const {return fLeading[3*icut];}
   Float_t   GetLeadingPhi(Int_t icut = 0)    const {return fLeading[3*icut+1];}
   Float_t   GetLeadingEta(Int_t icut = 0)    const {return fLeading[3*icut+2];} 
@@ -105,7 +105,7 @@ class AliReducedBaseEvent : public TObject {
   Bool_t    SetEventTag(UShort_t iflag)        {if (iflag>=8*sizeof(ULong64_t)) return kFALSE; fEventTag|=(ULong64_t(1)<<iflag); return kTRUE;}
   
   void SetNGlobalTracks(Int_t n, Int_t icut) {if (n>=0) fNGlobalTracks[icut] = n;} //set when running on the reduced tree, for the ith multiplicity estimator
-  void SetNTracksRegions(Int_t n, Int_t iRegion, Int_t icut) {if (n>=0 && iRegion>=0 && iRegion<=2) fNTracksRegions[8*iRegion + icut] = n;} 
+  void SetNTracksRegions(Int_t n, Int_t iRegion, bool regionToJpsi = true, Int_t icut = 0) {if (n>=0 && iRegion>=0 && iRegion<=2) fNTracksRegions[16*iRegion + 8*(!regionToJpsi) + icut] = n;} 
    // set when running on the reduced tree, for the ith multiplicity estimator
   void SetLeadingParticle(float pt, float phi, float eta, Int_t icut) {fLeading[0+3*icut] = pt; fLeading[1+3*icut] = phi; fLeading[2+3*icut] = eta;}
    //set pt phi eta for the cutset i
@@ -122,7 +122,7 @@ class AliReducedBaseEvent : public TObject {
   Int_t     fNtracks[2];            // number of tracks, [0]-total, [1]-selected for the tree
   Int_t     fNV0candidates[2];      // number of V0 candidates, [0]-total, [1]-selected for the tree
   Int_t     fNGlobalTracks[8];      // number of global tracks, depending on the multiplicity estimator
-  Int_t     fNTracksRegions[24];    // 0 to 7 is toward, 8 to 15 is transverse, 16 to 23 is away
+  Int_t     fNTracksRegions[48];    // 0 to 15 is toward (0 to 8 regions to Jpsi, 9 to 15 region to leading pt), 16 to 31 is transverse, 32 to 47 is away
   Float_t   fLeading[24];           // pt phi eta of the leading particle in the event, depending of the cutset (0,1,2 for the first cutset, etc...)         
 
 
@@ -138,7 +138,7 @@ class AliReducedBaseEvent : public TObject {
   AliReducedBaseEvent& operator= (const AliReducedBaseEvent &c);
   AliReducedBaseEvent(const AliReducedBaseEvent &c);
 
-  ClassDef(AliReducedBaseEvent, 7);
+  ClassDef(AliReducedBaseEvent, 8);
 };
 
 #endif

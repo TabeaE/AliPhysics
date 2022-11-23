@@ -281,13 +281,15 @@ Bool_t AliResonanceFits::Initialize() {
    if(fOptionBkgMethod==kBkgMixedEvent || 
       fOptionBkgMethod==kBkgMixedEventAndResidualFit || 
       fOptionDebug ||
-      (fOptionBkgMethod==kBkgLikeSign && fOptionUseRfactorCorrection)) {
+      (fOptionBkgMethod==kBkgLikeSign && fOptionUseRfactorCorrection) ||
+      (fOptionBkgMethod==kBkgLikeSignAndResidualFit && fOptionUseRfactorCorrection)) {
       if(!fMEOS) {
          cout << "AliResonanceFits::Initialize() Fatal: No ME-OS histogram provided! This is needed with the current matching options" << endl;
          return kFALSE;
       }
    }
    if(fOptionBkgMethod==kBkgLikeSign || 
+      fOptionBkgMethod==kBkgLikeSignAndResidualFit ||
       fOptionBkgMethod==kBkgMixedEventAndResidualFit || 
       fOptionDebug ||
       (fOptionBkgMethod==kBkgMixedEvent && fgOptionMEMatching==kMatchSELS)) {
@@ -314,7 +316,8 @@ Bool_t AliResonanceFits::Initialize() {
       }
    }
    if(fOptionBkgMethod==kBkgMixedEventAndResidualFit ||
-      fOptionBkgMethod==kBkgFitFunction) {
+      fOptionBkgMethod==kBkgFitFunction ||
+      fOptionBkgMethod==kBkgLikeSignAndResidualFit) {
       if(!fBkgFitFunction) {
          cout << "AliResonanceFits::Initialize() Fatal: Fit function not set !" << endl;
          return kFALSE;
@@ -626,7 +629,7 @@ void AliResonanceFits::AddSlice() {
    }  // end if mixed event and residual fit
    */
    // Construct the like-sign background
-   if(fOptionBkgMethod==kBkgLikeSign) {
+   if(fOptionBkgMethod==kBkgLikeSign || fOptionBkgMethod==kBkgLikeSignAndResidualFit) {
       if(!fgOptionUse2DMatching && fUserEnabledPtFitRange)
          bkgSlice = BuildLSbkg(projSELSleg1_ptRange, projSELSleg2_ptRange, projMEOS_ptRange, projMELSleg1_ptRange, projMELSleg2_ptRange);
       else
@@ -995,7 +998,7 @@ Double_t AliResonanceFits::GlobalFitFunction(Double_t *x, Double_t* par) {
    val *= par[0];
    //val += par[1]*fgTempBkg->GetBinContent(fgTempBkg->FindBin(x[0]));
    //cout << "sigVal = " << val << endl;
-   for(Int_t i=0;i<fBkgFitFunction->GetNpar();++i) {
+   for(Int_t i = 0; i < fBkgFitFunction->GetNpar(); ++i) {
       fBkgFitFunction->SetParameter(i, par[i+1]);
       // cout << "par" << i+1 << " = " << par[i+1] << endl;
    }   
@@ -1093,7 +1096,7 @@ void AliResonanceFits::FitInvMass() {
       //fSignalMCshape->Scale(fGlobalFitFunction->GetParameter(0));
    }
 
-   if(fOptionBkgMethod==kBkgMixedEventAndResidualFit) {
+   if(fOptionBkgMethod==kBkgMixedEventAndResidualFit || fOptionBkgMethod==kBkgLikeSignAndResidualFit) {
       // fit the residual bkg + signal distribution
       fSplusResidualBkg = (TH1*)fSplusB->Clone(Form("ResidualBkg_%.6f", gRandom->Rndm()));
       fSplusResidualBkg->Add(fBkg, -1.0);
@@ -1170,10 +1173,11 @@ Bool_t AliResonanceFits::Process() {
       fOptionBkgMethod==kBkgMixedEventAndResidualFit || 
       fOptionBkgMethod==kBkgFitFunction || 
       fOptionBkgMethod==kBkgLikeSign ||
+      fOptionBkgMethod==kBkgLikeSignAndResidualFit ||
       fOptionDebug)
    Slice();
-
-   if(!fgOptionUse2DMatching && (fOptionBkgMethod==kBkgFitFunction || fOptionBkgMethod==kBkgMixedEventAndResidualFit))
+   
+   if(!fgOptionUse2DMatching && (fOptionBkgMethod==kBkgFitFunction || fOptionBkgMethod==kBkgMixedEventAndResidualFit || fOptionBkgMethod==kBkgLikeSignAndResidualFit))
       FitInvMass();
 
    if(fOptionScaleSummedBkg && !(fOptionBkgMethod==kBkgFitFunction || fOptionBkgMethod==kBkgMixedEventAndResidualFit)) {
@@ -1184,7 +1188,7 @@ Bool_t AliResonanceFits::Process() {
    if(fSig) {delete fSig; fSig = 0;}
    if(fSoverB) {delete fSoverB; fSoverB = 0;}
    if(fSoverBfromMCshape) {delete fSoverBfromMCshape; fSoverBfromMCshape = 0;}
-   if(!(fOptionBkgMethod==kBkgFitFunction || fOptionBkgMethod==kBkgMixedEventAndResidualFit)) {
+   if(!(fOptionBkgMethod==kBkgFitFunction || fOptionBkgMethod==kBkgMixedEventAndResidualFit || fOptionBkgMethod==kBkgLikeSignAndResidualFit)) {
       // build the signal projection
       if(fgOptionUse2DMatching)
          fSig = (TH2D*)fSplusB->Clone(Form("fSig_%.6f", gRandom->Rndm()));
@@ -1234,7 +1238,7 @@ Bool_t AliResonanceFits::Process() {
       //fSig->Draw();
       //fSoverB->Draw();
    } 
-   if(!fgOptionUse2DMatching && fOptionBkgMethod==kBkgMixedEventAndResidualFit) {
+   if(!fgOptionUse2DMatching && (fOptionBkgMethod==kBkgMixedEventAndResidualFit || fOptionBkgMethod==kBkgLikeSignAndResidualFit)) {
       fSig = (TH1D*)fSplusResidualBkg->Clone(Form("fSig_%.6f", gRandom->Rndm()));
       for(Int_t ib=1; ib<=fSig->GetXaxis()->GetNbins(); ++ib) {
          fSig->SetBinContent(ib, fSig->GetBinContent(ib)-fBkgFitFunction->Eval(fSig->GetXaxis()->GetBinCenter(ib)));
@@ -1335,7 +1339,7 @@ Double_t* AliResonanceFits::ComputeOutputValues(Double_t minMass, Double_t maxMa
          cout << "bkgIntegral :: " << bkgIntegral << " +/- " << bkgIntegralErr << endl;
          cout << "counts - fitBkg :: " << fFitValues[kSplusB] - bkgIntegral << " +/- " << TMath::Sqrt(fFitValues[kSigErr]*fFitValues[kSigErr]+bkgIntegralErr*bkgIntegralErr) << endl;*/
       }
-      if(fOptionBkgMethod==kBkgMixedEventAndResidualFit) {
+      if(fOptionBkgMethod==kBkgMixedEventAndResidualFit || fOptionBkgMethod==kBkgLikeSignAndResidualFit) {
          // The ME-LS bkg scaled to the SE-LS is subtracted from SE-OS
          //   The residual distribution is fitted with a function which contains the MC signal shape and a bkg function
          Int_t nBkgPars = fBkgFitFunction->GetNpar();
@@ -1391,12 +1395,12 @@ Double_t* AliResonanceFits::ComputeOutputValues(Double_t minMass, Double_t maxMa
    
    if(fOptionBkgMethod==kBkgMixedEvent || fOptionBkgMethod==kBkgMixedEventAndResidualFit)
       fFitValues[kSignif] = ((fFitValues[kSig]+fFitValues[kBkg]>0.001) ? (fFitValues[kSig]/(TMath::Sqrt(fFitValues[kSig]+fFitValues[kBkg]))) : 0.0);
-   if(fOptionBkgMethod==kBkgLikeSign)
+   if(fOptionBkgMethod==kBkgLikeSign || fOptionBkgMethod==kBkgLikeSignAndResidualFit)
       fFitValues[kSignif] = ((fFitValues[kSig]+2.0*fFitValues[kBkg]>0.001) ? (fFitValues[kSig]/(TMath::Sqrt(fFitValues[kSig]+2.0*fFitValues[kBkg]))) : 0.0);
    if(fOptionBkgMethod==kBkgFitFunction)
       fFitValues[kSignif] = (fFitValues[kSigErr]>0.001 ? fFitValues[kSig] / fFitValues[kSigErr] : 0.0);
       
-   if(!(fOptionBkgMethod==kBkgFitFunction || fOptionBkgMethod==kBkgMixedEventAndResidualFit))
+   if(!(fOptionBkgMethod==kBkgFitFunction || fOptionBkgMethod==kBkgMixedEventAndResidualFit || fOptionBkgMethod==kBkgLikeSignAndResidualFit))
       fFitValues[kChisqSideBands] = Chi2(fSplusB, fBkg, 1.0, 0.0);
    
    // scale the signal MC background
