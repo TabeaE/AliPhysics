@@ -458,6 +458,7 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
   values[kNV0selected]       = baseEvent->NV0Candidates();
   values[kNtracksTotal]       = baseEvent->NTracksTotal();
   values[kNtracksSelected] = baseEvent->NTracks();
+  values[kNtracks2Selected] = baseEvent->NTracks2();
   
   if(baseEvent->IsA()!=EVENT::Class()) return;
   
@@ -3258,7 +3259,7 @@ void AliReducedVarManager::SetDefaultVarNames() {
     fgVariableNames[kNTracksPerTrackingStatus+iflag] = Form("Tracks with %s on", fgkTrackingStatusNames[iflag]); 
     fgVariableUnits[kNTracksPerTrackingStatus+iflag] = ""; 
   }
-  fgVariableNames[kNTracksTPCoutBeforeClean] = "Number of kTPCout before ESD cleanup"; fgVariableUnits[kNTracksTPCoutBeforeClean] = "";
+  fgVariableNames[kNTracksTPCoutBeforeClean]    = "Number of kTPCout before ESD cleanup"; fgVariableUnits[kNTracksTPCoutBeforeClean] = "";
   fgVariableNames[kNTracksTPCoutVsITSout]       = "TPCout/ITSout";                   fgVariableUnits[kNTracksTPCoutVsITSout] = "";
   fgVariableNames[kNTracksTRDoutVsITSout]       = "TRDout/ITSout";                   fgVariableUnits[kNTracksTRDoutVsITSout] = "";
   fgVariableNames[kNTracksTOFoutVsITSout]       = "TOFout/ITSout";                   fgVariableUnits[kNTracksTOFoutVsITSout] = "";
@@ -3269,8 +3270,8 @@ void AliReducedVarManager::SetDefaultVarNames() {
   fgVariableNames[kNTracksTPCoutVsSPDtracklets] = "TPCout/SPDtracklets";             fgVariableUnits[kNTracksTPCoutVsSPDtracklets] = "";
   fgVariableNames[kNTracksTRDoutVsSPDtracklets] = "TRDout/SPDtracklets";             fgVariableUnits[kNTracksTRDoutVsSPDtracklets] = "";
   fgVariableNames[kNTracksTOFoutVsSPDtracklets] = "TOFout/SPDtracklets";             fgVariableUnits[kNTracksTOFoutVsSPDtracklets] = "";
-  fgVariableNames[kNTracksTPCoutFromPileup] = "# kTPCout tracks - expectation";   fgVariableUnits[kNTracksTPCoutFromPileup] = "";
-  fgVariableNames[kNTracksTPCoutVsVZEROTotalMult] = "TPCout / VZERO multiplicity"; fgVariableUnits[kNTracksTPCoutVsVZEROTotalMult] = "";
+  fgVariableNames[kNTracksTPCoutFromPileup]     = "# kTPCout tracks - expectation";  fgVariableUnits[kNTracksTPCoutFromPileup] = "";
+  fgVariableNames[kNTracksTPCoutVsVZEROTotalMult] = "TPCout / VZERO multiplicity";   fgVariableUnits[kNTracksTPCoutVsVZEROTotalMult] = "";
   fgVariableNames[kCentVZERO]                   = "VZERO centrality";                fgVariableUnits[kCentVZERO]      = "%";
   fgVariableNames[kCentSPD]                     = "CL1 centrality";                  fgVariableUnits[kCentSPD]        = "%";
   fgVariableNames[kCentSPDcorr]                 = "SPD trklts centrality";           fgVariableUnits[kCentSPDcorr]    = "%";
@@ -3292,7 +3293,7 @@ void AliReducedVarManager::SetDefaultVarNames() {
   fgVariableNames[kNV0total]                    = "Total number of V0s";             fgVariableUnits[kNV0total]       = "";  
   fgVariableNames[kNV0selected]                 = "Number of selected V0s";          fgVariableUnits[kNV0selected]    = "";  
   fgVariableNames[kNpairsSelected]              = "Number of pairs per event";       fgVariableUnits[kNpairsSelected] = "";    
-  fgVariableNames[kEvAverageTPCchi2]        = "Event TPC <chi2>";            fgVariableUnits[kEvAverageTPCchi2] = "";
+  fgVariableNames[kEvAverageTPCchi2]            = "Event TPC <chi2>";            fgVariableUnits[kEvAverageTPCchi2] = "";
   fgVariableNames[kNDplusToK0sPiplusSelected]     = "Number of D+ ->K0s pi+ pairs per event";     fgVariableUnits[kNDplusToK0sPiplusSelected]     = "";
   fgVariableNames[kNDplusToK0sKplusSelected]      = "Number of D+ ->K0s K+ pairs per event";      fgVariableUnits[kNDplusToK0sKplusSelected]      = "";
   fgVariableNames[kNDplusToPhiPiplusSelected]     = "Number of D+ ->phi pi+ pairs per event";     fgVariableUnits[kNDplusToPhiPiplusSelected]     = "";
@@ -3303,18 +3304,36 @@ void AliReducedVarManager::SetDefaultVarNames() {
   fgVariableNames[kNADzeroToKplusPiminusSelected] = "Number of anti-D0 ->K+ pi- pairs per event"; fgVariableUnits[kNADzeroToKplusPiminusSelected] = "";
   fgVariableNames[kNDsplusToK0sKplusSelected]     = "Number of Ds+ ->K0s K+ pairs per event";     fgVariableUnits[kNDsplusToK0sKplusSelected]     = "";
   fgVariableNames[kNDsminusToK0sKminusSelected]   = "Number of Ds- ->K0s K- pairs per event";     fgVariableUnits[kNDsminusToK0sKminusSelected]   = "";  
-  fgVariableNames[kNtracksTotal]                = "No. of tracks in original event"; fgVariableUnits[kNtracksTotal]           = "";
-  fgVariableNames[kNtracksSelected]             = "No. of selected tracks";          fgVariableUnits[kNtracksSelected]        = "";
-  fgVariableNames[kNtracksPosAnalyzed]          = "No.selected positive tracks";     fgVariableUnits[kNtracksPosAnalyzed]     = "";  
-  fgVariableNames[kNtracksNegAnalyzed]          = "No.selected negative tracks";     fgVariableUnits[kNtracksNegAnalyzed]     = ""; 
-  fgVariableNames[kNtracksPiPlusAnalyzed]       = "No.selected pos. pions";          fgVariableUnits[kNtracksPiPlusAnalyzed]  = "";  
-  fgVariableNames[kNtracksPiMinusAnalyzed]      = "No.selected neg. pions";          fgVariableUnits[kNtracksPiMinusAnalyzed] = "";  
-  fgVariableNames[kNtracksKPlusAnalyzed]        = "No.selected pos. kaons";          fgVariableUnits[kNtracksKPlusAnalyzed]   = "";  
-  fgVariableNames[kNtracksKMinusAnalyzed]       = "No.selected neg. kaons";          fgVariableUnits[kNtracksKMinusAnalyzed]  = "";  
-  fgVariableNames[kNK0sAnalyzed]                = "No.selected K0s candidates";      fgVariableUnits[kNK0sAnalyzed]           = "";  
-  fgVariableNames[kNPhiAnalyzed]                = "No.selected phi candidates";      fgVariableUnits[kNPhiAnalyzed]           = "";  
-  fgVariableNames[kNtracksAnalyzed]             = "No.selected tracks";              fgVariableUnits[kNtracksAnalyzed]        = "";  
-  for(Int_t i=0; i<18; ++i) fgVariableNames[kNtracksAnalyzedInPhiBins+i] = Form("# selected tracks in #varphi sector %d and #eta<0.", i);
+  fgVariableNames[kNtracksTotal]          = "No. of tracks in original event";               fgVariableUnits[kNtracksTotal]         = "";
+  fgVariableNames[kNtracksSelected]       = "No. of selected tracks";                        fgVariableUnits[kNtracksSelected]      = "";
+  fgVariableNames[kNtracks2Selected]      = "No. of selected tracks in second array";        fgVariableUnits[kNtracks2Selected]     = "";
+  fgVariableNames[kNtracks2SelectedGood]  = "No. of selected good tracks in second array";   fgVariableUnits[kNtracks2SelectedGood] = "";
+  fgVariableNames[kNtracks2NopeJpsi]      = "No. of good tracks in 2nd array excludingJpsi"; fgVariableUnits[kNtracks2NopeJpsi]     = "";
+  fgVariableNames[knTracks_toward]        = "No. of selected good tracks 2A toward";         fgVariableUnits[knTracks_toward]       = "";
+  fgVariableNames[knTracks_transverse]    = "No. of selected good tracks 2A transverse";     fgVariableUnits[knTracks_transverse]   = "";
+  fgVariableNames[knTracks_away]          = "No. of selected good tracks 2A away";           fgVariableUnits[knTracks_away]         = "";
+  fgVariableNames[kNJpsi_toward]                = "toward region";                        fgVariableUnits[kNJpsi_toward]                = "";
+  fgVariableNames[kNJpsi_transverse]            = "transverse region";                    fgVariableUnits[kNJpsi_transverse]            = "";
+  fgVariableNames[kNJpsi_away]                  = "away region";                          fgVariableUnits[kNJpsi_away]                  = "";
+  fgVariableNames[kNJpsi_towardPosLikeSign]     = "toward region positive like-sign";     fgVariableUnits[kNJpsi_towardPosLikeSign]     = "";
+  fgVariableNames[kNJpsi_transversePosLikeSign] = "transverse region positive like-sign"; fgVariableUnits[kNJpsi_transversePosLikeSign] = "";
+  fgVariableNames[kNJpsi_awayPosLikeSign]       = "away region positive like-sign";       fgVariableUnits[kNJpsi_awayPosLikeSign]       = "";
+  fgVariableNames[kNJpsi_towardNegLikeSign]     = "toward region negative like-sign";     fgVariableUnits[kNJpsi_towardNegLikeSign]     = "";
+  fgVariableNames[kNJpsi_transverseNegLikeSign] = "transverse region negative like-sign"; fgVariableUnits[kNJpsi_transverseNegLikeSign] = "";
+  fgVariableNames[kNJpsi_awayNegLikeSign]       = "away region negative like-sign";       fgVariableUnits[kNJpsi_awayNegLikeSign]       = "";
+  fgVariableNames[kNJpsi_towardMC]              = "toward region MC";                     fgVariableUnits[kNJpsi_towardMC]              = "";
+  fgVariableNames[kNJpsi_transverseMC]          = "transverse region MC";                 fgVariableUnits[kNJpsi_transverseMC]          = "";
+  fgVariableNames[kNJpsi_awayMC]                = "away region MC";                       fgVariableUnits[kNJpsi_awayMC]                = "";
+  fgVariableNames[kNtracksPosAnalyzed]     = "No.selected positive tracks"; fgVariableUnits[kNtracksPosAnalyzed]     = "";  
+  fgVariableNames[kNtracksNegAnalyzed]     = "No.selected negative tracks"; fgVariableUnits[kNtracksNegAnalyzed]     = ""; 
+  fgVariableNames[kNtracksPiPlusAnalyzed]  = "No.selected pos. pions";      fgVariableUnits[kNtracksPiPlusAnalyzed]  = "";  
+  fgVariableNames[kNtracksPiMinusAnalyzed] = "No.selected neg. pions";      fgVariableUnits[kNtracksPiMinusAnalyzed] = "";  
+  fgVariableNames[kNtracksKPlusAnalyzed]   = "No.selected pos. kaons";      fgVariableUnits[kNtracksKPlusAnalyzed]   = "";  
+  fgVariableNames[kNtracksKMinusAnalyzed]  = "No.selected neg. kaons";      fgVariableUnits[kNtracksKMinusAnalyzed]  = "";  
+  fgVariableNames[kNK0sAnalyzed]           = "No.selected K0s candidates";  fgVariableUnits[kNK0sAnalyzed]           = "";  
+  fgVariableNames[kNPhiAnalyzed]           = "No.selected phi candidates";  fgVariableUnits[kNPhiAnalyzed]           = "";  
+  fgVariableNames[kNtracksAnalyzed]        = "No.selected tracks";          fgVariableUnits[kNtracksAnalyzed]        = "";  
+  for(Int_t i=0; i<18; ++i) fgVariableNames[kNtracksAnalyzedInPhiBins+i]    = Form("# selected tracks in #varphi sector %d and #eta<0.", i);
   for(Int_t i=0; i<18; ++i) fgVariableNames[kNtracksAnalyzedInPhiBins+18+i] = Form("# selected tracks in #varphi sector %d and #eta>0.",i);
   fgVariableNames[kNtracksSubEvLeft]            = "No.tracks sub-event left";        fgVariableUnits[kNtracksSubEvLeft]       = "";  
   fgVariableNames[kNtracksSubEvRight]           = "No.tracks sub-event right";       fgVariableUnits[kNtracksSubEvRight]      = "";  

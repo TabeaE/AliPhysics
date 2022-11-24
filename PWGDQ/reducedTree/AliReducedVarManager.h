@@ -199,53 +199,53 @@ class AliReducedVarManager : public TObject {
   enum Variables {
     kNothing = -1,
     // Run wise variables (LHC and ALICE GRP information)
-    kTotalLuminosity = 0,   // total run delivered lumi
-    kBeamIntensity0,    // beam 0 intensity
-    kBeamIntensity1,    // beam 1 intensity
-    kLHCFillNumber,     // LHC fill number
-    kDipolePolarity,    // dipole magnet polarity
-    kL3Polarity,        // L3 magnet polarity
-    kRunTimeStart,   // run start time
-    kRunTimeEnd,     // run end time
+    kTotalLuminosity = 0,  // total run delivered lumi
+    kBeamIntensity0,  // beam 0 intensity
+    kBeamIntensity1,  // beam 1 intensity
+    kLHCFillNumber,   // LHC fill number
+    kDipolePolarity,  // dipole magnet polarity
+    kL3Polarity,      // L3 magnet polarity
+    kRunTimeStart,    // run start time
+    kRunTimeEnd,      // run end time
     kNRunWiseVariables,
     
     // Event wise variables
-    kEventTag = kNRunWiseVariables,      // event tag
-    kEventNumberInFile, // event number in file
-    kL0TriggerInput,    // L0 trigger input
+    kEventTag = kNRunWiseVariables,  // event tag
+    kEventNumberInFile,  // event number in file
+    kL0TriggerInput,     // L0 trigger input
     kL0TriggerInput2,    // L0 trigger input, used for correlations between inputs
-    kL1TriggerInput,    // L1 trigger input
+    kL1TriggerInput,     // L1 trigger input
     kL1TriggerInput2,    // L1 trigger input, used for correlations between inputs
-    kL2TriggerInput,    // L2 trigger input
+    kL2TriggerInput,     // L2 trigger input
     kL2TriggerInput2,    // L2 trigger input, used for correlations between inputs
-    kRunNo,             // run number         
-    kRunID,             // variable for easy filling of histograms vs. run number, without empty bins
-    kBeamEnergy,        // LHC beam energy
+    kRunNo,              // run number         
+    kRunID,              // variable for easy filling of histograms vs. run number, without empty bins
+    kBeamEnergy,         // LHC beam energy
     kInstLumi,           // instantaneous interaction rate
-    kDetectorMask,      // detector mask
-    kNumberOfDetectors, // number of active detectors
-    kBC,                // bunch crossing     
-    kTimeStamp,         // time stamp of the event
-    kTimeRelativeSOR,   // time relative to the start of run, in minutes
-    kTimeRelativeSORfraction,   // time relative to the start of runs, expressed as fraction of the whole run duration 
-    kEventType,         // event type
-    kTriggerMask,       // trigger mask       
-    kOnlineTriggersFired,// 1 if fired, 0 if not fired, for each trigger
+    kDetectorMask,       // detector mask
+    kNumberOfDetectors,  // number of active detectors
+    kBC,                 // bunch crossing     
+    kTimeStamp,          // time stamp of the event
+    kTimeRelativeSOR,    // time relative to the start of run, in minutes
+    kTimeRelativeSORfraction,  // time relative to the start of runs, expressed as fraction of the whole run duration 
+    kEventType,            // event type
+    kTriggerMask,          // trigger mask       
+    kOnlineTriggersFired,  // 1 if fired, 0 if not fired, for each trigger
     kOnlineTrigger=kOnlineTriggersFired+kNTriggers,  // online trigger    
-    kOnlineTriggerFired,  // online trigger fired
+    kOnlineTriggerFired,   // online trigger fired
     kOnlineTriggerFired2,  // online trigger if fired, -1 if not fired
-    kIsPhysicsSelection,    // physics selection 
+    kIsPhysicsSelection,   // physics selection 
     kIsSPDPileup,          // whether is SPD pileup
-    kIsSPDPileup5,          // whether is SPD pileup (5 vertex contributors)
-    kIsPileupMV,            // pileup from multi vertexer
+    kIsSPDPileup5,         // whether is SPD pileup (5 vertex contributors)
+    kIsPileupMV,           // pileup from multi vertexer
     kIsSPDPileupMultBins,  // whether is SPD pileup in multiplicity bins
-    kNSPDpileups,         // number of pileup events from SPD
-    kNTrackPileups,       // number of pileup events from tracks
-    kIRIntClosestIntMap,  // map of closest out of bunch interactions; [0]-Int1, [1]-Int2
-    kNPMDtracks=kIRIntClosestIntMap+2,   // number of PMD tracks
-    kNTRDtracks,          // number of TRD tracks
-    kNTRDtracklets,          // number of TRD tracklets
-    kNVtxContributors,    // number of vertex contributors
+    kNSPDpileups,          // number of pileup events from SPD
+    kNTrackPileups,        // number of pileup events from tracks
+    kIRIntClosestIntMap,   // map of closest out of bunch interactions; [0]-Int1, [1]-Int2
+    kNPMDtracks=kIRIntClosestIntMap+2,  // number of PMD tracks
+    kNTRDtracks,           // number of TRD tracks
+    kNTRDtracklets,        // number of TRD tracklets
+    kNVtxContributors,     // number of vertex contributors
     kNVtxTPCContributors,  // number of TPC vertex contributors
     kNVtxSPDContributors,  // number of SPD vertex contributors
     kVtxX,              // vtx X                      
@@ -258,84 +258,102 @@ class AliReducedVarManager : public TObject {
     kVtxXspd,           // vtx X from spd
     kVtxYspd,           // vtx Y from spd
     kVtxZspd,           // vtx Z from spd
-    kDeltaVtxZspd,         // vtxZ - vtxZspd
+    kDeltaVtxZspd,      // vtxZ - vtxZspd
     kTPCpileupZAC,      // TPC pileup event Z from A&C sides  
     kTPCpileupZA,       // TPC pileup event Z from A side
     kTPCpileupZC,       // TPC pileup event Z from C side
-    kTPCpileupContributorsAC,    // TPC pileup event contributors from A&C sides
-    kTPCpileupContributorsA,     // TPC pileup event contributors from A side
-    kTPCpileupContributorsC,     // TPC pileup event contributors from C side
+    kTPCpileupContributorsAC,  // TPC pileup event contributors from A&C sides
+    kTPCpileupContributorsA,   // TPC pileup event contributors from A side
+    kTPCpileupContributorsC,   // TPC pileup event contributors from C side
     kTPCpileupZAC2,      // TPC pileup event Z with larger DCAz selection from A&C sides  
     kTPCpileupZA2,       // TPC pileup event Z with larger DCAz selection from A side
     kTPCpileupZC2,       // TPC pileup event Z with larger DCAz selection from C side
-    kTPCpileupContributorsAC2,    // TPC pileup event contributors with larger DCAz selection from A&C sides
-    kTPCpileupContributorsA2,     // TPC pileup event contributors with larger DCAz selection from A side
-    kTPCpileupContributorsC2,     // TPC pileup event contributors with larger DCAz selection from C side
+    kTPCpileupContributorsAC2,  // TPC pileup event contributors with larger DCAz selection from A&C sides
+    kTPCpileupContributorsA2,   // TPC pileup event contributors with larger DCAz selection from A side
+    kTPCpileupContributorsC2,   // TPC pileup event contributors with larger DCAz selection from C side
     kNTracksPerTrackingStatus,  // number of tracks with a given tracking flag
-    kNTracksTPCoutBeforeClean=kNTracksPerTrackingStatus+kNTrackingStatus,      // TPCout tracks before ESD cleaning
-    kNTracksTPCoutVsITSout,                              //  TPCout/ITSout
-    kNTracksTRDoutVsITSout,                              //  TRDout/ITSout
-    kNTracksTOFoutVsITSout,                              //  TOFout/ITSout
-    kNTracksTRDoutVsTPCout,                              //  TRDout/TPCout
-    kNTracksTOFoutVsTPCout,                              //  TOFout/TPCout
-    kNTracksTOFoutVsTRDout,                              //  TOFout/TRDout
-    kNTracksITSoutVsSPDtracklets,                        //  ITSout/SPDtracklets
-    kNTracksTPCoutVsSPDtracklets,                        //  TPCout/SPDtracklets
-    kNTracksTRDoutVsSPDtracklets,                        //  TRDout/SPDtracklets
-    kNTracksTOFoutVsSPDtracklets,                        //  TOFout/SPDtracklets
-    kNTracksTPCoutFromPileup,                       // number of tracks from (kNTracksPerTrackingStatus+kTPCout) minus the no-pileup expectation
-    kNTracksTPCoutVsVZEROTotalMult,      // number of kTPCout tracks / VZERO multiplicity
-    kCentVZERO,         // centrality from VZERO
-    kCentSPD,           // centrality from SPD
-    kCentSPDcorr,       // corrected centrality from SPD
-    kCentTPC,           // centrality from TPC  
-    kCentZDC,           // centrality from ZDC  
-    kCentVZEROA,        // centrality from VZERO-A
-    kCentVZEROC,        // centrality from VZERO-C
-    kCentZNA,           // centrality from ZNA
-    kCentV0MNew,        // centrality from V0MNew
-    kCentV0MNewPlus10,      // centrality from V0MNewPlus10
-    kCentV0MNewMinus10,     // centrality from V0MNewMinus10
-    kCentV0MNewPlus05,      // centrality from V0MNewPlus05
-    kCentV0MNewMinus05,     // centrality from V0MNewMinus05
+    kNTracksTPCoutBeforeClean=kNTracksPerTrackingStatus+kNTrackingStatus,  // TPCout tracks before ESD cleaning
+    kNTracksTPCoutVsITSout,          // TPCout/ITSout
+    kNTracksTRDoutVsITSout,          // TRDout/ITSout
+    kNTracksTOFoutVsITSout,          // TOFout/ITSout
+    kNTracksTRDoutVsTPCout,          // TRDout/TPCout
+    kNTracksTOFoutVsTPCout,          // TOFout/TPCout
+    kNTracksTOFoutVsTRDout,          // TOFout/TRDout
+    kNTracksITSoutVsSPDtracklets,    // ITSout/SPDtracklets
+    kNTracksTPCoutVsSPDtracklets,    // TPCout/SPDtracklets
+    kNTracksTRDoutVsSPDtracklets,    // TRDout/SPDtracklets
+    kNTracksTOFoutVsSPDtracklets,    // TOFout/SPDtracklets
+    kNTracksTPCoutFromPileup,        // number of tracks from (kNTracksPerTrackingStatus+kTPCout) minus the no-pileup expectation
+    kNTracksTPCoutVsVZEROTotalMult,  // number of kTPCout tracks / VZERO multiplicity
+    kCentVZERO,          // centrality from VZERO
+    kCentSPD,            // centrality from SPD
+    kCentSPDcorr,        // corrected centrality from SPD
+    kCentTPC,            // centrality from TPC  
+    kCentZDC,            // centrality from ZDC  
+    kCentVZEROA,         // centrality from VZERO-A
+    kCentVZEROC,         // centrality from VZERO-C
+    kCentZNA,            // centrality from ZNA
+    kCentV0MNew,         // centrality from V0MNew
+    kCentV0MNewPlus10,   // centrality from V0MNewPlus10
+    kCentV0MNewMinus10,  // centrality from V0MNewMinus10
+    kCentV0MNewPlus05,   // centrality from V0MNewPlus05
+    kCentV0MNewMinus05,  // centrality from V0MNewMinus05
     kCentV0MPlus10,      // centrality from V0MPlus10
     kCentV0MMinus10,     // centrality from V0MMinus10
     kCentV0MPlus05,      // centrality from V0MPlus05
     kCentV0MMinus05,     // centrality from V0MMinus05
-    kCentQuality,       // centrality quality   
-    kNV0total,          // total number of V0s in the esd      
-    kNV0selected,       // number of V0s selected              
-    kNpairsSelected,    // number of selected pairs per event  
+    kCentQuality,        // centrality quality   
+    kNV0total,           // total number of V0s in the esd      
+    kNV0selected,        // number of V0s selected              
+    kNpairsSelected,     // number of selected pairs per event  
     kEvAverageTPCchi2,   // average TPC chi2 for the tracks in a given event
-    kNDplusToK0sPiplusSelected,       // D+           -> K0s pi+
-    kNDplusToK0sKplusSelected,        // D+           -> K0s K+
-    kNDplusToPhiPiplusSelected,       // D+           -> phi pi+
-    kNDminusToK0sPiminusSelected,     // D-           -> K0s pi-
-    kNDminusToK0sKminusSelected,      // D-           -> K0s K-
-    kNDminusToPhiPiminusSelected,     // D-           -> phi pi-
-    kNDzeroToKminusPiplusSelected,    // D0           -> K- pi+
-    kNADzeroToKplusPiminusSelected,   // anti-D0      -> K+ pi-
-    kNDsplusToK0sKplusSelected,       // Ds+          -> K0s K+
-    kNDsminusToK0sKminusSelected,     // Ds-          -> K0s K-    
-    kNtracksTotal,      // total number of tracks               
-    kNtracksSelected,   // number of selected tracks            
-    kNtracksPosAnalyzed,// number of positive tracks passing analysis cuts      
-    kNtracksNegAnalyzed,// number of negative tracks passing analysis cuts      
+    kNDplusToK0sPiplusSelected,      // D+           -> K0s pi+
+    kNDplusToK0sKplusSelected,       // D+           -> K0s K+
+    kNDplusToPhiPiplusSelected,      // D+           -> phi pi+
+    kNDminusToK0sPiminusSelected,    // D-           -> K0s pi-
+    kNDminusToK0sKminusSelected,     // D-           -> K0s K-
+    kNDminusToPhiPiminusSelected,    // D-           -> phi pi-
+    kNDzeroToKminusPiplusSelected,   // D0           -> K- pi+
+    kNADzeroToKplusPiminusSelected,  // anti-D0      -> K+ pi-
+    kNDsplusToK0sKplusSelected,      // Ds+          -> K0s K+
+    kNDsminusToK0sKminusSelected,    // Ds-          -> K0s K-    
+    kNtracksTotal,          // total number of tracks               
+    kNtracksSelected,       // number of selected tracks            
+    kNtracks2Selected,      // number of selected tracks in 2. array (charged particles other than e+e-)
+    kNtracks2SelectedGood,  // number of selected "good" tracks in 1. and 2. array ("good" does not really have a meaning here, only for Ailec, because she requested quality flag 38 for "good" tracks)
+    kNtracks2NopeJpsi,    // number of selected tracks in 2. array excluding Jpsi daugthers
+    knTracks_toward,      // number of selected tracks in 1.+2. array in toward region (relative to random angle)
+    knTracks_transverse,  // number of selected tracks in 1.+2. array in transverse region (relative to random angle)
+    knTracks_away,        // number of selected tracks in 1.+2. array in away region (relative to random angle)
+    kNJpsi_toward,        // number of selected tracks in 1.+2. array in toward region (relative to jpsi candidate (selected e+e- pairs))
+    kNJpsi_transverse,    // number of selected tracks in 1.+2. array in transverse region (relative to jpsi candidate (selected e+e- pairs))
+    kNJpsi_away,          // number of selected tracks in 1.+2. array in away region (relative to jpsi candidate (selected e+e- pairs))
+    kNJpsi_towardPosLikeSign,      // number of selected tracks in 1.+2. array in toward region (relative to pos. like-sign pair (selected e+e- pairs))
+    kNJpsi_transversePosLikeSign,  // number of selected tracks in 1.+2. array in transverse region (relative to pos. like-sign pair (selected e+e- pairs))
+    kNJpsi_awayPosLikeSign,        // number of selected tracks in 1.+2. array in away region (relative to pos. like-sign pair (selected e+e- pairs))
+    kNJpsi_towardNegLikeSign,      // number of selected tracks in 1.+2. array in toward region (relative to neg. like-sign pair (selected e+e- pairs))
+    kNJpsi_transverseNegLikeSign,  // number of selected tracks in 1.+2. array in transverse region (relative to neg. like-sign pair (selected e+e- pairs))
+    kNJpsi_awayNegLikeSign,        // number of selected tracks in 1.+2. array in away region (relative to jpsi neg. like-sign pair (selected e+e- pairs))
+    kNJpsi_towardMC,      // number of selected tracks in 1.+2. array in toward region (relative to MC jpsi)
+    kNJpsi_transverseMC,  // number of selected tracks in 1.+2. array in transverse region (relative to MC jpsi)
+    kNJpsi_awayMC,        // number of selected tracks in 1.+2. array in away region (relative to MC jpsi)
+    kNtracksPosAnalyzed,  // number of positive tracks passing analysis cuts      
+    kNtracksNegAnalyzed,  // number of negative tracks passing analysis cuts      
     kNtracksPiPlusAnalyzed,     // number of pi plus selected tracks
     kNtracksPiMinusAnalyzed,    // number of pi minus selected tracks
     kNtracksKPlusAnalyzed,      // number of K plus selected tracks
     kNtracksKMinusAnalyzed,     // number of K minus selected tracks
     kNK0sAnalyzed,              // number of K0s candidates selected
     kNPhiAnalyzed,              // number of phi candidates selected
-    kNtracksAnalyzed,   // number of positive+negative tracks passing analysis cuts
-    kNtracksAnalyzedInPhiBins,   // number of positive+negative tracks passing analysis cuts in 36 phi bins (18 for each side of the TPC)
+    kNtracksAnalyzed,           // number of positive+negative tracks passing analysis cuts
+    kNtracksAnalyzedInPhiBins,  // number of positive+negative tracks passing analysis cuts in 36 phi bins (18 for each side of the TPC)
     kNtracksSubEvLeft=kNtracksAnalyzedInPhiBins+36,  // number of tracks in the left sub-event (negative pseudo-rapidity)            
-    kNtracksSubEvRight, // number of tracks in the left sub-event (positive pseudo-rapidity)            
-    kNtracksEventPlane, // number of tracks used for event plane                
-    kNCaloClusters,     // number of calorimeter clusters
-    kNTPCclusters,    // number of TPC clusters
-    kNTPCclustersFromPileup,            // number of TPC clusters minus the expected TPC clusters if no pileup is present
-    kNTPCclustersFromPileupRelative,    // number of TPC clusters minus the expected TPC clusters w/o pileup relative to the TPC clusters w/o pileup 
+    kNtracksSubEvRight,  // number of tracks in the left sub-event (positive pseudo-rapidity)            
+    kNtracksEventPlane,  // number of tracks used for event plane                
+    kNCaloClusters,      // number of calorimeter clusters
+    kNTPCclusters,       // number of TPC clusters
+    kNTPCclustersFromPileup,          // number of TPC clusters minus the expected TPC clusters if no pileup is present
+    kNTPCclustersFromPileupRelative,  // number of TPC clusters minus the expected TPC clusters w/o pileup relative to the TPC clusters w/o pileup 
     kMultiplicity,
     kSPDntracklets = kMultiplicity,
     kSPDntracklets08,

@@ -118,6 +118,8 @@ protected:
    TList fPrefilterPosTracks;  // list of prefilter selected positive tracks in the current event
    TList fPrefilterNegTracks; // list of prefilter selected negative tracks in the current event
    TList fJpsiCandidates;       // list of Jpsi candidates --> to be used in analyses inheriting from this 
+   TList fTrackSelected;        // list of selected charged particles tracks
+   TList fNoJpsiTracks;          //list of selected charged particles tracks excluding the Jpsi pair candidate
    
    // selection based on the MC truth information of the reconstructed leg candidates
    // NOTE:    The list is a list of AliReducedInfoCut objects which can be used to 
@@ -157,7 +159,9 @@ protected:
   void RunSameEventPairing(TString pairClass = "PairSE");
   void RunTrackSelection();
   void RunClusterSelection();
-  void LoopOverTracks(Int_t arrayOption=1);
+//   void LoopOverTracks(Int_t arrayOption=1);
+  void LoopOverTracks1();
+  void LoopOverTracks2();
   void FillTrackHistograms(TString trackClass = "Track");
   void FillTrackHistograms(AliReducedBaseTrack* track, TString trackClass = "Track");
   void FillPairHistograms(ULong_t trackMask, ULong_t pairMask, Int_t pairType, TString pairClass = "PairSE", UInt_t mcDecisions = 0);
