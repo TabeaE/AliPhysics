@@ -779,12 +779,15 @@ void AliReducedAnalysisJpsi2ee::LoopOverTracks2() {
         else AliReducedVarManager::FillClusterMatchedTrackInfo(track2, fValues, NULL, fClusterTrackMatcher);
         fHistosManager->FillHistClass("TrackMult_BeforeCuts", fValues);
         
-        if((!fOptionRunOverMC) && track2->TestQualityFlag(34) && track2->TestQualityFlag(35) && track2->TestQualityFlag(36)){
+        // pass1
+        if((!fOptionRunOverMC) && track2->TestQualityFlag(34) && track2->TestQualityFlag(35)) {
+//         // pass2
+//         if((!fOptionRunOverMC) && track2->TestQualityFlag(35) && track2->TestQualityFlag(38) && track2->TestQualityFlag(40) && (fValues[AliReducedVarManager::kPt]<=100.)) {
             // if(fJpiCandidates.GetEntries()==0) return;
 
             GoodTracks ++;
             fTrackSelected.Add(track2);
-        } else if (fOptionRunOverMC && track2->TestQualityFlag(37)){
+        } else if (fOptionRunOverMC && track2->TestQualityFlag(37)) {
             // if(fJpiCandidates.GetEntries()==0) return;
 
             GoodTracks ++;
