@@ -2574,8 +2574,6 @@ void AliReducedVarManager::FillPairInfoME(BASETRACK* t1, BASETRACK* t2, Int_t ty
     values[kOneOverPairEffSq] = oneOverPairEff*oneOverPairEff;
   }
 
-  cout << "test" << endl; 
-
   // Bmeson -> Jpsi + K: t1 is Jpsi candidate, t2 is associated track/kaon candidate 
   if(fgUsedVars[kMassJpsiK]) {
     values[kMassJpsiK] = ((PAIR*)t1)->Mass()*((PAIR*)t1)->Mass()+fgkParticleMass[kKaon]*fgkParticleMass[kKaon] + 
@@ -2595,9 +2593,7 @@ void AliReducedVarManager::FillPairInfoME(BASETRACK* t1, BASETRACK* t2, Int_t ty
   float momb = TMath::Sqrt(p.Px()*p.Px() + p.Py()*p.Py() + p.Pz()*p.Pz());
   float lQl1 = TMath::Abs(p.Px()*t1->Px() + p.Py()*t1->Py() + p.Pz()*t1->Pz()) / momb;
   float lQl2 = TMath::Abs(p.Px()*t2->Px() + p.Py()*t2->Py() + p.Pz()*t2->Pz()) / momb;
-  values[kArmAlpha] = (lQl1 - lQl2) / (lQl1 + lQl2); 
-
-  cout << momb << " " << lQl1 << " " << lQl2 << endl; 
+  values[kArmAlpha] = (lQl1 - lQl2) / (lQl1 + lQl2);
   
   FillPairMEflow(t1, t2, values);
 }
