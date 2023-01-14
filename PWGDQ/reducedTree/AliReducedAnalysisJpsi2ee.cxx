@@ -787,7 +787,7 @@ void AliReducedAnalysisJpsi2ee::LoopOverTracks2() {
 
             GoodTracks ++;
             fTrackSelected.Add(track2);
-        } else if (fOptionRunOverMC && track2->TestQualityFlag(37)) {
+        } else if (fOptionRunOverMC && track2->TestQualityFlag(36)) {
             // if(fJpiCandidates.GetEntries()==0) return;
 
             GoodTracks ++;
