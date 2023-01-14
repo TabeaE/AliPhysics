@@ -499,12 +499,13 @@ void AliReducedAnalysisJpsi2ee::FillTrackHistograms(AliReducedBaseTrack* track, 
    
    for(Int_t icut=0; icut<fTrackCuts.GetEntries(); ++icut) {
       if(track->TestFlag(icut)) {
-         fHistosManager->FillHistClass(Form("%s_%s", trackClass.Data(), fTrackCuts.At(icut)->GetName()), fValues);
-         if(mcDecisionMap) {       // Fill histograms for tracks identified as MC truth
+         fHistosManager->FillHistClass(Form("%s_%s",trackClass.Data(),fTrackCuts.At(icut)->GetName()), fValues);
+         if(mcDecisionMap) {  // Fill histograms for tracks identified as MC truth
             for(Int_t iMC=0; iMC<=fLegCandidatesMCcuts.GetEntries(); ++iMC) {
                if(mcDecisionMap & (UInt_t(1)<<iMC))
-                  fHistosManager->FillHistClass(Form("%s_%s_%s", trackClass.Data(), fTrackCuts.At(icut)->GetName(), 
-                                                                  fLegCandidatesMCcuts.At(iMC)->GetName()), fValues);
+                  fHistosManager->FillHistClass(Form("%s_%s_%s",trackClass.Data(),
+                                                     fTrackCuts.At(icut)->GetName(), 
+                                                     fLegCandidatesMCcuts.At(iMC)->GetName()), fValues);
             }
          }
          
@@ -515,42 +516,50 @@ void AliReducedAnalysisJpsi2ee::FillTrackHistograms(AliReducedBaseTrack* track, 
          
          for(UInt_t iflag=0; iflag<AliReducedVarManager::kNTrackingFlags; ++iflag) {
             AliReducedVarManager::FillTrackingFlag(trackInfo, iflag, fValues);
-            fHistosManager->FillHistClass(Form("%sStatusFlags_%s", trackClass.Data(), fTrackCuts.At(icut)->GetName()), fValues);
+            fHistosManager->FillHistClass(Form("%sStatusFlags_%s",trackClass.Data(),
+                                               fTrackCuts.At(icut)->GetName()), fValues);
             if(mcDecisionMap) {
                for(Int_t iMC=0; iMC<=fLegCandidatesMCcuts.GetEntries(); ++iMC) {
                   if(mcDecisionMap & (UInt_t(1)<<iMC))
-                     fHistosManager->FillHistClass(Form("%sStatusFlags_%s_%s", trackClass.Data(), fTrackCuts.At(icut)->GetName(),
-                                                                     fLegCandidatesMCcuts.At(iMC)->GetName()), fValues);
+                     fHistosManager->FillHistClass(Form("%sStatusFlags_%s_%s",trackClass.Data(),
+                                                        fTrackCuts.At(icut)->GetName(),
+                                                        fLegCandidatesMCcuts.At(iMC)->GetName()), fValues);
                }
             }
          }
          for(UInt_t iflag=0; iflag<64; ++iflag) {
             AliReducedVarManager::FillTrackQualityFlag(trackInfo, iflag, fValues);
-            fHistosManager->FillHistClass(Form("%sQualityFlags_%s", trackClass.Data(), fTrackCuts.At(icut)->GetName()), fValues);
+            fHistosManager->FillHistClass(Form("%sQualityFlags_%s",trackClass.Data(),
+                                               fTrackCuts.At(icut)->GetName()), fValues);
             if(mcDecisionMap) {
                for(Int_t iMC=0; iMC<=fLegCandidatesMCcuts.GetEntries(); ++iMC) {
                   if(mcDecisionMap & (UInt_t(1)<<iMC))
-                     fHistosManager->FillHistClass(Form("%sQualityFlags_%s_%s", trackClass.Data(), fTrackCuts.At(icut)->GetName(),
+                     fHistosManager->FillHistClass(Form("%sQualityFlags_%s_%s",trackClass.Data(),
+                                                        fTrackCuts.At(icut)->GetName(),
                                                         fLegCandidatesMCcuts.At(iMC)->GetName()), fValues);
                }
             }
          }
          for(Int_t iLayer=0; iLayer<6; ++iLayer) {
             AliReducedVarManager::FillITSlayerFlag(trackInfo, iLayer, fValues);
-            fHistosManager->FillHistClass(Form("%sITSclusterMap_%s", trackClass.Data(), fTrackCuts.At(icut)->GetName()), fValues);
+            fHistosManager->FillHistClass(Form("%sITSclusterMap_%s",trackClass.Data(),
+                                               fTrackCuts.At(icut)->GetName()), fValues);
             if(mcDecisionMap) {
                for(Int_t iMC=0; iMC<=fLegCandidatesMCcuts.GetEntries(); ++iMC) {
                   if(mcDecisionMap & (UInt_t(1)<<iMC))
-                     fHistosManager->FillHistClass(Form("%sITSclusterMap_%s_%s", trackClass.Data(), fTrackCuts.At(icut)->GetName(),
-                                                                     fLegCandidatesMCcuts.At(iMC)->GetName()), fValues);
+                     fHistosManager->FillHistClass(Form("%sITSclusterMap_%s_%s",trackClass.Data(),
+                                                        fTrackCuts.At(icut)->GetName(),
+                                                        fLegCandidatesMCcuts.At(iMC)->GetName()), fValues);
                }
             }
             AliReducedVarManager::FillITSsharedLayerFlag(trackInfo, iLayer, fValues);
-            fHistosManager->FillHistClass(Form("%sITSsharedClusterMap_%s", trackClass.Data(), fTrackCuts.At(icut)->GetName()), fValues);
+            fHistosManager->FillHistClass(Form("%sITSsharedClusterMap_%s",trackClass.Data(),
+                                               fTrackCuts.At(icut)->GetName()), fValues);
             if(mcDecisionMap) {
                for(Int_t iMC=0; iMC<=fLegCandidatesMCcuts.GetEntries(); ++iMC) {
                   if(mcDecisionMap & (UInt_t(1)<<iMC))
-                     fHistosManager->FillHistClass(Form("%sITSsharedClusterMap_%s_%s", trackClass.Data(), fTrackCuts.At(icut)->GetName(),
+                     fHistosManager->FillHistClass(Form("%sITSsharedClusterMap_%s_%s",trackClass.Data(),
+                                                        fTrackCuts.At(icut)->GetName(),
                                                         fLegCandidatesMCcuts.At(iMC)->GetName()), fValues);
                }
             }

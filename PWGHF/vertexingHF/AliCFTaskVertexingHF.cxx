@@ -248,7 +248,10 @@ AliCFTaskVertexingHF::AliCFTaskVertexingHF(const Char_t* name, AliRDHFCuts* cuts
   fPhiDistributionHybridTracks(0),
   fPhiDistributionComplementaryTracks(0),
   fPhiEtaDistributionHybridTracks(0)
+<<<<<<< HEAD
 
+=======
+>>>>>>> Beauty changes
 {
   //
   // Constructor. Initialization of Inputs and Outputs
@@ -2271,7 +2274,6 @@ void AliCFTaskVertexingHF::SetPtWeightsFromFONLL13overLHC20f4abc(){
 		     0.551171, 0.403904, 0.599378, 0.667071, 0.659958, 0.652962, 0.430683, 0.929707, 0.919869, 0.588927, 
 		     0.582726, 0.700133, 0.746096, 0.533198, 0.527627, 0.626529, 0.715384, 1.314777, 0.650559, 0.693354, 
 		     1.274332, 0.735664, 0.416049, 0.665190, 0.534928, 0.705930, 1.197772, 0.754417, 0.746742, 0.451704, 
->>>>>>> Update AliCFTaskVertexingHF.cxx
 		     0.670676, 0.612807, 0.463898, 0.650542, 0.551977, 0.478141, 0.398595, 0.681570, 0.824738, 0.734848};
   for(Int_t i=0; i<500; i++){
     fHistoPtWeight->SetBinContent(i+1,binc[i]);
@@ -2889,7 +2891,10 @@ Double_t AliCFTaskVertexingHF::CalculateRTValue(AliAODEvent* esdEvent, AliAODMCH
    ///settings for track filter used in RT determination
 
   AliAnalysisFilter* trackFilter = new AliAnalysisFilter("trackFilter");
+<<<<<<< HEAD
 
+=======
+>>>>>>> Beauty changes
   AliESDtrackCuts* esdTrackCutsGlobal[18] = {0};
   AliESDtrackCuts* esdTrackCutsComplementary[18] = {0};
 
@@ -2932,7 +2937,10 @@ Double_t AliCFTaskVertexingHF::CalculateRTValue(AliAODEvent* esdEvent, AliAODMCH
   trackFilter->AddCuts(esdTrackCutsRun2);
        }
     else {//end if on usage of hybrid tracks
+<<<<<<< HEAD
 
+=======
+>>>>>>> Beauty changes
  	fTrackFilterGlobal = new AliAnalysisFilter("fTrackFilterGlobal0");
  	esdTrackCutsGlobal[0] = new AliESDtrackCuts("esdTrackCutsRunGlobal0"); //use other slots for systematic if needed;
 
@@ -3010,7 +3018,10 @@ Double_t AliCFTaskVertexingHF::CalculateRTValue(AliAODEvent* esdEvent, AliAODMCH
              fPhiDistributionHybridTracks->Fill(part->Phi());
              fPhiEtaDistributionHybridTracks->Fill(part->Phi(),eta);
            } else {continue;}
+<<<<<<< HEAD
 
+=======
+>>>>>>> Beauty changes
 	   	 }
       }
    }
