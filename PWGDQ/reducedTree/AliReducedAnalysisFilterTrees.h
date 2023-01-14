@@ -29,58 +29,65 @@ public:
   virtual void Finish();
   
   // setters
-
-
+  
+  
   void AddTrackCut(AliReducedInfoCut* cut) {
-      // Add track cut and setup mixing handler      
-      fTrackCuts.Add(cut);
-      fMixingHandler->SetNParallelCuts(fMixingHandler->GetNParallelCuts()+1);
-      TString histClassNames = fMixingHandler->GetHistClassNames();
-      if (fPairCuts.GetEntries()>1) {
-         histClassNames = "";
-         for (Int_t iPairCut=0; iPairCut<fPairCuts.GetEntries(); iPairCut++) {
-            for (Int_t iTrackCut=0; iTrackCut<fTrackCuts.GetEntries(); iTrackCut++) {
-               histClassNames += Form("PairMEPP_%s_%s;", fTrackCuts.At(iTrackCut)->GetName(), fPairCuts.At(iPairCut)->GetName());
-               histClassNames += Form("PairMEPM_%s_%s;", fTrackCuts.At(iTrackCut)->GetName(), fPairCuts.At(iPairCut)->GetName());
-               histClassNames += Form("PairMEMM_%s_%s;", fTrackCuts.At(iTrackCut)->GetName(), fPairCuts.At(iPairCut)->GetName());
-            }
-         }
-      } else {
-         histClassNames += Form("PairMEPP_%s;", cut->GetName());
-         histClassNames += Form("PairMEPM_%s;", cut->GetName());
-         histClassNames += Form("PairMEMM_%s;", cut->GetName());
+    // Add track cut and setup mixing handler      
+    fTrackCuts.Add(cut);
+    fMixingHandler->SetNParallelCuts(fMixingHandler->GetNParallelCuts()+1);
+    TString histClassNames = fMixingHandler->GetHistClassNames();
+    if (fPairCuts.GetEntries()>1) {
+      histClassNames = "";
+      for (Int_t iPairCut=0; iPairCut<fPairCuts.GetEntries(); iPairCut++) {
+        for (Int_t iTrackCut=0; iTrackCut<fTrackCuts.GetEntries(); iTrackCut++) {
+          histClassNames += Form("PairMEPP_%s_%s;", fTrackCuts.At(iTrackCut)->GetName(),
+                                 fPairCuts.At(iPairCut)->GetName());
+          histClassNames += Form("PairMEPM_%s_%s;", fTrackCuts.At(iTrackCut)->GetName(),
+                                 fPairCuts.At(iPairCut)->GetName());
+          histClassNames += Form("PairMEMM_%s_%s;", fTrackCuts.At(iTrackCut)->GetName(),
+                                 fPairCuts.At(iPairCut)->GetName());
+        }
       }
-      fMixingHandler->SetHistClassNames(histClassNames.Data());
-   }
-
-
+    } else {
+      histClassNames += Form("PairMEPP_%s;", cut->GetName());
+      histClassNames += Form("PairMEPM_%s;", cut->GetName());
+      histClassNames += Form("PairMEMM_%s;", cut->GetName());
+    }
+    fMixingHandler->SetHistClassNames(histClassNames.Data());
+  }
+  
+  
   void AddPairCut(AliReducedInfoCut* cut) {
-      // Add pair cut and setup mixing handler
-      fPairCuts.Add(cut);  
-      fMixingHandler->SetNParallelPairCuts(fMixingHandler->GetNParallelPairCuts()+1);
-      if (fPairCuts.GetEntries()>1) {
-         TString histClassNamesNew = "";
-         for (Int_t iPairCut=0; iPairCut<fPairCuts.GetEntries(); iPairCut++) {
-            for (Int_t iTrackCut=0; iTrackCut<fTrackCuts.GetEntries(); iTrackCut++) {
-               histClassNamesNew += Form("PairMEPP_%s_%s;", fTrackCuts.At(iTrackCut)->GetName(), fPairCuts.At(iPairCut)->GetName());
-               histClassNamesNew += Form("PairMEPM_%s_%s;", fTrackCuts.At(iTrackCut)->GetName(), fPairCuts.At(iPairCut)->GetName());
-               histClassNamesNew += Form("PairMEMM_%s_%s;", fTrackCuts.At(iTrackCut)->GetName(), fPairCuts.At(iPairCut)->GetName());
-            }
-         }
-         fMixingHandler->SetHistClassNames(histClassNamesNew.Data());
+    // Add pair cut and setup mixing handler
+    fPairCuts.Add(cut);  
+    fMixingHandler->SetNParallelPairCuts(fMixingHandler->GetNParallelPairCuts()+1);
+    if (fPairCuts.GetEntries()>1) {
+      TString histClassNamesNew = "";
+      for (Int_t iPairCut=0; iPairCut<fPairCuts.GetEntries(); iPairCut++) {
+        for (Int_t iTrackCut=0; iTrackCut<fTrackCuts.GetEntries(); iTrackCut++) {
+          histClassNamesNew += Form("PairMEPP_%s_%s;", fTrackCuts.At(iTrackCut)->GetName(),
+                                    fPairCuts.At(iPairCut)->GetName());
+          histClassNamesNew += Form("PairMEPM_%s_%s;", fTrackCuts.At(iTrackCut)->GetName(),
+                                    fPairCuts.At(iPairCut)->GetName());
+          histClassNamesNew += Form("PairMEMM_%s_%s;", fTrackCuts.At(iTrackCut)->GetName(),
+                                    fPairCuts.At(iPairCut)->GetName());
+        }
       }
-   }
-
-
+      fMixingHandler->SetHistClassNames(histClassNamesNew.Data());
+    }
+  }
+  
+  
   void AddEventCut(AliReducedInfoCut* cut) {fEventCuts.Add(cut);}
   void SetWriteFilteredTracks(Bool_t option=kTRUE) {fWriteFilteredTracks=option;}
   void SetWriteFilteredPairs(Bool_t option=kTRUE) {fWriteFilteredPairs=option;}
   void SetWriteFilteredTracksCandidatesOnly(Bool_t option=kTRUE) {fWriteFilteredTracksCandidatesOnly=option;}
   void SetRejectEmptyEvents(Bool_t option=kTRUE) {fRejectEmptyEvents=option;}
   void SetMCJpsiPtWeights(TH1F* weights) {fMCJpsiPtWeights = weights;}
-  void SetReweightCut(Int_t ncut){fReweightCut = ncut;}
+  void SetReweightCut(Int_t ncut) {fReweightCut = ncut;}
   
-  void SetBuildCandidatePairs(AliReducedPairInfo::CandidateType type) {fBuildCandidatePairs=kTRUE; fCandidateType=type;}
+  void SetBuildCandidatePairs(AliReducedPairInfo::CandidateType type) {fBuildCandidatePairs=kTRUE;
+    fCandidateType=type;}
   void SetBuildCandidateLikePairs(Bool_t option=kTRUE) {fBuildCandidateLikePairs=option;}
   void AddCandidateLeg1Cut(AliReducedInfoCut* cut) {fLeg1Cuts.Add(cut);}
   void AddCandidateLeg2Cut(AliReducedInfoCut* cut) {fLeg2Cuts.Add(cut);}
@@ -96,14 +103,15 @@ public:
   void AddCandidateLeg2PrefilterCut(AliReducedInfoCut* cut) {fLeg2PrefilterCuts.Add(cut);}
   void AddCandidateLeg1PairPrefilterCut(AliReducedInfoCut* cut) {fLeg1PairPrefilterCuts.Add(cut);}
   void AddCandidateLeg2PairPrefilterCut(AliReducedInfoCut* cut) {fLeg2PairPrefilterCuts.Add(cut);}
-
+  
   void AddMixingHandler(AliMixingHandler* handler) {fMixingHandlerMult.Add(handler);}
-  void SetMultBinsMixing(int nBins, Float_t* bins) {fNMultBinsMixing = nBins; for(int i = 0;i<nBins+1;i++) fMultBinsMixing[i] = bins[i];}
+  void SetMultBinsMixing(Int_t nBins, Float_t* bins) {fNMultBinsMixing = nBins; for(Int_t i=0;i<nBins+1;i++)
+    fMultBinsMixing[i] = bins[i];}
   void SetJpsiMassDist(TF1* massDist) {fJpsiMassDist = massDist;}
   void SetMCTruthJpsi2eeOnly(Bool_t option) {fMCTruthJpsi2eeOnly = option;}
   void SetRegionsToMCTruth(Bool_t option) {fRegionsToMCTruth = option;}
   void SetDefaultRandomPhi(Bool_t option) {fDefaultRandomPhi = option;}
-  void SetMinPtLeading(float minpt) {fMinPtLeading = minpt;}
+  void SetMinPtLeading(Float_t minpt) {fMinPtLeading = minpt;}
   
   void SetRunOverMC(Bool_t option) {fOptionRunOverMC = option;};
   // getters
@@ -122,7 +130,7 @@ public:
   Bool_t GetRunEventMixing() const {return fOptionRunMixing;}
   Bool_t GetRunEventMixingMult() const {return fOptionRunMixingMult;}
   Int_t GetNMultBinsMixing() const {return (fOptionRunMixingMult ? fNMultBinsMixing : 0);}
-  Float_t GetMultBinsMixing(int i) const {return (fOptionRunMixingMult ? fMultBinsMixing[i] : 0);}
+  Float_t GetMultBinsMixing(Int_t i) const {return (fOptionRunMixingMult ? fMultBinsMixing[i] : 0);}
   Int_t GetCandidateType() const {return fCandidateType;}
   Bool_t GetRunCandidatePrefilter() const {return fRunCandidatePrefilter;}
   Int_t GetNCandidateLegCuts() const {return fLeg1Cuts.GetEntries();}
@@ -138,125 +146,129 @@ public:
   const Char_t* GetMeasMultcutName(Int_t i) const {return (i<fMeasuredMultTrackCuts.GetEntries() ? fMeasuredMultTrackCuts.At(i)->GetName() : "");}
   TF1* GetJpsiMassDist() const {return fJpsiMassDist;}
   Bool_t GetMCTruthJpsi2eeOnly() const {return fMCTruthJpsi2eeOnly;}
-
- 
- /* void AddLegCandidateMCcut(AliReducedInfoCut* cut) {
-     if(fLegCandidatesMCcuts.GetEntries()>=32) return;
-     fLegCandidatesMCcuts.Add(cut);
-  }*/
- // NOTE: The MC truth selection works with just one MC truth cut. It is not implemented properly for asymmetric decay channels,
- //         just one MC selection is applied to both legs.
- //       In the case that an MC truth selection is applied, then only built pairs which fulfill the MC truth will be written in the filtered trees.
- void SetLegCandidateMCcut(AliReducedInfoCut* cut) {
-     //if(fLegCandidatesMCcuts.GetEntries()>=32) return;
-     fLegCandidatesMCcuts  = cut;
+  
+  
+  /* void AddLegCandidateMCcut(AliReducedInfoCut* cut) {
+   *     if(fLegCandidatesMCcuts.GetEntries()>=32) return;
+   *     fLegCandidatesMCcuts.Add(cut);
+}*/
+  // NOTE: The MC truth selection works with just one MC truth cut. It is not implemented properly for asymmetric
+  //       decay channels, just one MC selection is applied to both legs.
+  //       In the case that an MC truth selection is applied, then only built pairs which fulfill the MC truth
+  //       will be written in the filtered trees.
+  void SetLegCandidateMCcut(AliReducedInfoCut* cut) {
+    //if(fLegCandidatesMCcuts.GetEntries()>=32) return;
+    fLegCandidatesMCcuts  = cut;
   }
-
+  
   void AddJpsiMotherMCCut(AliReducedInfoCut* cutMother, AliReducedInfoCut* cutElectron) {
-     if(fJpsiMotherMCcuts.GetEntries()>=32) return;
-     fJpsiMotherMCcuts.Add(cutMother);
-     fJpsiElectronMCcuts.Add(cutElectron);
+    if(fJpsiMotherMCcuts.GetEntries()>=32) return;
+    fJpsiMotherMCcuts.Add(cutMother);
+    fJpsiElectronMCcuts.Add(cutElectron);
   }
-
+  
   void FillMCTruthHistograms();
- 
+  
 protected:
-   AliHistogramManager* fHistosManager;   // Histogram manager
-   AliMixingHandler*    fMixingHandler;       // mixing handler
-   TList                fMixingHandlerMult;       // mixing handlers in multiplicity bins
-   Float_t                fMultBinsMixing[1000];  // Multiplicity bins for mixing in multiplicity bins
-   Int_t                fNMultBinsMixing;   // Number of multiplicity bins for mixing in multiplicity bins
-   
-   TList fEventCuts;               // array of event cuts used for filtering
-   TList fTrackCuts;               // array of track cuts used for filtering
-   Bool_t fWriteFilteredTracks;   // filter the track list
-   Bool_t fWriteFilteredTracksCandidatesOnly; // Write only the tracks associated to a pair candidate
-   TList fPairCuts;                  // array of pair cuts used for filtering
-   Bool_t fWriteFilteredPairs;   // filter the pair list
-   Bool_t fRejectEmptyEvents;     // if true, do not write events without tracks or pairs
-   Bool_t fMCTruthJpsi2eeOnly;    //if true, store only MCtruth for Jpsi which decay into dielectron
-   Bool_t fRegionsToMCTruth;    //if true, the regions are defined relative to true particles, else they are defined relative to measured tracks
-   Bool_t fDefaultRandomPhi;    //if true, when regions are calculated relative to Jpsi and there is no Jpsi, we choose a random phi, else we take phi leading
-   Float_t fMinPtLeading;
-
-   TF1* fJpsiMassDist;            // Real jpsi mass distribution (Crystal-ball)
-
-   Bool_t fComputeMult;            //if true, count the tracks to compute true and measured multiplicity
-   Bool_t fBuildCandidatePairs;   // if true, build additional candidate pairs from selected tracks 
-   Bool_t fBuildCandidateLikePairs;  // if true, build also like pairs (e.g. like-sign for symmetric decay channels)
-   Int_t fCandidateType;             // candidate type, see AliReducedPairInfo::CandidateType 
-   TList fLeg1Cuts;                      // list of track cuts for LEG1  (these cuts will be used also for LEG2 if the decay channel is symmetric)
-   TList fLeg2Cuts;                      // list of tracks cuts for LEG2 (NOTE: fLeg1Cuts and fLeg2Cuts must contain the same number of cuts)
-   TList fCandidatePairCuts;          // list of cuts for pair candidates
-   Bool_t fRunCandidatePrefilter;   // if true, run a prefilter on the selected legs
-   Bool_t fRunCandidatePrefilterOnSameCharge;   // default FALSE (unlike charged pairs only);
-                                                                // if true, run the prefilter on same charge pairs also;
-   TList fMeasuredMultTrackCuts;            // cuts for tracks for determination of measured multiplicity
-   TList fTrueMultTrackCuts;            // cuts for MC tracks for determination of true multiplicity
-   TList fLeg1PrefilterCuts;            // cuts for tracks used in the prefilter for LEG1  
-   TList fLeg2PrefilterCuts;            // cuts for tracks used in the prefilter for LEG2
-   TList fLeg1PairPrefilterCuts;      // cuts on the prefilter pairs for LEG1
-   TList fLeg2PairPrefilterCuts;      // cuts on the prefilter pairs for LEG2
-   TList fLeg1Tracks;                    // list of selected LEG1 tracks in the current event
-   TList fLeg2Tracks;                    // list of selected LEG2 tracks in the current event
-   TList fLeg1PrefilteredTracks;    // list of prefilter selected LEG1 tracks in the current event
-   TList fLeg2PrefilteredTracks;    // list of prefilter selected LEG2 tracks in the current event
-
-   Bool_t fOptionRunMixingMult;
-   Bool_t fOptionRunMixing;    // true: run event mixing, false: no event mixing
-   Bool_t fOptionRunOverMC;  // true: trees contain MC info -> fill histos to compute efficiencies, false: run normally as on data
-   // selection based on the MC truth information of the reconstructed leg candidates
-   // NOTE:    The list is a list of AliReducedInfoCut objects which can be used to 
-   //              apply cuts on the MC flags of the tracks.
-   // NOTE: The names of the cuts are used in the naming of the histogram classes
-   AliReducedInfoCut *fLegCandidatesMCcuts; 
- 
-   // selection cuts for the pure MC truth (select the J/psi from stack)
-   // the list should contains cuts which can be applied to a pure MC truth particle (no reconstructed information)
-   //  e.g. cuts on the MC flags and on kinematics
-   //  For each selection, a separate histogram directory will be created
-   TList fJpsiMotherMCcuts;
-   TH1F*  fMCJpsiPtWeights;            //! weights vs pt to reject events depending on the jpsi true pt (needed to re-weights jpsi Pt distribution)
-   Int_t fReweightCut;                //The number of the MC cut on which the weights should be applied (ex: only on prompt Jpsi)
-   Bool_t fSkipMCEvent; // if true MC event is skipped
-   // Selection on the MC truth of the electrons from the jpsi decay
-   //  Tipically, here one can specify the kinematic selection on the electrons from jpsi decay
-   //       so dividing the jpsi yield at this step by the yield of jpsi selected by the fJpsiMotherMCcuts, one can obtain the
-   //       acceptance efficiency.
-   //  NOTE: The number of selections on the jpsi electron needs to be the same and in sync with the number of fJpsiMotherMCcuts cuts
-   TList fJpsiElectronMCcuts;
-   
-   Bool_t IsEventSelected(AliReducedBaseEvent* event, Float_t* values=0x0);
-   Bool_t IsTrackSelected(AliReducedBaseTrack* track, Float_t* values=0x0);
-   Bool_t IsPairSelected(AliReducedPairInfo* pair, Float_t* values=0x0);
-   void CreateFilteredEvent();
-   Bool_t CheckReconstructedLegMCTruth(AliReducedBaseTrack* ptrack, AliReducedBaseTrack* ntrack);
- Bool_t CheckReconstructedLegMCTruth(AliReducedBaseTrack* track);
-  void    FindJpsiTruthLegs(AliReducedTrackInfo* mother, Int_t& leg1Label, Int_t& leg2Label);
+  AliHistogramManager* fHistosManager;         // Histogram manager
+  AliMixingHandler*    fMixingHandler;         // mixing handler
+  TList                fMixingHandlerMult;     // mixing handlers in multiplicity bins
+  Float_t              fMultBinsMixing[1000];  // Multiplicity bins for mixing in multiplicity bins
+  Int_t                fNMultBinsMixing;       // Number of multiplicity bins for mixing in multiplicity bins
+  
+  TList  fEventCuts;            // array of event cuts used for filtering
+  TList  fTrackCuts;            // array of track cuts used for filtering
+  Bool_t fWriteFilteredTracks;  // filter the track list
+  Bool_t fWriteFilteredTracksCandidatesOnly;  // Write only the tracks associated to a pair candidate
+  TList  fPairCuts;            // array of pair cuts used for filtering
+  Bool_t fWriteFilteredPairs;  // filter the pair list
+  Bool_t fRejectEmptyEvents;   // if true, do not write events without tracks or pairs
+  Bool_t fMCTruthJpsi2eeOnly;  // if true, store only MCtruth for Jpsi which decay into dielectron
+  Bool_t fRegionsToMCTruth;    // if true, the regions are defined relative to true particles, else they are defined relative to measured tracks
+  Bool_t fDefaultRandomPhi;    // if true, when regions are calculated relative to Jpsi and there is no Jpsi, we choose a random phi, else we take phi leading
+  Float_t fMinPtLeading;
+  
+  TF1* fJpsiMassDist;  // Real jpsi mass distribution (Crystal-ball)
+  
+  Bool_t fComputeMult;              // if true, count the tracks to compute true and measured multiplicity
+  Bool_t fBuildCandidatePairs;      // if true, build additional candidate pairs from selected tracks 
+  Bool_t fBuildCandidateLikePairs;  // if true, build also like pairs (e.g. like-sign for symmetric decay channels)
+  Int_t fCandidateType;           // candidate type, see AliReducedPairInfo::CandidateType 
+  TList fLeg1Cuts;                // list of track cuts for LEG1  (these cuts will be used also for LEG2 if the decay channel is symmetric)
+  TList fLeg2Cuts;                // list of tracks cuts for LEG2 (NOTE: fLeg1Cuts and fLeg2Cuts must contain the same number of cuts)
+  TList fCandidatePairCuts;       // list of cuts for pair candidates
+  Bool_t fRunCandidatePrefilter;  // if true, run a prefilter on the selected legs
+  Bool_t fRunCandidatePrefilterOnSameCharge;  // default FALSE (unlike charged pairs only); if true, run the prefilter on same charge pairs also;
+  TList fMeasuredMultTrackCuts;  // cuts for tracks for determination of measured multiplicity
+  TList fTrueMultTrackCuts;      // cuts for MC tracks for determination of true multiplicity
+  TList fLeg1PrefilterCuts;      // cuts for tracks used in the prefilter for LEG1  
+  TList fLeg2PrefilterCuts;      // cuts for tracks used in the prefilter for LEG2
+  TList fLeg1PairPrefilterCuts;  // cuts on the prefilter pairs for LEG1
+  TList fLeg2PairPrefilterCuts;  // cuts on the prefilter pairs for LEG2
+  TList fLeg1Tracks;             // list of selected LEG1 tracks in the current event
+  TList fLeg2Tracks;             // list of selected LEG2 tracks in the current event
+  TList fLeg1PrefilteredTracks;  // list of prefilter selected LEG1 tracks in the current event
+  TList fLeg2PrefilteredTracks;  // list of prefilter selected LEG2 tracks in the current event
+  
+  Bool_t fOptionRunMixingMult;
+  Bool_t fOptionRunMixing;  // true: run event mixing, false: no event mixing
+  Bool_t fOptionRunOverMC;  // true: trees contain MC info -> fill histos to compute efficiencies, false: run normally as on data
+  // selection based on the MC truth information of the reconstructed leg candidates
+  // NOTE:    The list is a list of AliReducedInfoCut objects which can be used to 
+  //              apply cuts on the MC flags of the tracks.
+  // NOTE: The names of the cuts are used in the naming of the histogram classes
+  AliReducedInfoCut *fLegCandidatesMCcuts; 
+  
+  // selection cuts for the pure MC truth (select the J/psi from stack)
+  // the list should contains cuts which can be applied to a pure MC truth particle (no reconstructed information)
+  //  e.g. cuts on the MC flags and on kinematics
+  //  For each selection, a separate histogram directory will be created
+  TList fJpsiMotherMCcuts;
+  TH1F* fMCJpsiPtWeights;  //! weights vs pt to reject events depending on the jpsi true pt (needed to re-weights jpsi Pt distribution)
+  Int_t fReweightCut;   // The number of the MC cut on which the weights should be applied (ex: only on prompt Jpsi)
+  Bool_t fSkipMCEvent;  // if true MC event is skipped
+  // Selection on the MC truth of the electrons from the jpsi decay
+  // Typically, here one can specify the kinematic selection on the electrons from jpsi decay
+  //     so dividing the jpsi yield at this step by the yield of jpsi selected by the fJpsiMotherMCcuts, one can
+  //     obtain the acceptance efficiency.
+  // NOTE: The number of selections on the jpsi electron needs to be the same and in sync with the number of
+  //       fJpsiMotherMCcuts cuts
+  TList fJpsiElectronMCcuts;
+  
+  Bool_t IsEventSelected(AliReducedBaseEvent* event, Float_t* values=0x0);
+  Bool_t IsTrackSelected(AliReducedBaseTrack* track, Float_t* values=0x0);
+  Bool_t IsPairSelected(AliReducedPairInfo* pair, Float_t* values=0x0);
+  void   CreateFilteredEvent();
+  Bool_t CheckReconstructedLegMCTruth(AliReducedBaseTrack* ptrack, AliReducedBaseTrack* ntrack);
+  Bool_t CheckReconstructedLegMCTruth(AliReducedBaseTrack* track);
+  void   FindJpsiTruthLegs(AliReducedTrackInfo* mother, Int_t& leg1Label, Int_t& leg2Label);
   AliReducedTrackInfo* FindTrackByLabel(Int_t label, bool isTruth = true);
-  void    LoopOverMCTracks(Int_t trackArray =1);
+  void   LoopOverMCTracks(Int_t trackArray =1);
   UInt_t CheckMotherMCTruth(AliReducedTrackInfo* mother);
   UInt_t CheckDaughterMCTruth(AliReducedTrackInfo* daughter); 
-
-   void FillMultiplicity(Bool_t regions = kFALSE);
-   Bool_t TrackIsCandidateLeg(AliReducedBaseTrack* track);
-   void WriteFilteredPairs();
-   void WriteFilteredTracks(Int_t array=1);
-   Bool_t IsTrackMeasuredMultSelected(AliReducedBaseTrack* track, Float_t* values=0x0); 
-   Bool_t IsTrackTrueMultSelected(AliReducedBaseTrack* track, Float_t* values=0x0); 
-   Bool_t IsCandidateLegSelected(AliReducedBaseTrack* track, Float_t* values=0x0, Int_t whichLeg=1); 
-   Bool_t IsCandidatePairSelected(Float_t* values);
-   Bool_t IsCandidateLegPrefilterSelected(AliReducedBaseTrack* track, Float_t* values=0x0, Int_t whichLeg=1);
-   Bool_t IsCandidateLegPairPrefilterSelected(Float_t* values, Int_t whichLeg=1);
-   void BuildCandidatePairs();
-   void RunCandidateLegsSelection(Int_t arrayOption /*=1*/);
-   void RunCandidateLegsPrefilter(Int_t leg);
-   void RunSameEventPairing();
-   void SetupPair(AliReducedPairInfo* pair, Float_t* values);
-   ULong_t CheckTrackCompatibility(AliReducedBaseTrack* leg1, AliReducedBaseTrack* leg2, Bool_t isAsymmetricDecayChannel);
-   void FillCandidateLegHistograms(TString histClass, AliReducedBaseTrack* track, Float_t* values, Int_t leg, Bool_t isAsymmetricDecayChannel);
-   void FillCandidatePairHistograms(TString histClass, AliReducedPairInfo* pair, Float_t* values, Bool_t isAsymmetricDecayChannel);
-   
+  
+  void   FillMultiplicity(Bool_t regions = kFALSE);
+  Bool_t TrackIsCandidateLeg(AliReducedBaseTrack* track);
+  void   WriteFilteredPairs();
+  void   WriteFilteredTracks(Int_t array=1);
+  Bool_t IsTrackMeasuredMultSelected(AliReducedBaseTrack* track, Float_t* values=0x0); 
+  Bool_t IsTrackTrueMultSelected(AliReducedBaseTrack* track, Float_t* values=0x0); 
+  Bool_t IsCandidateLegSelected(AliReducedBaseTrack* track, Float_t* values=0x0, Int_t whichLeg=1); 
+  Bool_t IsCandidatePairSelected(Float_t* values);
+  Bool_t IsCandidateLegPrefilterSelected(AliReducedBaseTrack* track, Float_t* values=0x0, Int_t whichLeg=1);
+  Bool_t IsCandidateLegPairPrefilterSelected(Float_t* values, Int_t whichLeg=1);
+  void BuildCandidatePairs();
+  void RunCandidateLegsSelection(Int_t arrayOption /*=1*/);
+  void RunCandidateLegsPrefilter(Int_t leg);
+  void RunSameEventPairing();
+  void SetupPair(AliReducedPairInfo* pair, Float_t* values);
+  ULong_t CheckTrackCompatibility(AliReducedBaseTrack* leg1, AliReducedBaseTrack* leg2,
+                                  Bool_t isAsymmetricDecayChannel);
+  void FillCandidateLegHistograms(TString histClass, AliReducedBaseTrack* track, Float_t* values, Int_t leg,
+                                  Bool_t isAsymmetricDecayChannel);
+  void FillCandidatePairHistograms(TString histClass, AliReducedPairInfo* pair, Float_t* values,
+                                   Bool_t isAsymmetricDecayChannel);
+  
   ClassDef(AliReducedAnalysisFilterTrees,2);
 };
 

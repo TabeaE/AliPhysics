@@ -460,7 +460,7 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
   values[kNtracksSelected] = baseEvent->NTracks();
   values[kNtracks1Selected] = baseEvent->NTracks1();
   values[kNtracks2Selected] = baseEvent->NTracks2();
-
+  
   
   if(baseEvent->IsA()!=EVENT::Class()) return;
 
@@ -2585,7 +2585,7 @@ void AliReducedVarManager::FillPairInfoME(BASETRACK* t1, BASETRACK* t2, Int_t ty
     values[kOneOverPairEffSq] = oneOverPairEff*oneOverPairEff;
   }
 
-  cout << "test" << endl; 
+//   cout << "test" << endl; 
 
   // Bmeson -> Jpsi + K: t1 is Jpsi candidate, t2 is associated track/kaon candidate 
   if(fgUsedVars[kMassJpsiK]) {
@@ -2608,7 +2608,7 @@ void AliReducedVarManager::FillPairInfoME(BASETRACK* t1, BASETRACK* t2, Int_t ty
   float lQl2 = TMath::Abs(p.Px()*t2->Px() + p.Py()*t2->Py() + p.Pz()*t2->Pz()) / momb;
   values[kArmAlpha] = (lQl1 - lQl2) / (lQl1 + lQl2); 
 
-  cout << momb << " " << lQl1 << " " << lQl2 << endl; 
+//   cout << momb << " " << lQl1 << " " << lQl2 << endl; 
   
   FillPairMEflow(t1, t2, values);
 }

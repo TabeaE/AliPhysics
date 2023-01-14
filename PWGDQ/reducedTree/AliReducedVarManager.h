@@ -367,7 +367,7 @@ class AliReducedVarManager : public TObject {
     kVZEROACTotalMult,
     kCorrectedMultiplicity,
     kNMultiplicityEstimators = kCorrectedMultiplicity - kMultiplicity,
-    kSPDFiredChips = kCorrectedMultiplicity + kNMultiplicityEstimators * ( 1 + kNCorrections * kNReferenceMultiplicities * kNSmearingMethods), // SPD fired chips in first and second layer
+    kSPDFiredChips = kCorrectedMultiplicity + kNMultiplicityEstimators * ( 1 + kNCorrections * kNReferenceMultiplicities * kNSmearingMethods),  // SPD fired chips in first and second layer
     kITSnClusters=kSPDFiredChips+2,        // number of ITS clusters in each layer
     kSPDnSingleClusters=kITSnClusters+6,   // number of clusters in SPD layer 1 not mached to tracklets from layer 2
     kSDDandSSDclusters,                    // number of clusters in the SDD and SSD layers
