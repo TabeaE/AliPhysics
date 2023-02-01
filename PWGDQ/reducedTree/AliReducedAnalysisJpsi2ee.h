@@ -35,34 +35,37 @@ public:
   
   // setters
   void AddEventCut(AliReducedInfoCut* cut) {fEventCuts.Add(cut);}
-  void AddClusterCut(AliReducedInfoCut* cut) {fClusterCuts.Add(cut); fFillCaloClusterHistograms=kTRUE; }
+  void AddClusterCut(AliReducedInfoCut* cut) {fClusterCuts.Add(cut); fFillCaloClusterHistograms=kTRUE;}
   void AddTrackCut(AliReducedInfoCut* cut);
+  void AddTrackCutEventSel(AliReducedInfoCut* cut, Int_t minSel=-1);
   void AddPrefilterTrackCut(AliReducedInfoCut* cut) {fPreFilterTrackCuts.Add(cut);}
   void AddPairCut(AliReducedInfoCut* cut);
   void AddPrefilterPairCut(AliReducedInfoCut* cut) {fPreFilterPairCuts.Add(cut);}
+  void AddTracks1MultCut(AliReducedInfoCut* cut) {fTracks1MultCuts.Add(cut);};
   void SetRunEventMixing(Bool_t option) {fOptionRunMixing = option;};
   void SetRunPairing(Bool_t option) {fOptionRunPairing = option;};
   void SetRunOverMC(Bool_t option) {fOptionRunOverMC = option;};
   void SetRunLikeSignPairing(Bool_t option) {fOptionRunLikeSignPairing = option;}
   void SetLoopOverTracks(Bool_t option) {
-     fOptionLoopOverTracks = option; 
-     if(!fOptionLoopOverTracks) {fOptionRunPairing = kFALSE; fOptionRunMixing = kFALSE; fOptionRunLikeSignPairing = kFALSE;}     
+    fOptionLoopOverTracks = option; 
+    if(!fOptionLoopOverTracks) {fOptionRunPairing = kFALSE; fOptionRunMixing = kFALSE; fOptionRunLikeSignPairing = kFALSE;}     
   }
   void SetRunPrefilter(Bool_t option) {fOptionRunPrefilter = option;}
   void SetStoreJpsiCandidates(Bool_t option) {fOptionStoreJpsiCandidates = option;}
   void SetMCJpsiPtWeights(TH1F* weights) {fMCJpsiPtWeights = weights;}
   void SetFillCaloClusterHistograms(Bool_t option) {fFillCaloClusterHistograms = option;}
   void SetClusterTrackMatcher(AliReducedCaloClusterTrackMatcher* matcher) {fClusterTrackMatcher = matcher;}
-
+  void SetRecPass(Int_t recPass){fRecPass = recPass;}
+  
   void AddLegCandidateMCcut(AliReducedInfoCut* cut, Bool_t sameMother=kTRUE) {
-     if(fLegCandidatesMCcuts.GetEntries()>=32) return;
-     fLegCandidatesMCcuts.Add(cut);
-     fLegCandidatesMCcuts_RequestSameMother[fLegCandidatesMCcuts.GetEntries()-1] = sameMother;
+    if(fLegCandidatesMCcuts.GetEntries()>=32) return;
+    fLegCandidatesMCcuts.Add(cut);
+    fLegCandidatesMCcuts_RequestSameMother[fLegCandidatesMCcuts.GetEntries()-1] = sameMother;
   }
   void AddJpsiMotherMCCut(AliReducedInfoCut* cutMother, AliReducedInfoCut* cutElectron) {
-     if(fJpsiMotherMCcuts.GetEntries()>=32) return;
-     fJpsiMotherMCcuts.Add(cutMother);
-     fJpsiElectronMCcuts.Add(cutElectron);
+    if(fJpsiMotherMCcuts.GetEntries()>=32) return;
+    fJpsiMotherMCcuts.Add(cutMother);
+    fJpsiElectronMCcuts.Add(cutElectron);
   }
   
   // getters
@@ -73,8 +76,11 @@ public:
   const Char_t* GetClusterCutName(Int_t i) const {return (i<fClusterCuts.GetEntries() ? fClusterCuts.At(i)->GetName() : "");}
   AliReducedInfoCut* GetCaloClusterCut(Int_t i) const {return (i<fClusterCuts.GetEntries() ? (AliReducedInfoCut*)fClusterCuts.At(i) : NULL);}
   Int_t GetNTrackCuts() const {return fTrackCuts.GetEntries();}
+  Int_t GetNTrackCutsEventSel() const {return fTrackCutsEventSel.GetEntries();}
   const Char_t* GetTrackCutName(Int_t i) const {return (i<fTrackCuts.GetEntries() ? fTrackCuts.At(i)->GetName() : "");}
+  const Char_t* GetTrackCutEventSelName(Int_t i) const {return (i<fTrackCutsEventSel.GetEntries() ? fTrackCutsEventSel.At(i)->GetName() : "");}
   AliReducedInfoCut* GetTrackCut(Int_t i) const {return (i<fTrackCuts.GetEntries() ? (AliReducedInfoCut*)fTrackCuts.At(i) : NULL);}
+  AliReducedInfoCut* GetTrackCutEventSel(Int_t i) const {return (i<fTrackCutsEventSel.GetEntries() ? (AliReducedInfoCut*)fTrackCutsEventSel.At(i) : NULL);}
   Int_t GetNPairCuts() const {return fPairCuts.GetEntries();}
   const Char_t* GetPairCutName(Int_t i) const {return (i<fPairCuts.GetEntries() ? fPairCuts.At(i)->GetName() : "");}
   AliReducedInfoCut* GetPairCut(Int_t i) const {return (i<fPairCuts.GetEntries() ? (AliReducedInfoCut*)fPairCuts.At(i) : NULL);}
@@ -90,68 +96,77 @@ public:
   const Char_t* GetLegCandidateMCcutName(Int_t i) const {return (i<fLegCandidatesMCcuts.GetEntries() ? fLegCandidatesMCcuts.At(i)->GetName() : "");}
   Int_t GetNJpsiMotherMCCuts() const {return fJpsiMotherMCcuts.GetEntries();}
   const Char_t* GetJpsiMotherMCcutName(Int_t i) const {return (i<fJpsiMotherMCcuts.GetEntries() ? fJpsiMotherMCcuts.At(i)->GetName() : "");}
+  Int_t GetRecPass(Int_t recPass){return fRecPass;}
   
 protected:
-   AliHistogramManager*               fHistosManager;       // Histogram manager
-   AliMixingHandler*                  fMixingHandler;       // mixing handler
-   AliReducedCaloClusterTrackMatcher* fClusterTrackMatcher; // cluster-track matcher
-   
-   Bool_t fOptionRunMixing;    // true: run event mixing, false: no event mixing
-   Bool_t fOptionRunPairing;    // true: run pairing, false: only apply the track cuts
-   Bool_t fOptionRunOverMC;  // true: trees contain MC info -> fill histos to compute efficiencies, false: run normally as on data
-   Bool_t fOptionRunLikeSignPairing;   // true (default): performs the like sign pairing in addition to the opposite pairing
-   Bool_t fOptionLoopOverTracks;       // true (default); if false do not loop over tracks and consequently no pairing
-   Bool_t fOptionRunPrefilter;        // true (default); if false do not run the prefilter
-   Bool_t fOptionStoreJpsiCandidates;   // false (default); if true, store the same event jpsi candidates in a TList 
-   Bool_t fFillCaloClusterHistograms;   // false (default); if true, fill calorimeter cluster histograms
+  AliHistogramManager*               fHistosManager;        // Histogram manager
+  AliMixingHandler*                  fMixingHandler;        // mixing handler
+  AliReducedCaloClusterTrackMatcher* fClusterTrackMatcher;  // cluster-track matcher
   
-   TList fEventCuts;               // array of event cuts
-   TList fClusterCuts;             // array of cluster cuts
-   TList fTrackCuts;               // array of track cuts
-   TList fPreFilterTrackCuts;  // track cuts to be used at the prefilter stage
-   TList fPairCuts;                  // array of pair cuts
-   TList fPreFilterPairCuts;     // pair cuts to be used at the prefilter stage
-
-   TList fClusters;               // list of selected clusters
-   TList fPosTracks;               // list of selected positive tracks in the current event
-   TList fNegTracks;              // list of selected negative tracks in the current event
-   TList fPrefilterPosTracks;  // list of prefilter selected positive tracks in the current event
-   TList fPrefilterNegTracks; // list of prefilter selected negative tracks in the current event
-   TList fJpsiCandidates;       // list of Jpsi candidates --> to be used in analyses inheriting from this 
-   TList fTrackSelected;        // list of selected charged particles tracks
-   TList fNoJpsiTracks;          //list of selected charged particles tracks excluding the Jpsi pair candidate
-   
-   // selection based on the MC truth information of the reconstructed leg candidates
-   // NOTE:    The list is a list of AliReducedInfoCut objects which can be used to 
-   //              apply cuts on the MC flags of the tracks.
-   // NOTE: The names of the cuts are used in the naming of the histogram classes
-   TList fLegCandidatesMCcuts;
-   Bool_t fLegCandidatesMCcuts_RequestSameMother[32];
-   
-   // selection cuts for the pure MC truth (select the J/psi from stack)
-   // the list should contains cuts which can be applied to a pure MC truth particle (no reconstructed information)
-   //  e.g. cuts on the MC flags and on kinematics
-   //  For each selection, a separate histogram directory will be created
-   TList fJpsiMotherMCcuts;
-   
-   // Selection on the MC truth of the electrons from the jpsi decay
-   //  Tipically, here one can specify the kinematic selection on the electrons from jpsi decay
-   //       so dividing the jpsi yield at this step by the yield of jpsi selected by the fJpsiMotherMCcuts, one can obtain the
-   //       acceptance efficiency.
-   //  NOTE: The number of selections on the jpsi electron needs to be the same and in sync with the number of fJpsiMotherMCcuts cuts
-   TList fJpsiElectronMCcuts;
-   
+  Bool_t fOptionRunMixing;   // true: run event mixing, false: no event mixing
+  Bool_t fOptionRunPairing;  // true: run pairing, false: only apply the track cuts
+  Bool_t fOptionRunOverMC;   // true: trees contain MC info -> fill histos to compute efficiencies, false: run normally as on data
+  Bool_t fOptionRunLikeSignPairing;   // true (default): performs the like sign pairing in addition to the opposite pairing
+  Bool_t fOptionLoopOverTracks;       // true (default); if false do not loop over tracks and consequently no pairing
+  Bool_t fOptionRunPrefilter;         // true (default); if false do not run the prefilter
+  Bool_t fOptionStoreJpsiCandidates;  // false (default); if true, store the same event jpsi candidates in a TList 
+  Bool_t fFillCaloClusterHistograms;  // false (default); if true, fill calorimeter cluster histograms
+  Int_t fRecPass;  // Reconstruction pass (default: 1)
+  
+  TList fEventCuts;           // list of event cuts
+  TList fClusterCuts;         // list of cluster cuts
+  TList fTrackCuts;           // list of track cuts
+  TList fTracks1MultCuts;     // track cut for multiplicity estimation for array1 (only 1 cut at the moment)
+  TList fTrackCutsEventSel;   // list of track cuts on full tracks for event selection only
+  TList fPreFilterTrackCuts;  // list of track cuts to be used at the prefilter stage
+  TList fPairCuts;            // list of pair cuts
+  TList fPreFilterPairCuts;   // list of pair cuts to be used at the prefilter stage
+  
+  TList fClusters;            // list of selected clusters
+  TList fPosTracks;           // list of selected positive tracks in the current event
+  TList fNegTracks;           // list of selected negative tracks in the current event
+  TList fPrefilterPosTracks;  // list of prefilter selected positive tracks in the current event
+  TList fPrefilterNegTracks;  // list of prefilter selected negative tracks in the current event
+  TList fJpsiCandidates;      // list of Jpsi candidates --> to be used in analyses inheriting from this 
+  TList fTrackSelected;       // list of selected charged particles tracks
+  TList fNoJpsiTracks;        // list of selected charged particles tracks excluding the Jpsi pair candidate
+  
+  // selection based on the MC truth information of the reconstructed leg candidates
+  // NOTE:    The list is a list of AliReducedInfoCut objects which can be used to 
+  //              apply cuts on the MC flags of the tracks.
+  // NOTE: The names of the cuts are used in the naming of the histogram classes
+  TList fLegCandidatesMCcuts;
+  Bool_t fLegCandidatesMCcuts_RequestSameMother[32];
+  
+  // selection cuts for the pure MC truth (select the J/psi from stack)
+  // the list should contains cuts which can be applied to a pure MC truth particle (no reconstructed
+  // information) e.g. cuts on the MC flags and on kinematics.
+  // For each selection, a separate histogram directory will be created.
+  TList fJpsiMotherMCcuts;
+  
+  // Selection on the MC truth of the electrons from the jpsi decay
+  // Typically, here one can specify the kinematic selection on the electrons from jpsi decay so dividing the
+  // jpsi yield at this step by the yield of jpsi selected by the fJpsiMotherMCcuts, one can obtain the
+  // acceptance efficiency.
+  // NOTE: The number of selections on the jpsi electron needs to be the same and in sync with the number of
+  //       fJpsiMotherMCcuts cuts.
+  TList fJpsiElectronMCcuts;
+  
+  std::vector<Int_t> fMinSelectedTracks;    // array of min. required selected tracks for each track cut in fTrackCutsEventSel
+  std::vector<Int_t> fNSelectedFullTracks;  // array of number of selected full tracks in the current event for each track cuts in fTrackCutsEventSel
+  
   Bool_t IsEventSelected(AliReducedBaseEvent* event, Float_t* values=0x0);
   Bool_t IsClusterSelected(AliReducedCaloClusterInfo* cluster, Float_t* values=0x0);
   Bool_t IsTrackSelected(AliReducedBaseTrack* track, Float_t* values=0x0);
+  Bool_t IsTracks1MultSelected(AliReducedBaseTrack* track, Float_t* values=0x0);
   Bool_t IsTrackPrefilterSelected(AliReducedBaseTrack* track, Float_t* values=0x0);
   ULong_t IsPairSelected(Float_t* values);
   Bool_t IsPairPreFilterSelected(Float_t* values);
   UInt_t CheckReconstructedLegMCTruth(AliReducedBaseTrack* ptrack, AliReducedBaseTrack* ntrack);
   UInt_t CheckReconstructedLegMCTruth(AliReducedBaseTrack* track);
-  void    FindJpsiTruthLegs(AliReducedTrackInfo* mother, Int_t& leg1Label, Int_t& leg2Label);
+  void   FindJpsiTruthLegs(AliReducedTrackInfo* mother, Int_t& leg1Label, Int_t& leg2Label);
   AliReducedTrackInfo* FindMCtruthTrackByLabel(Int_t label);
-  void    LoopOverMCTracks(Int_t trackArray =1);
+  void   LoopOverMCTracks(Int_t trackArray=1);
   UInt_t CheckMotherMCTruth(AliReducedTrackInfo* mother, Bool_t checkReweight=kFALSE);
   UInt_t CheckDaughterMCTruth(AliReducedTrackInfo* daughter);
   
@@ -159,7 +174,7 @@ protected:
   void RunSameEventPairing(TString pairClass = "PairSE");
   void RunTrackSelection();
   void RunClusterSelection();
-//   void LoopOverTracks(Int_t arrayOption=1);
+  //   void LoopOverTracks(Int_t arrayOption=1);
   void LoopOverTracks1();
   void LoopOverTracks2();
   void FillTrackHistograms(TString trackClass = "Track");
@@ -168,13 +183,13 @@ protected:
   void FillClusterHistograms(TString clusterClass="CaloCluster");
   void FillClusterHistograms(AliReducedCaloClusterInfo* cluster, TString clusterClass="CaloCluster");
   void FillMCTruthHistograms();
-
+  
   TList*  fClusterTrackMatcherHistograms;             // list of cluster-track matcher histograms
   TH1I*   fClusterTrackMatcherMultipleMatchesBefore;  // multiple matches of tracks to same cluster before matching
   TH1I*   fClusterTrackMatcherMultipleMatchesAfter;   // multiple matches of tracks to same cluster after matching
-
-  Bool_t fSkipMCEvent;          // decision to skip MC event
-  TH1F*  fMCJpsiPtWeights;            // weights vs pt to reject events depending on the jpsi true pt (needed to re-weights jpsi Pt distribution)
+  
+  Bool_t fSkipMCEvent;      // decision to skip MC event
+  TH1F*  fMCJpsiPtWeights;  // weights vs pt to reject events depending on the jpsi true pt (needed to re-weights jpsi Pt distribution)
   
   ClassDef(AliReducedAnalysisJpsi2ee,13);
 };

@@ -558,7 +558,7 @@ void AliReducedAnalysisFilterTrees::RunSameEventPairing() {
 }
 
 //___________________________________________________________________________
-void AliReducedAnalysisFilterTrees::FillMultiplicity(){
+void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions/*=kFALSE*/) {
   // Fill global tracks (both signal and MC and Jpsi)
   
   for (int icut = 0; icut<GetNMeasMultCuts(); icut++) fValues[AliReducedVarManager::kNGlobalTracks+icut] = 0.;
@@ -568,7 +568,7 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(){
   for(Int_t iArray = 1; iArray<=2; iArray++) {
     AliReducedBaseTrack* track = 0x0;
     TClonesArray* tracklist = (iArray==1 ? fEvent->GetTracks() : fEvent->GetTracks2());
-    if(!trackList) return;
+    if(!tracklist) return;
     TIter nextTrack(tracklist);
 
     // Loop over tracks
@@ -579,7 +579,7 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(){
       AliReducedVarManager::FillTrackInfo(track, fValues);
       
       // Calculate measured multiplicity
-      if(!(track->IsMCTruth()) && IsTrackMeasuredMultSelected(track, fValues)) {
+      if(!(track->IsMCTruth()) && IsTrackMeasMultSelected(track, fValues)) {
         // Loop over multiplicity estimators
         for(Int_t icut = 0; icut<GetNMeasMultCuts(); icut++) {
           // Check if track is selected for multiplicity estimator
@@ -658,15 +658,15 @@ Bool_t AliReducedAnalysisFilterTrees::IsPairSelected(AliReducedPairInfo* pair, F
 }
 
 //___________________________________________________________________________
-Bool_t AliReducedAnalysisFilterTrees::IsTrackMeasuredMultSelected(AliReducedBaseTrack* track, Float_t* values /*=0x0*/) {
+Bool_t AliReducedAnalysisFilterTrees::IsTrackMeasMultSelected(AliReducedBaseTrack* track, Float_t* values /*=0x0*/) {
   //
   // apply cuts for determining measured multiplicity
   //
-  if(fMeasuredMultTrackCuts.GetEntries()==0) return kTRUE;
+  if(fMeasMultTrackCuts.GetEntries()==0) return kTRUE;
   track->ResetFlags();  
   
-  for(Int_t i=0; i<fMeasuredMultTrackCuts.GetEntries(); ++i) {
-    AliReducedInfoCut* cut = (AliReducedInfoCut*) fMeasuredMultTrackCuts.At(i);
+  for(Int_t i=0; i<fMeasMultTrackCuts.GetEntries(); ++i) {
+    AliReducedInfoCut* cut = (AliReducedInfoCut*) fMeasMultTrackCuts.At(i);
     if(values) { if(cut->IsSelected(track, values)) track->SetFlag(i); }
     else { if(cut->IsSelected(track)) track->SetFlag(i); }
   }

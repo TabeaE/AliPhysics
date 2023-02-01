@@ -196,6 +196,10 @@ class AliReducedVarManager : public TObject {
   static const Float_t fgkParticleMass[kNSpecies];
   static const Float_t fgkPairMass[AliReducedPairInfo::kNMaxCandidateTypes];
   
+  enum Ncuts {
+    kNMaxCutsGlobalTracks=8
+  };
+  
   enum Variables {
     kNothing = -1,
     // Run wise variables (LHC and ALICE GRP information)
@@ -361,7 +365,11 @@ class AliReducedVarManager : public TObject {
     kSPDntrackletsOuterEta,
     kSPDntrackletsEtaBin,
     kSPDnTracklets10EtaVtxCorr = kSPDntrackletsEtaBin + 32,
-    kVZEROTotalMult,
+    kNGlobalTracks,  // Filled only when event is accepted, else -999. Max. 8 possible cutsets
+    kNGlobalTracksToward = kNGlobalTracks + kNMaxCutsGlobalTracks,  // regions to Jpsi/randomphi and regions to leading pt
+    kNGlobalTracksTransverse = kNGlobalTracksToward + 2*kNMaxCutsGlobalTracks,
+    kNGlobalTracksAway = kNGlobalTracksTransverse + 2*kNMaxCutsGlobalTracks,
+    kVZEROTotalMult = kNGlobalTracksAway + 2*kNMaxCutsGlobalTracks,
     kVZEROATotalMult,
     kVZEROCTotalMult,
     kVZEROTotalMultFromChannels,
@@ -491,10 +499,17 @@ class AliReducedVarManager : public TObject {
     kEMCEGATriggered,
     kEMCEGAHighTriggered,
     kEtaBinForSPDtracklets,
-    kMCNch,                                  // number of primary charged particles in the MC, in |eta|<1
-    kMCNchNegSide,                     // number of primary charged particles in the MC, in -1<eta<0
-    kMCNchPosSide,                     // number of primary charged particles in the MC, in 0<eta<1
-    kMCNchSPDacc,                       // number of primary charged particles in the MC, in |eta|<1 but limited to the SPD acceptance
+    kMCNch,    // number of primary charged particles in the MC, in |eta|<1
+    kMCNch09,  // number of primary charged particles in the MC, in |eta|<0.9, filled only if MC event is
+               //   accepted (nch09>0, zvtx<10). Second variable is the same only if MC event is triggered and
+               //   accepted, else -999. Third variable is the same only if MC event is triggered and accepted
+               //   (nch09>0, zvtx<10), and the reconstructed event is accepted, else -999.
+    kMCNch09Toward=kMCNch09+3,
+    kMCNch09Away=kMCNch09Toward+2,       // regions to Jpsi/randomphi and regions to leading pt (leading pt chosen with cutset 1)
+    kMCNch09Transverse=kMCNch09Away+2,
+    kMCNchNegSide=kMCNch09Transverse+2,  // number of primary charged particles in the MC, in -1<eta<0
+    kMCNchPosSide,                       // number of primary charged particles in the MC, in 0<eta<1
+    kMCNchSPDacc,                        // number of primary charged particles in the MC, in |eta|<1 but limited to the SPD acceptance
     kDiffNchSPDtrklts,
     kDiffNchSPDaccSPDtrklts,
     kRelDiffNchSPDtrklts,
