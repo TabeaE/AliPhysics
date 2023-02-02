@@ -193,11 +193,10 @@ void AliReducedAnalysisFilterTrees::Process() {
     return;
   }
   
-  if(fEventCounter%10000==0) 
-    cout << "Event no. " << fEventCounter << endl;
+  if(fEventCounter%10000==0) cout << "Event no. " << fEventCounter << endl;
   fEventCounter++;
-  AliReducedVarManager::SetEvent(fEvent);
   
+  AliReducedVarManager::SetEvent(fEvent);
   // reset the values array, keep only the run wise data (LHC and ALICE GRP information)
   // NOTE: The run wise data will be updated automatically in the VarManager in case a run number change
   //       is detected.
@@ -212,15 +211,26 @@ void AliReducedAnalysisFilterTrees::Process() {
   Bool_t isEventUnbiased = fEvent->TestEventTag(14) || GetRunOverMC();
   //Assuming that we have selected 2% unbiased events only for data and not for MC
   
-  if(isEventUnbiased){
-    fHistosManager->FillHistClass("Event_BeforeCuts", fValues);
+  if(isEventUnbiased) {
+    fHistosManager->FillHistClass("Event_MB_BeforeCuts", fValues);
     for(UShort_t ibit=0; ibit<64; ++ibit) {
       AliReducedVarManager::FillEventTagInput(fEvent, ibit, fValues);
-      fHistosManager->FillHistClass("EventTag_BeforeCuts", fValues);
+      fHistosManager->FillHistClass("EventTag_MB_BeforeCuts", fValues);
     }
     for(UShort_t ibit=0; ibit<64; ++ibit) {
       AliReducedVarManager::FillEventOnlineTrigger(ibit, fValues);
-      fHistosManager->FillHistClass("EventTriggers_BeforeCuts", fValues);
+      fHistosManager->FillHistClass("EventTriggers_MB_BeforeCuts", fValues);
+    }
+  }
+  else {
+    fHistosManager->FillHistClass("Event_noTag14_BeforeCuts", fValues);
+    for(UShort_t ibit=0; ibit<64; ++ibit) {
+      AliReducedVarManager::FillEventTagInput(fEvent, ibit, fValues);
+      fHistosManager->FillHistClass("EventTag_noTag14_BeforeCuts", fValues);
+    }
+    for(UShort_t ibit=0; ibit<64; ++ibit) {
+      AliReducedVarManager::FillEventOnlineTrigger(ibit, fValues);
+      fHistosManager->FillHistClass("EventTriggers_noTag14_BeforeCuts", fValues);
     }
   }
   
@@ -233,32 +243,22 @@ void AliReducedAnalysisFilterTrees::Process() {
     for(Int_t icut=0; icut<nGlobalEstimators; icut++) {
       fHistosManager->FillHistClass(Form("EventMult_%s_INELGT0", GetMeasMultcutName(icut)), fValues);
     }
-    if(fValues[AliReducedVarManager::kINT7Triggered]) {
-      fHistosManager->FillHistClass("Event_INELGT0_MB", fValues);
-      for(Int_t icut=0; icut<nGlobalEstimators; icut++) {
-        fHistosManager->FillHistClass(Form("EventMult_%s_INELGT0_MB", GetMeasMultcutName(icut)), fValues);
-      }
-    }
   }
   if(GetRunOverMC() && !(fValues[AliReducedVarManager::kINT7Triggered])) isEventSelected = kFALSE;
   
   //Vtx reconstruction
   if(isEventUnbiased && isEventSelected) {
     fHistosManager->FillHistClass("Event_NoVtxRec", fValues);
-    for(Int_t icut=0; icut<nGlobalEstimators; icut++) {
-      if(fValues[AliReducedVarManager::kINT7Triggered])
-        fHistosManager->FillHistClass(Form("EventMult_%s_NoVtxRec", GetMeasMultcutName(icut)), fValues);
-    }
+    for(Int_t icut=0; icut<nGlobalEstimators; icut++)
+      fHistosManager->FillHistClass(Form("EventMult_%s_NoVtxRec", GetMeasMultcutName(icut)), fValues);
   }
   if(fValues[AliReducedVarManager::kNVtxContributors]<0.1) isEventSelected = kFALSE;
   
   //Vtx z cut
   if(isEventUnbiased && isEventSelected) {
     fHistosManager->FillHistClass("Event_NoVtxzCut", fValues);
-    for(Int_t icut=0; icut<nGlobalEstimators; icut++) {
-      if(fValues[AliReducedVarManager::kINT7Triggered])
-        fHistosManager->FillHistClass(Form("EventMult_%s_NoVtxzCut", GetMeasMultcutName(icut)), fValues);
-    }
+    for(Int_t icut=0; icut<nGlobalEstimators; icut++)
+      fHistosManager->FillHistClass(Form("EventMult_%s_NoVtxzCut", GetMeasMultcutName(icut)), fValues);
   }
   if(abs(fValues[AliReducedVarManager::kVtxZ])>10) isEventSelected = kFALSE;
   
@@ -272,28 +272,18 @@ void AliReducedAnalysisFilterTrees::Process() {
   
   
   if(isEventUnbiased) {
-    for(Int_t cutMode=0; cutMode<4*nGlobalEstimators; cutMode=cutMode+4) {
+    for(Int_t cutMode=0; cutMode<2*nGlobalEstimators; cutMode=cutMode+2) {
       // For multiplicity unfolding
-      // For MC, only the smearing matrix is important (supposed independent of the trigger) 
-      // => HM filled even if no HM triggered events
+      // For MC, only the smearing matrix is important (supposed independent of the trigger)
       
-      // MB triggered
-      if(fValues[AliReducedVarManager::kINT7Triggered] || GetRunOverMC()) {
-        fHistosManager->FillHistClass(Form("pPb_5TeV_Data_cutMode_%d",cutMode+100), fValues);
-        fHistosManager->FillHistClass(Form("pPb_5TeV_MC_cutMode_%d",cutMode+100), fValues);
-      }
+      fHistosManager->FillHistClass(Form("pPb_5TeV_Data_cutMode_%d",cutMode+100), fValues);
+      fHistosManager->FillHistClass(Form("pPb_5TeV_MC_cutMode_%d",cutMode+100), fValues);
       
-      // Inclusive (MB or HM triggered)
-      if(fValues[AliReducedVarManager::kINT7Triggered]) {
-        fHistosManager->FillHistClass(Form("pPb_5TeV_Data_cutMode_%d",cutMode+102), fValues);
-        fHistosManager->FillHistClass(Form("pPb_5TeV_MC_cutMode_%d",cutMode+102), fValues);
-      }
-      
-      for(Int_t j = 0; j < fValues[AliReducedVarManager::kMCNJpsi]; j++) {
+      for(Int_t j=0; j<fValues[AliReducedVarManager::kMCNJpsi]; j++) {
         //Double_t rnd = gRandom->Rndm();
         //float weight = 77./376.;
         //if(rnd < weight) {
-        fHistosManager->FillHistClass(Form("pPb_5TeV_MC_cutMode_%d",cutMode+103), fValues);
+        fHistosManager->FillHistClass(Form("pPb_5TeV_MC_cutMode_%d",cutMode+101), fValues);
         //}
       }
     }
@@ -311,12 +301,8 @@ void AliReducedAnalysisFilterTrees::Process() {
   // fill event info histograms after cuts
   if(isEventUnbiased){
     fHistosManager->FillHistClass("Event_AfterCuts", fValues);
-    for(Int_t icut=0; icut<nGlobalEstimators; icut++) {
-      if(fValues[AliReducedVarManager::kINT7Triggered])
-        fHistosManager->FillHistClass(Form("EventMult_%s_Inclusive",GetMeasMultcutName(icut)), fValues);
-      if(fValues[AliReducedVarManager::kINT7Triggered])
-        fHistosManager->FillHistClass(Form("EventMult_%s_MB",GetMeasMultcutName(icut)), fValues);
-    }
+    for(Int_t icut=0; icut<nGlobalEstimators; icut++)
+      fHistosManager->FillHistClass(Form("EventMult_%s",GetMeasMultcutName(icut)), fValues);
     
     fHistosManager->FillHistClass("CorrelMult", fValues); //Correlations between different multiplicity estimators
     
@@ -364,22 +350,12 @@ void AliReducedAnalysisFilterTrees::CreateFilteredEvent() {
     for(Int_t icut=0; icut<GetNMeasMultCuts(); icut++) {
       
       if(fEvent->TestEventTag(14) || GetRunOverMC()) { //event is unbiased
-        // Both triggers + MB + HM  (regions to jpsi)
-        if(fValues[AliReducedVarManager::kINT7Triggered])
-          fHistosManager->FillHistClass(Form("EventMultRegions_%s_Inclusive",
-                                             GetMeasMultcutName(icut)), fValues);
-        if(fValues[AliReducedVarManager::kINT7Triggered])
-          fHistosManager->FillHistClass(Form("EventMultRegions_%s_MB",
-                                             GetMeasMultcutName(icut)), fValues);
+        // Regions to jpsi
+        fHistosManager->FillHistClass(Form("EventMultRegions_%s", GetMeasMultcutName(icut)), fValues);
         
-        if(fValues[AliReducedVarManager::kPtLeading+icut] > fMinPtLeading) {
-          // Both triggers + MB + HM  (regions to leading)
-          if(fValues[AliReducedVarManager::kINT7Triggered])
-            fHistosManager->FillHistClass(Form("EventMultRegions2Leading_%s_Inclusive",
-                                               GetMeasMultcutName(icut)), fValues);
-          if(fValues[AliReducedVarManager::kINT7Triggered])
-            fHistosManager->FillHistClass(Form("EventMultRegions2Leading_%s_MB",
-                                               GetMeasMultcutName(icut)), fValues);
+        if(fValues[AliReducedVarManager::kPtLeading+icut]>fMinPtLeading) {
+          // Regions to leading
+          fHistosManager->FillHistClass(Form("EventMultRegions2Leading_%s", GetMeasMultcutName(icut)), fValues);
         }
       }
       
