@@ -248,10 +248,7 @@ AliCFTaskVertexingHF::AliCFTaskVertexingHF(const Char_t* name, AliRDHFCuts* cuts
   fPhiDistributionHybridTracks(0),
   fPhiDistributionComplementaryTracks(0),
   fPhiEtaDistributionHybridTracks(0)
-<<<<<<< HEAD
 
-=======
->>>>>>> Beauty changes
 {
   //
   // Constructor. Initialization of Inputs and Outputs
@@ -2891,10 +2888,7 @@ Double_t AliCFTaskVertexingHF::CalculateRTValue(AliAODEvent* esdEvent, AliAODMCH
    ///settings for track filter used in RT determination
 
   AliAnalysisFilter* trackFilter = new AliAnalysisFilter("trackFilter");
-<<<<<<< HEAD
 
-=======
->>>>>>> Beauty changes
   AliESDtrackCuts* esdTrackCutsGlobal[18] = {0};
   AliESDtrackCuts* esdTrackCutsComplementary[18] = {0};
 
@@ -2937,10 +2931,7 @@ Double_t AliCFTaskVertexingHF::CalculateRTValue(AliAODEvent* esdEvent, AliAODMCH
   trackFilter->AddCuts(esdTrackCutsRun2);
        }
     else {//end if on usage of hybrid tracks
-<<<<<<< HEAD
 
-=======
->>>>>>> Beauty changes
  	fTrackFilterGlobal = new AliAnalysisFilter("fTrackFilterGlobal0");
  	esdTrackCutsGlobal[0] = new AliESDtrackCuts("esdTrackCutsRunGlobal0"); //use other slots for systematic if needed;
 
@@ -3018,10 +3009,7 @@ Double_t AliCFTaskVertexingHF::CalculateRTValue(AliAODEvent* esdEvent, AliAODMCH
              fPhiDistributionHybridTracks->Fill(part->Phi());
              fPhiEtaDistributionHybridTracks->Fill(part->Phi(),eta);
            } else {continue;}
-<<<<<<< HEAD
 
-=======
->>>>>>> Beauty changes
 	   	 }
       }
    }
