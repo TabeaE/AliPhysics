@@ -28,18 +28,18 @@ public:
   virtual void Process();
   virtual void Finish();
   
-  // setters
-  
+
+  // -------------------- Setters ------------------------------------------------------------ //
   
   void AddTrackCut(AliReducedInfoCut* cut) {
     // Add track cut and setup mixing handler      
     fTrackCuts.Add(cut);
     fMixingHandler->SetNParallelCuts(fMixingHandler->GetNParallelCuts()+1);
     TString histClassNames = fMixingHandler->GetHistClassNames();
-    if (fPairCuts.GetEntries()>1) {
+    if(fPairCuts.GetEntries()>1) {
       histClassNames = "";
-      for (Int_t iPairCut=0; iPairCut<fPairCuts.GetEntries(); iPairCut++) {
-        for (Int_t iTrackCut=0; iTrackCut<fTrackCuts.GetEntries(); iTrackCut++) {
+      for(Int_t iPairCut=0; iPairCut<fPairCuts.GetEntries(); iPairCut++) {
+        for(Int_t iTrackCut=0; iTrackCut<fTrackCuts.GetEntries(); iTrackCut++) {
           histClassNames += Form("PairMEPP_%s_%s;", fTrackCuts.At(iTrackCut)->GetName(),
                                  fPairCuts.At(iPairCut)->GetName());
           histClassNames += Form("PairMEPM_%s_%s;", fTrackCuts.At(iTrackCut)->GetName(),
@@ -56,15 +56,14 @@ public:
     fMixingHandler->SetHistClassNames(histClassNames.Data());
   }
   
-  
   void AddPairCut(AliReducedInfoCut* cut) {
     // Add pair cut and setup mixing handler
     fPairCuts.Add(cut);  
     fMixingHandler->SetNParallelPairCuts(fMixingHandler->GetNParallelPairCuts()+1);
-    if (fPairCuts.GetEntries()>1) {
+    if(fPairCuts.GetEntries()>1) {
       TString histClassNamesNew = "";
-      for (Int_t iPairCut=0; iPairCut<fPairCuts.GetEntries(); iPairCut++) {
-        for (Int_t iTrackCut=0; iTrackCut<fTrackCuts.GetEntries(); iTrackCut++) {
+      for(Int_t iPairCut=0; iPairCut<fPairCuts.GetEntries(); iPairCut++) {
+        for(Int_t iTrackCut=0; iTrackCut<fTrackCuts.GetEntries(); iTrackCut++) {
           histClassNamesNew += Form("PairMEPP_%s_%s;", fTrackCuts.At(iTrackCut)->GetName(),
                                     fPairCuts.At(iPairCut)->GetName());
           histClassNamesNew += Form("PairMEPM_%s_%s;", fTrackCuts.At(iTrackCut)->GetName(),
@@ -77,7 +76,6 @@ public:
     }
   }
   
-  
   void AddEventCut(AliReducedInfoCut* cut) {fEventCuts.Add(cut);}
   void SetWriteFilteredTracks(Bool_t option=kTRUE) {fWriteFilteredTracks=option;}
   void SetWriteFilteredPairs(Bool_t option=kTRUE) {fWriteFilteredPairs=option;}
@@ -85,7 +83,6 @@ public:
   void SetRejectEmptyEvents(Bool_t option=kTRUE) {fRejectEmptyEvents=option;}
   void SetMCJpsiPtWeights(TH1F* weights) {fMCJpsiPtWeights = weights;}
   void SetReweightCut(Int_t ncut) {fReweightCut = ncut;}
-  
   void SetBuildCandidatePairs(AliReducedPairInfo::CandidateType type) {fBuildCandidatePairs=kTRUE;
     fCandidateType=type;}
   void SetBuildCandidateLikePairs(Bool_t option=kTRUE) {fBuildCandidateLikePairs=option;}
@@ -112,18 +109,22 @@ public:
   void SetRegionsToMCTruth(Bool_t option) {fRegionsToMCTruth = option;}
   void SetDefaultRandomPhi(Bool_t option) {fDefaultRandomPhi = option;}
   void SetMinPtLeading(Float_t minpt) {fMinPtLeading = minpt;}
-  
   void SetRunOverMC(Bool_t option) {fOptionRunOverMC = option;};
-  // getters
+
+
+  // -------------------- Getters ------------------------------------------------------------ //
+
   virtual AliHistogramManager* GetHistogramManager() const {return fHistosManager;}
   virtual AliMixingHandler* GetMixingHandler() const {return fMixingHandler;}
   Bool_t GetWriteFilteredTracks() const {return fWriteFilteredTracks;}
   Int_t GetNTrackCuts() const {return fTrackCuts.GetEntries();}
-  const Char_t* GetTrackCutName(Int_t i) const {return (i<fTrackCuts.GetEntries() ? fTrackCuts.At(i)->GetName() : "");} 
+  const Char_t* GetTrackCutName(Int_t i) const {
+    return (i<fTrackCuts.GetEntries() ? fTrackCuts.At(i)->GetName() : "");}
   Bool_t GetWriteFilteredPairs() const {return fWriteFilteredPairs;}
   Bool_t GetRejectEmptyEvents() const {return fRejectEmptyEvents;}
   Int_t GetNPairCuts() const {return fPairCuts.GetEntries();}
-  const Char_t* GetPairCutName(Int_t i) const {return (i<fPairCuts.GetEntries() ? fPairCuts.At(i)->GetName() : "");} 
+  const Char_t* GetPairCutName(Int_t i) const {
+    return (i<fPairCuts.GetEntries() ? fPairCuts.At(i)->GetName() : "");}
   Bool_t GetBuildCandidatePairs() const {return fBuildCandidatePairs;}
   Bool_t GetBuildCandidateLikePairs() const {return fBuildCandidateLikePairs;}
   Bool_t GetComputeMult() const {return fComputeMult;};
@@ -139,11 +140,14 @@ public:
   Bool_t GetRunOverMC() const {return fOptionRunOverMC;};
   //  Int_t GetNLegCandidateMCcuts() const {return fLegCandidatesMCcuts.GetEntries();}
   //const Char_t* GetLegCandidateMCcutName(Int_t i) const {return (i<fLegCandidatesMCcuts.GetEntries() ? fLegCandidatesMCcuts.At(i)->GetName() : "");}
-  const Char_t* GetLegCandidateMCcutName() const {return (fLegCandidatesMCcuts ? fLegCandidatesMCcuts->GetName() : "");}
+  const Char_t* GetLegCandidateMCcutName() const {
+    return (fLegCandidatesMCcuts ? fLegCandidatesMCcuts->GetName() : "");}
   Int_t GetNJpsiMotherMCCuts() const {return fJpsiMotherMCcuts.GetEntries();}
-  const Char_t* GetJpsiMotherMCcutName(Int_t i) const {return (i<fJpsiMotherMCcuts.GetEntries() ? fJpsiMotherMCcuts.At(i)->GetName() : "");}
+  const Char_t* GetJpsiMotherMCcutName(Int_t i) const {
+    return (i<fJpsiMotherMCcuts.GetEntries() ? fJpsiMotherMCcuts.At(i)->GetName() : "");}
   Int_t GetNMeasMultCuts() const {return fMeasuredMultTrackCuts.GetEntries();}
-  const Char_t* GetMeasMultcutName(Int_t i) const {return (i<fMeasuredMultTrackCuts.GetEntries() ? fMeasuredMultTrackCuts.At(i)->GetName() : "");}
+  const Char_t* GetMeasMultcutName(Int_t i) const {
+    return (i<fMeasuredMultTrackCuts.GetEntries() ? fMeasuredMultTrackCuts.At(i)->GetName() : "");}
   TF1* GetJpsiMassDist() const {return fJpsiMassDist;}
   Bool_t GetMCTruthJpsi2eeOnly() const {return fMCTruthJpsi2eeOnly;}
   
@@ -152,13 +156,14 @@ public:
    *     if(fLegCandidatesMCcuts.GetEntries()>=32) return;
    *     fLegCandidatesMCcuts.Add(cut);
 }*/
-  // NOTE: The MC truth selection works with just one MC truth cut. It is not implemented properly for asymmetric
-  //       decay channels, just one MC selection is applied to both legs.
-  //       In the case that an MC truth selection is applied, then only built pairs which fulfill the MC truth
-  //       will be written in the filtered trees.
+
+  // NOTE: The MC truth selection works with just one MC truth cut. It is not implemented properly for
+  //       asymmetric decay channels, just one MC selection is applied to both legs.
+  //       In the case that an MC truth selection is applied, then only built pairs which fulfill the MC
+  //       truth will be written in the filtered trees.
   void SetLegCandidateMCcut(AliReducedInfoCut* cut) {
     //if(fLegCandidatesMCcuts.GetEntries()>=32) return;
-    fLegCandidatesMCcuts  = cut;
+    fLegCandidatesMCcuts = cut;
   }
   
   void AddJpsiMotherMCCut(AliReducedInfoCut* cutMother, AliReducedInfoCut* cutElectron) {
@@ -171,8 +176,8 @@ public:
   
 protected:
   AliHistogramManager* fHistosManager;         // Histogram manager
-  AliMixingHandler*    fMixingHandler;         // mixing handler
-  TList                fMixingHandlerMult;     // mixing handlers in multiplicity bins
+  AliMixingHandler*    fMixingHandler;         // Mixing handler
+  TList                fMixingHandlerMult;     // Mixing handlers in multiplicity bins
   Float_t              fMultBinsMixing[1000];  // Multiplicity bins for mixing in multiplicity bins
   Int_t                fNMultBinsMixing;       // Number of multiplicity bins for mixing in multiplicity bins
   
