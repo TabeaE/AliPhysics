@@ -149,6 +149,8 @@ fJpsiElectronMCcuts()
   fLeg2Tracks.SetOwner(kFALSE);
   fLeg1PrefilteredTracks.SetOwner(kFALSE);
   fLeg2PrefilteredTracks.SetOwner(kFALSE);
+  fJpsiMotherMCcuts.SetOwner(kTRUE);
+  fJpsiElectronMCcuts.SetOwner(kTRUE);
 }
 
 
@@ -462,22 +464,6 @@ void AliReducedAnalysisFilterTrees::WriteFilteredTracks(Int_t array /*=1*/) {
         if(track->TestFlag(icut)) {
           fHistosManager->FillHistClass(Form("Track_WriteFilteredTracks_%s",
                                              fTrackCuts.At(icut)->GetName()), fValues);
-//           if(track->IsA() != AliReducedTrackInfo::Class()) continue;
-//           AliReducedTrackInfo* trackInfo = dynamic_cast<AliReducedTrackInfo*>(track);
-//           if(!trackInfo) continue;
-//           for(Int_t iLayer=0; iLayer<6; ++iLayer) {
-//             AliReducedVarManager::FillITSlayerFlag(trackInfo, iLayer, fValues);
-//             fHistosManager->FillHistClass(Form("Track_WriteFilteredTracks_ITSclusterMap_%s",fTrackCuts.At(icut)->GetName()),
-//                                           fValues);
-//             AliReducedVarManager::FillITSsharedLayerFlag(trackInfo, iLayer, fValues);
-//             fHistosManager->FillHistClass(Form("Track_WriteFilteredTracks_ITSsharedClusterMap_%s",
-//                                                fTrackCuts.At(icut)->GetName()), fValues);
-//           }
-//           for(Int_t iLayer=0; iLayer<8; ++iLayer) {
-//             AliReducedVarManager::FillTPCclusterBitFlag(trackInfo, iLayer, fValues);
-//             fHistosManager->FillHistClass(Form("Track_WriteFilteredTracks_TPCclusterMap_%s",fTrackCuts.At(icut)->GetName()),
-//                                           fValues);
-//           }
         }
       }
       TClonesArray& tracks = (array==1 ? *(fFilteredEvent->fTracks) : *(fFilteredEvent->fTracks2));
@@ -693,10 +679,43 @@ void AliReducedAnalysisFilterTrees::RunCandidateLegsPrefilter(Int_t leg) {
   iterLeg.Reset();
   for(Int_t it=0; it<(leg==1?fLeg1Tracks.GetEntries():fLeg2Tracks.GetEntries()); ++it) {
     track = (AliReducedBaseTrack*)iterLeg();
+    Int_t legCuts = (2&&isAsymmetricDecayChannel ? 2 : 1);
     AliReducedVarManager::FillTrackInfo(track, fValues);
     AliReducedVarManager::FillClusterMatchedTrackInfo(track, fValues);
-    FillCandidateLegHistograms(Form("Track_LEG%d_AfterPrefilter",leg), track, fValues,
-                               (leg==2&&isAsymmetricDecayChannel?2:1), isAsymmetricDecayChannel);
+    FillCandidateLegHistograms(Form("Track_LEG%d_AfterPrefilter",leg), track, fValues, legCuts,
+                               isAsymmetricDecayChannel);
+
+    if(track->IsA() != AliReducedTrackInfo::Class()) continue;
+    AliReducedTrackInfo* trackInfo = dynamic_cast<AliReducedTrackInfo*>(track);
+    if(!trackInfo) continue;
+    for(Int_t icut=0; icut<fLeg1Cuts.GetEntries(); ++icut) {
+      if(track->TestFlag(legCuts==2 && isAsymmetricDecayChannel ? icut+32 : icut)) {
+        for(UInt_t iflag=0; iflag<AliReducedVarManager::kNTrackingFlags; ++iflag) {
+          AliReducedVarManager::FillTrackingFlag(trackInfo, iflag, fValues);
+          fHistosManager->FillHistClass(Form("TrackStatusFlags_%s", (legCuts==2&&isAsymmetricDecayChannel?
+              fLeg2Cuts.At(icut)->GetName():fLeg1Cuts.At(icut)->GetName())), fValues);
+        }
+        for(UInt_t iflag=0; iflag<64; ++iflag) {
+          AliReducedVarManager::FillTrackQualityFlag(trackInfo, iflag, fValues);
+          fHistosManager->FillHistClass(Form("TrackQualityFlags_%s", (legCuts==2&&isAsymmetricDecayChannel?
+              fLeg2Cuts.At(icut)->GetName():fLeg1Cuts.At(icut)->GetName())), fValues);
+        }
+        for(Int_t iLayer=0; iLayer<6; ++iLayer) {
+          AliReducedVarManager::FillITSlayerFlag(trackInfo, iLayer, fValues);
+          fHistosManager->FillHistClass(Form("TrackITSclusterMap_%s", (legCuts==2&&isAsymmetricDecayChannel?
+              fLeg2Cuts.At(icut)->GetName():fLeg1Cuts.At(icut)->GetName())), fValues);
+          AliReducedVarManager::FillITSsharedLayerFlag(trackInfo, iLayer, fValues);
+          fHistosManager->FillHistClass(Form("TrackITSsharedClusterMap_%s",
+              (legCuts==2&&isAsymmetricDecayChannel?
+              fLeg2Cuts.At(icut)->GetName():fLeg1Cuts.At(icut)->GetName())), fValues);
+        }
+        for(Int_t iLayer=0; iLayer<8; ++iLayer) {
+          AliReducedVarManager::FillTPCclusterBitFlag(trackInfo, iLayer, fValues);
+          fHistosManager->FillHistClass(Form("TrackTPCclusterMap_%s", (legCuts==2&&isAsymmetricDecayChannel?
+              fLeg2Cuts.At(icut)->GetName():fLeg1Cuts.At(icut)->GetName())), fValues);
+        }
+      }
+    }
   }
 }
 
@@ -1285,6 +1304,7 @@ void AliReducedAnalysisFilterTrees::FillCandidateLegHistograms(TString histClass
   //
   // fill track histogram lists according to the track flags 
   //
+
   for(Int_t icut=0; icut<fLeg1Cuts.GetEntries(); ++icut) {
     if(track->TestFlag(leg==2 && isAsymmetricDecayChannel ? icut+32 : icut)) {
       fHistosManager->FillHistClass(Form("%s_%s",histClass.Data(),
@@ -1419,7 +1439,8 @@ void AliReducedAnalysisFilterTrees::LoopOverMCTracks(Int_t trackArray /*=1*/) {
   
   TClonesArray* trackList = (trackArray==1 ? fEvent->GetTracks() : fEvent->GetTracks2());
   if(!trackList) return;
-  TIter nextTrack(trackList); 
+  TIter nextTrack(trackList);
+
   // if the pt dependent weights were set, check the weight and reject randomly the event
   if(fMCJpsiPtWeights) {
     for(Int_t it=0; it<trackList->GetEntries(); ++it) {
@@ -1430,7 +1451,7 @@ void AliReducedAnalysisFilterTrees::LoopOverMCTracks(Int_t trackArray /*=1*/) {
       // apply selections on the jpsi mother
       UInt_t motherDecisions = CheckMotherMCTruth(mother);
       if(!motherDecisions) continue;
-      //Apply only selections to one of the MCJpsi cuts
+      // Apply only selections to one of the MCJpsi cuts. TODO Why needed?
       if((fReweightCut>=0) && (fReweightCut<GetNJpsiMotherMCCuts()) &&
          !(motherDecisions&UInt_t(1)<<fReweightCut)) continue;
       
@@ -1468,13 +1489,14 @@ void AliReducedAnalysisFilterTrees::LoopOverMCTracks(Int_t trackArray /*=1*/) {
     for(Int_t i=AliReducedVarManager::kNEventVars; i<AliReducedVarManager::kNTrackVars; ++i)
       fValues[i] = -9999.;
     AliReducedVarManager::FillMCTruthInfo(mother, fValues, daughter1, daughter2);
+
     // loop over jpsi mother selections and fill histograms before the kine cuts on electrons
     for(Int_t iCut=0; iCut<fJpsiMotherMCcuts.GetEntries(); ++iCut) {
       if(!(motherDecisions & (UInt_t(1)<<iCut))) continue;
       fHistosManager->FillHistClass(Form("PureMCTRUTH_BeforeSelection_%s",
                                          fJpsiMotherMCcuts.At(iCut)->GetName()), fValues);
     }
-    if(fMCTruthJpsi2eeOnly && ((daughter1Label==0) || (daughter2Label==0))) continue;      
+    if(fMCTruthJpsi2eeOnly && ((daughter1Label==0) || (daughter2Label==0))) continue;
     if(!daughter1) continue;
     if(!daughter2) continue;
     
@@ -1484,8 +1506,8 @@ void AliReducedAnalysisFilterTrees::LoopOverMCTracks(Int_t trackArray /*=1*/) {
     UInt_t daughtersDecisions = daughter1Decisions & CheckDaughterMCTruth(daughter2);
     if(!daughtersDecisions) continue;
     for(Int_t iCut=0; iCut<fJpsiMotherMCcuts.GetEntries(); ++iCut) {
-      if(!(motherDecisions    & (UInt_t(1)<<iCut)))  continue;
-      if(!(daughtersDecisions & (UInt_t(1)<<iCut)))  continue;
+      if(!(motherDecisions    & (UInt_t(1)<<iCut))) continue;
+      if(!(daughtersDecisions & (UInt_t(1)<<iCut))) continue;
       fHistosManager->FillHistClass(Form("PureMCTRUTH_AfterSelection_%s",
                                          fJpsiMotherMCcuts.At(iCut)->GetName()), fValues);
       
@@ -1562,7 +1584,7 @@ UInt_t AliReducedAnalysisFilterTrees::CheckDaughterMCTruth(AliReducedTrackInfo* 
 
 
 //___________________________________________________________________________
-AliReducedTrackInfo* AliReducedAnalysisFilterTrees::FindTrackByLabel(Int_t label, bool isTruth) {
+AliReducedTrackInfo* AliReducedAnalysisFilterTrees::FindTrackByLabel(Int_t label, Bool_t isTruth) {
   //
   // search the track list for pure MC track with label and return the track pointer
   //
