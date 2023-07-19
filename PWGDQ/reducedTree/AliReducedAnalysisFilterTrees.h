@@ -247,7 +247,7 @@ protected:
   Bool_t CheckReconstructedLegMCTruth(AliReducedBaseTrack* ptrack, AliReducedBaseTrack* ntrack);
   Bool_t CheckReconstructedLegMCTruth(AliReducedBaseTrack* track);
   void   FindJpsiTruthLegs(AliReducedTrackInfo* mother, Int_t& leg1Label, Int_t& leg2Label);
-  AliReducedTrackInfo* FindTrackByLabel(Int_t label, bool isTruth = true);
+  AliReducedTrackInfo* FindTrackByLabel(Int_t label, Bool_t isTruth = true);
   void   LoopOverMCTracks(Int_t trackArray =1);
   UInt_t CheckMotherMCTruth(AliReducedTrackInfo* mother);
   UInt_t CheckDaughterMCTruth(AliReducedTrackInfo* daughter); 
