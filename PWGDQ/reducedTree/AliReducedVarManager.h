@@ -517,7 +517,7 @@ class AliReducedVarManager : public TObject {
     // Common pair/track variables
     kPt=kNEventVars,
     kPtMC,
-    kPt_weight = kPtMC + 2,    //kPTMC + 1 is filled for every MC Jpsi, kPtMC only when the particle is detected
+    kPt_weight,
     kPtMCfromLegs,             // MC truth pt computed using the decay leg kinematics
     kP,      
     kPMC,

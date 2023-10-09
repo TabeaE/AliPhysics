@@ -84,7 +84,7 @@ public:
   void SetMCJpsiPtWeights(TH1F* weights) {fMCJpsiPtWeights = weights;}
   void SetReweightCut(Int_t ncut) {fReweightCut = ncut;}
   void SetBuildCandidatePairs(AliReducedPairInfo::CandidateType type) {fBuildCandidatePairs=kTRUE;
-    fCandidateType=type;}
+                                                                       fCandidateType=type;}
   void SetBuildCandidateLikePairs(Bool_t option=kTRUE) {fBuildCandidateLikePairs=option;}
   void AddCandidateLeg1Cut(AliReducedInfoCut* cut) {fLeg1Cuts.Add(cut);}
   void AddCandidateLeg2Cut(AliReducedInfoCut* cut) {fLeg2Cuts.Add(cut);}
@@ -101,7 +101,7 @@ public:
   void AddCandidateLeg1PairPrefilterCut(AliReducedInfoCut* cut) {fLeg1PairPrefilterCuts.Add(cut);}
   void AddCandidateLeg2PairPrefilterCut(AliReducedInfoCut* cut) {fLeg2PairPrefilterCuts.Add(cut);}
   
-  void AddMixingHandler(AliMixingHandler* handler) {fMixingHandlerMult.Add(handler);}
+  void AddMixingHandler(AliMixingHandler* handler)   {fMixingHandlerMult.Add(handler);}
   void SetMultBinsMixing(Int_t nBins, Float_t* bins) {fNMultBinsMixing = nBins; for(Int_t i=0;i<nBins+1;i++)
     fMultBinsMixing[i] = bins[i];}
   void SetJpsiMassDist(TF1* massDist) {fJpsiMassDist = massDist;}
@@ -115,56 +115,57 @@ public:
   // -------------------- Getters ------------------------------------------------------------ //
 
   virtual AliHistogramManager* GetHistogramManager() const {return fHistosManager;}
-  virtual AliMixingHandler* GetMixingHandler() const {return fMixingHandler;}
+  virtual AliMixingHandler*    GetMixingHandler()    const {return fMixingHandler;}
   Bool_t GetWriteFilteredTracks() const {return fWriteFilteredTracks;}
-  Int_t GetNTrackCuts() const {return fTrackCuts.GetEntries();}
-  const Char_t* GetTrackCutName(Int_t i) const {
-    return (i<fTrackCuts.GetEntries() ? fTrackCuts.At(i)->GetName() : "");}
+  Int_t  GetNTrackCuts()          const {return fTrackCuts.GetEntries();}
+  const Char_t* GetTrackCutName(Int_t i) const {return (i<fTrackCuts.GetEntries() ?
+                                                        fTrackCuts.At(i)->GetName() : "");}
   Bool_t GetWriteFilteredPairs() const {return fWriteFilteredPairs;}
-  Bool_t GetRejectEmptyEvents() const {return fRejectEmptyEvents;}
-  Int_t GetNPairCuts() const {return fPairCuts.GetEntries();}
-  const Char_t* GetPairCutName(Int_t i) const {
-    return (i<fPairCuts.GetEntries() ? fPairCuts.At(i)->GetName() : "");}
-  Bool_t GetBuildCandidatePairs() const {return fBuildCandidatePairs;}
-  Bool_t GetBuildCandidateLikePairs() const {return fBuildCandidateLikePairs;}
-  Bool_t GetComputeMult() const {return fComputeMult;};
-  Bool_t GetRunEventMixing() const {return fOptionRunMixing;}
-  Bool_t GetRunEventMixingMult() const {return fOptionRunMixingMult;}
-  Int_t GetNMultBinsMixing() const {return (fOptionRunMixingMult ? fNMultBinsMixing : 0);}
+  Bool_t GetRejectEmptyEvents()  const {return fRejectEmptyEvents;}
+  Int_t  GetNPairCuts()          const {return fPairCuts.GetEntries();}
+  const Char_t* GetPairCutName(Int_t i) const {return (i<fPairCuts.GetEntries() ?
+                                                       fPairCuts.At(i)->GetName() : "");}
+  Bool_t  GetBuildCandidatePairs()      const {return fBuildCandidatePairs;}
+  Bool_t  GetBuildCandidateLikePairs()  const {return fBuildCandidateLikePairs;}
+  Bool_t  GetComputeMult()           const {return fComputeMult;};
+  Bool_t  GetRunEventMixing()        const {return fOptionRunMixing;}
+  Bool_t  GetRunEventMixingMult()    const {return fOptionRunMixingMult;}
+  Int_t   GetNMultBinsMixing()       const {return (fOptionRunMixingMult ? fNMultBinsMixing : 0);}
   Float_t GetMultBinsMixing(Int_t i) const {return (fOptionRunMixingMult ? fMultBinsMixing[i] : 0);}
-  Int_t GetCandidateType() const {return fCandidateType;}
-  Bool_t GetRunCandidatePrefilter() const {return fRunCandidatePrefilter;}
-  Int_t GetNCandidateLegCuts() const {return fLeg1Cuts.GetEntries();}
+  Int_t   GetCandidateType()         const {return fCandidateType;}
+  Bool_t  GetRunCandidatePrefilter() const {return fRunCandidatePrefilter;}
+  Int_t   GetNCandidateLegCuts()     const {return fLeg1Cuts.GetEntries();}
   const Char_t* GetCandidateLegCutName(Int_t i, Int_t leg);
   Bool_t IsAsymmetricDecayChannel();
-  Bool_t GetRunOverMC() const {return fOptionRunOverMC;};
-  //  Int_t GetNLegCandidateMCcuts() const {return fLegCandidatesMCcuts.GetEntries();}
-  //const Char_t* GetLegCandidateMCcutName(Int_t i) const {return (i<fLegCandidatesMCcuts.GetEntries() ? fLegCandidatesMCcuts.At(i)->GetName() : "");}
-  const Char_t* GetLegCandidateMCcutName() const {
-    return (fLegCandidatesMCcuts ? fLegCandidatesMCcuts->GetName() : "");}
-  Int_t GetNJpsiMotherMCCuts() const {return fJpsiMotherMCcuts.GetEntries();}
-  const Char_t* GetJpsiMotherMCcutName(Int_t i) const {
-    return (i<fJpsiMotherMCcuts.GetEntries() ? fJpsiMotherMCcuts.At(i)->GetName() : "");}
-  Int_t GetNMeasMultCuts() const {return fMeasuredMultTrackCuts.GetEntries();}
-  const Char_t* GetMeasMultcutName(Int_t i) const {
-    return (i<fMeasuredMultTrackCuts.GetEntries() ? fMeasuredMultTrackCuts.At(i)->GetName() : "");}
-  TF1* GetJpsiMassDist() const {return fJpsiMassDist;}
-  Bool_t GetMCTruthJpsi2eeOnly() const {return fMCTruthJpsi2eeOnly;}
+  Bool_t GetRunOverMC()                           const {return fOptionRunOverMC;};
+  Int_t  GetNLegCandidateMCcuts()                 const {return fLegCandidatesMCcuts.GetEntries();}
+  const Char_t* GetLegCandidateMCcutName(Int_t i) const {return (i<fLegCandidatesMCcuts.GetEntries() ?
+                                                         fLegCandidatesMCcuts.At(i)->GetName() : "");}
+//   const Char_t* GetLegCandidateMCcutName()        const {return (fLegCandidatesMCcuts ?
+//                                                          fLegCandidatesMCcuts->GetName() : "");}
+  Int_t GetNJpsiMotherMCCuts()                    const {return fJpsiMotherMCcuts.GetEntries();}
+  const Char_t* GetJpsiMotherMCcutName(Int_t i)   const {return (i<fJpsiMotherMCcuts.GetEntries() ?
+                                                         fJpsiMotherMCcuts.At(i)->GetName() : "");}
+  Int_t GetNMeasMultCuts()                        const {return fMeasuredMultTrackCuts.GetEntries();}
+  const Char_t* GetMeasMultcutName(Int_t i)       const {return (i<fMeasuredMultTrackCuts.GetEntries() ?
+                                                         fMeasuredMultTrackCuts.At(i)->GetName() : "");}
+  TF1* GetJpsiMassDist()                          const {return fJpsiMassDist;}
+  Bool_t GetMCTruthJpsi2eeOnly()                  const {return fMCTruthJpsi2eeOnly;}
   
-  
-  /* void AddLegCandidateMCcut(AliReducedInfoCut* cut) {
-   *     if(fLegCandidatesMCcuts.GetEntries()>=32) return;
-   *     fLegCandidatesMCcuts.Add(cut);
-}*/
-
   // NOTE: The MC truth selection works with just one MC truth cut. It is not implemented properly for
   //       asymmetric decay channels, just one MC selection is applied to both legs.
   //       In the case that an MC truth selection is applied, then only built pairs which fulfill the MC
   //       truth will be written in the filtered trees.
-  void SetLegCandidateMCcut(AliReducedInfoCut* cut) {
-    //if(fLegCandidatesMCcuts.GetEntries()>=32) return;
-    fLegCandidatesMCcuts = cut;
+  void AddLegCandidateMCcut(AliReducedInfoCut* cut, Bool_t sameMother=kTRUE) {
+    if(fLegCandidatesMCcuts.GetEntries()>=32) return;
+    fLegCandidatesMCcuts.Add(cut);
+    fLegCandidatesMCcuts_RequestSameMother[fLegCandidatesMCcuts.GetEntries()-1] = sameMother;
   }
+
+//   void SetLegCandidateMCcut(AliReducedInfoCut* cut) {
+//     //if(fLegCandidatesMCcuts.GetEntries()>=32) return;
+//     fLegCandidatesMCcuts = cut;
+//   }
   
   void AddJpsiMotherMCCut(AliReducedInfoCut* cutMother, AliReducedInfoCut* cutElectron) {
     if(fJpsiMotherMCcuts.GetEntries()>=32) return;
@@ -218,16 +219,17 @@ protected:
   Bool_t fOptionRunMixingMult;
   Bool_t fOptionRunMixing;  // true: run event mixing, false: no event mixing
   Bool_t fOptionRunOverMC;  // true: trees contain MC info -> fill histos to compute efficiencies, false: run normally as on data
-  // selection based on the MC truth information of the reconstructed leg candidates
-  // NOTE:    The list is a list of AliReducedInfoCut objects which can be used to 
-  //              apply cuts on the MC flags of the tracks.
-  // NOTE: The names of the cuts are used in the naming of the histogram classes
-  AliReducedInfoCut *fLegCandidatesMCcuts; 
+  // Selection based on the MC truth information of the reconstructed leg candidates.
+  // NOTE: The list is a list of AliReducedInfoCut objects which can be used to apply cuts on the MC flags of
+  //       the tracks.
+  // NOTE: The names of the cuts are used in the naming of the histogram classes.
+  TList  fLegCandidatesMCcuts;
+  Bool_t fLegCandidatesMCcuts_RequestSameMother[32];
   
-  // selection cuts for the pure MC truth (select the J/psi from stack)
-  // the list should contains cuts which can be applied to a pure MC truth particle (no reconstructed information)
-  //  e.g. cuts on the MC flags and on kinematics
-  //  For each selection, a separate histogram directory will be created
+  // Selection cuts for the pure MC truth (select the J/psi from stack).
+  // The list should contain cuts which can be applied to a pure MC truth particle (no reconstructed
+  // information) e.g. cuts on the MC flags and on kinematics.
+  // For each selection, a separate histogram directory will be created.
   TList fJpsiMotherMCcuts;
   TH1F* fMCJpsiPtWeights;  //! weights vs pt to reject events depending on the jpsi true pt (needed to re-weights jpsi Pt distribution)
   Int_t fReweightCut;   // The number of the MC cut on which the weights should be applied (ex: only on prompt Jpsi)
@@ -244,24 +246,24 @@ protected:
   Bool_t IsTrackSelected(AliReducedBaseTrack* track, Float_t* values=0x0);
   Bool_t IsPairSelected(AliReducedPairInfo* pair, Float_t* values=0x0);
   void   CreateFilteredEvent();
-  Bool_t CheckReconstructedLegMCTruth(AliReducedBaseTrack* ptrack, AliReducedBaseTrack* ntrack);
-  Bool_t CheckReconstructedLegMCTruth(AliReducedBaseTrack* track);
+  UInt_t CheckReconstructedLegMCTruth(AliReducedBaseTrack* ptrack, AliReducedBaseTrack* ntrack);
+  UInt_t CheckReconstructedLegMCTruth(AliReducedBaseTrack* track);
   void   FindJpsiTruthLegs(AliReducedTrackInfo* mother, Int_t& leg1Label, Int_t& leg2Label);
   AliReducedTrackInfo* FindTrackByLabel(Int_t label, Bool_t isTruth = true);
   void   LoopOverMCTracks(Int_t trackArray =1);
   UInt_t CheckMotherMCTruth(AliReducedTrackInfo* mother);
   UInt_t CheckDaughterMCTruth(AliReducedTrackInfo* daughter); 
   
-  void   FillMultiplicity(Bool_t regions = kFALSE);
-  Bool_t TrackIsCandidateLeg(AliReducedBaseTrack* track);
-  void   WriteFilteredPairs();
-  void   WriteFilteredTracks(Int_t array=1);
-  Bool_t IsTrackMeasuredMultSelected(AliReducedBaseTrack* track, Float_t* values=0x0); 
-  Bool_t IsTrackTrueMultSelected(AliReducedBaseTrack* track, Float_t* values=0x0); 
-  Bool_t IsCandidateLegSelected(AliReducedBaseTrack* track, Float_t* values=0x0, Int_t whichLeg=1); 
-  Bool_t IsCandidatePairSelected(Float_t* values);
-  Bool_t IsCandidateLegPrefilterSelected(AliReducedBaseTrack* track, Float_t* values=0x0, Int_t whichLeg=1);
-  Bool_t IsCandidateLegPairPrefilterSelected(Float_t* values, Int_t whichLeg=1);
+  void    FillMultiplicity(Bool_t regions = kFALSE);
+  Bool_t  TrackIsCandidateLeg(AliReducedBaseTrack* track);
+  void    WriteFilteredPairs();
+  void    WriteFilteredTracks(Int_t array=1);
+  Bool_t  IsTrackMeasuredMultSelected(AliReducedBaseTrack* track, Float_t* values=0x0);
+  Bool_t  IsTrackTrueMultSelected(AliReducedBaseTrack* track, Float_t* values=0x0);
+  Bool_t  IsCandidateLegSelected(AliReducedBaseTrack* track, Float_t* values=0x0, Int_t whichLeg=1);
+  ULong_t IsCandidatePairSelected(Float_t* values);
+  Bool_t  IsCandidateLegPrefilterSelected(AliReducedBaseTrack* track, Float_t* values=0x0, Int_t whichLeg=1);
+  Bool_t  IsCandidateLegPairPrefilterSelected(Float_t* values, Int_t whichLeg=1);
   void BuildCandidatePairs();
   void RunCandidateLegsSelection(Int_t arrayOption /*=1*/);
   void RunCandidateLegsPrefilter(Int_t leg);
@@ -269,10 +271,13 @@ protected:
   void SetupPair(AliReducedPairInfo* pair, Float_t* values);
   ULong_t CheckTrackCompatibility(AliReducedBaseTrack* leg1, AliReducedBaseTrack* leg2,
                                   Bool_t isAsymmetricDecayChannel);
-  void FillCandidateLegHistograms(TString histClass, AliReducedBaseTrack* track, Float_t* values, Int_t leg,
+  void FillCandidateLegHistograms(TString histClass, AliReducedBaseTrack* track, Int_t leg,
                                   Bool_t isAsymmetricDecayChannel);
-  void FillCandidatePairHistograms(TString histClass, AliReducedPairInfo* pair, Float_t* values,
-                                   Bool_t isAsymmetricDecayChannel);
+//   void FillCandidatePairHistograms(TString histClass, AliReducedPairInfo* pair,
+//                                    Bool_t isAsymmetricDecayChannel);
+  void FillCandidatePairHistograms(ULong_t trackMask, ULong_t pairMask, Int_t pairType,
+                                   TString pairClass /*="Pair_Candidate"*/, Bool_t isAsymmetricDecayChannel,
+                                   UInt_t mcDecisions /* = 0*/);
   
   ClassDef(AliReducedAnalysisFilterTrees,2);
 };
