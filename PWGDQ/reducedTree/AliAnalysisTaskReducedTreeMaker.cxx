@@ -383,9 +383,9 @@ void AliAnalysisTaskReducedTreeMaker::UserCreateOutputObjects()
   fEventsHistogram = new TH2I("EventStatistics", "Event statistics", kNEventSelectionNames, -0.5, -0.5+kNEventSelectionNames,
                                                                      kNOfflineTriggerAliases,-2.5, -2.5+ kNOfflineTriggerAliases);
   const Char_t* offlineTriggerNames[kNOfflineTriggerAliases] = {"Total", "No Phys Sel", "MB/INT1", "INT7", "MUON", "HighMult/HighMultSPD", "EMC1", "CINT5/INT5", "CMUS5/MUSPB/INT7inMUON",
-     "MuonSingleHighPt7/MUSH7/MUSHPB", "MuonLikeLowPt7/MUL7/MuonLikePB", "MuonUnlikeLowPt7/MUU7/MuonUnlikePB", "EMC7/EMC8", 
-     "MUS7/MuonSingleLowPt7", "PHI1", "PHI7/PHI8/PHOSPb", "EMCEJE", "EMCEGA", "Central/HighMultV0", "SemiCentral", "DG/DG5", "ZED", 
-     "SPI7/SPI", "INT8", "MuonSingleLowPt8", "MuonSingleHighPt8", "MuonLikeLowPt8", "MuonUnlikeLowPt8", "MuonUnlikeLowPt0/INT6", "UserDefined", 
+     "MuonSingleHighPt7/MUSH7/MUSHPB", "MuonLikeLowPt7/MUL7/MuonLikePB", "MuonUnlikeLowPt7/MUU7/MuonUnlikePB", "EMC7/EMC8",
+     "MUS7/MuonSingleLowPt7", "PHI1", "PHI7/PHI8/PHOSPb", "EMCEJE", "EMCEGA", "Central/HighMultV0", "SemiCentral", "DG/DG5", "ZED",
+     "SPI7/SPI", "INT8", "MuonSingleLowPt8", "MuonSingleHighPt8", "MuonLikeLowPt8", "MuonUnlikeLowPt8", "MuonUnlikeLowPt0/INT6", "UserDefined",
      "TRD", "MuonCalo/CaloOnly", "FastOnly", "N/A"
   };  
   const Char_t* selectionNames[kNEventSelectionNames] = {"All events", 
@@ -429,7 +429,7 @@ void AliAnalysisTaskReducedTreeMaker::UserCreateOutputObjects()
   TH2I *centEventsHistogram[nCentEstimators];
   for(Int_t i=0; i<nCentEstimators; ++i) {
     centEventsHistogram[i] = new TH2I(estimatorNames[i], Form("%s estimator",estimatorNames[i]), kNEventSelectionNames, -0.5,-0.5+kNEventSelectionNames,120,-5.,115.);
-    for(Int_t xi=1;xi<=kNEventSelectionNames;++xi) 
+    for(Int_t xi=1;xi<=kNEventSelectionNames;++xi)
       centEventsHistogram[i]->GetXaxis()->SetBinLabel(xi, selectionNames[xi-1]);
     fCentEventsList->Add(centEventsHistogram[i]);
   }

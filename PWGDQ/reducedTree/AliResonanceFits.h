@@ -5,7 +5,7 @@
  *   Brief usage guide
  *   
  *   1) Input data
- *       THnF histograms tipically obtained from reducedTree analyses, but generic THnF can be used as well.
+ *       THnF histograms typically obtained from reducedTree analyses, but generic THnF can be used as well.
  *       The histograms can be set via the SetHistograms() methods.
  *       An initialized AliResonanceFits can be reused multiple times, and these histograms can be reset.
  *   2) Specifying dimensions / variables
@@ -71,7 +71,7 @@
  *      At this point, the function ComputeOutputValues() can be called to calculate integrated signal, S/B, signif, etc.
  *      The user must provide as arguments, the mass range where the signal should be counted / integrated, and optionally the pt range.
  *      The return values of ComputeOutputValues() is an array of doubles which contains the information specified in the FitValues enumeration.
- *      NOTE: If any of the options, input data or ranges of AliResonanceFits are changed, the output values become unavailble 
+ *      NOTE: If any of the options, input data or ranges of AliResonanceFits are changed, the output values become unavailble
  *                 and the Process() function must be called again. So, the output information must be always in sync with the active options.
  *                 
  *   5) Plotting
@@ -154,7 +154,7 @@ public:
   void SetMEOSHistogram(THnF* hist) {fMEOS = hist; fMatchingIsDone = kFALSE;};
   void SetMELSHistograms(THnF* hLeg1, THnF* hLeg2) {fMELSleg1 = hLeg1; fMELSleg2 = hLeg2; fMatchingIsDone = kFALSE;}
   void SetSEOSMCHistogram(THnF* hist) {fSEOS_MCtruth = hist;}
-  void SetSignalMCshape(TH1* shape) {fSignalMCshape = shape;}
+  void SetSignalMCshape(TH1* shape)   {fSignalMCshape = shape;}
   
   // add variables and set ranges on the THnF
   void AddVariables(Int_t nVars, Int_t* vars, Int_t* indices);
@@ -164,25 +164,25 @@ public:
   
   // indicate the special mass and pt variables
   void SetMassVariable(Int_t var) {fMassVariable = var; fMatchingIsDone = kFALSE;}
-  void SetPtVariable(Int_t var) {fPtVariable = var; fMatchingIsDone = kFALSE;}
+  void SetPtVariable(Int_t var)   {fPtVariable = var; fMatchingIsDone = kFALSE;}
   
   // set various options (see also defaults)
-  void SetBkgMethod(Int_t method) {fOptionBkgMethod = method; fMatchingIsDone = kFALSE;}
-  void SetMEMatchingMethod(Int_t option) {fgOptionMEMatching = option; fMatchingIsDone = kFALSE;}
+  void SetBkgMethod(Int_t method)                {fOptionBkgMethod = method; fMatchingIsDone = kFALSE;}
+  void SetMEMatchingMethod(Int_t option)         {fgOptionMEMatching = option; fMatchingIsDone = kFALSE;}
   void SetUseRfactorCorrection(Bool_t use=kTRUE) {fOptionUseRfactorCorrection = use; fMatchingIsDone = kFALSE;}
-  void SetUse2DMatching(Bool_t flag=kTRUE) {fgOptionUse2DMatching = flag; fMatchingIsDone = kFALSE;}
-  void SetScalingOption(Int_t option) {fOptionScale = option; fMatchingIsDone = kFALSE;}
-  void SetLSmethod(Int_t option) {fOptionLSmethod = option; fMatchingIsDone = kFALSE;}
-  void SetWeightedAveragePower(Double_t power) {fWeightedAveragePower = power; fMatchingIsDone = kFALSE;}
-  void SetMinuitFitOption(Float_t option) {fOptionMinuit = option; fMatchingIsDone = kFALSE;}
-  void SetUseSignificantZero(Bool_t option) {fgOptionUseSignificantZero = option; fMatchingIsDone = kFALSE;}
-  void SetScaleSummedBkg(Bool_t option) {fOptionScaleSummedBkg = option; fMatchingIsDone = kFALSE;}
-  void SetDebugMode(Bool_t option) {fOptionDebug=option; fMatchingIsDone = kFALSE;}
-  void SetSignalFromMC(Bool_t option) {fOptionSignalFromMC=option; fMatchingIsDone = kFALSE;}
+  void SetUse2DMatching(Bool_t flag=kTRUE)       {fgOptionUse2DMatching = flag; fMatchingIsDone = kFALSE;}
+  void SetScalingOption(Int_t option)            {fOptionScale = option; fMatchingIsDone = kFALSE;}
+  void SetLSmethod(Int_t option)                 {fOptionLSmethod = option; fMatchingIsDone = kFALSE;}
+  void SetWeightedAveragePower(Double_t power)   {fWeightedAveragePower = power; fMatchingIsDone = kFALSE;}
+  void SetMinuitFitOption(Float_t option)        {fOptionMinuit = option; fMatchingIsDone = kFALSE;}
+  void SetUseSignificantZero(Bool_t option)      {fgOptionUseSignificantZero = option; fMatchingIsDone = kFALSE;}
+  void SetScaleSummedBkg(Bool_t option)          {fOptionScaleSummedBkg = option; fMatchingIsDone = kFALSE;}
+  void SetDebugMode(Bool_t option)               {fOptionDebug=option; fMatchingIsDone = kFALSE;}
+  void SetSignalFromMC(Bool_t option)            {fOptionSignalFromMC=option; fMatchingIsDone = kFALSE;}
   
   // set various ranges
   void SetMassFitRange(Double_t min, Double_t max) {fgMassFitRange[0] = min+1.0e-6; fgMassFitRange[1] = max-1.0e-6; fUserEnabledMassFitRange = kTRUE; fMatchingIsDone = kFALSE;}
-  void SetPtFitRange(Double_t min, Double_t max) {fgPtFitRange[0] = min+1.0e-6; fgPtFitRange[1] = max-1.0e-6; fUserEnabledPtFitRange = kTRUE; fMatchingIsDone = kFALSE;}
+  void SetPtFitRange(Double_t min, Double_t max)   {fgPtFitRange[0] = min+1.0e-6; fgPtFitRange[1] = max-1.0e-6; fUserEnabledPtFitRange = kTRUE; fMatchingIsDone = kFALSE;}
   void AddMassExclusionRange(Double_t min, Double_t max) {
     if(fgNMassExclusionRanges==10) return;        // maximum 10 mass exclusion ranges
     fgMassExclusionRanges[fgNMassExclusionRanges][0] = min + 1.0e-6; fgMassExclusionRanges[fgNMassExclusionRanges][1] = max -1.0e-6;
@@ -219,26 +219,26 @@ public:
    */
   // Getters
   TH1* GetSplusB() const {return (fMatchingIsDone ? fSplusB : 0x0);}
-  TH1* GetBkg() const {return (fMatchingIsDone ? fBkg : 0x0);}
+  TH1* GetBkg()    const {return (fMatchingIsDone ? fBkg : 0x0);}
   TH1* GetSignal() const {return (fMatchingIsDone ? fSig : 0x0);}
   TH1* GetSoverB(Bool_t fromMCshape=kFALSE) const {return (fMatchingIsDone ? (fromMCshape ? fSoverBfromMCshape : fSoverB) : 0x0);}
   TH1* GetSplusResidualBkg() const {return (fMatchingIsDone ? fSplusResidualBkg : 0x0);}
   TH1* GetBkgCombinatorial() const {return (fMatchingIsDone ? fBkgCombinatorial : 0x0);}
   TH1* GetResidualBkg() const {return (fMatchingIsDone ? fBkgResidual : 0x0);}
-  TH1* GetSignalMC() const {return (fMatchingIsDone ? fSignalMCshape : 0x0);}
+  TH1* GetSignalMC()    const {return (fMatchingIsDone ? fSignalMCshape : 0x0);}
   
-  Int_t GetBkgMethod() const {return fOptionBkgMethod;}
-  Int_t GetScalingOption() const {return fOptionScale;}
+  Int_t GetBkgMethod()        const {return fOptionBkgMethod;}
+  Int_t GetScalingOption()    const {return fOptionScale;}
   Int_t GetMEMatchingMethod() const {return fgOptionMEMatching;}
-  Int_t GetMinuitFitOption() const {return fOptionMinuit;}
+  Int_t GetMinuitFitOption()  const {return fOptionMinuit;}
   Double_t* GetMassFitRange() const {return fgMassFitRange;}
-  Int_t     GetNMassExclusionRanges() const {return fgNMassExclusionRanges;}
+  Int_t     GetNMassExclusionRanges()        const {return fgNMassExclusionRanges;}
   Double_t* GetMassExclusionRange(Int_t i=0) const {return (i<fgNMassExclusionRanges ? fgMassExclusionRanges[i] : 0x0);}
   const Double_t* GetFitValues() const {return fFitValues;}
-  TF1* GetResidualFitFunction() const {return fResidualFitFunc;}
-  TF1* GetBkgFitFunction() const {return fBkgFitFunction;}
+  TF1* GetResidualFitFunction()  const {return fResidualFitFunc;}
+  TF1* GetBkgFitFunction()    const {return fBkgFitFunction;}
   TF1* GetGlobalFitFunction() const {return fGlobalFitFunction;}
-  Bool_t GetDebugMode() const {return fOptionDebug;}
+  Bool_t GetDebugMode()       const {return fOptionDebug;}
   
 private:
   // User input data --------------------------------------------------------------------------------------------
