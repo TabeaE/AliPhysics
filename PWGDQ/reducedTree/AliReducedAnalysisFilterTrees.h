@@ -76,81 +76,85 @@ public:
     }
   }
   
-  void AddEventCut(AliReducedInfoCut* cut) {fEventCuts.Add(cut);}
-  void SetWriteFilteredTracks(Bool_t option=kTRUE) {fWriteFilteredTracks=option;}
-  void SetWriteFilteredPairs(Bool_t option=kTRUE) {fWriteFilteredPairs=option;}
-  void SetWriteFilteredTracksCandidatesOnly(Bool_t option=kTRUE) {fWriteFilteredTracksCandidatesOnly=option;}
-  void SetRejectEmptyEvents(Bool_t option=kTRUE) {fRejectEmptyEvents=option;}
-  void SetMCJpsiPtWeights(TH1F* weights) {fMCJpsiPtWeights = weights;}
-  void SetReweightCut(Int_t ncut) {fReweightCut = ncut;}
+  void AddEventCut                          (AliReducedInfoCut* cut) {fEventCuts.Add(cut);}
+  void SetWriteFilteredTracks               (Bool_t option=kTRUE) {fWriteFilteredTracks = option;}
+  void SetWriteFilteredPairs                (Bool_t option=kTRUE) {fWriteFilteredPairs = option;}
+  void SetWriteFilteredTracksCandidatesOnly (Bool_t option=kTRUE) {fWriteFilteredTracksCandidatesOnly=option;}
+  void SetFillTrackV0Histograms             (Bool_t option)       {fFillTrackV0Histograms = option;}
+  void SetRejectEmptyEvents                 (Bool_t option=kTRUE) {fRejectEmptyEvents = option;}
+  void SetMCJpsiPtWeights                   (TH1F* weights)       {fMCJpsiPtWeights = weights;}
+  void SetReweightCut                       (Int_t ncut)          {fReweightCut = ncut;}
   void SetBuildCandidatePairs(AliReducedPairInfo::CandidateType type) {fBuildCandidatePairs=kTRUE;
                                                                        fCandidateType=type;}
-  void SetBuildCandidateLikePairs(Bool_t option=kTRUE) {fBuildCandidateLikePairs=option;}
-  void AddCandidateLeg1Cut(AliReducedInfoCut* cut) {fLeg1Cuts.Add(cut);}
-  void AddCandidateLeg2Cut(AliReducedInfoCut* cut) {fLeg2Cuts.Add(cut);}
-  void AddCandidatePairCut(AliReducedInfoCut* cut) {fCandidatePairCuts.Add(cut);}
-  void SetRunCandidatePrefilter(Bool_t option=kTRUE) {fRunCandidatePrefilter=option;}
-  void SetRunCandidatePrefilterOnSameCharge(Bool_t option=kTRUE) {fRunCandidatePrefilterOnSameCharge=option;}
-  void SetRunEventMixing(Bool_t option) {fOptionRunMixing = option;};
-  void SetRunEventMixingMult(Bool_t option) {fOptionRunMixingMult = option;};
-  void SetComputeMult(Bool_t option) {fComputeMult = option;};
-  void AddMeasuredMultTrackCut(AliReducedInfoCut* cut) {fMeasuredMultTrackCuts.Add(cut);}
-  void AddTrueMultTrackCut(AliReducedInfoCut* cut) {fTrueMultTrackCuts.Add(cut);}
-  void AddCandidateLeg1PrefilterCut(AliReducedInfoCut* cut) {fLeg1PrefilterCuts.Add(cut);}
-  void AddCandidateLeg2PrefilterCut(AliReducedInfoCut* cut) {fLeg2PrefilterCuts.Add(cut);}
-  void AddCandidateLeg1PairPrefilterCut(AliReducedInfoCut* cut) {fLeg1PairPrefilterCuts.Add(cut);}
-  void AddCandidateLeg2PairPrefilterCut(AliReducedInfoCut* cut) {fLeg2PairPrefilterCuts.Add(cut);}
+  void SetBuildCandidateLikePairs           (Bool_t option=kTRUE)     {fBuildCandidateLikePairs=option;}
+  void AddCandidateLeg1Cut                  (AliReducedInfoCut* cut)  {fLeg1Cuts.Add(cut);}
+  void AddCandidateLeg2Cut                  (AliReducedInfoCut* cut)  {fLeg2Cuts.Add(cut);}
+  void AddCandidatePairCut                  (AliReducedInfoCut* cut)  {fCandidatePairCuts.Add(cut);}
+  void SetRunCandidatePrefilter             (Bool_t option=kTRUE) {fRunCandidatePrefilter = option;}
+  void SetRunCandidatePrefilterOnSameCharge (Bool_t option=kTRUE) {fRunCandidatePrefilterOnSameCharge=option;}
+  void SetRunEventMixing                    (Bool_t option)       {fOptionRunMixing = option;};
+  void SetRunEventMixingMult                (Bool_t option)       {fOptionRunMixingMult = option;};
+  void SetComputeMult                       (Bool_t option)       {fComputeMult = option;};
+  void AddMeasuredMultTrackCut              (AliReducedInfoCut* cut) {fMeasuredMultTrackCuts.Add(cut);}
+  void AddTrueMultTrackCut                  (AliReducedInfoCut* cut) {fTrueMultTrackCuts.Add(cut);}
+  void AddCandidateLeg1PrefilterCut         (AliReducedInfoCut* cut) {fLeg1PrefilterCuts.Add(cut);}
+  void AddCandidateLeg2PrefilterCut         (AliReducedInfoCut* cut) {fLeg2PrefilterCuts.Add(cut);}
+  void AddCandidateLeg1PairPrefilterCut     (AliReducedInfoCut* cut) {fLeg1PairPrefilterCuts.Add(cut);}
+  void AddCandidateLeg2PairPrefilterCut     (AliReducedInfoCut* cut) {fLeg2PairPrefilterCuts.Add(cut);}
   
-  void AddMixingHandler(AliMixingHandler* handler)   {fMixingHandlerMult.Add(handler);}
-  void SetMultBinsMixing(Int_t nBins, Float_t* bins) {fNMultBinsMixing = nBins; for(Int_t i=0;i<nBins+1;i++)
-    fMultBinsMixing[i] = bins[i];}
-  void SetJpsiMassDist(TF1* massDist) {fJpsiMassDist = massDist;}
-  void SetMCTruthJpsi2eeOnly(Bool_t option) {fMCTruthJpsi2eeOnly = option;}
-  void SetRegionsToMCTruth(Bool_t option) {fRegionsToMCTruth = option;}
-  void SetDefaultRandomPhi(Bool_t option) {fDefaultRandomPhi = option;}
-  void SetMinPtLeading(Float_t minpt) {fMinPtLeading = minpt;}
-  void SetRunOverMC(Bool_t option) {fOptionRunOverMC = option;};
+  void AddMixingHandler  (AliMixingHandler* handler)  {fMixingHandlerMult.Add(handler);}
+  void SetMultBinsMixing (Int_t nBins, Float_t* bins) {fNMultBinsMixing = nBins; for(Int_t i=0;i<nBins+1;i++)
+                                                       fMultBinsMixing[i] = bins[i];}
+  void SetJpsiMassDist       (TF1* massDist) {fJpsiMassDist       = massDist;}
+  void SetMCTruthJpsi2eeOnly (Bool_t option) {fMCTruthJpsi2eeOnly = option;}
+  void SetRegionsToMCTruth   (Bool_t option) {fRegionsToMCTruth   = option;}
+  void SetDefaultRandomPhi   (Bool_t option) {fDefaultRandomPhi   = option;}
+  void SetMinPtLeading       (Float_t minpt) {fMinPtLeading       = minpt;}
+  void SetRunOverMC          (Bool_t option) {fOptionRunOverMC    = option;};
 
 
   // -------------------- Getters ------------------------------------------------------------ //
 
-  virtual AliHistogramManager* GetHistogramManager() const {return fHistosManager;}
-  virtual AliMixingHandler*    GetMixingHandler()    const {return fMixingHandler;}
-  Bool_t GetWriteFilteredTracks() const {return fWriteFilteredTracks;}
-  Int_t  GetNTrackCuts()          const {return fTrackCuts.GetEntries();}
-  const Char_t* GetTrackCutName(Int_t i) const {return (i<fTrackCuts.GetEntries() ?
-                                                        fTrackCuts.At(i)->GetName() : "");}
-  Bool_t GetWriteFilteredPairs() const {return fWriteFilteredPairs;}
-  Bool_t GetRejectEmptyEvents()  const {return fRejectEmptyEvents;}
-  Int_t  GetNPairCuts()          const {return fPairCuts.GetEntries();}
-  const Char_t* GetPairCutName(Int_t i) const {return (i<fPairCuts.GetEntries() ?
-                                                       fPairCuts.At(i)->GetName() : "");}
-  Bool_t  GetBuildCandidatePairs()      const {return fBuildCandidatePairs;}
-  Bool_t  GetBuildCandidateLikePairs()  const {return fBuildCandidateLikePairs;}
-  Bool_t  GetComputeMult()           const {return fComputeMult;};
-  Bool_t  GetRunEventMixing()        const {return fOptionRunMixing;}
-  Bool_t  GetRunEventMixingMult()    const {return fOptionRunMixingMult;}
-  Int_t   GetNMultBinsMixing()       const {return (fOptionRunMixingMult ? fNMultBinsMixing : 0);}
-  Float_t GetMultBinsMixing(Int_t i) const {return (fOptionRunMixingMult ? fMultBinsMixing[i] : 0);}
-  Int_t   GetCandidateType()         const {return fCandidateType;}
-  Bool_t  GetRunCandidatePrefilter() const {return fRunCandidatePrefilter;}
-  Int_t   GetNCandidateLegCuts()     const {return fLeg1Cuts.GetEntries();}
-  const Char_t* GetCandidateLegCutName(Int_t i, Int_t leg);
-  Bool_t IsAsymmetricDecayChannel();
-  Bool_t GetRunOverMC()                           const {return fOptionRunOverMC;};
-  Int_t  GetNLegCandidateMCcuts()                 const {return fLegCandidatesMCcuts.GetEntries();}
-  const Char_t* GetLegCandidateMCcutName(Int_t i) const {return (i<fLegCandidatesMCcuts.GetEntries() ?
-                                                         fLegCandidatesMCcuts.At(i)->GetName() : "");}
-//   const Char_t* GetLegCandidateMCcutName()        const {return (fLegCandidatesMCcuts ?
-//                                                          fLegCandidatesMCcuts->GetName() : "");}
-  Int_t GetNJpsiMotherMCCuts()                    const {return fJpsiMotherMCcuts.GetEntries();}
-  const Char_t* GetJpsiMotherMCcutName(Int_t i)   const {return (i<fJpsiMotherMCcuts.GetEntries() ?
-                                                         fJpsiMotherMCcuts.At(i)->GetName() : "");}
-  Int_t GetNMeasMultCuts()                        const {return fMeasuredMultTrackCuts.GetEntries();}
-  const Char_t* GetMeasMultcutName(Int_t i)       const {return (i<fMeasuredMultTrackCuts.GetEntries() ?
-                                                         fMeasuredMultTrackCuts.At(i)->GetName() : "");}
-  TF1* GetJpsiMassDist()                          const {return fJpsiMassDist;}
-  Bool_t GetMCTruthJpsi2eeOnly()                  const {return fMCTruthJpsi2eeOnly;}
+  virtual AliHistogramManager* GetHistogramManager () const {return fHistosManager;}
+  virtual AliMixingHandler*    GetMixingHandler    () const {return fMixingHandler;}
+  Bool_t        GetWriteFilteredTracks     ()         const {return fWriteFilteredTracks;}
+  Bool_t        GetFillTrackV0Histograms   ()         const {return fFillTrackV0Histograms;}
+  Int_t         GetNTrackCuts              ()         const {return fTrackCuts.GetEntries();}
+  const Char_t* GetTrackCutName            (Int_t i)  const {return (i<fTrackCuts.GetEntries() ?
+                                                             fTrackCuts.At(i)->GetName() : "");}
+  Bool_t        GetWriteFilteredPairs      ()         const {return fWriteFilteredPairs;}
+  Bool_t        GetRejectEmptyEvents       ()         const {return fRejectEmptyEvents;}
+  Int_t         GetNPairCuts               ()         const {return fPairCuts.GetEntries();}
+  const Char_t* GetPairCutName             (Int_t i)  const {return (i<fPairCuts.GetEntries() ?
+                                                             fPairCuts.At(i)->GetName() : "");}
+  Bool_t        GetBuildCandidatePairs     ()         const {return fBuildCandidatePairs;}
+  Bool_t        GetBuildCandidateLikePairs ()         const {return fBuildCandidateLikePairs;}
+  Bool_t        GetComputeMult             ()         const {return fComputeMult;};
+  Bool_t        GetRunEventMixing          ()         const {return fOptionRunMixing;}
+  Bool_t        GetRunEventMixingMult      ()         const {return fOptionRunMixingMult;}
+  Int_t         GetNMultBinsMixing         ()         const {return (fOptionRunMixingMult ?
+                                                             fNMultBinsMixing : 0);}
+  Float_t       GetMultBinsMixing          (Int_t i)  const {return (fOptionRunMixingMult ?
+                                                             fMultBinsMixing[i] : 0);}
+  Int_t         GetCandidateType           ()         const {return fCandidateType;}
+  Bool_t        GetRunCandidatePrefilter   ()         const {return fRunCandidatePrefilter;}
+  Int_t         GetNCandidateLegCuts       ()         const {return fLeg1Cuts.GetEntries();}
+  const Char_t* GetCandidateLegCutName     (Int_t i, Int_t leg);
+  Bool_t        IsAsymmetricDecayChannel   ();
+  Bool_t        GetRunOverMC               ()         const {return fOptionRunOverMC;};
+  Int_t         GetNLegCandidateMCcuts     ()         const {return fLegCandidatesMCcuts.GetEntries();}
+  const Char_t* GetLegCandidateMCcutName   (Int_t i)  const {return (i<fLegCandidatesMCcuts.GetEntries() ?
+                                                             fLegCandidatesMCcuts.At(i)->GetName() : "");}
+//   const Char_t* GetLegCandidateMCcutName()         const {return (fLegCandidatesMCcuts ?
+//                                                           fLegCandidatesMCcuts->GetName() : "");}
+  Int_t         GetNJpsiMotherMCCuts       ()         const {return fJpsiMotherMCcuts.GetEntries();}
+  const Char_t* GetJpsiMotherMCcutName     (Int_t i)  const {return (i<fJpsiMotherMCcuts.GetEntries() ?
+                                                             fJpsiMotherMCcuts.At(i)->GetName() : "");}
+  Int_t         GetNMeasMultCuts           ()         const {return fMeasuredMultTrackCuts.GetEntries();}
+  const Char_t* GetMeasMultcutName         (Int_t i)  const {return (i<fMeasuredMultTrackCuts.GetEntries() ?
+                                                             fMeasuredMultTrackCuts.At(i)->GetName() : "");}
+  TF1*          GetJpsiMassDist            ()         const {return fJpsiMassDist;}
+  Bool_t        GetMCTruthJpsi2eeOnly      ()         const {return fMCTruthJpsi2eeOnly;}
   
   // NOTE: The MC truth selection works with just one MC truth cut. It is not implemented properly for
   //       asymmetric decay channels, just one MC selection is applied to both legs.
@@ -186,6 +190,7 @@ protected:
   TList  fTrackCuts;            // array of track cuts used for filtering
   Bool_t fWriteFilteredTracks;  // filter the track list
   Bool_t fWriteFilteredTracksCandidatesOnly;  // Write only the tracks associated to a pair candidate
+  Bool_t fFillTrackV0Histograms;              // Fill track histograms for V0 candidates
   TList  fPairCuts;            // array of pair cuts used for filtering
   Bool_t fWriteFilteredPairs;  // filter the pair list
   Bool_t fRejectEmptyEvents;   // if true, do not write events without tracks or pairs
@@ -235,11 +240,11 @@ protected:
   Int_t fReweightCut;   // The number of the MC cut on which the weights should be applied (ex: only on prompt Jpsi)
   Bool_t fSkipMCEvent;  // if true MC event is skipped
   // Selection on the MC truth of the electrons from the jpsi decay
-  // Typically, here one can specify the kinematic selection on the electrons from jpsi decay
-  //     so dividing the jpsi yield at this step by the yield of jpsi selected by the fJpsiMotherMCcuts, one can
-  //     obtain the acceptance efficiency.
+  // Typically, here one can specify the kinematic selection on the electrons from jpsi decay so dividing the
+  // jpsi yield at this step by the yield of jpsi selected by the fJpsiMotherMCcuts, one can obtain the
+  // acceptance efficiency.
   // NOTE: The number of selections on the jpsi electron needs to be the same and in sync with the number of
-  //       fJpsiMotherMCcuts cuts
+  //       fJpsiMotherMCcuts cuts.
   TList fJpsiElectronMCcuts;
   
   Bool_t IsEventSelected(AliReducedBaseEvent* event, Float_t* values=0x0);
@@ -264,22 +269,22 @@ protected:
   ULong_t IsCandidatePairSelected(Float_t* values);
   Bool_t  IsCandidateLegPrefilterSelected(AliReducedBaseTrack* track, Float_t* values=0x0, Int_t whichLeg=1);
   Bool_t  IsCandidateLegPairPrefilterSelected(Float_t* values, Int_t whichLeg=1);
-  void BuildCandidatePairs();
-  void RunCandidateLegsSelection(Int_t arrayOption /*=1*/);
-  void RunCandidateLegsPrefilter(Int_t leg);
-  void RunSameEventPairing();
-  void SetupPair(AliReducedPairInfo* pair, Float_t* values);
+  void    BuildCandidatePairs();
+  void    RunCandidateLegsSelection(Int_t arrayOption /*=1*/);
+  void    RunCandidateLegsPrefilter(Int_t leg);
+  void    RunSameEventPairing();
+  void    SetupPair(AliReducedPairInfo* pair, Float_t* values);
   ULong_t CheckTrackCompatibility(AliReducedBaseTrack* leg1, AliReducedBaseTrack* leg2,
                                   Bool_t isAsymmetricDecayChannel);
-  void FillCandidateLegHistograms(TString histClass, AliReducedBaseTrack* track, Int_t leg,
-                                  Bool_t isAsymmetricDecayChannel);
+  void    FillCandidateLegHistograms(TString histClass, AliReducedBaseTrack* track, Int_t leg,
+                                     Bool_t isAsymmetricDecayChannel);
 //   void FillCandidatePairHistograms(TString histClass, AliReducedPairInfo* pair,
 //                                    Bool_t isAsymmetricDecayChannel);
-  void FillCandidatePairHistograms(ULong_t trackMask, ULong_t pairMask, Int_t pairType,
-                                   TString pairClass /*="Pair_Candidate"*/, Bool_t isAsymmetricDecayChannel,
-                                   UInt_t mcDecisions /* = 0*/);
+  void    FillCandidatePairHistograms(ULong_t trackMask, ULong_t pairMask, Int_t pairType,
+                                      TString pairClass /*="Pair_Candidate"*/,
+                                      Bool_t isAsymmetricDecayChannel, UInt_t mcDecisions /* = 0*/);
   
-  ClassDef(AliReducedAnalysisFilterTrees,2);
+  ClassDef(AliReducedAnalysisFilterTrees,3);
 };
 
 #endif

@@ -36,6 +36,7 @@ fEventCuts(),
 fTrackCuts(),
 fWriteFilteredTracks(kTRUE),
 fWriteFilteredTracksCandidatesOnly(kFALSE),
+fFillTrackV0Histograms(kFALSE),
 fOptionRunMixing(kTRUE),
 fOptionRunMixingMult(kFALSE),
 fComputeMult(kTRUE),
@@ -92,6 +93,7 @@ fEventCuts(),
 fTrackCuts(),
 fWriteFilteredTracks(kTRUE),
 fWriteFilteredTracksCandidatesOnly(kFALSE),
+fFillTrackV0Histograms(kFALSE),
 fRejectEmptyEvents(kFALSE),
 fOptionRunMixing(kTRUE),
 fOptionRunMixingMult(kFALSE),
@@ -279,8 +281,9 @@ void AliReducedAnalysisFilterTrees::Process() {
     fValues[AliReducedVarManager::kMCNch09+2] = -9999.;
   }
   
-  // For multiplicity unfolding
+
   if(isEventUnbiased) {
+    // For multiplicity unfolding
     for(Int_t cutMode=0; cutMode<2*nGlobalEstimators; cutMode=cutMode+2) {
       // For MC, only the smearing matrix is important (supposed independent of the trigger)
       fHistosManager->FillHistClass(Form("pPb_5TeV_Data_cutMode_%d", cutMode+100), fValues);
@@ -290,6 +293,25 @@ void AliReducedAnalysisFilterTrees::Process() {
       for(Int_t j=0; j<fValues[AliReducedVarManager::kMCNJpsi]; j++)
         fHistosManager->FillHistClass(Form("pPb_5TeV_MC_cutMode_%d", cutMode+101), fValues);
     }
+
+    // TODO
+    /*// Fill histograms for tracks used for measured multiplicity estimation
+    for(Int_t iArray=1; iArray<=2; iArray++) {
+      AliReducedTrackInfo* track;
+      TClonesArray* tracklist = (iArray==1 ? fEvent->GetTracks() : fEvent->GetTracks2());
+      TIter nextTrack(tracklist);
+      // Loop over tracks
+      for(Int_t it=0; it<tracklist->GetEntries(); ++it) {
+        track = (AliReducedTrackInfo*)nextTrack();
+        if(!(track->IsMCTruth()) && IsTrackMeasuredMultSelected(track,fValues)) {
+          for(Int_t icut=0; icut<GetNMeasMultCuts(); icut++) {
+            if(track->TestFlag(icut)) {
+              fHistosManager->FillHistClass("TrackMult_AfterCuts", fValues);
+            }
+          }
+        }
+      }
+    }*/
   }
   
   // apply event selection
@@ -335,8 +357,7 @@ void AliReducedAnalysisFilterTrees::Process() {
   
   
   CreateFilteredEvent();
-  if(fRejectEmptyEvents &&
-     (fFilteredEvent->NPairs()+fFilteredEvent->NTracks1()+fFilteredEvent->NTracks2())==0)
+  if(fRejectEmptyEvents && (fFilteredEvent->NPairs()+fFilteredEvent->NTracks1()+fFilteredEvent->NTracks2())==0)
     return;
   fFilteredTree->Fill();
   
@@ -371,30 +392,30 @@ void AliReducedAnalysisFilterTrees::CreateFilteredEvent() {
     FillMultiplicity(kTRUE);
     for(Int_t icut=0; icut<GetNMeasMultCuts(); icut++) {
       
-      if(fEvent->TestEventTag(14) || GetRunOverMC()) { //event is unbiased
+      // If event is unbiased
+      if(fEvent->TestEventTag(14) || GetRunOverMC()) {
         // Regions relative to jpsi
         fHistosManager->FillHistClass(Form("EventMultRegions_%s", GetMeasMultcutName(icut)), fValues);
         // Regions relative to leading particle
         if(fValues[AliReducedVarManager::kPtLeading+icut] > fMinPtLeading)
-          fHistosManager->FillHistClass(Form("EventMultRegions2Leading_%s", GetMeasMultcutName(icut)),
-                                        fValues);
+          fHistosManager->FillHistClass(Form("EventMultRegions2Leading_%s", GetMeasMultcutName(icut)), fValues);
       }
       
       fFilteredEvent->SetNGlobalTracks(fValues[AliReducedVarManager::kNGlobalTracks+icut], icut);
       // Fill mult regions relative to jpsi
-      fFilteredEvent->SetNTracksRegions(fValues[AliReducedVarManager::kNGlobalTracksToward+icut], 0,
-                                        kTRUE, icut);
-      fFilteredEvent->SetNTracksRegions(fValues[AliReducedVarManager::kNGlobalTracksTransverse+icut], 1,
-                                        kTRUE, icut);
-      fFilteredEvent->SetNTracksRegions(fValues[AliReducedVarManager::kNGlobalTracksAway+icut], 2,
-                                        kTRUE, icut);
+      fFilteredEvent->SetNTracksRegions(fValues[AliReducedVarManager::kNGlobalTracksToward+icut],     0, kTRUE,
+                                        icut);
+      fFilteredEvent->SetNTracksRegions(fValues[AliReducedVarManager::kNGlobalTracksTransverse+icut], 1, kTRUE,
+                                        icut);
+      fFilteredEvent->SetNTracksRegions(fValues[AliReducedVarManager::kNGlobalTracksAway+icut],       2, kTRUE,
+                                        icut);
       // Fill mult regions relative to leading pt
       fFilteredEvent->SetNTracksRegions(fValues[AliReducedVarManager::kNGlobalTracksToward +
-          AliReducedVarManager::kNMaxCutsGlobalTracks+icut], 0, kFALSE, icut);
+                                        AliReducedVarManager::kNMaxCutsGlobalTracks+icut], 0, kFALSE, icut);
       fFilteredEvent->SetNTracksRegions(fValues[AliReducedVarManager::kNGlobalTracksTransverse +
-          AliReducedVarManager::kNMaxCutsGlobalTracks+icut], 1, kFALSE, icut);
+                                        AliReducedVarManager::kNMaxCutsGlobalTracks+icut], 1, kFALSE, icut);
       fFilteredEvent->SetNTracksRegions(fValues[AliReducedVarManager::kNGlobalTracksAway +
-          AliReducedVarManager::kNMaxCutsGlobalTracks+icut], 2, kFALSE, icut);
+                                        AliReducedVarManager::kNMaxCutsGlobalTracks+icut], 2, kFALSE, icut);
       
       fFilteredEvent->SetLeadingParticle(fValues[AliReducedVarManager::kPtLeading+icut],
                                          fValues[AliReducedVarManager::kPhiLeading+icut],
@@ -423,16 +444,55 @@ void AliReducedAnalysisFilterTrees::WriteFilteredPairs() {
       AliReducedVarManager::FillPairQualityFlag(pair, iflag, fValues);
       fHistosManager->FillHistClass("PairQualityFlags_BeforeCuts", fValues);
     }
+
+    TString pairTypeStr = "";
+    if(pair->CandidateId()>=0) {
+      fCandidateType = pair->CandidateId();
+      if      (pair->PairType()==0) pairTypeStr = "Offline";
+      else if (pair->PairType()==1) pairTypeStr = "OnTheFly";
+    }
     
     if(IsPairSelected(pair,fValues)) {
       for(Int_t icut=0; icut<fPairCuts.GetEntries(); ++icut) {
         if(pair->TestFlag(icut)) {
-          fHistosManager->FillHistClass(Form("Pair_%s", fPairCuts.At(icut)->GetName()), fValues);
+//           fHistosManager->FillHistClass(Form("Pair_%s", fPairCuts.At(icut)->GetName()), fValues);
           for(UShort_t iflag=0; iflag<32; ++iflag) {
             AliReducedVarManager::FillPairQualityFlag(pair, iflag, fValues);
-            fHistosManager->FillHistClass(Form("PairQualityFlags_%s", fPairCuts.At(icut)->GetName()),
-                                          fValues);
+            fHistosManager->FillHistClass(Form("PairQualityFlags_%s", fPairCuts.At(icut)->GetName()), fValues);
           }
+          switch(fCandidateType) {
+            case AliReducedPairInfo::kJpsiToEE :
+              fHistosManager->FillHistClass(  Form("Pair_%s", fPairCuts.At(icut)->GetName()), fValues);
+              break;
+            case AliReducedPairInfo::kGammaConv :
+              fHistosManager->FillHistClass(  Form("Pair_%s_%sGamma",
+                                                   fPairCuts.At(icut)->GetName(),pairTypeStr.Data()), fValues);
+              if(pair->IsPureV0Gamma())
+                fHistosManager->FillHistClass(Form("Pair_%s_%sPureGamma",
+                                                   fPairCuts.At(icut)->GetName(),pairTypeStr.Data()), fValues);
+              break;
+            case AliReducedPairInfo::kK0sToPiPi :
+              fHistosManager->FillHistClass(  Form("Pair_%s_%sK0s",
+                                                   fPairCuts.At(icut)->GetName(),pairTypeStr.Data()), fValues);
+              if(pair->IsPureV0K0s())
+                fHistosManager->FillHistClass(Form("Pair_%s_%sPureK0s",
+                                                   fPairCuts.At(icut)->GetName(),pairTypeStr.Data()), fValues);
+              break;
+            case AliReducedPairInfo::kLambda0ToPPi :
+              fHistosManager->FillHistClass(  Form("Pair_%s_%sLambda",
+                                                   fPairCuts.At(icut)->GetName(),pairTypeStr.Data()), fValues);
+              if(pair->IsPureV0Lambda())
+                fHistosManager->FillHistClass(Form("Pair_%s_%sPureLambda",
+                                                   fPairCuts.At(icut)->GetName(),pairTypeStr.Data()), fValues);
+              break;
+            case AliReducedPairInfo::kALambda0ToPPi :
+              fHistosManager->FillHistClass(  Form("Pair_%s_%sALambda",
+                                                   fPairCuts.At(icut)->GetName(),pairTypeStr.Data()), fValues);
+              if(pair->IsPureV0ALambda())
+                fHistosManager->FillHistClass(Form("Pair_%s_%sPureALambda",
+                                                   fPairCuts.At(icut)->GetName(),pairTypeStr.Data()), fValues);
+              break;
+          };
         }
       }
       TClonesArray& pairs = *(fFilteredEvent->fCandidates);
@@ -473,9 +533,62 @@ void AliReducedAnalysisFilterTrees::WriteFilteredTracks(Int_t array /*=1*/) {
     
     if(writeTrack) {
       for(Int_t icut=0; icut<fTrackCuts.GetEntries(); ++icut) {
-        if(track->TestFlag(icut))
-          fHistosManager->FillHistClass(Form("Track_WriteFilteredTracks_%s", fTrackCuts.At(icut)->GetName()),
-                                        fValues);
+        if(track->TestFlag(icut)) {
+          for(UInt_t iflag=0; iflag<64; ++iflag) {
+            AliReducedVarManager::FillTrackQualityFlag(track, iflag, fValues);
+            fHistosManager->FillHistClass(Form("TrackQualityFlags_WriteFilteredTracks_%s",
+                                               fTrackCuts.At(icut)->GetName()), fValues);
+          }
+          if(!fFillTrackV0Histograms)
+            fHistosManager->FillHistClass(Form("Track_WriteFilteredTracks_%s",
+                                               fTrackCuts.At(icut)->GetName()), fValues);
+          else {
+            if(track->IsGammaLeg())
+              fHistosManager->FillHistClass(Form("Track_WriteFilteredTracks_%sGammaLeg",
+                                                 fTrackCuts.At(icut)->GetName()), fValues);
+            if(track->IsPureGammaLeg())
+              fHistosManager->FillHistClass(Form("Track_WriteFilteredTracks_%sPureGammaLeg",
+                                                 fTrackCuts.At(icut)->GetName()), fValues);
+            if(track->IsK0sLeg())
+              fHistosManager->FillHistClass(Form("Track_WriteFilteredTracks_%sK0sLeg",
+                                                 fTrackCuts.At(icut)->GetName()), fValues);
+            if(track->IsPureK0sLeg())
+              fHistosManager->FillHistClass(Form("Track_WriteFilteredTracks_%sPureK0sLeg",
+                                                 fTrackCuts.At(icut)->GetName()), fValues);
+            if(track->IsLambdaLeg()) {
+              if(track->Charge()>0)
+                fHistosManager->FillHistClass(Form("Track_WriteFilteredTracks_%sLambdaPosLeg",
+                                                   fTrackCuts.At(icut)->GetName()), fValues);
+              else
+                fHistosManager->FillHistClass(Form("Track_WriteFilteredTracks_%sLambdaNegLeg",
+                                                   fTrackCuts.At(icut)->GetName()), fValues);
+            }
+            if(track->IsPureLambdaLeg()) {
+              if(track->Charge()>0)
+                fHistosManager->FillHistClass(Form("Track_WriteFilteredTracks_%sPureLambdaPosLeg",
+                                                   fTrackCuts.At(icut)->GetName()), fValues);
+              else
+                fHistosManager->FillHistClass(Form("Track_WriteFilteredTracks_%sPureLambdaNegLeg",
+                                                   fTrackCuts.At(icut)->GetName()), fValues);
+            }
+            if(track->IsALambdaLeg()) {
+              if(track->Charge()>0)
+                fHistosManager->FillHistClass(Form("Track_WriteFilteredTracks_%sALambdaPosLeg",
+                                                   fTrackCuts.At(icut)->GetName()), fValues);
+              else
+                fHistosManager->FillHistClass(Form("Track_WriteFilteredTracks_%sALambdaNegLeg",
+                                                   fTrackCuts.At(icut)->GetName()), fValues);
+            }
+            if(track->IsPureALambdaLeg()) {
+              if(track->Charge()>0)
+                fHistosManager->FillHistClass(Form("Track_WriteFilteredTracks_%sPureALambdaPosLeg",
+                                                   fTrackCuts.At(icut)->GetName()), fValues);
+              else
+                fHistosManager->FillHistClass(Form("Track_WriteFilteredTracks_%sPureALambdaNegLeg",
+                                                   fTrackCuts.At(icut)->GetName()), fValues);
+            }
+          }
+        }
       }
       TClonesArray& tracks = (array==1 ? *(fFilteredEvent->fTracks) : *(fFilteredEvent->fTracks2));
       
@@ -586,7 +699,7 @@ void AliReducedAnalysisFilterTrees::RunCandidateLegsSelection(Int_t arrayOption 
         }
         else if(track->Charge() < 0) {
           fLeg2Tracks.Add(track);
-          FillCandidateLegHistograms("Track_LEG2_BeforePrefilter", track, 1, isAsymmetricDecayChannel);
+          FillCandidateLegHistograms("Track_LEG2_BeforePrefilter", track, 2, isAsymmetricDecayChannel);
         }
       }
     }
@@ -760,8 +873,7 @@ void AliReducedAnalysisFilterTrees::RunSameEventPairing() {
 
       ULong_t pairCutMask = IsCandidatePairSelected(fValues);
       if(!pairCutMask) continue;
-      FillCandidatePairHistograms(compatibilityMask, pairCutMask, 1, "Pair_Candidate",
-                                  isAsymmetricDecayChannel,
+      FillCandidatePairHistograms(compatibilityMask, pairCutMask, 1, "Pair_Candidate", isAsymmetricDecayChannel,
                                   (fOptionRunOverMC?CheckReconstructedLegMCTruth(leg1Track,leg2Track):0));
 
       if(fOptionRunOverMC && (fLegCandidatesMCcuts.GetEntries()>0) &&
@@ -782,8 +894,7 @@ void AliReducedAnalysisFilterTrees::RunSameEventPairing() {
         leg1Track_2 = (AliReducedTrackInfo*)fLeg1Tracks.At(it1_2);
         
         // verify that the two current tracks have at least 1 common bit
-        ULong_t compatibilityMask = CheckTrackCompatibility(leg1Track, leg1Track_2,
-                                                            isAsymmetricDecayChannel);
+        ULong_t compatibilityMask = CheckTrackCompatibility(leg1Track, leg1Track_2, isAsymmetricDecayChannel);
         if(!compatibilityMask) continue;
         AliReducedVarManager::FillPairInfo(leg1Track, leg1Track_2, fCandidateType, fValues);
         fValues[AliReducedVarManager::kPairMCMap] = 0;
@@ -814,8 +925,7 @@ void AliReducedAnalysisFilterTrees::RunSameEventPairing() {
         leg2Track_2 = (AliReducedTrackInfo*)fLeg2Tracks.At(it2_2);
         
         // verify that the two current tracks have at least 1 common bit
-        ULong_t compatibilityMask = CheckTrackCompatibility(leg2Track, leg2Track_2,
-                                                            isAsymmetricDecayChannel);
+        ULong_t compatibilityMask = CheckTrackCompatibility(leg2Track, leg2Track_2, isAsymmetricDecayChannel);
         if(!compatibilityMask) continue;
         AliReducedVarManager::FillPairInfo(leg2Track, leg2Track_2, fCandidateType, fValues);
         fValues[AliReducedVarManager::kPairMCMap] = 0;
@@ -839,7 +949,7 @@ void AliReducedAnalysisFilterTrees::RunSameEventPairing() {
 
 
 //___________________________________________________________________________
-void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions /*= kFALSE*/){
+void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions /*= kFALSE*/) {
   //
   // Fill multiplicity values (global if regions = false; in the regions if regions = true).
   //
@@ -856,7 +966,7 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions /*= kFALSE*/
   if(regions) {
     // Define the phi reference
     if(fDefaultRandomPhi) phi = TMath::TwoPi() * gRandom->Rndm();
-    else phi = fValues[AliReducedVarManager::kPhiLeading];
+    else                  phi = fValues[AliReducedVarManager::kPhiLeading];
     
     if(!fRegionsToMCTruth) {
       TClonesArray* pairs = fFilteredEvent->fCandidates;
@@ -906,24 +1016,23 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions /*= kFALSE*/
     fValues[AliReducedVarManager::kMCNch09Away+1]       = 0.;
   }
   
-  
+
   // Loop over both arrays
   for(Int_t iArray=1; iArray<=2; iArray++) {
     AliReducedTrackInfo* track;
     TClonesArray* tracklist = (iArray==1 ? fEvent->GetTracks() : fEvent->GetTracks2());
     TIter nextTrack(tracklist);
-    
+    // Loop over tracks
     for(Int_t it=0; it<tracklist->GetEntries(); ++it) {
       track = (AliReducedTrackInfo*)nextTrack();  
       for(Int_t i=AliReducedVarManager::kNEventVars; i<AliReducedVarManager::kNTrackVars; ++i)
         fValues[i] = -9999.;
       AliReducedVarManager::FillTrackInfo(track, fValues);
 
-      // Get measured multiplicity
+      // Get measured multiplicity (track has to be reconstructed & selected by at least one meas mult cut)
       if(!(track->IsMCTruth()) && IsTrackMeasuredMultSelected(track,fValues)) {
         for(Int_t icut=0; icut<GetNMeasMultCuts(); icut++) {
           if(track->TestFlag(icut)) {
-
             if(!regions) {
               fValues[AliReducedVarManager::kNGlobalTracks+icut] += 1;
               // Look for leading particle
@@ -961,10 +1070,10 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions /*= kFALSE*/
                         AliReducedVarManager::kNMaxCutsGlobalTracks+icut] += 1.;
             }
           }
-        }  // end loop over multiplicity cuts
+        }
       }
 
-      // Get true multiplicity
+      // Get true multiplicity (track has to be true MC (not rec) & selected by at least one true mult cut)
       if(track->IsMCTruth() && IsTrackTrueMultSelected(track, fValues)) {
         if(!regions) {
           fValues[AliReducedVarManager::kMCNch09] += 1;
@@ -1016,21 +1125,20 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions /*= kFALSE*/
     }  // end loop over tracks
   }  // end loop over arrays
 
-  // some quantities necessary to compute efficiency/contamination
+  // some quantities necessary to compute efficiency/contamination TODO is this implemented properly?
   if(!regions) {
-    fValues[AliReducedVarManager::kMCNch09+2] = fValues[AliReducedVarManager::kMCNch09];
     fValues[AliReducedVarManager::kMCNch09+1] = fValues[AliReducedVarManager::kMCNch09];
+    fValues[AliReducedVarManager::kMCNch09+2] = fValues[AliReducedVarManager::kMCNch09];
     
-    Float_t VtxZMC      = fValues[AliReducedVarManager::kVtxZMC];
     Bool_t isTriggered  = kTRUE;
-    Bool_t isMCAccepted = (fValues[AliReducedVarManager::kMCNch]>0) && (abs(VtxZMC)<=10.);
-    
-    if(!isTriggered){
+    if(!isTriggered) {
       fValues[AliReducedVarManager::kMCNch09+1] = -9999.;
       fValues[AliReducedVarManager::kMCNch09+2] = -9999.;
     }
-    
-    if(!isMCAccepted){
+
+    Bool_t isMCAccepted = (fValues[AliReducedVarManager::kMCNch]>0) &&
+                          (abs(fValues[AliReducedVarManager::kVtxZMC])<=10.);
+    if(!isMCAccepted) {
       fValues[AliReducedVarManager::kMCNch09]   = -9999.;
       fValues[AliReducedVarManager::kMCNch09+1] = -9999.;
       fValues[AliReducedVarManager::kMCNch09+2] = -9999.;
@@ -1114,7 +1222,8 @@ Bool_t AliReducedAnalysisFilterTrees::IsPairSelected(AliReducedPairInfo* pair, F
 
 
 //___________________________________________________________________________
-Bool_t AliReducedAnalysisFilterTrees::IsTrackMeasuredMultSelected(AliReducedBaseTrack* track, Float_t* values /*=0x0*/) {
+Bool_t AliReducedAnalysisFilterTrees::IsTrackMeasuredMultSelected(AliReducedBaseTrack* track,
+                                                                  Float_t* values /*=0x0*/) {
   //
   // apply cuts for determining measured multiplicity
   //
@@ -1132,7 +1241,8 @@ Bool_t AliReducedAnalysisFilterTrees::IsTrackMeasuredMultSelected(AliReducedBase
 
 
 //___________________________________________________________________________
-Bool_t AliReducedAnalysisFilterTrees::IsTrackTrueMultSelected(AliReducedBaseTrack* track, Float_t* values /*=0x0*/) {
+Bool_t AliReducedAnalysisFilterTrees::IsTrackTrueMultSelected(AliReducedBaseTrack* track,
+                                                              Float_t* values /*=0x0*/) {
   //
   // apply cuts for determining MC true multiplicity
   //
@@ -1150,7 +1260,8 @@ Bool_t AliReducedAnalysisFilterTrees::IsTrackTrueMultSelected(AliReducedBaseTrac
 
 
 //___________________________________________________________________________
-Bool_t AliReducedAnalysisFilterTrees::IsCandidateLegSelected(AliReducedBaseTrack* track, Float_t* values /*=0x0*/, Int_t whichLeg /*=1*/) {
+Bool_t AliReducedAnalysisFilterTrees::IsCandidateLegSelected(AliReducedBaseTrack* track,
+                                                             Float_t* values /*=0x0*/, Int_t whichLeg /*=1*/) {
   //
   // apply cuts to the candidate leg
   //
@@ -1167,15 +1278,12 @@ Bool_t AliReducedAnalysisFilterTrees::IsCandidateLegSelected(AliReducedBaseTrack
   if(whichLeg==1) track->ResetFlags();
   
   for(Int_t i=0; i<fLeg1Cuts.GetEntries(); ++i) {
-    AliReducedInfoCut* cut = (AliReducedInfoCut*)(whichLeg==2 && isAsymmetricDecayChannel?fLeg2Cuts.At(i)
-                                                                                         :fLeg1Cuts.At(i));
-    if(values) { 
-      if(cut->IsSelected(track,values)) 
-        track->SetFlag(whichLeg==2 && isAsymmetricDecayChannel ? 32+i : i); 
-    }
-    else {
-      if(cut->IsSelected(track)) 
-        track->SetFlag(whichLeg==2 && isAsymmetricDecayChannel ? 32+i : i); 
+    AliReducedInfoCut* cut = (AliReducedInfoCut*)(whichLeg==2 && isAsymmetricDecayChannel ? fLeg2Cuts.At(i)
+                                                                                          : fLeg1Cuts.At(i));
+    if(values) {
+      if(cut->IsSelected(track,values)) track->SetFlag(whichLeg==2 && isAsymmetricDecayChannel ? 32+i : i);
+    } else {
+      if(cut->IsSelected(track))        track->SetFlag(whichLeg==2 && isAsymmetricDecayChannel ? 32+i : i);
     }
   }
   return (track->GetFlags()>0 ? kTRUE : kFALSE);
@@ -1183,7 +1291,8 @@ Bool_t AliReducedAnalysisFilterTrees::IsCandidateLegSelected(AliReducedBaseTrack
 
 
 //___________________________________________________________________________
-Bool_t AliReducedAnalysisFilterTrees::IsCandidateLegPrefilterSelected(AliReducedBaseTrack* track, Float_t* values /*=0x0*/, Int_t whichLeg /*=1*/) {
+Bool_t AliReducedAnalysisFilterTrees::IsCandidateLegPrefilterSelected(AliReducedBaseTrack* track,
+    Float_t* values /*=0x0*/, Int_t whichLeg /*=1*/) {
   //
   // apply prefilter cuts on the candidate legs
   //
@@ -1239,7 +1348,8 @@ ULong_t AliReducedAnalysisFilterTrees::IsCandidatePairSelected(Float_t* values) 
 
 
 //___________________________________________________________________________
-Bool_t AliReducedAnalysisFilterTrees::IsCandidateLegPairPrefilterSelected(Float_t* values, Int_t whichLeg /*=1*/) {
+Bool_t AliReducedAnalysisFilterTrees::IsCandidateLegPairPrefilterSelected(Float_t* values,
+                                                                          Int_t whichLeg /*=1*/) {
   //
   // apply the prefilter pair cuts
   //
@@ -1249,8 +1359,8 @@ Bool_t AliReducedAnalysisFilterTrees::IsCandidateLegPairPrefilterSelected(Float_
   
   // loop over all the cuts and make a logical OR between all cuts in the list
   for(Int_t i=0; i<fLeg1PairPrefilterCuts.GetEntries(); ++i) {
-    AliReducedInfoCut* cut = (AliReducedInfoCut*)(whichLeg==2 &&
-        isAsymmetricDecayChannel ? fLeg2PairPrefilterCuts.At(i) : fLeg1PairPrefilterCuts.At(i));
+    AliReducedInfoCut* cut = (AliReducedInfoCut*)(whichLeg==2 && isAsymmetricDecayChannel?
+                                                  fLeg2PairPrefilterCuts.At(i):fLeg1PairPrefilterCuts.At(i));
     if(cut->IsSelected(values)) return kTRUE;
   }
   return kFALSE;
@@ -1258,7 +1368,8 @@ Bool_t AliReducedAnalysisFilterTrees::IsCandidateLegPairPrefilterSelected(Float_
 
 
 //___________________________________________________________________________
-ULong_t AliReducedAnalysisFilterTrees::CheckTrackCompatibility(AliReducedBaseTrack* leg1, AliReducedBaseTrack* leg2, Bool_t isAsymmetricDecayChannel) {
+ULong_t AliReducedAnalysisFilterTrees::CheckTrackCompatibility(AliReducedBaseTrack* leg1,
+    AliReducedBaseTrack* leg2, Bool_t isAsymmetricDecayChannel) {
   //
   // check whether the 2 tracks fulfill at least one set of common cuts
   // NOTE: In the case of asymmetric decay channels, a track can fulfill simultaneously both the cuts of
@@ -1285,19 +1396,19 @@ void AliReducedAnalysisFilterTrees::SetupPair(AliReducedPairInfo* pair, Float_t*
   // setup pair information
   //
 
-  pair->Pt (values[AliReducedVarManager::kPt]);
-  pair->Phi(values[AliReducedVarManager::kPhi]);
-  pair->Eta(values[AliReducedVarManager::kEta]);
-  pair->Charge(0);
-  pair->CandidateId(fCandidateType);
-  pair->PairType   (values[AliReducedVarManager::kPairType]);
-  pair->PairTypeSPD(values[AliReducedVarManager::kPairTypeSPD]);
-  pair->SetMass    (values[AliReducedVarManager::kMass]);
-  pair->SetLxy     (values[AliReducedVarManager::kPairLxy]);
-  pair->SetPseudoProper (values[AliReducedVarManager::kPseudoProperDecayTime]);
-  pair->SetPointingAngle(values[AliReducedVarManager::kPairPointingAngle]);
-  pair->SetChisquare    (values[AliReducedVarManager::kPairChisquare]);
-  pair->SetMCMap        (values[AliReducedVarManager::kPairMCMap]);
+  pair->Pt               (values[AliReducedVarManager::kPt]);
+  pair->Phi              (values[AliReducedVarManager::kPhi]);
+  pair->Eta              (values[AliReducedVarManager::kEta]);
+  pair->Charge           (0);
+  pair->CandidateId      (fCandidateType);
+  pair->PairType         (values[AliReducedVarManager::kPairType]);
+  pair->PairTypeSPD      (values[AliReducedVarManager::kPairTypeSPD]);
+  pair->SetMass          (values[AliReducedVarManager::kMass]);
+  pair->SetLxy           (values[AliReducedVarManager::kPairLxy]);
+  pair->SetPseudoProper  (values[AliReducedVarManager::kPseudoProperDecayTime]);
+  pair->SetPointingAngle (values[AliReducedVarManager::kPairPointingAngle]);
+  pair->SetChisquare     (values[AliReducedVarManager::kPairChisquare]);
+  pair->SetMCMap         (values[AliReducedVarManager::kPairMCMap]);
 }
 
 
@@ -1365,7 +1476,7 @@ void AliReducedAnalysisFilterTrees::FillCandidatePairHistograms(ULong_t trackMas
   //
 
   TString typeStr[3] = {"11", "12", "22"};
-  if(fPairCuts.GetEntries()>1) {
+  if(fPairCuts.GetEntries() > 1) {
     // loop over leg cuts (for asymmetric decay channels there should always be a pair of cuts for leg1 and
     // leg2)
     for(Int_t iTrackCut=0; iTrackCut<fLeg1Cuts.GetEntries(); ++iTrackCut) {
@@ -1375,20 +1486,17 @@ void AliReducedAnalysisFilterTrees::FillCandidatePairHistograms(ULong_t trackMas
         for(Int_t iPairCut=0; iPairCut<fPairCuts.GetEntries(); ++iPairCut) {
           // check if the pair fulfills the pair cut
           if(pairMask & (ULong_t(1)<<iPairCut)) {
-            fHistosManager->FillHistClass(Form("%s%s_%s%s_%s",
-                pairClass.Data(), typeStr[pairType].Data(),
+            fHistosManager->FillHistClass(Form("%s%s_%s%s_%s", pairClass.Data(), typeStr[pairType].Data(),
                 fLeg1Cuts.At(iTrackCut)->GetName(),
                 (isAsymmetricDecayChannel?Form("_%s",fLeg2Cuts.At(iTrackCut)->GetName()):""),
                 fPairCuts.At(iPairCut)->GetName()), fValues);
             if(mcDecisions && pairType==1) {
               for(Int_t iMC=0; iMC<=fLegCandidatesMCcuts.GetEntries(); ++iMC) {
                 if(mcDecisions & (UInt_t(1)<<iMC))
-                  fHistosManager->FillHistClass(Form("%s%s_%s%s_%s_%s",
-                      pairClass.Data(), typeStr[pairType].Data(),
-                      fLeg1Cuts.At(iTrackCut)->GetName(),
+                  fHistosManager->FillHistClass(Form("%s%s_%s%s_%s_%s", pairClass.Data(),
+                      typeStr[pairType].Data(), fLeg1Cuts.At(iTrackCut)->GetName(),
                       (isAsymmetricDecayChannel?Form("_%s",fLeg2Cuts.At(iTrackCut)->GetName()):""),
-                      fPairCuts.At(iPairCut)->GetName(),
-                      fLegCandidatesMCcuts.At(iMC)->GetName()), fValues);
+                      fPairCuts.At(iPairCut)->GetName(), fLegCandidatesMCcuts.At(iMC)->GetName()), fValues);
               }
             }
           }
@@ -1399,15 +1507,13 @@ void AliReducedAnalysisFilterTrees::FillCandidatePairHistograms(ULong_t trackMas
   else {
     for(Int_t iTrackCut=0; iTrackCut<fLeg1Cuts.GetEntries(); ++iTrackCut) {
       if(trackMask & (ULong_t(1)<<iTrackCut)) {
-        fHistosManager->FillHistClass(Form("%s%s_%s%s",
-            pairClass.Data(), typeStr[pairType].Data(),
+        fHistosManager->FillHistClass(Form("%s%s_%s%s", pairClass.Data(), typeStr[pairType].Data(),
             fLeg1Cuts.At(iTrackCut)->GetName(),
             (isAsymmetricDecayChannel?Form("_%s",fLeg2Cuts.At(iTrackCut)->GetName()):"")), fValues);
         if(mcDecisions && pairType==1) {
           for(Int_t iMC=0; iMC<=fLegCandidatesMCcuts.GetEntries(); ++iMC) {
             if(mcDecisions & (UInt_t(1)<<iMC))
-              fHistosManager->FillHistClass(Form("%s%s_%s%s_%s",
-                  pairClass.Data(), typeStr[pairType].Data(),
+              fHistosManager->FillHistClass(Form("%s%s_%s%s_%s", pairClass.Data(), typeStr[pairType].Data(),
                   fLeg1Cuts.At(iTrackCut)->GetName(),
                   (isAsymmetricDecayChannel?Form("_%s",fLeg2Cuts.At(iTrackCut)->GetName()):""),
                   fLegCandidatesMCcuts.At(iMC)->GetName()), fValues);
@@ -1517,8 +1623,7 @@ UInt_t AliReducedAnalysisFilterTrees::CheckReconstructedLegMCTruth(AliReducedBas
     if(fLegCandidatesMCcuts_RequestSameMother[i])
       sameMotherDecision = (TMath::Abs(((AliReducedTrackInfo*)ptrack)->MCLabel(1)) ==
                             TMath::Abs(((AliReducedTrackInfo*)ntrack)->MCLabel(1)));
-    if(sameMotherDecision && pDecision && nDecision)
-      decisions |= (UInt_t(1)<<i);
+    if(sameMotherDecision && pDecision && nDecision) decisions |= (UInt_t(1)<<i);
   }
 
   return decisions;
@@ -1713,7 +1818,7 @@ AliReducedTrackInfo* AliReducedAnalysisFilterTrees::FindTrackByLabel(Int_t label
   for(Int_t i=0; i<trackList->GetEntries(); ++i) {
     track = (AliReducedTrackInfo*)nextTrack();
     if(isTruth  && (!track->IsMCKineParticle())) continue;
-    if(!isTruth && track->IsMCKineParticle())    continue;
+    if(!isTruth &&   track->IsMCKineParticle())    continue;
     if(track->MCLabel(0)==label) return track;
   }
   return 0x0;
@@ -1728,7 +1833,6 @@ void AliReducedAnalysisFilterTrees::FindJpsiTruthLegs(AliReducedTrackInfo* mothe
   //
   Int_t mLabel = mother->MCLabel(0);
   AliReducedTrackInfo* track = 0x0;
-  
   Int_t legsFound = 0;
   
   // loop over the first track array

@@ -3652,10 +3652,10 @@ void AliReducedVarManager::SetDefaultVarNames() {
     fgVariableUnits[kVZEROXcYc+iHarmonic] = "";
     fgVariableNames[kVZEROdeltaRPac+iHarmonic]  = Form("#Psi_{%d}^{VZERO-A} - #Psi_{%d}^{VZERO-C}", iHarmonic+1, iHarmonic+1);
     fgVariableUnits[kVZEROdeltaRPac+iHarmonic]  = "rad.";
-    fgVariableNames[kVZEROQaQcSP+iHarmonic] = Form("cos(%d(#Psi_{%d}^{VZERO-A} - #Psi_{%d}^{VZERO-C})|Q^{VZERO-A}_{%d}||Q^{VZERO-C}_{%d}|", 
+    fgVariableNames[kVZEROQaQcSP+iHarmonic] = Form("cos(%d(#Psi_{%d}^{VZERO-A} - #Psi_{%d}^{VZERO-C})|Q^{VZERO-A}_{%d}||Q^{VZERO-C}_{%d}|",
 						       iHarmonic+1, iHarmonic+1, iHarmonic+1, iHarmonic+1, iHarmonic+1);
     fgVariableUnits[kVZEROQaQcSP+iHarmonic] = "";
-    fgVariableNames[kVZEROQaQcSPsine+iHarmonic] = Form("sin(%d(#Psi_{%d}^{VZERO-A} - #Psi_{%d}^{VZERO-C})|Q^{VZERO-A}_{%d}||Q^{VZERO-C}_{%d}|", 
+    fgVariableNames[kVZEROQaQcSPsine+iHarmonic] = Form("sin(%d(#Psi_{%d}^{VZERO-A} - #Psi_{%d}^{VZERO-C})|Q^{VZERO-A}_{%d}||Q^{VZERO-C}_{%d}|",
 							   iHarmonic+1, iHarmonic+1, iHarmonic+1, iHarmonic+1, iHarmonic+1);
     fgVariableUnits[kVZEROQaQcSPsine+iHarmonic] = "";
     fgVariableUnits[kVZEROdeltaRPac+iHarmonic]  = "rad.";
@@ -3748,17 +3748,17 @@ void AliReducedVarManager::SetDefaultVarNames() {
     fgVariableUnits[kTPCRPnegTree+iHarmonic]    = "rad.";
   }  // end loop over harmonics 
   
-  fgVariableNames[kMCNch] = "N_{ch} in |#eta|<1"; fgVariableUnits[kMCNch] = ""; 
-  fgVariableNames[kMCNch09] = "N_{ch} in |#eta|<0.9"; fgVariableUnits[kMCNch09] = ""; 
-  fgVariableNames[kMCNch09+1] = "N_{ch} in |#eta|<0.9"; fgVariableUnits[kMCNch09+1] = ""; 
-  fgVariableNames[kMCNch09+2] = "N_{ch} in |#eta|<0.9"; fgVariableUnits[kMCNch09+2] = ""; 
-  fgVariableNames[kMCNch09Toward] = "N_{ch} Toward in |#eta|<0.9"; fgVariableUnits[kMCNch09+2] = ""; 
-  fgVariableNames[kMCNch09Transverse] = "N_{ch} Transverse in |#eta|<0.9"; fgVariableUnits[kMCNch09+2] = ""; 
-  fgVariableNames[kMCNch09Away] = "N_{ch} Away in |#eta|<0.9"; fgVariableUnits[kMCNch09+2] = ""; 
-  fgVariableNames[kMCNchSPDacc] = "N_{ch} in SPD acceptance"; fgVariableUnits[kMCNchSPDacc] = ""; 
+  fgVariableNames[kMCNch] = "N_{ch} in |#eta|<1"; fgVariableUnits[kMCNch] = "";
+  fgVariableNames[kMCNch09] = "N_{ch} in |#eta|<0.9"; fgVariableUnits[kMCNch09] = "";
+  fgVariableNames[kMCNch09+1] = "N_{ch} in |#eta|<0.9"; fgVariableUnits[kMCNch09+1] = "";
+  fgVariableNames[kMCNch09+2] = "N_{ch} in |#eta|<0.9"; fgVariableUnits[kMCNch09+2] = "";
+  fgVariableNames[kMCNch09Toward] = "N_{ch} Toward in |#eta|<0.9"; fgVariableUnits[kMCNch09+2] = "";
+  fgVariableNames[kMCNch09Transverse] = "N_{ch} Transverse in |#eta|<0.9"; fgVariableUnits[kMCNch09+2] = "";
+  fgVariableNames[kMCNch09Away] = "N_{ch} Away in |#eta|<0.9"; fgVariableUnits[kMCNch09+2] = "";
+  fgVariableNames[kMCNchSPDacc] = "N_{ch} in SPD acceptance"; fgVariableUnits[kMCNchSPDacc] = "";
   fgVariableNames[kEtaBinForSPDtracklets] = "#eta"; fgVariableUnits[kEtaBinForSPDtracklets] = "";
   fgVariableNames[kMCNchNegSide] = "N_{ch} in -1<#eta<0"; fgVariableUnits[kMCNchNegSide] = "";
-  fgVariableNames[kMCNchPosSide] = "N_{ch} in 0<#eta<1"; fgVariableUnits[kMCNchPosSide] = ""; 
+  fgVariableNames[kMCNchPosSide] = "N_{ch} in 0<#eta<1"; fgVariableUnits[kMCNchPosSide] = "";
   fgVariableNames[kDiffNchSPDtrklts] = "N_{ch}^{|#eta|<1} - SPD #trklts"; fgVariableUnits[kDiffNchSPDtrklts] = "";
   fgVariableNames[kDiffNchSPDaccSPDtrklts] = "N_{ch}^{SPD} - SPD #trklts"; fgVariableUnits[kDiffNchSPDaccSPDtrklts] = "";
   fgVariableNames[kRelDiffNchSPDtrklts] = "(N_{ch}^{|#eta|<1} - SPD #trklts) / N_{ch}^{|#eta|<1}"; fgVariableUnits[kRelDiffNchSPDtrklts] = "";

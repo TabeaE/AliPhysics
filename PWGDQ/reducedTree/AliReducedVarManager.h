@@ -512,7 +512,7 @@ class AliReducedVarManager : public TObject {
     kPtLeading,
     kPhiLeading = kPtLeading + kNMaxCutsGlobalTracks,       // 8 possible cutsets
     kEtaLeading = kPhiLeading + kNMaxCutsGlobalTracks,
-    kNEventVars = kEtaLeading + kNMaxCutsGlobalTracks,                               // number of event variables  
+    kNEventVars = kEtaLeading + kNMaxCutsGlobalTracks,                               // number of event variables
     // Particle variables --------------------------------------
     // Common pair/track variables
     kPt=kNEventVars,
@@ -588,11 +588,11 @@ class AliReducedVarManager : public TObject {
     kPairPhiCS,                    // phi* in Collins-Soper frame
     kPairThetaHE,                // cos (theta*) in helicity frame       
     kPairPhiHE,                    // phi* in helicity frame
-    kPairVZEROFlowNom,            // Nominator of combinatorial pair flow for VZERO, 6 harmonics, 3 VZERO sides (A, C and A&C) 
-    kPairVZEROFlowDenom=kPairVZEROFlowNom+6*3,  // Denominator of combinatorial pair flow for VZERO, 6 harmonics, 3 VZERO sides (A, C and A&C) 
+    kPairVZEROFlowNom,            // Nominator of combinatorial pair flow for VZERO, 6 harmonics, 3 VZERO sides (A, C and A&C)
+    kPairVZEROFlowDenom=kPairVZEROFlowNom+6*3,  // Denominator of combinatorial pair flow for VZERO, 6 harmonics, 3 VZERO sides (A, C and A&C)
     kPairTPCFlowNom=kPairVZEROFlowDenom+6*3,
     kPairTPCFlowDenom=kPairTPCFlowNom+6,
-    kPairVZEROFlowSPNom=kPairTPCFlowDenom+6,     // Nominator of combinatorial Scalar Product pair flow for VZERO, 6 harmonics, 3 VZERO sides (A, C and A&C) 
+    kPairVZEROFlowSPNom=kPairTPCFlowDenom+6,     // Nominator of combinatorial Scalar Product pair flow for VZERO, 6 harmonics, 3 VZERO sides (A, C and A&C)
     kPairVZEROFlowSPDenom=kPairVZEROFlowSPNom+6*3,  // Denominator of combinatorial pair flow for VZERO, 6 harmonics, 3 VZERO sides (A, C and A&C) 
     kPairTPCFlowSPNom=kPairVZEROFlowSPDenom+6*3,
     kPairTPCFlowSPDenom=kPairTPCFlowSPNom+6,
@@ -835,7 +835,7 @@ class AliReducedVarManager : public TObject {
   static const Double_t fgkVZEROminMult;   // minimum VZERO channel multiplicity
   static const Float_t fgkTPCQvecRapGap;    // symmetric interval in the middle of the TPC excluded from EP calculation
   
-  static const Double_t fgkSPDEtaCutsVsVtxZ[20][2];      // eta interval coverage for the SPDntracklets estimator as a function of vtx 
+  static const Double_t fgkSPDEtaCutsVsVtxZ[20][2];      // eta interval coverage for the SPDntracklets estimator as a function of vtx
     
   AliReducedVarManager();
   AliReducedVarManager(const Char_t* name);
@@ -927,9 +927,9 @@ class AliReducedVarManager : public TObject {
   static Float_t fgBeamMomentum;                  // beam energy (needed when calculating polarization angles) 
   static AliReducedBaseEvent* fgEvent;            // pointer to the current event
   static AliReducedEventPlaneInfo* fgEventPlane;  // pointer to the current event plane
-  static Bool_t fgUsedVars[kNVars];              // array of flags toggled when the corresponding variable is required (e.g., in the histogram manager, in cuts, mixing handler, etc.) 
+  static Bool_t fgUsedVars[kNVars];              // array of flags toggled when the corresponding variable is required (e.g., in the histogram manager, in cuts, mixing handler, etc.)
                                                  //   when a variable is used
-  static void SetVariableDependencies();       // toggle those variables on which other used variables might depend 
+  static void SetVariableDependencies();       // toggle those variables on which other used variables might depend
   
 
   static Double_t DeltaPhi(Double_t phi1, Double_t phi2);  
