@@ -321,7 +321,7 @@ void AliReducedAnalysisJpsi2ee::Init() {
 
    fMixingHandler->SetHistogramManager(fHistosManager);
 
-  if (fClusterTrackMatcher) {
+  if(fClusterTrackMatcher) {
     fClusterTrackMatcherMultipleMatchesBefore = new TH1I("multipleCounts_beforeMatching", "mulitple counts of matched cluster IDs beofore matching", 50, 0.5, 50.5);
     fClusterTrackMatcherMultipleMatchesAfter = new TH1I("multipleCounts_afterMatching", "mulitple counts of matched cluster IDs after matching", 50, 0.5, 50.5);
     fClusterTrackMatcherHistograms = new TList();
