@@ -189,6 +189,13 @@ void AliReducedAnalysisFilterTrees::Init() {
   //
 
   AliReducedVarManager::SetDefaultVarNames();
+
+  AliReducedVarManager::SetUseVariable(AliReducedVarManager::kPseudoProperDecayTime);
+  AliReducedVarManager::SetUseVariable(AliReducedVarManager::kPseudoProperDecayTimeMC);
+  AliReducedVarManager::SetUseVariable(AliReducedVarManager::kPseudoProperTimeError);
+  AliReducedVarManager::SetUseVariable(AliReducedVarManager::kTriggerPseudoProperDecayTime);
+  AliReducedVarManager::SetUseVariable(AliReducedVarManager::kTripletPseudoProperDecayTime);
+
   fHistosManager->SetUseDefaultVariableNames(kTRUE);
   fHistosManager->SetDefaultVarNames(AliReducedVarManager::fgVariableNames,
                                      AliReducedVarManager::fgVariableUnits);
@@ -203,12 +210,12 @@ void AliReducedAnalysisFilterTrees::Process() {
   //  
   
   if(!fEvent) return;
-  if(!(fEvent->IsA()==AliReducedEventInfo::Class())) {
+  if(!(fEvent->IsA() == AliReducedEventInfo::Class())) {
     cout << "ERROR: AliReducedAnalysisFilterTrees::Process() needs AliReducedEventInfo events" << endl;
     return;
   }
 
-  if(fEventCounter%10000==0) cout << "Event no. " << fEventCounter << endl;
+  if(fEventCounter%10000 == 0) cout << "Event no. " << fEventCounter << endl;
   fEventCounter++;
   
   AliReducedVarManager::SetEvent(fEvent);
@@ -253,7 +260,7 @@ void AliReducedAnalysisFilterTrees::Process() {
   if(isEventUnbiased && isEventSelected && GetRunOverMC() && (fValues[AliReducedVarManager::kMCNch]>0)) {
     fHistosManager->FillHistClass("Event_INELGT0", fValues);
     for(Int_t icut=0; icut<nGlobalEstimators; icut++)
-      fHistosManager->FillHistClass(Form("EventMult_%s_INELGT0", GetMeasMultcutName(icut)), fValues);
+      fHistosManager->FillHistClass(Form("EventMult_%s_INELGT0",GetMeasMultcutName(icut)), fValues);
   }
   if(GetRunOverMC() && !(fValues[AliReducedVarManager::kINT7Triggered])) isEventSelected = kFALSE;
   
@@ -261,17 +268,17 @@ void AliReducedAnalysisFilterTrees::Process() {
   if(isEventUnbiased && isEventSelected) {
     fHistosManager->FillHistClass("Event_NoVtxRec", fValues);
     for(Int_t icut=0; icut<nGlobalEstimators; icut++)
-      fHistosManager->FillHistClass(Form("EventMult_%s_NoVtxRec", GetMeasMultcutName(icut)), fValues);
+      fHistosManager->FillHistClass(Form("EventMult_%s_NoVtxRec",GetMeasMultcutName(icut)), fValues);
   }
-  if(fValues[AliReducedVarManager::kNVtxContributors]<0.1) isEventSelected = kFALSE;
+  if(fValues[AliReducedVarManager::kNVtxContributors] < 0.1) isEventSelected = kFALSE;
   
   //Vtx z cut
   if(isEventUnbiased && isEventSelected) {
     fHistosManager->FillHistClass("Event_NoVtxzCut", fValues);
     for(Int_t icut=0; icut<nGlobalEstimators; icut++)
-      fHistosManager->FillHistClass(Form("EventMult_%s_NoVtxzCut", GetMeasMultcutName(icut)), fValues);
+      fHistosManager->FillHistClass(Form("EventMult_%s_NoVtxzCut",GetMeasMultcutName(icut)), fValues);
   }
-  if(abs(fValues[AliReducedVarManager::kVtxZ])>10) isEventSelected = kFALSE;
+  if(abs(fValues[AliReducedVarManager::kVtxZ]) > 10) isEventSelected = kFALSE;
   
   // Reset the multiplicity estimators if event was not selected
   if(!isEventSelected) {
@@ -417,7 +424,7 @@ void AliReducedAnalysisFilterTrees::CreateFilteredEvent() {
       fFilteredEvent->SetNTracksRegions(fValues[AliReducedVarManager::kNGlobalTracksAway +
                                         AliReducedVarManager::kNMaxCutsGlobalTracks+icut], 2, kFALSE, icut);
       
-      fFilteredEvent->SetLeadingParticle(fValues[AliReducedVarManager::kPtLeading+icut],
+      fFilteredEvent->SetLeadingParticle(fValues[AliReducedVarManager::kPtLeading +icut],
                                          fValues[AliReducedVarManager::kPhiLeading+icut],
                                          fValues[AliReducedVarManager::kEtaLeading+icut], icut);
     }  // end loop over multiplicity cuts
@@ -446,7 +453,7 @@ void AliReducedAnalysisFilterTrees::WriteFilteredPairs() {
     }
 
     TString pairTypeStr = "";
-    if(pair->CandidateId()>=0) {
+    if(pair->CandidateId() >= 0) {
       fCandidateType = pair->CandidateId();
       if      (pair->PairType()==0) pairTypeStr = "Offline";
       else if (pair->PairType()==1) pairTypeStr = "OnTheFly";
@@ -518,7 +525,7 @@ void AliReducedAnalysisFilterTrees::WriteFilteredTracks(Int_t array /*=1*/) {
   if(fWriteFilteredTracksCandidatesOnly && (fFilteredEvent->NV0Candidates() == 0)) return;
   TIter nextTrack(trackList);
   for(Int_t it=0; it<trackList->GetEntries(); ++it) {
-    track = (AliReducedBaseTrack*)nextTrack();
+    track = (AliReducedBaseTrack*) nextTrack();
     AliReducedVarManager::FillTrackInfo(track, fValues);
     AliReducedVarManager::FillClusterMatchedTrackInfo(track, fValues);
     fHistosManager->FillHistClass("Track_WriteFilteredTracks_BeforeCuts", fValues);
@@ -528,7 +535,7 @@ void AliReducedAnalysisFilterTrees::WriteFilteredTracks(Int_t array /*=1*/) {
     
     if(fWriteFilteredTracksCandidatesOnly)
       // Comment following line for comparison with AliReducedAnalysisJpsi2ee Track_BeforePrefilter_standard
-      // histogram
+      //   histogram.
       writeTrack = TrackIsCandidateLeg(track) && !(track->IsMCTruth());
     
     if(writeTrack) {
@@ -636,8 +643,8 @@ void AliReducedAnalysisFilterTrees::BuildCandidatePairs() {
       TIter nextHandler(&fMixingHandlerMult); 
       for(Int_t i=0; i<fMixingHandlerMult.GetEntries(); i++) {
         handler = (AliMixingHandler*) nextHandler();
-        if(fValues[AliReducedVarManager::kNGlobalTracks]>=fMultBinsMixing[i] &&
-           fValues[AliReducedVarManager::kNGlobalTracks]<fMultBinsMixing[i+1]) {
+        if(fValues[AliReducedVarManager::kNGlobalTracks] >= fMultBinsMixing[i]  &&
+           fValues[AliReducedVarManager::kNGlobalTracks] <  fMultBinsMixing[i+1]) {
           handler->FillEvent(&fLeg1Tracks, &fLeg2Tracks, fValues, AliReducedPairInfo::kJpsiToEE);
         }
       }
@@ -868,7 +875,7 @@ void AliReducedAnalysisFilterTrees::RunSameEventPairing() {
                         leg1Track->MCLabel(1)==leg2Track->MCLabel(1) && leg1Track->MCPdg(1)==443;
         Bool_t isJpsiFromB = isJpsi && ((abs(leg1Track->MCPdg(2))>500  && abs(leg1Track->MCPdg(2))<599) ||
                                         (abs(leg1Track->MCPdg(2))>5000 && abs(leg1Track->MCPdg(2))<5999));
-        fValues[AliReducedVarManager::kPairMCMap] = isJpsi+2*isJpsiFromB;
+        fValues[AliReducedVarManager::kPairMCMap] = isJpsi+2*isJpsiFromB;  // TODO implement with fMCMap|=(UShort_t(1)<<i
       }
 
       ULong_t pairCutMask = IsCandidatePairSelected(fValues);
@@ -1130,7 +1137,7 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions /*= kFALSE*/
     fValues[AliReducedVarManager::kMCNch09+1] = fValues[AliReducedVarManager::kMCNch09];
     fValues[AliReducedVarManager::kMCNch09+2] = fValues[AliReducedVarManager::kMCNch09];
     
-    Bool_t isTriggered  = kTRUE;
+    Bool_t isTriggered = kTRUE;
     if(!isTriggered) {
       fValues[AliReducedVarManager::kMCNch09+1] = -9999.;
       fValues[AliReducedVarManager::kMCNch09+2] = -9999.;
@@ -1153,7 +1160,7 @@ Bool_t AliReducedAnalysisFilterTrees::IsEventSelected(AliReducedBaseEvent* event
   // apply event cuts
   //
 
-  if(fEventCuts.GetEntries()==0) return kTRUE;
+  if(fEventCuts.GetEntries() == 0) return kTRUE;
   // loop over all the cuts and make a logical and between all cuts in the list
   for(Int_t i=0; i<fEventCuts.GetEntries(); ++i) {
     AliReducedInfoCut* cut = (AliReducedInfoCut*)fEventCuts.At(i);
@@ -1170,7 +1177,7 @@ Bool_t AliReducedAnalysisFilterTrees::IsTrackSelected(AliReducedBaseTrack* track
   // apply track cuts
   //
 
-  if(fTrackCuts.GetEntries()==0) return kTRUE;
+  if(fTrackCuts.GetEntries() == 0) return kTRUE;
   track->ResetFlags();
   
   // loop over all the cuts and toggle a filter bit if the track passes the corresponding cut
@@ -1194,8 +1201,8 @@ Bool_t AliReducedAnalysisFilterTrees::TrackIsCandidateLeg(AliReducedBaseTrack* t
   TIter nextPair(pairList);
   for(Int_t ip=0; ip<fFilteredEvent->NPairs(); ++ip) {
     pair = (AliReducedPairInfo*)nextPair();
-    if(track->TrackId()==pair->LegId(0)) return kTRUE;
-    if(track->TrackId()==pair->LegId(1)) return kTRUE;
+    if(track->TrackId() == pair->LegId(0)) return kTRUE;
+    if(track->TrackId() == pair->LegId(1)) return kTRUE;
   }
   return kFALSE;
 }
@@ -1211,7 +1218,7 @@ Bool_t AliReducedAnalysisFilterTrees::IsPairSelected(AliReducedPairInfo* pair, F
   if(fPairCuts.GetEntries()==0) return kTRUE;
   pair->ResetFlags();
   
-  // loop over all the cuts and toggle a filter bit if the pair passes the corresponding cut
+  // Loop over all the cuts and toggle a filter bit if the pair passes the corresponding cut
   for(Int_t i=0; i<fPairCuts.GetEntries(); ++i) {
     AliReducedInfoCut* cut = (AliReducedInfoCut*)fPairCuts.At(i);
     if(values) { if(cut->IsSelected(pair, values)) pair->SetFlag(i); }
@@ -1228,7 +1235,7 @@ Bool_t AliReducedAnalysisFilterTrees::IsTrackMeasuredMultSelected(AliReducedBase
   // apply cuts for determining measured multiplicity
   //
   
-  if(fMeasuredMultTrackCuts.GetEntries()==0) return kTRUE;
+  if(fMeasuredMultTrackCuts.GetEntries() == 0) return kTRUE;
   track->ResetFlags();  
   
   for(Int_t i=0; i<fMeasuredMultTrackCuts.GetEntries(); ++i) {
@@ -1268,14 +1275,14 @@ Bool_t AliReducedAnalysisFilterTrees::IsCandidateLegSelected(AliReducedBaseTrack
 
   Bool_t isAsymmetricDecayChannel = IsAsymmetricDecayChannel();
   
-  if(fLeg1Cuts.GetEntries()==0) return kTRUE;
+  if(fLeg1Cuts.GetEntries() == 0) return kTRUE;
   
   // reset the flags for the track only if these are the cuts on LEG1
   // For LEG2, we use the same bit map as for LEG1, which it is assumed was already evaluated so the
   // ResetFlags() should not be called.
   // IMPORTANT: In the case of asymmetric decay channels, the LEG1 cuts have to be always evaluated before
   //            LEG2 cuts.
-  if(whichLeg==1) track->ResetFlags();
+  if(whichLeg == 1) track->ResetFlags();
   
   for(Int_t i=0; i<fLeg1Cuts.GetEntries(); ++i) {
     AliReducedInfoCut* cut = (AliReducedInfoCut*)(whichLeg==2 && isAsymmetricDecayChannel ? fLeg2Cuts.At(i)
@@ -1297,7 +1304,7 @@ Bool_t AliReducedAnalysisFilterTrees::IsCandidateLegPrefilterSelected(AliReduced
   // apply prefilter cuts on the candidate legs
   //
 
-  if(fLeg1PrefilterCuts.GetEntries()==0) return kTRUE;
+  if(fLeg1PrefilterCuts.GetEntries() == 0) return kTRUE;
   Bool_t isAsymmetricDecayChannel = IsAsymmetricDecayChannel();
   
   for(Int_t i=0; i<fLeg1PrefilterCuts.GetEntries(); ++i) {
@@ -1305,8 +1312,8 @@ Bool_t AliReducedAnalysisFilterTrees::IsCandidateLegPrefilterSelected(AliReduced
     // NOTE: The analysis task could also be configured such that there is a prefilter track cut
     //       corresponding to each track cut in which case one needs to make sure the number of prefilter
     //       cuts is the same as the number of track cuts.
-    AliReducedInfoCut* cut = (AliReducedInfoCut*)(whichLeg==2 && isAsymmetricDecayChannel?
-                                                  fLeg2PrefilterCuts.At(i):fLeg1PrefilterCuts.At(i));
+    AliReducedInfoCut* cut = (AliReducedInfoCut*)((whichLeg==2 && isAsymmetricDecayChannel) ?
+                                                  fLeg2PrefilterCuts.At(i) : fLeg1PrefilterCuts.At(i));
     if(values) { if(!cut->IsSelected(track, values)) return kFALSE; }
     else       { if(!cut->IsSelected(track))         return kFALSE; }
   }
@@ -1320,7 +1327,7 @@ ULong_t AliReducedAnalysisFilterTrees::IsCandidatePairSelected(Float_t* values) 
   // apply pair cuts
   //
 
-  if(fCandidatePairCuts.GetEntries()==0) return 1;
+  if(fCandidatePairCuts.GetEntries() == 0) return 1;
 
   ULong_t mask = 0;
   for(Int_t i=0; i<fCandidatePairCuts.GetEntries(); ++i) {

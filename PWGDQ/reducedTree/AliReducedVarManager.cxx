@@ -197,6 +197,8 @@ Bool_t                          AliReducedVarManager::fgOptionEventRes = kFALSE;
 TH1F*                           AliReducedVarManager::fgReweightMCpt=0x0;
 TH3F*                           AliReducedVarManager::fgLegEfficiency=0x0;
 Bool_t                          AliReducedVarManager::fgUsePinForLegEffPropagation = kFALSE;
+
+
 //__________________________________________________________________
 AliReducedVarManager::AliReducedVarManager() :
   TObject()
@@ -223,6 +225,7 @@ AliReducedVarManager::~AliReducedVarManager() {
   // destructor
   //
 }
+
 
 //__________________________________________________________________
 void AliReducedVarManager::SetVariableDependencies() {
@@ -409,6 +412,7 @@ void AliReducedVarManager::SetVariableDependencies() {
   }
 }
 
+
 //__________________________________________________________________
 void AliReducedVarManager::FillEventInfo(Float_t* values) {
   //
@@ -417,12 +421,14 @@ void AliReducedVarManager::FillEventInfo(Float_t* values) {
   FillEventInfo(fgEvent, values, fgEventPlane);
 }
 
+
 void AliReducedVarManager::FillMCEventInfo(AliReducedEventInfo* event, Float_t* values) {
    //
    // fill MC event information
    //
    
 }
+
 
 //__________________________________________________________________
 void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, EVENTPLANE* eventF/*=0x0*/) {
@@ -1261,6 +1267,7 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
 
 }
 
+
 //_________________________________________________________________
 void AliReducedVarManager::FillITSlayerFlag(TRACK* track, Int_t layer, Float_t* values) {
   //
@@ -1270,6 +1277,7 @@ void AliReducedVarManager::FillITSlayerFlag(TRACK* track, Int_t layer, Float_t* 
   if(fgUsedVars[kITSlayerHit] && track->ITSLayerHit(layer)) values[kITSlayerHit] = layer+1;
 }
 
+
 //_________________________________________________________________
 void AliReducedVarManager::FillITSsharedLayerFlag(TRACK* track, Int_t layer, Float_t* values) {
    //
@@ -1278,6 +1286,7 @@ void AliReducedVarManager::FillITSsharedLayerFlag(TRACK* track, Int_t layer, Flo
    values[kITSlayerShared] = -1.0*(layer+1);
    if(fgUsedVars[kITSlayerShared] && track->ITSLayerHit(layer) && track->ITSClusterIsShared(layer)) values[kITSlayerShared] = layer+1;
 }
+
 
 //_________________________________________________________________
 void AliReducedVarManager::FillL0TriggerInputs(EVENT* event, Int_t input, Float_t* values, Int_t input2 /*=999*/) {
@@ -1302,6 +1311,7 @@ void AliReducedVarManager::FillL1TriggerInputs(EVENT* event, Int_t input, Float_
   if(fgUsedVars[kL1TriggerInput2] && event->L1TriggerInput(input2)) values[kL1TriggerInput2] = input2;
 }
 
+
 //_________________________________________________________________
 void AliReducedVarManager::FillL2TriggerInputs(EVENT* event, Int_t input, Float_t* values, Int_t input2 /*=999*/) {
   //
@@ -1313,6 +1323,7 @@ void AliReducedVarManager::FillL2TriggerInputs(EVENT* event, Int_t input, Float_
   if(fgUsedVars[kL2TriggerInput2] && event->L2TriggerInput(input2)) values[kL2TriggerInput2] = input2;
 }
 
+
 //_________________________________________________________________
 void AliReducedVarManager::FillEventTagInput(BASEEVENT* event, Int_t input, Float_t* values) {
   //
@@ -1321,6 +1332,7 @@ void AliReducedVarManager::FillEventTagInput(BASEEVENT* event, Int_t input, Floa
   values[kEventTag] = -1.0;
   if(fgUsedVars[kEventTag] && event->EventTag(input)) values[kEventTag] = input;
 }
+
 
 //_________________________________________________________________
 void AliReducedVarManager::FillTPCclusterBitFlag(TRACK* track, Int_t bit, Float_t* values) {
@@ -1362,6 +1374,7 @@ void AliReducedVarManager::FillTrackQualityFlag(BASETRACK* track, UShort_t flag,
   if(track->TestQualityFlag(flag2)) values[kTrackQualityFlag2] = flag2;
 }
 
+
 //_________________________________________________________________
 void AliReducedVarManager::FillTrackMCFlag(BASETRACK* track, UShort_t flag, Float_t* values, UShort_t flag2 /*=999*/) {
    //
@@ -1372,6 +1385,7 @@ void AliReducedVarManager::FillTrackMCFlag(BASETRACK* track, UShort_t flag, Floa
    values[kTrackMCFlag2] = -1;
    if(flag2<32 && track->TestMCFlag(flag2)) values[kTrackMCFlag2] = flag2;
 }
+
 
 //_________________________________________________________________
 void AliReducedVarManager::FillPairQualityFlag(PAIR* p, UShort_t flag, Float_t* values, UShort_t flag2 /*=999*/) {
@@ -1384,6 +1398,7 @@ void AliReducedVarManager::FillPairQualityFlag(PAIR* p, UShort_t flag, Float_t* 
   if(p->TestQualityFlag(flag2)) values[kPairQualityFlag2] = flag2;
 }
 
+
 //_________________________________________________________________
 void AliReducedVarManager::FillEventOnlineTriggers(AliReducedEventInfo* event, Float_t* values){
   //
@@ -1393,6 +1408,7 @@ void AliReducedVarManager::FillEventOnlineTriggers(AliReducedEventInfo* event, F
     values[kOnlineTriggersFired+i] = (event->TriggerMask()&(ULong_t(1)<<i) ? 1.0 : 0.0);
   }
 }
+
 
 //_________________________________________________________________
 void AliReducedVarManager::FillEventOnlineTrigger(UShort_t triggerBit, Float_t* values, UShort_t triggerBit2 /*=999*/) {
@@ -1408,6 +1424,7 @@ void AliReducedVarManager::FillEventOnlineTrigger(UShort_t triggerBit, Float_t* 
   if(triggerBit<64)
      values[kOnlineTriggerFired2] = (((AliReducedEventInfo*)fgEvent)->TriggerMask()&(ULong_t(1)<<triggerBit2) ? triggerBit2 : -1.0);
 }
+
 
 //________________________________________________________________
 void AliReducedVarManager::FillV0Channel(Int_t ich, Float_t* values) {
@@ -1426,8 +1443,10 @@ void AliReducedVarManager::FillV0Channel(Int_t ich, Float_t* values) {
    }
 }
 
+
 //_________________________________________________________________
-void AliReducedVarManager::FillMCTruthInfo(TRACK* p, Float_t* values, TRACK* leg1 /* = 0x0 */, TRACK* leg2 /* = 0x0 */) {
+void AliReducedVarManager::FillMCTruthInfo(TRACK* p, Float_t* values, TRACK* leg1 /* = 0x0 */,
+                                           TRACK* leg2 /* = 0x0 */) {
    //
    //  Fill pure MC truth information
    //
@@ -1962,6 +1981,7 @@ void AliReducedVarManager::FillTrackInfo(BASETRACK* p, Float_t* values) {
   }
 }
 
+
 //_________________________________________________________________
 void AliReducedVarManager::FillClusterMatchedTrackInfo(AliReducedBaseTrack* p, Float_t* values, TList* clusterList/*=0x0*/, AliReducedCaloClusterTrackMatcher* matcher/*=0x0*/) {
   //
@@ -2014,6 +2034,7 @@ void AliReducedVarManager::FillClusterMatchedTrackInfo(AliReducedBaseTrack* p, F
   }
 }
 
+
 //_________________________________________________________________
 void AliReducedVarManager::FillCaloClusterInfo(CLUSTER* cl, Float_t* values) {
   //
@@ -2034,6 +2055,7 @@ void AliReducedVarManager::FillCaloClusterInfo(CLUSTER* cl, Float_t* values) {
   values[kEMCALclusterPhi] = phiCluster;
   values[kEMCALclusterEta] = clusterVector.Eta();
 }
+
 
 //_________________________________________________________________
 void AliReducedVarManager::GetLegMassAssumption(Int_t id, Float_t& m1, Float_t& m2) {
@@ -2097,6 +2119,7 @@ void AliReducedVarManager::GetLegMassAssumption(Int_t id, Float_t& m1, Float_t& 
   }
 }
 
+
 //_________________________________________________________________
 void AliReducedVarManager::FillPairInfo(PAIR* p, Float_t* values) {
   //
@@ -2123,18 +2146,18 @@ void AliReducedVarManager::FillPairInfo(PAIR* p, Float_t* values) {
   values[kMassV0+2] = p->Mass(2);
   values[kMassV0+3] = p->Mass(3);
   
-  if(fgUsedVars[kRap])    values[kRap]              = p->Rapidity();
-  if(fgUsedVars[kRapAbs]) values[kRapAbs]           = TMath::Abs(p->Rapidity());
-  values[kPairLxy]          = p->Lxy();
+  if(fgUsedVars[kRap])    values[kRap]    = p->Rapidity();
+  if(fgUsedVars[kRapAbs]) values[kRapAbs] = TMath::Abs(p->Rapidity());
+  values[kPairLxy] = p->Lxy();
 
   // polarization variables
   Bool_t usePolarization=kFALSE;
   if(fgUsedVars[kPairThetaCS] || fgUsedVars[kPairThetaHE] || fgUsedVars[kPairPhiCS] || fgUsedVars[kPairPhiHE])
     usePolarization = kTRUE;
   if(usePolarization)
-    GetThetaPhiCM(fgEvent->GetTrack(((AliReducedPairInfo*)p)->LegId(0)), 
-		  fgEvent->GetTrack(((AliReducedPairInfo*)p)->LegId(1)), 
-		  values[kPairThetaHE], values[kPairPhiHE], values[kPairThetaCS], values[kPairPhiCS], m1, m2);
+    GetThetaPhiCM(fgEvent->GetTrack(((AliReducedPairInfo*)p)->LegId(0)),
+                  fgEvent->GetTrack(((AliReducedPairInfo*)p)->LegId(1)),
+                  values[kPairThetaHE], values[kPairPhiHE], values[kPairThetaCS], values[kPairPhiCS], m1, m2);
 }
 
 
@@ -2613,6 +2636,7 @@ void AliReducedVarManager::FillPairInfoME(BASETRACK* t1, BASETRACK* t2, Int_t ty
   FillPairMEflow(t1, t2, values);
 }
 
+
 //____________________________________________________________________________________
 void AliReducedVarManager::FillPairMEflow(BASETRACK* t1, BASETRACK* t2, Float_t* values/*, Int_t idx /*=0*/) {
     //
@@ -2653,6 +2677,7 @@ void AliReducedVarManager::FillPairMEflow(BASETRACK* t1, BASETRACK* t2, Float_t*
                TMath::Cos(2.0*(t1->Phi()-t2->Phi()));
     }
 }
+
 
 //_________________________________________________________________
 void AliReducedVarManager::FillPairInfo(PAIR* t1, BASETRACK* t2, Int_t type, Float_t* values) {
@@ -2807,6 +2832,7 @@ void AliReducedVarManager::FillPsiPrimeInfo(BASETRACK* trig, BASETRACK* pion1, B
   }
 }
 
+
 //__________________________________________________________________
 void AliReducedVarManager::FillBcandidateInfo(BASETRACK* trig, BASETRACK* leg1, BASETRACK* leg2, BASETRACK* assoc, Float_t* values) {
 // fill info on B cabdidate (Jpsi+K) by idstoreh
@@ -2896,6 +2922,7 @@ void AliReducedVarManager::FillBcandidateInfo(BASETRACK* trig, BASETRACK* leg1, 
   */
 
 } // end function
+
 
 //__________________________________________________________________
 void AliReducedVarManager::FillCorrelationInfo(BASETRACK* trig, BASETRACK* assoc, Float_t* values) {
@@ -3111,9 +3138,9 @@ Double_t AliReducedVarManager::DeltaPhi(Double_t phi1, Double_t phi2) {
 
 //____________________________________________________________________________________
 void AliReducedVarManager::GetThetaPhiCM(BASETRACK* leg1, BASETRACK* leg2,
-                                    Float_t &thetaHE, Float_t &phiHE, 
-                                    Float_t &thetaCS, Float_t &phiCS,
-				    Float_t leg1Mass /*=gkParticleMass[kElectron]*/, Float_t leg2Mass /*=gkParticleMass[kElectron]*/)
+                                         Float_t &thetaHE, Float_t &phiHE, Float_t &thetaCS, Float_t &phiCS,
+                                         Float_t leg1Mass /*=gkParticleMass[kElectron]*/,
+                                         Float_t leg2Mass /*=gkParticleMass[kElectron]*/)
 {
   //
   // Calculate theta and phi in helicity and Collins-Soper coordinate frame
@@ -4057,7 +4084,8 @@ void AliReducedVarManager::SetDefaultVarNames() {
 
 //_________________________________________________________________
 TChain* AliReducedVarManager::GetChain(const Char_t* filename, Int_t howMany, Int_t offset, Long64_t& entries,
-                                       TChain* friendChain/*=0x0*/, const Char_t* friendDir/*=0x0*/, const Char_t* friendFileName/*=0x0*/) {
+                                       TChain* friendChain/*=0x0*/, const Char_t* friendDir/*=0x0*/,
+                                       const Char_t* friendFileName/*=0x0*/) {
   //
   // read an ascii file containing a list of root files with reduced trees
   // and build a TChain
@@ -4107,8 +4135,11 @@ TChain* AliReducedVarManager::GetChain(const Char_t* filename, Int_t howMany, In
   return chain;
 }
 
+
 //____________________________________________________________________________________
-void AliReducedVarManager::SetTPCelectronCorrectionMaps(TH2F* centroidMap, TH2F* widthMap, AliReducedVarManager::Variables varX, AliReducedVarManager::Variables varY) {
+void AliReducedVarManager::SetTPCelectronCorrectionMaps(TH2F* centroidMap, TH2F* widthMap,
+                                                        AliReducedVarManager::Variables varX,
+                                                        AliReducedVarManager::Variables varY) {
    //
    // initialize the electron TPC pid correction maps
    //
@@ -4134,6 +4165,7 @@ void AliReducedVarManager::SetTPCelectronCorrectionMaps(TH2F* centroidMap, TH2F*
    }
 }
 
+
 //____________________________________________________________________________________
 void AliReducedVarManager::SetTPCpidCalibMaps(Int_t pid, THnF* centroidMap, THnF* widthMap, THnI* statusMap) {
    //
@@ -4147,6 +4179,7 @@ void AliReducedVarManager::SetTPCpidCalibMaps(Int_t pid, THnF* centroidMap, THnF
    fgTPCpidCalibWidth[pid] = widthMap;
    fgTPCpidCalibStatus[pid] = statusMap;
 }
+
 
 //____________________________________________________________________________________
 void AliReducedVarManager::SetTPCpidCalibDepVars(Variables vars[]) {
@@ -4170,6 +4203,7 @@ void AliReducedVarManager::SetTPCpidCalibDepVars(Variables vars[]) {
       }
    }
 }
+
 
 //____________________________________________________________________________________
 void AliReducedVarManager::SetPairEfficiencyMap(TH1* map, AliReducedVarManager::Variables varX, AliReducedVarManager::Variables varY/*=kNothing*/, AliReducedVarManager::Variables varZ/*=kNothing*/) {
@@ -4215,6 +4249,7 @@ void AliReducedVarManager::SetPairEfficiencyMap(TH1* map, AliReducedVarManager::
   }
   fgPairEffMap->SetDirectory(0x0);
 }
+
 
 //____________________________________________________________________________________
 void AliReducedVarManager::SetPairEfficiencyMapDependeciesCorrelation(AliReducedVarManager::Variables varX, AliReducedVarManager::Variables varY/*=kNothing*/, AliReducedVarManager::Variables varZ/*=kNothing*/) {
@@ -4285,6 +4320,7 @@ void AliReducedVarManager::SetAssociatedHadronEfficiencyMap(TH1* map, AliReduced
   fgAssocHadronEffMap->SetDirectory(0x0);
 }
 
+
 //____________________________________________________________________________________
 void AliReducedVarManager::SetLHCDataInfo(TH1F* totalLumi, TH1F* totalInt0, TH1F* totalInt1, TH1I* fillNumber) {
    //
@@ -4308,6 +4344,7 @@ void AliReducedVarManager::SetLHCDataInfo(TH1F* totalLumi, TH1F* totalInt0, TH1F
    }
 }
 
+
 //____________________________________________________________________________________
 void AliReducedVarManager::SetGRPDataInfo(TH1I* dipolePolarity, TH1I* l3Polarity, TH1I* timeStart, TH1I* timeStop) {
    //
@@ -4330,6 +4367,7 @@ void AliReducedVarManager::SetGRPDataInfo(TH1I* dipolePolarity, TH1I* l3Polarity
       fgRunTimeEnd->SetDirectory(0x0);
    }
 }
+
 
 //____________________________________________________________________________________
 void AliReducedVarManager::SetupGRPinformation(const Char_t* filename) {
@@ -4355,6 +4393,7 @@ void AliReducedVarManager::SetupGRPinformation(const Char_t* filename) {
    fgRunTimeEnd->SetDirectory(0x0);
 }
 
+
 //____________________________________________________________________________________
 void AliReducedVarManager::SetRunNumbers( TString runNumbers ){
   TObjArray* runNumbersArr = runNumbers.Tokenize(";");
@@ -4364,6 +4403,8 @@ void AliReducedVarManager::SetRunNumbers( TString runNumbers ){
     fgRunNumbers.push_back( runNumberString.Atoi() );
   }
 }
+
+
 //___________________________________________________________________________________
 void AliReducedVarManager::SetWeightSpectrum(TH1F *pTspectrum)
 {
@@ -4375,6 +4416,8 @@ void AliReducedVarManager::SetWeightSpectrum(TH1F *pTspectrum)
       cout<< "There is no pT reweight spectra, please double check !!!"<<endl;
     }
 }
+
+
 //___________________________________________________________________________________
 void AliReducedVarManager::SetLegEfficiency(TH3F *LegPIDEfficiency, Bool_t usePin)
 {
@@ -4387,6 +4430,8 @@ void AliReducedVarManager::SetLegEfficiency(TH3F *LegPIDEfficiency, Bool_t usePi
       cout<< "Leg efficiency was not loaded. "<<endl;
   }
 }
+
+
 //____________________________________________________________________________________
 Double_t AliReducedVarManager::CalculateWeightFactor( Double_t McpT, Double_t Centrality)
 {
@@ -4408,6 +4453,8 @@ Double_t AliReducedVarManager::CalculateWeightFactor( Double_t McpT, Double_t Ce
       return 0.0;
     }
 }
+
+
 //____________________________________________________________________________________
 Float_t AliReducedVarManager::GetPairEffWeightFactor(Float_t Cent, Float_t P1, Float_t P2, Float_t Eta1, Float_t Eta2, Int_t type)// type 1 is for standard propagation, type 0 returns weight when setting leg PID efficiency to its value - 1 sigma, type 2 returns weight when setting leg PID efficiency to its value + 1 sigma
 {
@@ -4477,6 +4524,8 @@ Float_t AliReducedVarManager::GetPairEffWeightFactor(Float_t Cent, Float_t P1, F
 
   return pairEff;
 }
+
+
 //____________________________________________________________________________________
 void AliReducedVarManager::SetMultiplicityProfile(TH2* profile, Int_t estimator) {
    //
@@ -4495,6 +4544,7 @@ void AliReducedVarManager::SetMultiplicityProfile(TH2* profile, Int_t estimator)
   fgAvgMultVsVtxAndRun[iEstimator]->SetDirectory(0x0);
 }
 
+
 //____________________________________________________________________________________
 void AliReducedVarManager::SetVZEROCalibrationPath(const Char_t* path) {
    //
@@ -4503,6 +4553,7 @@ void AliReducedVarManager::SetVZEROCalibrationPath(const Char_t* path) {
    fgVZEROCalibrationPath = path;
 }
 
+
 //____________________________________________________________________________________
 void AliReducedVarManager::SetCalibrateVZEROqVector(Bool_t option) {
    //
@@ -4510,6 +4561,7 @@ void AliReducedVarManager::SetCalibrateVZEROqVector(Bool_t option) {
    //
    fgOptionCalibrateVZEROqVec = option;
 }
+
 
 //____________________________________________________________________________________
 void AliReducedVarManager::SetRecenterVZEROqVector(Bool_t option) {
@@ -4520,6 +4572,8 @@ void AliReducedVarManager::SetRecenterVZEROqVector(Bool_t option) {
    //if(fgOptionRecenterVZEROqVec) fgOptionCalibrateVZEROqVec = kTRUE;
 }
 
+
+//____________________________________________________________________________________
 void AliReducedVarManager::SetRecenterTPCqVector(Bool_t option) {
    //
    // set the option whether to recenter the TPC event plane
@@ -4528,6 +4582,8 @@ void AliReducedVarManager::SetRecenterTPCqVector(Bool_t option) {
   
 }
 
+
+//____________________________________________________________________________________
 void AliReducedVarManager::SetEventResolution(Bool_t option) {
    //
    // set the option whether to divide by resolution the flow coefficients
@@ -4536,8 +4592,10 @@ void AliReducedVarManager::SetEventResolution(Bool_t option) {
   
 }
 
+
 //____________________________________________________________________________________
-Int_t AliReducedVarManager::GetCorrectedMultiplicity( Int_t estimator,  Int_t correction, Int_t reference, Int_t smearing ){
+Int_t AliReducedVarManager::GetCorrectedMultiplicity(Int_t estimator,  Int_t correction, Int_t reference,
+                                                     Int_t smearing ) {
   //
   // Return the index of the multiplicity estimator, for given
   // - estimator
@@ -4598,6 +4656,7 @@ AliKFParticle AliReducedVarManager::BuildKFvertex( AliReducedEventInfo * event )
    return kVtx;
 }
 
+
 //____________________________________________________________________________________
 AliKFParticle AliReducedVarManager::BuildKFtriplet(TRACK* track1, Float_t mh1, TRACK* track2, Float_t mh2, TRACK* track3, Float_t mh3, Double_t& doubletAssocDistance, Double_t& doubletAssocDeviation) {
  //
@@ -4635,3 +4694,4 @@ AliKFParticle AliReducedVarManager::BuildKFtriplet(TRACK* track1, Float_t mh1, T
  
  return pairKF;
 }
+

@@ -130,7 +130,7 @@ class AliReducedTrackInfo : public AliReducedBaseTrack {
   Float_t fDCA[2];              // DCA xy,z
   Float_t fTPCDCA[2];           // TPConly DCA xy,z
   Float_t fTrackLength;         // track length
-  Float_t fMassForTracking;    // mass hypothesis used for tracking
+  Float_t fMassForTracking;     // mass hypothesis used for tracking
   Float_t fChi2TPCConstrainedVsGlobal;   // AliESDtrack::GetChi2TPCConstrainedVsGlobal()
   Float_t fHelixCenter[2];      // Helix Center x,y
   Float_t fHelixRadius;         // Radius of the Helix

@@ -29,6 +29,7 @@ fResType("FF")
   // default constructor
   //
 }
+
 //___________________________________________________________________________________
 AliDielectronBtoJPSItoEle::AliDielectronBtoJPSItoEle(const AliDielectronBtoJPSItoEle& source) :
 TNamed(source),
@@ -40,8 +41,9 @@ fResType(source.fResType)
   // copy constructor
   //
 }
-//_________________________________________________________________________________________________
 
+
+//_________________________________________________________________________________________________
 AliDielectronBtoJPSItoEle &AliDielectronBtoJPSItoEle::operator=(const AliDielectronBtoJPSItoEle& source)
 {
   //
@@ -53,6 +55,8 @@ AliDielectronBtoJPSItoEle &AliDielectronBtoJPSItoEle::operator=(const AliDielect
 
   return *this;
 }
+
+
 //_________________________________________________________________________________________________
 AliDielectronBtoJPSItoEle::~AliDielectronBtoJPSItoEle()
 {
@@ -62,6 +66,8 @@ AliDielectronBtoJPSItoEle::~AliDielectronBtoJPSItoEle()
   delete fFCNfunction;
   delete fMCtemplate;
 }
+
+
 //_________________________________________________________________________________________________
 Int_t AliDielectronBtoJPSItoEle::DoMinimization(Int_t step)
 {
@@ -72,6 +78,8 @@ Int_t AliDielectronBtoJPSItoEle::DoMinimization(Int_t step)
 
   return iret;
 }
+
+
 //_________________________________________________________________________________________________
 void AliDielectronBtoJPSItoEle::ReadCandidates(TNtuple* nt, Double_t* &pseudoproper, Double_t* &invmass, Double_t* &pt, Int_t * &typeCand, Int_t& ncand, Double_t massLow, Double_t massUp, Double_t ptLow, Double_t ptUp)
 {
@@ -81,12 +89,13 @@ void AliDielectronBtoJPSItoEle::ReadCandidates(TNtuple* nt, Double_t* &pseudopro
   Float_t mJPSI = 0; Float_t x = 0; Float_t type = 0; Float_t transvMom = 0.;
   Int_t nentries = 0;
   ncand=0;
-  TString arrType[] = {"SS","FS","FF"};
-  nt->SetBranchAddress("Mass",&mJPSI);
-  nt->SetBranchAddress("Xdecaytime",&x);
-  nt->SetBranchAddress("Pt",&transvMom);
+  TString arrType[] = {"SS", "FS", "FF"};
+  nt->SetBranchAddress("Mass",       &mJPSI);
+  nt->SetBranchAddress("Xdecaytime", &x);
+  nt->SetBranchAddress("Pt",         &transvMom);
   //
-  if(!nt->GetListOfBranches()->At(2)) {AliInfo("ERROR: branch with candidate type doesn't exist! \n"); return;}
+  if(!nt->GetListOfBranches()->At(2)) {
+    AliInfo("ERROR: branch with candidate type doesn't exist! \n"); return;}
   nt->SetBranchAddress("Type",&type);
   //
   nentries = (Int_t)nt->GetEntries();
@@ -96,18 +105,20 @@ void AliDielectronBtoJPSItoEle::ReadCandidates(TNtuple* nt, Double_t* &pseudopro
   typeCand     = new Int_t[nentries];
 
   for(Int_t i = 0; i < nentries; i++) {
-      nt->GetEntry(i);
-      if(!fResType.Contains(arrType[(Int_t)type])) continue;
-      if(massUp > massLow && massLow > 0) { if(mJPSI < massLow || mJPSI >massUp) continue; } 
-      if(ptUp > ptLow && ptLow > 0) { if(transvMom < ptLow || transvMom > ptUp) continue; } 
-      pseudoproper[ncand]=(Double_t)x;
-      invmass[ncand]=(Double_t)mJPSI;
-      pt[ncand]=(Double_t)transvMom;
-      typeCand[ncand] = (Int_t)type;
-      ncand++;
-      }
- return; 
+    nt->GetEntry(i);
+    if(!fResType.Contains(arrType[(Int_t)type])) continue;
+    if(massUp > massLow && massLow > 0) { if(mJPSI < massLow || mJPSI >massUp) continue; }
+    if(ptUp > ptLow && ptLow > 0) { if(transvMom < ptLow || transvMom > ptUp) continue; }
+    pseudoproper[ncand]=(Double_t)x;
+    invmass[ncand]=(Double_t)mJPSI;
+    pt[ncand]=(Double_t)transvMom;
+    typeCand[ncand] = (Int_t)type;
+    ncand++;
+  }
+  return;
 }
+
+
 //_________________________________________________________________________________________________
 void AliDielectronBtoJPSItoEle::SetCsiMC()
 {
@@ -118,6 +129,8 @@ void AliDielectronBtoJPSItoEle::SetCsiMC()
 
   return;
 }
+
+
 //_________________________________________________________________________________________________
 void AliDielectronBtoJPSItoEle::SetFitHandler(Double_t* x /*pseudoproper*/, Double_t* m /*inv mass*/, Double_t* pt /*pt*/, Int_t* type /*type*/, Int_t ncand /*candidates*/) 
 {
@@ -127,9 +140,7 @@ void AliDielectronBtoJPSItoEle::SetFitHandler(Double_t* x /*pseudoproper*/, Doub
 
   fFCNfunction = new AliDielectronBtoJPSItoEleCDFfitHandler(x,m,pt,type,ncand);
   if(!fFCNfunction) {
-
-     AliInfo("fFCNfunction not istanziated  ---> nothing done");
-     return;
-
-     } 
+    AliInfo("fFCNfunction not istanziated  ---> nothing done");
+    return;
+  }
 }
