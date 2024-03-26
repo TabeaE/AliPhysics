@@ -475,7 +475,7 @@ void AliAnalysisTaskReducedTreeMaker::UserCreateOutputObjects()
                                  fMCsignals.GetEntries(),   -0.5, Double_t(fMCsignals.GetEntries())-0.5,
                                  kNOfflineTriggerAliases-2, -0.5, -2.5+kNOfflineTriggerAliases);
   for(Int_t i=1; i<=(kNOfflineTriggerAliases-2); ++i)
-    fMCSignalsHistogram->GetYaxis()->SetBinLabel(i, offlineTriggerNames[i-1]);
+    fMCSignalsHistogram->GetYaxis()->SetBinLabel(i, offlineTriggerNames[i-1+2]);
   for(Int_t i=1;i<=fMCsignals.GetEntries();++i) {
      TString trackTypeStr = "base track";
      if(fMCsignalsWritingOptions[i-1]==kFullTrack) trackTypeStr = "full track";
