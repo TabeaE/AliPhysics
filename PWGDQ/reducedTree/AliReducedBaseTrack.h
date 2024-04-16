@@ -28,11 +28,14 @@ class AliReducedBaseTrack : public TObject {
     Float_t Phi()      const;
     Float_t Pt()       const {return (fIsCartesian ? TMath::Sqrt(fP[0]*fP[0]+fP[1]*fP[1]) : fP[0]);}
     Float_t Eta()      const;
+    Float_t PhiMother() const {return (fP[4]);}
+    Float_t PtMother()  const {return (fP[3]);}
+    Float_t EtaMother() const {return (fP[5]);}
     Float_t Rapidity(Float_t massAssumption) const;
     Float_t Theta()                          const;
     Float_t Energy(Float_t massAssumption)   const {return TMath::Sqrt(massAssumption*massAssumption+P()*P());}
     Bool_t  TestFlag(UShort_t iflag)         const {return ((iflag<(8*sizeof(ULong_t))) ?
-                                                    fFlags&(ULong_t(1)<<iflag) : kFALSE);}
+                                                            fFlags&(ULong_t(1)<<iflag) : kFALSE);}
     ULong_t GetFlags()                       const {return fFlags;}
     Int_t   Charge()                         const {return fCharge;}
     Bool_t  IsCartesian()                    const {return fIsCartesian;}
@@ -76,14 +79,18 @@ class AliReducedBaseTrack : public TObject {
     void   Pt(Float_t pt)   {fP[0] = pt;  fIsCartesian=kFALSE;}
     void   Phi(Float_t phi) {fP[1] = phi; fIsCartesian=kFALSE;}
     void   Eta(Float_t eta) {fP[2] = eta; fIsCartesian=kFALSE;}
+    void   PtMother(Float_t pt)   {fP[3] = pt;}
+    void   PhiMother(Float_t phi) {fP[4] = phi;}
+    void   EtaMother(Float_t eta) {fP[5] = eta;}
     void   PtPhiEta(Float_t pt, Float_t phi, Float_t eta) {fP[0]=pt; fP[1]=phi; fP[2]=eta; fIsCartesian=kFALSE;}
-    void   Charge(Int_t ch)        {fCharge=ch;}
-    void   ResetFlags()            {fFlags=0;}
-    void   SetFlags(ULong_t flags) {fFlags=flags;}
-    Bool_t SetFlag(UShort_t iflag) {if(iflag>=8*sizeof(ULong_t)) return kFALSE; fFlags|=(ULong_t(1)<<iflag);
+    void   Charge(Int_t ch)        {fCharge = ch;}
+    void   ResetFlags()            {fFlags = 0;}
+    void   SetFlags(ULong_t flags) {fFlags = flags;}
+    Bool_t SetFlag(UShort_t iflag) {if(iflag >= 8*sizeof(ULong_t)) return kFALSE; fFlags|=(ULong_t(1)<<iflag);
                                     return kTRUE;}
-    Bool_t UnsetFlag(UShort_t iflag)        {if(iflag>=8*sizeof(ULong_t)) return kFALSE;
-                                             if(TestFlag(iflag)) fFlags^=(ULong_t(1)<<iflag); return kTRUE;}
+    Bool_t UnsetFlag(UShort_t iflag)        {if(iflag >= 8*sizeof(ULong_t)) return kFALSE;
+                                             if(TestFlag(iflag)) fFlags^=(ULong_t(1)<<iflag);
+                                             return kTRUE;}
     void   ResetQualityFlags()              {fQualityFlags=0;}
     void   SetQualityFlags(ULong_t flags)   {fQualityFlags=flags;}
     Bool_t SetQualityFlag(UShort_t iflag)   {if(iflag>=8*sizeof(ULong_t)) return kFALSE;
@@ -95,12 +102,13 @@ class AliReducedBaseTrack : public TObject {
     Bool_t SetMCFlag(UShort_t iflag)        {if(iflag>=8*sizeof(UInt_t)) return kFALSE;
                                              fMCFlags |= (UInt_t(1)<<iflag); return kTRUE;}
     Bool_t UnsetMCFlag(UShort_t iflag)      {if(iflag>=8*sizeof(UInt_t)) return kFALSE;
-                                             if(TestMCFlag(iflag)) fMCFlags ^= (UInt_t(1)<<iflag); return kTRUE;}
+                                             if(TestMCFlag(iflag)) fMCFlags ^= (UInt_t(1)<<iflag);
+                                             return kTRUE;}
     void   SetIsMCTruth(Bool_t flag=kTRUE)  {fIsMCTruth = flag;}
    
   protected:
     UShort_t fTrackId;     // track id
-    Float_t fP[3];         // 3-momentum vector
+    Float_t fP[6];         // 3-momentum vector + 3-momentum vector in pt-phi-eta coordinates for mother (MC)
     Bool_t  fIsCartesian;  // if false then the 3-momentum vector is in spherical coordinates (pt,phi,eta)
     Char_t  fCharge;       // electrical charge
     ULong_t fFlags;        // flags reserved for various operations

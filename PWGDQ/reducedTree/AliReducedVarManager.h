@@ -581,14 +581,19 @@ class AliReducedVarManager : public TObject {
     kPseudoProperDecayTime,
     kPseudoProperDecayTimeMC,
     kPseudoProperTimeError,
+    kPseudoProperDecayTimeXYZ,
+    kPseudoProperTimeXYZError,
     kPairOpeningAngle,  
     kPairPointingAngle, 
     kPairCosPointingAngle,
+    kPairCosPointingAngleXY,
+    kPairDCAXY,                  // DCA of the pair (as if it was a track)
+    kPairDCAZ,
     kPairThetaCS,                // cos (theta*) in Collins-Soper frame       
-    kPairPhiCS,                    // phi* in Collins-Soper frame
+    kPairPhiCS,                  // phi* in Collins-Soper frame
     kPairThetaHE,                // cos (theta*) in helicity frame       
-    kPairPhiHE,                    // phi* in helicity frame
-    kPairVZEROFlowNom,            // Nominator of combinatorial pair flow for VZERO, 6 harmonics, 3 VZERO sides (A, C and A&C)
+    kPairPhiHE,                  // phi* in helicity frame
+    kPairVZEROFlowNom,           // Nominator of combinatorial pair flow for VZERO, 6 harmonics, 3 VZERO sides (A, C and A&C)
     kPairVZEROFlowDenom=kPairVZEROFlowNom+6*3,  // Denominator of combinatorial pair flow for VZERO, 6 harmonics, 3 VZERO sides (A, C and A&C)
     kPairTPCFlowNom=kPairVZEROFlowDenom+6*3,
     kPairTPCFlowDenom=kPairTPCFlowNom+6,
@@ -823,25 +828,25 @@ class AliReducedVarManager : public TObject {
     kNVars=kTrackingStatus+kNTrackingStatus,     
   };
   
-  static TString fgVariableNames[kNVars];         // variable names
-  static TString fgVariableUnits[kNVars];         // variable units  
+  static TString fgVariableNames[kNVars];  // variable names
+  static TString fgVariableUnits[kNVars];  // variable units
   static const Char_t* fgkTrackingStatusNames[kNTrackingStatus];  // tracking flags name
   
   static const Char_t* fgkOfflineTriggerNames[64];
   
-  static const Double_t fgkVZEROChannelRadii[64]; // radii of VZERO channels centers (in cm)
-  static const Double_t fgkVZEROAz;      // z-position for VZERO-A
-  static const Double_t fgkVZEROCz;    // z-position for VZERO-C
-  static const Double_t fgkVZEROminMult;   // minimum VZERO channel multiplicity
-  static const Float_t fgkTPCQvecRapGap;    // symmetric interval in the middle of the TPC excluded from EP calculation
+  static const Double_t fgkVZEROChannelRadii[64];  // radii of VZERO channels centers (in cm)
+  static const Double_t fgkVZEROAz;       // z-position for VZERO-A
+  static const Double_t fgkVZEROCz;       // z-position for VZERO-C
+  static const Double_t fgkVZEROminMult;  // minimum VZERO channel multiplicity
+  static const Float_t fgkTPCQvecRapGap;  // symmetric interval in the middle of the TPC excluded from EP calculation
   
-  static const Double_t fgkSPDEtaCutsVsVtxZ[20][2];      // eta interval coverage for the SPDntracklets estimator as a function of vtx
+  static const Double_t fgkSPDEtaCutsVsVtxZ[20][2];  // eta interval coverage for the SPDntracklets estimator as a function of vtx
     
   AliReducedVarManager();
   AliReducedVarManager(const Char_t* name);
   virtual ~AliReducedVarManager();
   
-  static void SetBeamMomentum(Float_t beamMom) {fgBeamMomentum = beamMom;}
+  static void    SetBeamMomentum(Float_t beamMom) {fgBeamMomentum = beamMom;}
   static Float_t GetBeamMomentum() {return fgBeamMomentum;}
   
   static void SetEvent(AliReducedBaseEvent* const ev) {fgEvent = ev;};
@@ -849,14 +854,15 @@ class AliReducedVarManager : public TObject {
   static void SetUseVariable(Int_t var) {fgUsedVars[var] = kTRUE; SetVariableDependencies();}
   static void SetUseVars(const Bool_t* usedVars) {
     for(Int_t i=0;i<kNVars;++i) {
-      if(usedVars[i]) fgUsedVars[i]=kTRUE;    // overwrite only the variables that are being used since there are more channels to modify the used variables array, independently
+      if(usedVars[i]) fgUsedVars[i] = kTRUE;  // overwrite only the variables that are being used since there are more channels to modify the used variables array, independently
     }
     SetVariableDependencies();
   }
   static Bool_t GetUsedVar(Variables var) {return fgUsedVars[var];}
   
   static void FillEventInfo(Float_t* values);
-  static void FillEventInfo(AliReducedBaseEvent* event, Float_t* values, AliReducedEventPlaneInfo* eventPlane=0x0);
+  static void FillEventInfo(AliReducedBaseEvent* event, Float_t* values,
+                            AliReducedEventPlaneInfo* eventPlane=0x0);
   static void FillEventOnlineTriggers(AliReducedEventInfo* event, Float_t* values);
   static void FillEventOnlineTrigger(UShort_t triggerBit, Float_t* values, UShort_t triggerBit2=999);
   static void FillEventTagInput(AliReducedBaseEvent* event, Int_t input, Float_t* values);
@@ -865,11 +871,13 @@ class AliReducedVarManager : public TObject {
   static void FillL2TriggerInputs(AliReducedEventInfo* event, Int_t input, Float_t* values, Int_t input2=999);
   static void FillV0Channel(Int_t ich, Float_t* values);
   static void FillTrackingFlag(AliReducedTrackInfo* track, UInt_t flag, Float_t* values);
-  static void FillTrackQualityFlag(AliReducedBaseTrack* track, UShort_t flag, Float_t* values, UShort_t flag2=999);
+  static void FillTrackQualityFlag(AliReducedBaseTrack* track, UShort_t flag, Float_t* values,
+                                   UShort_t flag2=999);
   static void FillTrackMCFlag(AliReducedBaseTrack* track, UShort_t flag, Float_t* values, UShort_t flag2=999);
   static void FillPairQualityFlag(AliReducedPairInfo* p, UShort_t flag, Float_t* values, UShort_t flag2=999);
   static void FillTrackInfo(AliReducedBaseTrack* p, Float_t* values);
-  static void FillClusterMatchedTrackInfo(AliReducedBaseTrack* p, Float_t* values, TList* clusterList=0x0, AliReducedCaloClusterTrackMatcher* matcher=0x0);
+  static void FillClusterMatchedTrackInfo(AliReducedBaseTrack* p, Float_t* values, TList* clusterList=0x0,
+                                          AliReducedCaloClusterTrackMatcher* matcher=0x0);
   static void FillITSlayerFlag(AliReducedTrackInfo* track, Int_t layer, Float_t* values);
   static void FillITSsharedLayerFlag(AliReducedTrackInfo* track, Int_t layer, Float_t* values);
   static void FillTPCclusterBitFlag(AliReducedTrackInfo* track, Int_t bit, Float_t* values);
@@ -879,12 +887,15 @@ class AliReducedVarManager : public TObject {
   static void FillPairInfoME(AliReducedBaseTrack* t1, AliReducedBaseTrack* t2, Int_t type, Float_t* values);
   static void FillPairMEflow(AliReducedBaseTrack* t1, AliReducedBaseTrack* t2, Float_t* values/*, Int_t idx=0*/);
   static void FillCorrelationInfo(AliReducedBaseTrack* p, AliReducedBaseTrack* t, Float_t* values);
-  static void FillBcandidateInfo(AliReducedBaseTrack* p, AliReducedBaseTrack* leg1, AliReducedBaseTrack* leg2, AliReducedBaseTrack* t, Float_t* values); //idstoreh
+  static void FillBcandidateInfo(AliReducedBaseTrack* p, AliReducedBaseTrack* leg1, AliReducedBaseTrack* leg2,
+                                 AliReducedBaseTrack* t, Float_t* values); //idstoreh
   static void FillCaloClusterInfo(AliReducedCaloClusterInfo* cl, Float_t* values);
-  static void FillPsiPrimeInfo(AliReducedBaseTrack* p, AliReducedBaseTrack* t1, AliReducedBaseTrack* t2, Float_t* values);//tariq
+  static void FillPsiPrimeInfo(AliReducedBaseTrack* p, AliReducedBaseTrack* t1, AliReducedBaseTrack* t2,
+                               Float_t* values);//tariq
   static void FillTrackingStatus(AliReducedTrackInfo* p, Float_t* values);
  // static void FillTrackingFlags(AliReducedTrackInfo* p, Float_t* values);
-  static void FillMCTruthInfo(AliReducedTrackInfo* p, Float_t* values, AliReducedTrackInfo* leg1 = 0x0, AliReducedTrackInfo* leg2 = 0x0);
+  static void FillMCTruthInfo(AliReducedTrackInfo* p, Float_t* values, AliReducedTrackInfo* leg1=0x0,
+                              AliReducedTrackInfo* leg2=0x0);
   static void FillMCTruthInfo(AliReducedTrackInfo* leg1, AliReducedTrackInfo* leg2, Float_t* values);
   static void FillMCEventInfo(AliReducedEventInfo* event, Float_t* values);
   
@@ -895,17 +906,21 @@ class AliReducedVarManager : public TObject {
   //static TChain* GetChain(const Char_t* filename, Int_t howMany, Int_t offset, Long64_t& entries,
   //                        TChain* friendChain=0x0, const Char_t* friendChainFile=0x0);
   static TChain* GetChain(const Char_t* filename, Int_t howMany, Int_t offset, Long64_t& entries,
-                                       TChain* friendChain=0x0, const Char_t* friendDir=0x0, const Char_t* friendFileName=0x0);
+                          TChain* friendChain=0x0, const Char_t* friendDir=0x0,
+                          const Char_t* friendFileName=0x0);
 
   static TString GetVarName(Int_t var) {return fgVariableNames[var];} 
   static TString GetVarUnit(Int_t var) {return fgVariableUnits[var];} 
 
-  static void SetTPCelectronCorrectionMaps(TH2F* centroidMap, TH2F* widthMap, Variables xVarDep, Variables yVarDep);
+  static void SetTPCelectronCorrectionMaps(TH2F* centroidMap, TH2F* widthMap, Variables xVarDep,
+                                           Variables yVarDep);
   static void SetTPCpidCalibMaps(Int_t pid, THnF* centroidMap, THnF* widthMap, THnI* statusMap);
   static void SetTPCpidCalibDepVars(Variables vars[]);
   static void SetPairEfficiencyMap(TH1* map, Variables varX, Variables varY=kNothing, Variables varZ=kNothing);
-  static void SetPairEfficiencyMapDependeciesCorrelation(Variables varX, Variables varY=kNothing, Variables varZ=kNothing);
-  static void SetAssociatedHadronEfficiencyMap(TH1* map, Variables varX, Variables varY=kNothing, Variables varZ=kNothing);
+  static void SetPairEfficiencyMapDependeciesCorrelation(Variables varX, Variables varY=kNothing,
+                                                         Variables varZ=kNothing);
+  static void SetAssociatedHadronEfficiencyMap(TH1* map, Variables varX, Variables varY=kNothing,
+                                               Variables varZ=kNothing);
   static void SetLHCDataInfo(TH1F* totalLumi, TH1F* totalInt0, TH1F* totalInt1, TH1I* fillNumber);
   static void SetGRPDataInfo(TH1I* dipolePolarity, TH1I* l3Polarity, TH1I* timeStart, TH1I* timeStop);
   static void SetupGRPinformation(const Char_t* filename);
@@ -916,31 +931,38 @@ class AliReducedVarManager : public TObject {
   static void SetRecenterVZEROqVector(Bool_t option);
   static void SetRecenterTPCqVector(Bool_t option);
   static void SetEventResolution(Bool_t option);
-  static Int_t GetCorrectedMultiplicity( Int_t estimator = kMultiplicity, Int_t correction = 0, Int_t reference = 0, Int_t smearing = 0 );
-  static void SetWeightSpectrum(TH1F *gReweightMCpt);
+  static Int_t GetCorrectedMultiplicity(Int_t estimator=kMultiplicity, Int_t correction=0, Int_t reference=0,
+                                        Int_t smearing=0);
+  static void     SetWeightSpectrum(TH1F* gReweightMCpt);
   static Double_t CalculateWeightFactor(Double_t Mcpt, Double_t Centrality);
-  static void SetLegEfficiency(TH3F *LegEfficiency, Bool_t usePin);
-  static Float_t GetPairEffWeightFactor(Float_t Cent, Float_t P1, Float_t P2, Float_t Eta1, Float_t Eta2, Int_t type = 1);
+  static void     SetLegEfficiency(TH3F* LegEfficiency, Bool_t usePin);
+  static Float_t  GetPairEffWeightFactor(Float_t Cent, Float_t P1, Float_t P2, Float_t Eta1, Float_t Eta2,
+                                         Int_t type=1);
+  static TString  GetPeriodFromRunNumber(Int_t runNo);
+  static Float_t  GetFieldFromRunNumber(Int_t runNo);
   
  private:
-  static Int_t     fgCurrentRunNumber;               // current run number
+  static Int_t   fgCurrentRunNumber;              // current run number
   static Float_t fgBeamMomentum;                  // beam energy (needed when calculating polarization angles) 
   static AliReducedBaseEvent* fgEvent;            // pointer to the current event
   static AliReducedEventPlaneInfo* fgEventPlane;  // pointer to the current event plane
-  static Bool_t fgUsedVars[kNVars];              // array of flags toggled when the corresponding variable is required (e.g., in the histogram manager, in cuts, mixing handler, etc.)
+  static Bool_t fgUsedVars[kNVars];               // array of flags toggled when the corresponding variable is required (e.g., in the histogram manager, in cuts, mixing handler, etc.)
                                                  //   when a variable is used
-  static void SetVariableDependencies();       // toggle those variables on which other used variables might depend
+  static void SetVariableDependencies();  // toggle those variables on which other used variables might depend
   
 
   static Double_t DeltaPhi(Double_t phi1, Double_t phi2);  
-  static void GetThetaPhiCM(AliReducedBaseTrack* leg1, AliReducedBaseTrack* leg2,
-                            Float_t &thetaHE, Float_t &phiHE, 
-			    Float_t &thetaCS, Float_t &phiCS,
-			    Float_t leg1Mass=fgkParticleMass[kElectron], Float_t leg2Mass=fgkParticleMass[kElectron]);
+  static void GetThetaPhiCM(AliReducedBaseTrack* leg1, AliReducedBaseTrack* leg2, Float_t &thetaHE,
+                            Float_t &phiHE, Float_t &thetaCS, Float_t &phiCS,
+                            Float_t leg1Mass=fgkParticleMass[kElectron],
+                            Float_t leg2Mass=fgkParticleMass[kElectron]);
   static void GetLegMassAssumption(Int_t id, Float_t& m1, Float_t& m2);
-  static AliKFParticle BuildKFcandidate(AliReducedTrackInfo* track1, Float_t mh1, AliReducedTrackInfo* track2, Float_t mh2);
-  static AliKFParticle BuildKFvertex( AliReducedEventInfo * event );
-  static AliKFParticle BuildKFtriplet(AliReducedTrackInfo* track1, Float_t mh1, AliReducedTrackInfo* track2, Float_t mh2, AliReducedTrackInfo* track3, Float_t mh3, Double_t& doubletAssocDistance, Double_t& doubletAssocDeviation);
+  static AliKFParticle BuildKFcandidate(AliReducedTrackInfo* track1, Float_t mh1, AliReducedTrackInfo* track2,
+                                        Float_t mh2);
+  static AliKFParticle BuildKFvertex(AliReducedEventInfo* event);
+  static AliKFParticle BuildKFtriplet(AliReducedTrackInfo* track1, Float_t mh1, AliReducedTrackInfo* track2,
+                                      Float_t mh2, AliReducedTrackInfo* track3, Float_t mh3,
+                                      Double_t& doubletAssocDistance, Double_t& doubletAssocDeviation);
   
   static TH2F* fgTPCelectronCentroidMap;    // TPC electron centroid 2D map
   static TH2F* fgTPCelectronWidthMap;       // TPC electron width 2D map
@@ -950,24 +972,24 @@ class AliReducedVarManager : public TObject {
   static THnF* fgTPCpidCalibWidth[3];       // TPC calib width 4D map
   static THnI* fgTPCpidCalibStatus[3];      // TPC calib status 4D map
   static Variables fgTPCpidCalibVars[4];    // variables used for TPC pid 4D calibration
-  static TH1*      fgPairEffMap;                  // pair efficiency map
-  static Variables fgEffMapVarDependencyX;        // varX in the pair eff maps
-  static Variables fgEffMapVarDependencyY;        // varY in the pair eff maps
-  static Variables fgEffMapVarDependencyZ;        // varZ in the pair eff maps
-  static Variables fgEffMapVarDependencyXCorr;        // varX in the pair eff maps, used for correlation
-  static Variables fgEffMapVarDependencyYCorr;        // varY in the pair eff maps, used for correlation
-  static Variables fgEffMapVarDependencyZCorr;        // varZ in the pair eff maps, used for correlation
-  static TH1*      fgAssocHadronEffMap;               // assoc hadron efficiency map
-  static Variables fgAssocHadronEffMapVarDependencyX; // varX in assoc hadron eff map
-  static Variables fgAssocHadronEffMapVarDependencyY; // varY in assoc hadron eff map
-  static Variables fgAssocHadronEffMapVarDependencyZ; // varZ in assoc hadron eff map
+  static TH1*      fgPairEffMap;                 // pair efficiency map
+  static Variables fgEffMapVarDependencyX;       // varX in the pair eff maps
+  static Variables fgEffMapVarDependencyY;       // varY in the pair eff maps
+  static Variables fgEffMapVarDependencyZ;       // varZ in the pair eff maps
+  static Variables fgEffMapVarDependencyXCorr;         // varX in the pair eff maps, used for correlation
+  static Variables fgEffMapVarDependencyYCorr;         // varY in the pair eff maps, used for correlation
+  static Variables fgEffMapVarDependencyZCorr;         // varZ in the pair eff maps, used for correlation
+  static TH1*      fgAssocHadronEffMap;                // assoc hadron efficiency map
+  static Variables fgAssocHadronEffMapVarDependencyX;  // varX in assoc hadron eff map
+  static Variables fgAssocHadronEffMapVarDependencyY;  // varY in assoc hadron eff map
+  static Variables fgAssocHadronEffMapVarDependencyZ;  // varZ in assoc hadron eff map
   
-  static TH1F* fgRunTotalLuminosity;      // total luminosity, GRP/GRP/LHCData::GetLumiAliceSBDelivered()
-  static TH1F* fgRunTotalIntensity0;        // total intensity beam 1, GRP/GRP/LHCData::GetTotalIntensity(0)
-  static TH1F* fgRunTotalIntensity1;         // total intensity beam 2, GRP/GRP/LHCData::GetTotalIntensity(1)
+  static TH1F* fgRunTotalLuminosity;       // total luminosity, GRP/GRP/LHCData::GetLumiAliceSBDelivered()
+  static TH1F* fgRunTotalIntensity0;       // total intensity beam 1, GRP/GRP/LHCData::GetTotalIntensity(0)
+  static TH1F* fgRunTotalIntensity1;       // total intensity beam 2, GRP/GRP/LHCData::GetTotalIntensity(1)
   static TH1I* fgRunLHCFillNumber;         // LHC fill number, GRP/GRP/LHCData::GetFillNumber()
-  static TH1I* fgRunDipolePolarity;          // dipole magnet polarity, GRP/GRP/Data::GetDipolePolarity()
-  static TH1I* fgRunL3Polarity;                // L3 magnet polarity, GRP/GRP/Data::GetL3Polarity()
+  static TH1I* fgRunDipolePolarity;           // dipole magnet polarity, GRP/GRP/Data::GetDipolePolarity()
+  static TH1I* fgRunL3Polarity;               // L3 magnet polarity, GRP/GRP/Data::GetL3Polarity()
   static TH1I* fgRunTimeStart;                // run start time, GRP/GRP/Data::GetTimeStart()
   static TH1I* fgRunTimeEnd;                  // run stop time, GRP/GRP/Data::GetTimeEnd()
   static TFile* fgGRPfile;                    // file containing GRP information

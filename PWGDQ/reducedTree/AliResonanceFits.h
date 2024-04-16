@@ -179,13 +179,21 @@ public:
   void SetScaleSummedBkg(Bool_t option)          {fOptionScaleSummedBkg = option; fMatchingIsDone = kFALSE;}
   void SetDebugMode(Bool_t option)               {fOptionDebug=option; fMatchingIsDone = kFALSE;}
   void SetSignalFromMC(Bool_t option)            {fOptionSignalFromMC=option; fMatchingIsDone = kFALSE;}
+  void SetDoMeanPt(Bool_t option)                {fOptionMeanPt = option;}
+  void SetFitMeanPtAdditionalError(Bool_t option) {fFitMeanPtAdditionalErrors = option;}
+  void SetBkgFitOption(TString option)            {fBkgFitOption = option;}
+  void SetBkgFitFunctionCorr(TH1* hBkgCorr)       {fBkgFitFunction_corr = hBkgCorr;}
+  void SetAlphaHistogram(TH1* alpha)              {fAlpha = alpha;}
   
   // set various ranges
-  void SetMassFitRange(Double_t min, Double_t max) {fgMassFitRange[0] = min+1.0e-6; fgMassFitRange[1] = max-1.0e-6; fUserEnabledMassFitRange = kTRUE; fMatchingIsDone = kFALSE;}
-  void SetPtFitRange(Double_t min, Double_t max)   {fgPtFitRange[0] = min+1.0e-6; fgPtFitRange[1] = max-1.0e-6; fUserEnabledPtFitRange = kTRUE; fMatchingIsDone = kFALSE;}
+  void SetMassFitRange(Double_t min, Double_t max) {fgMassFitRange[0] = min+1.0e-6;
+    fgMassFitRange[1] = max-1.0e-6; fUserEnabledMassFitRange = kTRUE; fMatchingIsDone = kFALSE;}
+  void SetPtFitRange(Double_t min, Double_t max)   {fgPtFitRange[0] = min+1.0e-6; fgPtFitRange[1] = max-1.0e-6;
+    fUserEnabledPtFitRange = kTRUE; fMatchingIsDone = kFALSE;}
   void AddMassExclusionRange(Double_t min, Double_t max) {
     if(fgNMassExclusionRanges==10) return;        // maximum 10 mass exclusion ranges
-    fgMassExclusionRanges[fgNMassExclusionRanges][0] = min + 1.0e-6; fgMassExclusionRanges[fgNMassExclusionRanges][1] = max -1.0e-6;
+    fgMassExclusionRanges[fgNMassExclusionRanges][0] = min + 1.0e-6;
+    fgMassExclusionRanges[fgNMassExclusionRanges][1] = max -1.0e-6;
     fgNMassExclusionRanges++;
     fMatchingIsDone = kFALSE;
   }
@@ -205,7 +213,6 @@ public:
     if(fSignalFitFunc) delete fSignalFitFunc;
     fSignalFitFunc = (TF1*)fitFunc->Clone("SignalFitFunction");  
   }
-  void SetBkgFitOption(TString option){fBkgFitOption = option;}
   
   Bool_t Process();
   Double_t* ComputeOutputValues(Double_t minMass, Double_t maxMass, Double_t minPt=-1., Double_t maxPt=-1.);
@@ -221,11 +228,13 @@ public:
   TH1* GetSplusB() const {return (fMatchingIsDone ? fSplusB : 0x0);}
   TH1* GetBkg()    const {return (fMatchingIsDone ? fBkg : 0x0);}
   TH1* GetSignal() const {return (fMatchingIsDone ? fSig : 0x0);}
-  TH1* GetSoverB(Bool_t fromMCshape=kFALSE) const {return (fMatchingIsDone ? (fromMCshape ? fSoverBfromMCshape : fSoverB) : 0x0);}
+  TH1* GetSoverB(Bool_t fromMCshape=kFALSE) const {return (fMatchingIsDone ?
+                                                   (fromMCshape ? fSoverBfromMCshape : fSoverB) : 0x0);}
   TH1* GetSplusResidualBkg() const {return (fMatchingIsDone ? fSplusResidualBkg : 0x0);}
   TH1* GetBkgCombinatorial() const {return (fMatchingIsDone ? fBkgCombinatorial : 0x0);}
   TH1* GetResidualBkg() const {return (fMatchingIsDone ? fBkgResidual : 0x0);}
   TH1* GetSignalMC()    const {return (fMatchingIsDone ? fSignalMCshape : 0x0);}
+  TH1* GetAlpha()       const {return (fMatchingIsDone ? fAlpha : 0x0);}
   
   Int_t GetBkgMethod()        const {return fOptionBkgMethod;}
   Int_t GetScalingOption()    const {return fOptionScale;}
@@ -234,11 +243,11 @@ public:
   Double_t* GetMassFitRange() const {return fgMassFitRange;}
   Int_t     GetNMassExclusionRanges()        const {return fgNMassExclusionRanges;}
   Double_t* GetMassExclusionRange(Int_t i=0) const {return (i<fgNMassExclusionRanges ? fgMassExclusionRanges[i] : 0x0);}
-  const Double_t* GetFitValues() const {return fFitValues;}
-  TF1* GetResidualFitFunction()  const {return fResidualFitFunc;}
-  TF1* GetBkgFitFunction()    const {return fBkgFitFunction;}
-  TF1* GetGlobalFitFunction() const {return fGlobalFitFunction;}
-  Bool_t GetDebugMode()       const {return fOptionDebug;}
+  const Double_t* GetFitValues()  const {return fFitValues;}
+  TF1*   GetResidualFitFunction() const {return fResidualFitFunc;}
+  TF1*   GetBkgFitFunction()      const {return fBkgFitFunction;}
+  TF1*   GetGlobalFitFunction()   const {return fGlobalFitFunction;}
+  Bool_t GetDebugMode()           const {return fOptionDebug;}
   
 private:
   // User input data --------------------------------------------------------------------------------------------
@@ -262,24 +271,32 @@ private:
   Int_t fPtVariable;    // the transverse momentum variable among the fNVariables (defaults to -1 -> not set)
   
   // Temporary variables
-  Int_t fNLoopingVariables;     
-  Int_t fCurrentVariable;
-  Int_t fIter[kNMaxVariables];
+  Int_t  fNLoopingVariables;
+  Int_t  fCurrentVariable;
+  Int_t  fIter[kNMaxVariables];
   static TH1* fgTempSignal;  // pointer to temporary signal histogram used during fitting
   static TH1* fgTempBkg;     // pointer to temporary bkg histogram used during fitting
   
   // User options -----------------------------------------------------------------------------------------------
-  static Bool_t fgOptionUse2DMatching;  // FALSE (default): match inv.mass projections; TRUE: match (m,pt) projections
-  Int_t fOptionBkgMethod;           // either one of these: kBkgMixedEvent (default), kBkgLikeSign, kBkgFunction
-  static Int_t fgOptionMEMatching;  // either one of these: kMatchSEOS (default), kMatchSELS
-  Bool_t fOptionUseRfactorCorrection;  // if true apply R-factor correction; default: FALSE
-  Int_t fOptionScale;     // either one of these: kScaleEntries (default), kScaleWeightedAverage, kScaleFit
-  Int_t fOptionLSmethod;  // either one of these: kLSGeometricMean (default), kLSArithmeticMean (used for low stat situations)
-  Double_t fWeightedAveragePower;  // (default: 2.0) power of the inverse statistical error used as weights for the weighted average
-  Int_t fOptionMinuit;             // either kMinuitMethodChi2 (default) or kMinuitMethodLikelihood
-  static Bool_t fgOptionUseSignificantZero;  // if true, assume zero entries as significant and error of 1 during the chi2 calculation
-  Bool_t fOptionScaleSummedBkg;  // if true, run the matching procedure on the summed S+B and bkg (default: false)
+  static Bool_t fgOptionUse2DMatching;  // FALSE (default): match inv.mass projections;
+                                        // TRUE: match (m,pt) projections
+  Int_t fOptionBkgMethod;               // either one of these: kBkgMixedEvent (default), kBkgLikeSign,
+                                        //                      kBkgFunction
+  static Int_t fgOptionMEMatching;      // either one of these: kMatchSEOS (default), kMatchSELS
+  Bool_t fOptionUseRfactorCorrection;   // if true apply R-factor correction; default: FALSE
+  Int_t  fOptionScale;     // either one of these: kScaleEntries (default), kScaleWeightedAverage, kScaleFit
+  Int_t  fOptionLSmethod;  // either one of these: kLSGeometricMean (default),
+                           //                      kLSArithmeticMean (used for low stat situations)
+  Double_t fWeightedAveragePower;  // (default: 2.0) power of the inverse statistical error used as weights for
+                                   // the weighted average
+  Int_t         fOptionMinuit;     // either kMinuitMethodChi2 (default) or kMinuitMethodLikelihood
+  static Bool_t fgOptionUseSignificantZero;  // if true, assume zero entries as significant and error of 1
+                                             // during the chi2 calculation
+  Bool_t fOptionScaleSummedBkg;  // if true, run the matching procedure on the summed S+B and bkg
+                                 // (default is false)
   Bool_t fOptionDebug;           // if true, construct all possible distributions
+  Bool_t fOptionMeanPt;               // If true, we are doing mean-pt fit: the bkg is scaled by 1-alpha
+  Bool_t fFitMeanPtAdditionalErrors;  // Using additional errors from S/(S+B) when fitting mean pt
   
   Bool_t fOptionSignalFromMC;
   // Matching / fit ranges
@@ -292,12 +309,15 @@ private:
   Bool_t fUserEnabledPtFitRange;      // default: false, enabled when SetPtFitRange() is called
 //   static Double_t fgMassExclusionRange[2];       // mass exclusion range, used in matching / fitting
   static Double_t fgMassExclusionRanges[10][2];  // mass exclusion range, used in matching / fitting
-  static Int_t fgNMassExclusionRanges;           // number of mass exclusion ranges
+  static Int_t    fgNMassExclusionRanges;        // number of mass exclusion ranges
   
   // Utility data members
   TH1* fSplusB;  // total signal + bkg projection
   TH1* fBkg;     // background projection
   TH1* fSig;     // signal projection
+
+  static TH1* fAlpha;                // fAlpha=S/S+B from previous fit (used for fit of mean pt)
+  static TH1* fBkgFitFunction_corr;  // background fit function can be multiplied by a fit function
   
   TH1* fBkgLikeSign;
   TH1* fBkgLikeSignLeg1;
@@ -318,14 +338,15 @@ private:
   TH1* fSoverB;                // S/B projection
   TH1* fSoverBfromMCshape;     // S/B projection using the scaled MC shape for the signal
   static TH1* fSignalMCshape;  // MC truth signal shape
-  Double_t fFitValues[kNFitValues];  // array used to store information on the signal fit
-  Bool_t fMatchingIsDone;      // set to true if the matching procedure was succesfully run; false if the object is in any other state
+  Double_t    fFitValues[kNFitValues];  // array used to store information on the signal fit
+  Bool_t      fMatchingIsDone;          // set to true if the matching procedure was succesfully run;
+                                        // false if the object is in any other state
   
   TMinuit* fMinuitFitter;  // used if fit option is required
   ///////////////////////////////////////////////////
-  TF1* fResidualFitFunc;       // fit function used to fit the combinatorial bkg subtracted minv distribution
-  static TF1* fSignalFitFunc;  // fit function used to fit the combinatorial bkg subtracted minv distribution
-  TString fBkgFitOption;       // String used to define fit options for the background function
+  TF1*        fResidualFitFunc;  // fit function used to fit the combinatorial bkg subtracted minv distribution
+  static TF1* fSignalFitFunc;    // fit function used to fit the combinatorial bkg subtracted minv distribution
+  TString     fBkgFitOption;     // String used to define fit options for the background function
   
   ////////////////////////////////////////////////////
   
@@ -340,15 +361,17 @@ private:
   void ComputeWeightedScale(TH1* sig, TH1* bkg);
   void FitScale(TH1* sig, TH1* bkg, Bool_t fixScale=kFALSE);
   void ComputeScale(TH1* scaleHist, TH1* bkgHist);
-  static void Fcn(Int_t&, Double_t*, Double_t &f, Double_t *par, Int_t);
+  static void     Fcn(Int_t&, Double_t*, Double_t &f, Double_t *par, Int_t);
   static Double_t Chi2(TH1* sig, TH1* bkg, Double_t scale, Double_t scaleError=0.0);
   void FitInvMass();
   void FitResidualBkg();
   static Double_t GlobalFitFunction(Double_t *x, Double_t* par);
+  static Double_t GlobalFitFunctionMeanPt(Double_t *x, Double_t* par);
   static Double_t GlobalFitFunctionCrystalBall(Double_t *x, Double_t* par);
+  static void     Chi2MeanPt(Int_t &npar, Double_t* gin, Double_t &f, Double_t* par, Int_t iflag);
   
   
-  ClassDef(AliResonanceFits, 6);
+  ClassDef(AliResonanceFits, 7);
 };
 
 #endif
