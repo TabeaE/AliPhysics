@@ -472,7 +472,7 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
 
   EVENT* event = (EVENT*)baseEvent;
   
-  values[kMCNch] = event->Nch10();
+  values[kMCNch]  = event->Nch10();
   values[kVtxXMC] = (abs(event->VertexMC(0))<90. ? event->VertexMC(0) : values[kVtxX]);
   values[kVtxYMC] = (abs(event->VertexMC(1))<90. ? event->VertexMC(1) : values[kVtxY]);
   values[kVtxZMC] = (abs(event->VertexMC(2))<90. ? event->VertexMC(2) : values[kVtxZ]);
@@ -2248,6 +2248,7 @@ void AliReducedVarManager::FillPairInfo(BASETRACK* t1, BASETRACK* t2, Int_t type
      TRACK* ti2=(TRACK*)t2;
      AliKFParticle pairKF = BuildKFcandidate(ti1,m1,ti2,m2);
      Double_t errPseudoProperTime2;
+     Double_t errPseudoProperTimeXYZ2;
      EVENT* eventInfo = (EVENT*)fgEvent;
      AliKFParticle primVtx = BuildKFvertex(eventInfo);
      if (pairKF.GetNDF())
@@ -2255,21 +2256,37 @@ void AliReducedVarManager::FillPairInfo(BASETRACK* t1, BASETRACK* t2, Int_t type
      else
         values[kPairChi2prNDOF] = -999.;
 
-     if(fgUsedVars[kPseudoProperDecayTime]) 
-        values[kPseudoProperDecayTime] = pairKF.GetPseudoProperDecayTime(primVtx, fgkPairMass[type], &errPseudoProperTime2);
+     // Changed by Gauthier
+     if(fgUsedVars[kPseudoProperDecayTime]) {
+        values[kPseudoProperDecayTime] = pairKF.GetPseudoProperDecayTime(primVtx, fgkPairMass[type],
+                                                                         &errPseudoProperTime2);
+        //values[kPseudoProperDecayTimeXYZ] = pairKF.GetPseudoProperDecayTimeXYZ(primVtx, fgkPairMass[type], &errPseudoProperTimeXYZ2);
+        if(errPseudoProperTime2 >= 0.)
+          values[kPseudoProperTimeError] = TMath::Sqrt(errPseudoProperTime2);
+        if(errPseudoProperTimeXYZ2 >= 0.)
+          values[kPseudoProperTimeXYZError] = TMath::Sqrt(errPseudoProperTimeXYZ2);
+     }
 
      Double_t deltaPrimSecVtx[3]; //vector between the reference point and the V0 vertex
      deltaPrimSecVtx[0] = pairKF.X() - primVtx.X();
      deltaPrimSecVtx[1] = pairKF.Y() - primVtx.Y();
      deltaPrimSecVtx[2] = pairKF.Z() - primVtx.Z();
-     Double_t deltaPrimSecVtx2 = deltaPrimSecVtx[0]*deltaPrimSecVtx[0] + deltaPrimSecVtx[1]*deltaPrimSecVtx[1] + deltaPrimSecVtx[2]*deltaPrimSecVtx[2];
+     Double_t deltaPrimSecVtx2 = deltaPrimSecVtx[0]*deltaPrimSecVtx[0] + deltaPrimSecVtx[1]*deltaPrimSecVtx[1] +
+                                 deltaPrimSecVtx[2]*deltaPrimSecVtx[2];
+     Double_t deltaPrimSecVtxXY2 = deltaPrimSecVtx[0]*deltaPrimSecVtx[0] +
+                                   deltaPrimSecVtx[1]*deltaPrimSecVtx[1];
      Double_t momV02    = p.Px()*p.Px() + p.Py()*p.Py() + p.Pz()*p.Pz();
      Double_t test = p.Px()*p.Px() + p.Py()*p.Py();
 
      //values[kPairLxy] = ( deltaPrimSecVtx[0]*p.Px() + deltaPrimSecVtx[1]*p.Py() )/p.Pt();
      values[kPairLxy] = ( deltaPrimSecVtx[0]*p.Px() + deltaPrimSecVtx[1]*p.Py() )/TMath::Sqrt(test);
      values[kPairLxyz] = ( deltaPrimSecVtx[0]*p.Px() + deltaPrimSecVtx[1]*p.Py() + deltaPrimSecVtx[2]*p.Pz())/TMath::Sqrt(momV02);
-     values[kPairCosPointingAngle] = values[kPairLxyz] / TMath::Sqrt(deltaPrimSecVtx2);
+     values[kPairCosPointingAngle]   = values[kPairLxyz] / TMath::Sqrt(deltaPrimSecVtx2);
+     values[kPairCosPointingAngleXY] = values[kPairLxy]  / TMath::Sqrt(deltaPrimSecVtxXY2);
+     pairKF.TransportToParticle(primVtx);
+     values[kPairDCAXY] = -sin(p.Phi())*pairKF.X() + cos(p.Phi())*pairKF.Y() + sin(p.Phi())*primVtx.X()
+                          -cos(p.Phi())*primVtx.Y();
+     values[kPairDCAZ]  = pairKF.Z() - primVtx.Z();
   }
 
   if ((fgUsedVars[kPairLegEMCALmatchedEnergy] || fgUsedVars[kPairLegEMCALmatchedEnergy+1]) &&
@@ -2608,7 +2625,6 @@ void AliReducedVarManager::FillPairInfoME(BASETRACK* t1, BASETRACK* t2, Int_t ty
     values[kOneOverPairEffSq] = oneOverPairEff*oneOverPairEff;
   }
 
-//   cout << "test" << endl; 
 
   // Bmeson -> Jpsi + K: t1 is Jpsi candidate, t2 is associated track/kaon candidate 
   if(fgUsedVars[kMassJpsiK]) {
@@ -2630,8 +2646,6 @@ void AliReducedVarManager::FillPairInfoME(BASETRACK* t1, BASETRACK* t2, Int_t ty
   float lQl1 = TMath::Abs(p.Px()*t1->Px() + p.Py()*t1->Py() + p.Pz()*t1->Pz()) / momb;
   float lQl2 = TMath::Abs(p.Px()*t2->Px() + p.Py()*t2->Py() + p.Pz()*t2->Pz()) / momb;
   values[kArmAlpha] = (lQl1 - lQl2) / (lQl1 + lQl2); 
-
-//   cout << momb << " " << lQl1 << " " << lQl2 << endl; 
   
   FillPairMEflow(t1, t2, values);
 }
@@ -4523,6 +4537,35 @@ Float_t AliReducedVarManager::GetPairEffWeightFactor(Float_t Cent, Float_t P1, F
   }
 
   return pairEff;
+}
+
+
+//____________________________________________________________________________________
+TString AliReducedVarManager::GetPeriodFromRunNumber(Int_t runNo) {
+  // Hard coded, TODO
+
+  TString period = "";
+
+  if(runNo>=265309 && runNo<=265525) period = "16q";
+  if(runNo>=267163 && runNo<=267166) period = "16t";
+
+  if(strcmp(period,"") == 0)
+    std::cout << "WARNING: DID NOT FIND PERIOD FOR RUN " << runNo << std::endl;
+  return period;
+}
+
+//____________________________________________________________________________________
+Float_t AliReducedVarManager::GetFieldFromRunNumber(Int_t runNo) {
+  // Hard coded, TODO
+  // Field in kGauss (=0.1 T)
+
+  TString period = GetPeriodFromRunNumber(runNo);
+
+  if(strcmp(period,"16q") == 0) return 5.;
+  if(strcmp(period,"16t") == 0) return 5.;
+
+  std::cout << "WARNING: DID NOT FIND MAGNETIC FIELD FOR PERIOD " << period << std::endl;
+  return 0.;
 }
 
 

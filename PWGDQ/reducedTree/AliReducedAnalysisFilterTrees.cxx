@@ -870,11 +870,12 @@ void AliReducedAnalysisFilterTrees::RunSameEventPairing() {
       if(!compatibilityMask) continue;
       AliReducedVarManager::FillPairInfo(leg1Track, leg2Track, fCandidateType, fValues);
       
+      Bool_t isJpsiFromB = kFALSE;
       if(fOptionRunOverMC) {
         Bool_t isJpsi = abs(leg1Track->MCPdg(0))==11 && abs(leg2Track->MCPdg(0))==11 &&
                         leg1Track->MCLabel(1)==leg2Track->MCLabel(1) && leg1Track->MCPdg(1)==443;
-        Bool_t isJpsiFromB = isJpsi && ((abs(leg1Track->MCPdg(2))>500  && abs(leg1Track->MCPdg(2))<599) ||
-                                        (abs(leg1Track->MCPdg(2))>5000 && abs(leg1Track->MCPdg(2))<5999));
+        isJpsiFromB = isJpsi && ((abs(leg1Track->MCPdg(2))>500  && abs(leg1Track->MCPdg(2))<599) ||
+                                 (abs(leg1Track->MCPdg(2))>5000 && abs(leg1Track->MCPdg(2))<5999));
         fValues[AliReducedVarManager::kPairMCMap] = isJpsi+2*isJpsiFromB;  // TODO implement with fMCMap|=(UShort_t(1)<<i
       }
 
@@ -889,6 +890,21 @@ void AliReducedAnalysisFilterTrees::RunSameEventPairing() {
 
       TClonesArray& pairs = *(fFilteredEvent->fCandidates);
       AliReducedPairInfo* candidatePair = new(pairs[fFilteredEvent->fNV0candidates[1]]) AliReducedPairInfo();
+
+      if(fOptionRunOverMC && isJpsiFromB) {
+        AliReducedBaseTrack* jpsimother = FindTrackByLabel(leg1Track->MCLabel(2), kTRUE);
+        if(jpsimother) {
+          candidatePair->PtMother (jpsimother->Pt());
+          candidatePair->PhiMother(jpsimother->Phi());
+          candidatePair->EtaMother(jpsimother->Eta());
+        }
+      }
+      else {
+        candidatePair->PtMother (0.);
+        candidatePair->PhiMother(0.);
+        candidatePair->EtaMother(0.);
+      }
+
       candidatePair->SetLegIds(leg1Track->TrackId(), leg2Track->TrackId());
       candidatePair->SetFlags(compatibilityMask);
       SetupPair(candidatePair, fValues);
@@ -1416,6 +1432,35 @@ void AliReducedAnalysisFilterTrees::SetupPair(AliReducedPairInfo* pair, Float_t*
   pair->SetPointingAngle (values[AliReducedVarManager::kPairPointingAngle]);
   pair->SetChisquare     (values[AliReducedVarManager::kPairChisquare]);
   pair->SetMCMap         (values[AliReducedVarManager::kPairMCMap]);
+
+  pair->SetPairTopology(values[AliReducedVarManager::kPairLxy],  0);
+  pair->SetPairTopology(values[AliReducedVarManager::kPairLxyz], 1);
+  //pair->SetPairTopology(values[AliReducedVarManager::kPairLxy], 2);
+  //pair->SetPairTopology(values[AliReducedVarManager::kPairLxy], 3);
+  pair->SetPairTopology(values[AliReducedVarManager::kPseudoProperDecayTime],    4);
+  pair->SetPairTopology(values[AliReducedVarManager::kPseudoProperDecayTimeXYZ], 5);
+  if(values[AliReducedVarManager::kPseudoProperTimeError] > 0.) {
+    pair->SetPairTopology(values[AliReducedVarManager::kPseudoProperDecayTime] /
+                          values[AliReducedVarManager::kPseudoProperTimeError], 6);
+  }
+  if(values[AliReducedVarManager::kPseudoProperTimeXYZError] > 0.) {
+    pair->SetPairTopology(values[AliReducedVarManager::kPseudoProperDecayTimeXYZ] /
+                          values[AliReducedVarManager::kPseudoProperTimeXYZError], 7);
+  }
+  pair->SetPairTopology(values[AliReducedVarManager::kPairCosPointingAngle],   8);
+  pair->SetPairTopology(values[AliReducedVarManager::kPairCosPointingAngleXY], 9);
+  pair->SetPairTopology(values[AliReducedVarManager::kPairDCAXY], 10);
+  pair->SetPairTopology(values[AliReducedVarManager::kPairDCAZ],  11);
+
+  if(fComputeMult) {
+    FillMultiplicity(kTRUE);
+    // Fill mult regions relative to jpsi
+    for(Int_t icut=0; icut<GetNMeasMultCuts(); icut++) {
+      pair->SetNTracksRegions(fValues[AliReducedVarManager::kNGlobalTracksToward+icut],     0, icut);
+      pair->SetNTracksRegions(fValues[AliReducedVarManager::kNGlobalTracksTransverse+icut], 1, icut);
+      pair->SetNTracksRegions(fValues[AliReducedVarManager::kNGlobalTracksAway+icut],       2, icut);
+    }
+  }
 }
 
 

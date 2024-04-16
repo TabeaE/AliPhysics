@@ -92,9 +92,9 @@ public:
   void AddCandidatePairCut                  (AliReducedInfoCut* cut)  {fCandidatePairCuts.Add(cut);}
   void SetRunCandidatePrefilter             (Bool_t option=kTRUE) {fRunCandidatePrefilter = option;}
   void SetRunCandidatePrefilterOnSameCharge (Bool_t option=kTRUE) {fRunCandidatePrefilterOnSameCharge=option;}
-  void SetRunEventMixing                    (Bool_t option)       {fOptionRunMixing = option;};
+  void SetRunEventMixing                    (Bool_t option)       {fOptionRunMixing     = option;};
   void SetRunEventMixingMult                (Bool_t option)       {fOptionRunMixingMult = option;};
-  void SetComputeMult                       (Bool_t option)       {fComputeMult = option;};
+  void SetComputeMult                       (Bool_t option)       {fComputeMult         = option;};
   void AddMeasuredMultTrackCut              (AliReducedInfoCut* cut) {fMeasuredMultTrackCuts.Add(cut);}
   void AddTrueMultTrackCut                  (AliReducedInfoCut* cut) {fTrueMultTrackCuts.Add(cut);}
   void AddCandidateLeg1PrefilterCut         (AliReducedInfoCut* cut) {fLeg1PrefilterCuts.Add(cut);}

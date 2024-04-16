@@ -518,12 +518,12 @@ void AliAnalysisTaskReducedTreeMaker::UserExec(Option_t *option)
  // cout << "***************************** AliAnalysisTaskReducedTreeMaker::UserExec()  1" << endl;
 
   // Was event selected ?
-  UInt_t isPhysSel = AliVEvent::kAny;
-  UInt_t isPhysAndTrigSel = AliVEvent::kAny;
-  UChar_t trdtrgtype=0;
-  UInt_t emcaltrgtype=0;
+  UInt_t  isPhysSel        = AliVEvent::kAny;
+  UInt_t  isPhysAndTrigSel = AliVEvent::kAny;
+  UChar_t trdtrgtype   = 0;
+  UInt_t  emcaltrgtype = 0;
 
-  if((isESD && inputHandler->GetEventSelection()) || isAOD){
+  if((isESD && inputHandler->GetEventSelection()) || isAOD) {
     isPhysSel = inputHandler->IsEventSelected();
     isPhysAndTrigSel = isPhysSel & fTriggerMask;
 
@@ -574,10 +574,11 @@ void AliAnalysisTaskReducedTreeMaker::UserExec(Option_t *option)
   if(!centrality && !multSelection) AliInfo("No centrality object found");
   for(Int_t i=0; i<nCentEstimators; ++i)
     percentileEstimators[i] = (isOldCent ? centrality->GetCentralityPercentile(Form("%s",estimatorNames[i])) :
-                                           multSelection->GetMultiplicityPercentile(Form("%s",estimatorNames[i])));
+                               multSelection->GetMultiplicityPercentile(Form("%s",estimatorNames[i])));
 
   // event statistics before any selection
-  FillStatisticsHistograms(Bool_t(isPhysSel), isPhysSel, trdtrgtype,  emcaltrgtype, 0., percentileEstimators,  nCentEstimators);
+  FillStatisticsHistograms(Bool_t(isPhysSel), isPhysSel, trdtrgtype,  emcaltrgtype, 0., percentileEstimators,
+                           nCentEstimators);
 
   // rejected due to physics selection
   if(fSelectPhysics && !isPhysSel) {
@@ -594,39 +595,47 @@ void AliAnalysisTaskReducedTreeMaker::UserExec(Option_t *option)
   }
 
   // event statistics after physics selection
-  // NOTE: if physics selection was not applied (as requested by user) then we can still have events with PS not fulfilled
-  FillStatisticsHistograms(Bool_t(isPhysSel), isPhysSel, trdtrgtype,  emcaltrgtype, 1., percentileEstimators,  nCentEstimators);
+  // NOTE: if physics selection was not applied (as requested by user) then we can still have events with PS not
+  //       fulfilled
+  FillStatisticsHistograms(Bool_t(isPhysSel), isPhysSel, trdtrgtype,  emcaltrgtype, 1., percentileEstimators,
+                           nCentEstimators);
 
   // event statistics after physics selection and trigger selection
   if(isPhysAndTrigSel)
-    FillStatisticsHistograms(kTRUE, isPhysSel, trdtrgtype,  emcaltrgtype, 3., percentileEstimators,  nCentEstimators);
+    FillStatisticsHistograms(kTRUE, isPhysSel, trdtrgtype,  emcaltrgtype, 3., percentileEstimators,
+                             nCentEstimators);
   else {
     // reject events which do not fulfill the requested trigger mask
-    FillStatisticsHistograms(Bool_t(isPhysSel), isPhysSel, trdtrgtype,  emcaltrgtype, 4., percentileEstimators,  nCentEstimators);
+    FillStatisticsHistograms(Bool_t(isPhysSel), isPhysSel, trdtrgtype,  emcaltrgtype, 4., percentileEstimators,
+                             nCentEstimators);
     PostData(3, fEventsList);
     return;
   }
 
   // rejected by pileup selection
   if(fRejectPileup && InputEvent()->IsPileupFromSPD(3,0.8,3.,2.,5.)) {
-    FillStatisticsHistograms(Bool_t(isPhysSel), isPhysSel, trdtrgtype,  emcaltrgtype, 6., percentileEstimators,  nCentEstimators);
+    FillStatisticsHistograms(Bool_t(isPhysSel), isPhysSel, trdtrgtype,  emcaltrgtype, 6., percentileEstimators,
+                             nCentEstimators);
     PostData(3, fEventsList);
     return;
   }
   else {
     // accepted pileup selection
-    FillStatisticsHistograms(Bool_t(isPhysSel), isPhysSel, trdtrgtype,  emcaltrgtype, 5., percentileEstimators,  nCentEstimators);
+    FillStatisticsHistograms(Bool_t(isPhysSel), isPhysSel, trdtrgtype,  emcaltrgtype, 5., percentileEstimators,
+                             nCentEstimators);
   }
 
   // user defined event filter
   if(fEventFilter && !fEventFilter->IsSelected(InputEvent())) {
     // event statistics for events failing selection cuts
-    FillStatisticsHistograms(Bool_t(isPhysSel), isPhysSel, trdtrgtype,  emcaltrgtype, 8., percentileEstimators,  nCentEstimators);
+    FillStatisticsHistograms(Bool_t(isPhysSel), isPhysSel, trdtrgtype,  emcaltrgtype, 8., percentileEstimators,
+                             nCentEstimators);
     PostData(3, fEventsList);
     return;
   }
   else {
-    FillStatisticsHistograms(Bool_t(isPhysSel), isPhysSel, trdtrgtype,  emcaltrgtype, 7., percentileEstimators,  nCentEstimators);
+    FillStatisticsHistograms(Bool_t(isPhysSel), isPhysSel, trdtrgtype,  emcaltrgtype, 7., percentileEstimators,
+                             nCentEstimators);
   }
 
   // Apply the time range cut needed to reject events with bad TPC pid in some chambers
@@ -635,7 +644,8 @@ void AliAnalysisTaskReducedTreeMaker::UserExec(Option_t *option)
   if(fTimeRangeCut.CutEvent(InputEvent())) {
      if(fTimeRangeReject) {
         // if rejecting the bad events from writing, fill the appropriate event stats bins and return
-        FillStatisticsHistograms(Bool_t(isPhysSel), isPhysSel, trdtrgtype,  emcaltrgtype, 10., percentileEstimators,  nCentEstimators);
+        FillStatisticsHistograms(Bool_t(isPhysSel), isPhysSel, trdtrgtype,  emcaltrgtype, 10.,
+                                 percentileEstimators, nCentEstimators);
         PostData(3, fEventsList);
         return;
      }

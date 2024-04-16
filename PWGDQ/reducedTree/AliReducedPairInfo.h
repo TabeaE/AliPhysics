@@ -37,6 +37,7 @@ class AliReducedPairInfo : public AliReducedBaseTrack {
     kBToJpsiK,               // B+/-         -> J/psi K+/-
     kNMaxCandidateTypes
   };
+
   static const Char_t* fgkDecayChannelNames[kNMaxCandidateTypes][4];
   
   AliReducedPairInfo();
@@ -54,6 +55,9 @@ class AliReducedPairInfo : public AliReducedBaseTrack {
   void SetPointingAngle (Float_t pa)                   {fPointingAngle = pa;}
   void SetChisquare     (Float_t chi2)                 {fChisquare = chi2;}
   void SetMCMap         (UShort_t MCMap)               {fMCMap = MCMap;}
+  void SetPairTopology  (Float_t x, Int_t i)           {fPairTopology[i] = x;}
+  void SetNTracksRegions(Int_t n, Int_t iRegion, Int_t icut=0) {if(n>=0 && iRegion>=0 && iRegion<=2)
+                                                                fNTracksRegions[8*iRegion+icut] = n;}
   
   // getters
   Char_t   CandidateId()     const {return fCandidateId;}
@@ -75,6 +79,9 @@ class AliReducedPairInfo : public AliReducedBaseTrack {
   Bool_t   IsPureV0Gamma()   const {return (fQualityFlags&(UInt_t(1)<<4));}
   UInt_t   QualityFlags()    const {return fQualityFlags;}
   Int_t    MCMap()           const {return fMCMap;}
+  Float_t  PairTopology(Int_t i)                       const {return (i>=0 && i<12) ? fPairTopology[i] : -999.;}
+  Int_t    NTracksRegions(Int_t iRegion, Int_t icut=0) const {return ((iRegion>=0 && iRegion<=2) ?
+                                                              fNTracksRegions[8*iRegion+icut] : 0);}
   
  protected:
   Char_t   fCandidateId;    // candidate type (K0s, Lambda, J/psi, phi, etc)
@@ -82,17 +89,26 @@ class AliReducedPairInfo : public AliReducedBaseTrack {
   Char_t   fPairTypeSPD;    // 2 both / 1 one / 0 none of the two legs has an hit in the first layers of the SPD;
   UShort_t fLegIds[2];      // leg ids
   Float_t  fMass[4];        // invariant mass for pairs (3 extra mass values for other V0 pid assumptions)
-                            // idx=0 -> K0s assumption; idx=1 -> Lambda; idx=2 -> anti-Lambda; idx=3 -> gamma conversion
-  Float_t  fLxy;            // pseudo-proper decay length (pair candidates) or radius of the secondary vertex for V0s
-  Float_t  fPsProper;       // pseudo-proper decay length (pair candidates) or radius of the secondary vertex for V0s
+                            // idx=0 -> K0s assumption; idx=1 -> Lambda; idx=2 -> anti-Lambda;
+                            // idx=3 -> gamma conversion
+  Float_t  fLxy;            // ps-proper decay length (pair candidates) or radius of the secondary vertex for V0s
+  Float_t  fPsProper;       // ps-proper decay length (pair candidates) or radius of the secondary vertex for V0s
   Float_t  fPointingAngle;  // angle between the pair momentum vector and the secondary vertex position vector
   Float_t  fChisquare;      // chi2 for the legs matching
-  UShort_t fMCMap;          // Bit 0: is it real MC Jpsi (are both electrons from the same Jpsi?) // Bit 1: is this Jpsi from B?
+  UShort_t fMCMap;          // Bit 0: is it real MC Jpsi (are both electrons from the same Jpsi?)
+                            // Bit 1: is this Jpsi from B?
+  Float_t  fPairTopology[12];  // All pair topological variables in one array: Lxy, Lxyz, LxyReduced,
+                               // LxyzReduced, PsProperxy, PsProperxyz, PsProperxyRed, PsProperxyzRed,
+                               // cosThetaxy, cosThetaxyz, dcaxy, dcaz (reduced=divided by error)
+  Int_t fNTracksRegions[24];  // Multiplicity in regions with respect to the pair
+                              // (3 regions, 8 track cuts possible)
+                              // 0 to 7 is toward, 8 to 15 is transverse, 16 to 23 is aw
   
   AliReducedPairInfo& operator = (const AliReducedPairInfo &c);
 
-  ClassDef(AliReducedPairInfo, 3);
+  ClassDef(AliReducedPairInfo, 4);
 };
+
 
 //_______________________________________________________________________________
 inline Float_t AliReducedPairInfo::Energy() const 
@@ -100,7 +116,7 @@ inline Float_t AliReducedPairInfo::Energy() const
   //
   // Return the energy
   //
-  Float_t mass=fMass[0];
+  Float_t mass = fMass[0];
   switch (fCandidateId) {
     case kK0sToPiPi:
       mass = fMass[0];

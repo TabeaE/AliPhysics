@@ -186,10 +186,10 @@ Bool_t AliAnalysisUtils::IsPileUpMV(AliVEvent *event)
     if (vtPlp->GetNContributors() < fMinPlpContribMV) continue;
     if (vtPlp->GetChi2perNDF() > fMaxPlpChi2MV) continue;
     if(fCheckPlpFromDifferentBCMV)
-      {
-	Int_t bcPlp = vtPlp->GetBC();
-	if (bcPlp!=AliVTrack::kTOFBCNA && TMath::Abs(bcPlp-bcPrim)>2) return kTRUE; // pile-up from other BC
-      }
+    {
+      Int_t bcPlp = vtPlp->GetBC();
+      if (bcPlp!=AliVTrack::kTOFBCNA && TMath::Abs(bcPlp-bcPrim)>2) return kTRUE; // pile-up from other BC
+    }
     //
     Double_t wDst = GetWDist(vtPrm,vtPlp);
     if (wDst<fMinWDistMV) continue;
