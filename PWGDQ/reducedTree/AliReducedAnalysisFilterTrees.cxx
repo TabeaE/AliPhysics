@@ -291,14 +291,29 @@ void AliReducedAnalysisFilterTrees::Process() {
 
   if(isEventUnbiased) {
     // For multiplicity unfolding
-    for(Int_t cutMode=0; cutMode<2*nGlobalEstimators; cutMode=cutMode+2) {
-      // For MC, only the smearing matrix is important (supposed independent of the trigger)
-      fHistosManager->FillHistClass(Form("pPb_5TeV_Data_cutMode_%d", cutMode+100), fValues);
-      fHistosManager->FillHistClass(Form("pPb_5TeV_MC_cutMode_%d",   cutMode+100), fValues);
-      
+    // For MC, only the smearing matrix is important (supposed to be independent of the trigger)
+    // => HM filled even if no HM triggered events
+    for(Int_t cutMode=0; cutMode<4*nGlobalEstimators; cutMode=cutMode+4) {
+      // MB triggered
+      if(fValues[AliReducedVarManager::kINT7Triggered]) {
+        fHistosManager->FillHistClass(Form("pPb_5TeV_Data_cutMode_%d",cutMode+100), fValues);
+        fHistosManager->FillHistClass(Form("pPb_5TeV_MC_cutMode_%d",  cutMode+100), fValues);
+      }
+      // HM triggered
+      if(kFALSE) {
+//       if(fValues[AliReducedVarManager::kHighMultV0Triggered] || GetRunOverMC()) {
+        fHistosManager->FillHistClass(Form("pPb_5TeV_Data_cutMode_%d",cutMode+101), fValues);
+        fHistosManager->FillHistClass(Form("pPb_5TeV_MC_cutMode_%d",  cutMode+101), fValues);
+      }
+      // Inclusive (MB or HM triggered)
+      if(kFALSE) {
+//       if(fValues[AliReducedVarManager::kINT7Triggered] || fValues[AliReducedVarManager::kHighMultV0Triggered]) {
+        fHistosManager->FillHistClass(Form("pPb_5TeV_Data_cutMode_%d",cutMode+102), fValues);
+        fHistosManager->FillHistClass(Form("pPb_5TeV_MC_cutMode_%d",  cutMode+102), fValues);
+      }
       // Fill for each jpsi counts
       for(Int_t j=0; j<fValues[AliReducedVarManager::kMCNJpsi]; j++)
-        fHistosManager->FillHistClass(Form("pPb_5TeV_MC_cutMode_%d", cutMode+101), fValues);
+        fHistosManager->FillHistClass(Form("pPb_5TeV_MC_cutMode_%d",cutMode+103), fValues);
     }
 
     // TODO
@@ -1791,8 +1806,8 @@ void AliReducedAnalysisFilterTrees::LoopOverMCTracks(Int_t trackArray /*=1*/) {
     UInt_t daughtersDecisions = daughter1Decisions & CheckDaughterMCTruth(daughter2);
     if(!daughtersDecisions) continue;
     for(Int_t iCut=0; iCut<fJpsiMotherMCcuts.GetEntries(); ++iCut) {
-      // Fill histogram for MCTruth jpsi after selection on daughters
-      // reset track variables and fill info. Necessary because of FillPairInfo of detected daughters in loop
+      // Fill histogram for MCTruth jpsi after selection on daughters reset track variables and fill info.
+      // Necessary because of FillPairInfo of detected daughters in loop
       for(Int_t i=AliReducedVarManager::kNEventVars; i<AliReducedVarManager::kNTrackVars; ++i)
         fValues[i] = -9999.;
       AliReducedVarManager::FillMCTruthInfo(mother, fValues, daughter1, daughter2);
@@ -1813,11 +1828,16 @@ void AliReducedAnalysisFilterTrees::LoopOverMCTracks(Int_t trackArray /*=1*/) {
       if(!IsCandidateLegSelected(daughter2Det)) continue;
 
       AliReducedVarManager::FillPairInfo(daughter1Det, daughter2Det, fCandidateType, fValues);
-      fHistosManager->FillHistClass(Form("PureMCTRUTH_DetectedDaughters_%s",
-                                         fJpsiMotherMCcuts.At(iCut)->GetName()), fValues);
-      for(Int_t jcut=0; jcut<GetNMeasMultCuts(); jcut++)
-        fHistosManager->FillHistClass(Form("JpsiPtMultCorrelMeas_%s_%s", GetMeasMultcutName(jcut),
-                                           fJpsiMotherMCcuts.At(iCut)->GetName()), fValues);
+      for(int icutleg=0; icutleg<GetNCandidateLegCuts(); icutleg++) {
+        if(!daughter1Det->TestFlag(icutleg) || !daughter2Det->TestFlag(icutleg)) continue;
+        fHistosManager->FillHistClass(Form("PureMCTRUTH_DetectedDaughters_%s_%s",
+                                           fJpsiMotherMCcuts.At(iCut)->GetName(),
+                                           GetCandidateLegCutName(icutleg,1)), fValues);
+        for(Int_t jcut=0; jcut<GetNMeasMultCuts(); jcut++)
+          fHistosManager->FillHistClass(Form("JpsiPtMultCorrelMeas_%s_%s_%s",GetMeasMultcutName(jcut),
+                                             fJpsiMotherMCcuts.At(iCut)->GetName(),
+                                             GetCandidateLegCutName(icutleg,1)), fValues);
+      }  // end loop over fLeg1Cuts
     }  // end loop over fJpsiMotherMCcuts
   }  // end loop over tracks
 
