@@ -34,18 +34,21 @@ class AliReducedBaseTrack : public TObject {
     Float_t Rapidity(Float_t massAssumption) const;
     Float_t Theta()                          const;
     Float_t Energy(Float_t massAssumption)   const {return TMath::Sqrt(massAssumption*massAssumption+P()*P());}
-    Bool_t  TestFlag(UShort_t iflag)         const {return ((iflag<(8*sizeof(ULong_t))) ?
-                                                            fFlags&(ULong_t(1)<<iflag) : kFALSE);}
-    ULong_t GetFlags()                       const {return fFlags;}
     Int_t   Charge()                         const {return fCharge;}
     Bool_t  IsCartesian()                    const {return fIsCartesian;}
 
+    Bool_t  TestFlag(UShort_t iflag)         const {return ((iflag<(8*sizeof(ULong_t))) ?
+                                                            fFlags&(ULong_t(1)<<iflag) : kFALSE);}
+    Bool_t  TestMultFlag(UShort_t iflag)     const {return ((iflag<(8*sizeof(UInt_t))) ?
+                                                            fMultFlags&(UInt_t(1)<<iflag) : kFALSE);}
+    Bool_t  TestQualityFlag(UShort_t iflag)  const {return ((iflag<(8*sizeof(ULong_t))) ?
+                                                            fQualityFlags&(ULong_t(1)<<iflag) : kFALSE);}
+    ULong_t GetFlags()                       const {return fFlags;}
+    UInt_t  GetMultFlags()                   const {return fMultFlags;}
     ULong_t GetQualityFlags()                const {return fQualityFlags;}
     UInt_t  GetFirstHalfOfQualityFlags()     const;
     UInt_t  GetSecondHalfOfQualityFlags()    const;
     Bool_t  UsedForQvector()                 const {return fQualityFlags&(UShort_t(1)<<0);}
-    Bool_t  TestQualityFlag(UShort_t iflag)  const {return ((iflag<(8*sizeof(ULong_t))) ?
-                                                    fQualityFlags&(ULong_t(1)<<iflag) : kFALSE);}
     Bool_t  IsMCTruth()                      const {return (fIsMCTruth ? kTRUE : kFALSE);}
     //Bool_t HasMCTruthInfo()                const {return (fMCFlags ? kTRUE : kFALSE);}
     Bool_t  IsTRDmatch()                     const {return fQualityFlags&(ULong_t(1)<<26);}
@@ -84,13 +87,21 @@ class AliReducedBaseTrack : public TObject {
     void   EtaMother(Float_t eta) {fP[5] = eta;}
     void   PtPhiEta(Float_t pt, Float_t phi, Float_t eta) {fP[0]=pt; fP[1]=phi; fP[2]=eta; fIsCartesian=kFALSE;}
     void   Charge(Int_t ch)        {fCharge = ch;}
-    void   ResetFlags()            {fFlags = 0;}
-    void   SetFlags(ULong_t flags) {fFlags = flags;}
-    Bool_t SetFlag(UShort_t iflag) {if(iflag >= 8*sizeof(ULong_t)) return kFALSE; fFlags|=(ULong_t(1)<<iflag);
-                                    return kTRUE;}
-    Bool_t UnsetFlag(UShort_t iflag)        {if(iflag >= 8*sizeof(ULong_t)) return kFALSE;
-                                             if(TestFlag(iflag)) fFlags^=(ULong_t(1)<<iflag);
-                                             return kTRUE;}
+
+    void   ResetFlags()              {fFlags = 0;}
+    void   SetFlags(ULong_t flags)   {fFlags = flags;}
+    Bool_t SetFlag(UShort_t iflag)   {if(iflag >= 8*sizeof(ULong_t)) return kFALSE; fFlags|=(ULong_t(1)<<iflag);
+                                      return kTRUE;}
+    Bool_t UnsetFlag(UShort_t iflag) {if(iflag >= 8*sizeof(ULong_t)) return kFALSE;
+                                      if(TestFlag(iflag)) fFlags^=(ULong_t(1)<<iflag); return kTRUE;}
+
+    void   ResetMultFlags()              {fMultFlags = 0;}
+    void   SetMultFlags(UInt_t flags)    {fMultFlags = flags;}
+    Bool_t SetMultFlag(UShort_t iflag)   {if(iflag>=8*sizeof(UInt_t)) return kFALSE;
+                                          fMultFlags|=(UInt_t(1)<<iflag); return kTRUE;}
+    Bool_t UnsetMultFlag(UShort_t iflag) {if(iflag>=8*sizeof(UInt_t)) return kFALSE;
+                                          if(TestMultFlag(iflag)) fMultFlags^=(UInt_t(1)<<iflag); return kTRUE;}
+
     void   ResetQualityFlags()              {fQualityFlags=0;}
     void   SetQualityFlags(ULong_t flags)   {fQualityFlags=flags;}
     Bool_t SetQualityFlag(UShort_t iflag)   {if(iflag>=8*sizeof(ULong_t)) return kFALSE;
@@ -98,13 +109,13 @@ class AliReducedBaseTrack : public TObject {
     Bool_t UnsetQualityFlag(UShort_t iflag) {if(iflag>=8*sizeof(ULong_t)) return kFALSE;
                                              if(TestQualityFlag(iflag)) fQualityFlags^=(ULong_t(1)<<iflag);
                                              return kTRUE;}
-    void   SetMCFlags(UInt_t flags)         {fMCFlags = flags;}
-    Bool_t SetMCFlag(UShort_t iflag)        {if(iflag>=8*sizeof(UInt_t)) return kFALSE;
-                                             fMCFlags |= (UInt_t(1)<<iflag); return kTRUE;}
-    Bool_t UnsetMCFlag(UShort_t iflag)      {if(iflag>=8*sizeof(UInt_t)) return kFALSE;
-                                             if(TestMCFlag(iflag)) fMCFlags ^= (UInt_t(1)<<iflag);
-                                             return kTRUE;}
-    void   SetIsMCTruth(Bool_t flag=kTRUE)  {fIsMCTruth = flag;}
+
+    void   SetMCFlags(UInt_t flags)        {fMCFlags = flags;}
+    Bool_t SetMCFlag(UShort_t iflag)       {if(iflag>=8*sizeof(UInt_t)) return kFALSE;
+                                            fMCFlags |= (UInt_t(1)<<iflag); return kTRUE;}
+    Bool_t UnsetMCFlag(UShort_t iflag)     {if(iflag>=8*sizeof(UInt_t)) return kFALSE;
+                                            if(TestMCFlag(iflag)) fMCFlags ^= (UInt_t(1)<<iflag); return kTRUE;}
+    void   SetIsMCTruth(Bool_t flag=kTRUE) {fIsMCTruth = flag;}
    
   protected:
     UShort_t fTrackId;       // track id
@@ -112,6 +123,7 @@ class AliReducedBaseTrack : public TObject {
     Bool_t   fIsCartesian;   // if false then the 3-momentum vector is in spherical coordinates (pt,phi,eta)
     Char_t   fCharge;        // electrical charge
     ULong_t  fFlags;         // flags reserved for various operations
+    UInt_t   fMultFlags;     // flags reserved for multiplicity estimators
     ULong_t  fQualityFlags;  // BIT0 toggled if track used for TPC event plane
                                               // BIT1 toggled if track belongs to a gamma conversion
                                               // BIT2 toggled if track belongs to a K0s

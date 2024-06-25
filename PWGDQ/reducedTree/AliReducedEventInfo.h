@@ -208,7 +208,7 @@ class AliReducedEventInfo : public AliReducedBaseEvent {
   Int_t     fSPDnSingle;            // number of clusters in SPD layer 1, not associated to a tracklet on SPD layer 2
   Int_t     fNtracksPerTrackingFlag[32];  // number of tracks for each tracking status bit                
   Int_t     fNtracksTPCout;          // number of kTPCout tracks in ESDs
-  Int_t     fNch[8];                // number of MCtruth charged particles in different eta regions
+  Int_t     fNch[8];                // number of MCtruth charged particles in different eta regions (for MC with pileup this includes pileup tracks)
   Float_t   fVZEROMult[64];         // VZERO multiplicity in all 64 channels
   Float_t   fVZEROTotalMult[2];    // Total VZERO multiplicity
   Float_t   fZDCnEnergy[10];         // neutron ZDC energy in all 8 channels

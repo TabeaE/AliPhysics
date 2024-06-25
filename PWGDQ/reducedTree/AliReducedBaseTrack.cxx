@@ -18,6 +18,7 @@ AliReducedBaseTrack::AliReducedBaseTrack() :
   fIsCartesian(kFALSE),
   fCharge(0),
   fFlags(0),
+  fMultFlags(0),
   fQualityFlags(0),
   fMCFlags(0),
   fIsMCTruth(kFALSE)
@@ -36,6 +37,7 @@ AliReducedBaseTrack::AliReducedBaseTrack(const AliReducedBaseTrack &c) :
   fIsCartesian(c.IsCartesian()),
   fCharge(c.Charge()),
   fFlags(c.GetFlags()),
+  fMultFlags(c.GetMultFlags()),
   fQualityFlags(c.GetQualityFlags()),
   fMCFlags(c.GetMCFlags()),
   fIsMCTruth(c.IsMCTruth())
