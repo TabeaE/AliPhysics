@@ -354,7 +354,7 @@ class AliReducedVarManager : public TObject {
     kSPDnTracklets10EtaVtxCorr = kSPDntrackletsEtaBin + 32,
     kNGlobalTracks,                     // Filled only when event is accepted, else -999
                                         // Max. 8 possible cutsets
-    kNGlobalTracksToward     = kNGlobalTracks + kNMaxCutsGlobalTracks,   //regions to Jpsi/randomphi and regions to leading pt
+    kNGlobalTracksToward     = kNGlobalTracks + kNMaxCutsGlobalTracks,  // regions to Jpsi/randomphi and regions to leading pt
     kNGlobalTracksTransverse = kNGlobalTracksToward     + 2*kNMaxCutsGlobalTracks,
     kNGlobalTracksAway       = kNGlobalTracksTransverse + 2*kNMaxCutsGlobalTracks,
     kVZEROTotalMult = kNGlobalTracksAway + 2*kNMaxCutsGlobalTracks,
@@ -368,9 +368,9 @@ class AliReducedVarManager : public TObject {
     kCorrectedMultiplicity,
     kNMultiplicityEstimators = kCorrectedMultiplicity - kMultiplicity,
     kSPDFiredChips = kCorrectedMultiplicity + kNMultiplicityEstimators * ( 1 + kNCorrections * kNReferenceMultiplicities * kNSmearingMethods),  // SPD fired chips in first and second layer
-    kITSnClusters=kSPDFiredChips+2,        // number of ITS clusters in each layer
-    kSPDnSingleClusters=kITSnClusters+6,   // number of clusters in SPD layer 1 not mached to tracklets from layer 2
-    kSDDandSSDclusters,                    // number of clusters in the SDD and SSD layers
+    kITSnClusters = kSPDFiredChips+2,       // number of ITS clusters in each layer
+    kSPDnSingleClusters = kITSnClusters+6,  // number of clusters in SPD layer 1 not mached to tracklets from layer 2
+    kSDDandSSDclusters,                     // number of clusters in the SDD and SSD layers
     kEventMixingId,     // Id of the event mixing category 
     // VZERO event plane related variables
     kVZEROCurrentChannel,         // current VZERO channel
@@ -488,20 +488,20 @@ class AliReducedVarManager : public TObject {
     kEMCEGATriggered,
     kEMCEGAHighTriggered,
     kEtaBinForSPDtracklets,
-    kMCNch,                                  // number of primary charged particles in the MC, in |eta|<1
+    kMCNch,                             // number of primary charged particles in the MC, in |eta|<1
     kMCNch09,                           // number of primary charged particles in the MC, in |eta|<0.9, 
                                         // filled only if MC event is accepted (nch09>0, zvtx<10)
                                         // Second variable is the same only if MC event is triggered and accepted, else -999
                                         // Third variable is the same only if MC event is triggered and accepted (nch09>0, zvtx<10),
                                         // and the reconstructed event is accepted, else -999
     kMCNch09Toward=kMCNch09+3,
-    kMCNch09Away=kMCNch09Toward+2,       //regions to Jpsi/randomphi and regions to leading pt (leading pt chosen with cutset 1)
+    kMCNch09Away=kMCNch09Toward+2,       // regions to Jpsi/randomphi and regions to leading pt (leading pt chosen with cutset 1)
     kMCNch09Transverse=kMCNch09Away+2,
-    kMCNchNegSide=kMCNch09Transverse+2,                     // number of primary charged particles in the MC, in -1<eta<0
-    kMCNchPosSide,                     // number of primary charged particles in the MC, in 0<eta<1
-    kMCNchSPDacc,                       // number of primary charged particles in the MC, in |eta|<1 but limited to the SPD acceptance
-    kMCNJpsi,                           // number of Jpsi in the event in |y|<0.9
-    kPhiJpsiMCTruth,                    // keep it to define MCTruth regions
+    kMCNchNegSide=kMCNch09Transverse+2,  // number of primary charged particles in the MC, in -1<eta<0
+    kMCNchPosSide,                       // number of primary charged particles in the MC, in 0<eta<1
+    kMCNchSPDacc,                        // number of primary charged particles in the MC, in |eta|<1 but limited to the SPD acceptance
+    kMCNJpsi,                            // number of Jpsi in the event in |y|<0.9
+    kPhiJpsiMCTruth,                     // keep it to define MCTruth regions
     kDiffNchSPDtrklts,
     kDiffNchSPDaccSPDtrklts,
     kRelDiffNchSPDtrklts,
