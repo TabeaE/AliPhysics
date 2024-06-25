@@ -2179,11 +2179,12 @@ void AliReducedVarManager::FillPairInfo(BASETRACK* t1, BASETRACK* t2, Int_t type
   else                            p.PairType(2);
   values[kPairType] = p.PairType();
   values[kPairTypeSPD] = -1.;
-  if(t1->IsA()==TRACK::Class() && t2->IsA()==TRACK::Class() ){
-   TRACK* ti1=(TRACK*)t1; TRACK* ti2=(TRACK*)t2;
+  if(t1->IsA()==TRACK::Class() && t2->IsA()==TRACK::Class()) {
+   TRACK* ti1 = (TRACK*)t1;
+   TRACK* ti2 = (TRACK*)t2;
    values[kPairTypeSPD] = ti1->ITSLayerHit(0)+ti2->ITSLayerHit(0);
   }
-  values[kCandidateId] = type;
+  values[kCandidateId]   = type;
   values[kPairChisquare] = -999.;
   
   Float_t m1 = 0.0; Float_t m2 = 0.0;
@@ -2195,7 +2196,8 @@ void AliReducedVarManager::FillPairInfo(BASETRACK* t1, BASETRACK* t2, Int_t type
                          t1->Px()*t2->Px() - t1->Py()*t2->Py() - t1->Pz()*t2->Pz());
     if(values[kMass]<0.0) {
       cout << "FillPairInfo(track, track, type, values): Warning: Very small squared mass found. "
-           << "   Could be negative due to resolution of Float_t so it will be set to a small positive value." << endl; 
+           << "   Could be negative due to resolution of Float_t so it will be set to a small positive value."
+           << endl;
       cout << "   mass2: " << values[kMass] << endl;
       cout << "p1(p,x,y,z): " << t1->P() << ", " << t1->Px() << ", " << t1->Py() << ", " << t1->Pz() << endl;
       cout << "p2(p,x,y,z): " << t2->P() << ", " << t2->Px() << ", " << t2->Py() << ", " << t2->Pz() << endl;
@@ -2208,8 +2210,8 @@ void AliReducedVarManager::FillPairInfo(BASETRACK* t1, BASETRACK* t2, Int_t type
 
   if(fgUsedVars[kRap])    values[kRap]    = p.Rapidity();
   if(fgUsedVars[kRapAbs]) values[kRapAbs] = TMath::Abs(p.Rapidity());
-  values[kPairLegPt+0] = t1->Pt();
-  values[kPairLegPt+1] = t2->Pt();
+  values[kPairLegPt+0]  = t1->Pt();
+  values[kPairLegPt+1]  = t2->Pt();
   values[kPairLegPtSum] = t1->Pt()+t2->Pt();
   
   values[kMassV0]   = -999.0;
@@ -2227,47 +2229,51 @@ void AliReducedVarManager::FillPairInfo(BASETRACK* t1, BASETRACK* t2, Int_t type
     GetThetaPhiCM(t1, t2, values[kPairThetaHE], values[kPairPhiHE], values[kPairThetaCS], values[kPairPhiCS]);
   
   if(fgUsedVars[kDMA] && (t1->IsA()==TRACK::Class()) && (t2->IsA()==TRACK::Class())) {
-     TRACK* ti1=(TRACK*)t1; TRACK* ti2=(TRACK*)t2;
-     values[kDMA]=TMath::Sqrt((ti1->HelixX()-ti2->HelixX())*(ti1->HelixX()-ti2->HelixX())+(ti1->HelixY()-ti2->HelixY())*(ti1->HelixY()-ti2->HelixY()))-ti1->HelixR()-ti2->HelixR();   
+     TRACK* ti1 = (TRACK*)t1;
+     TRACK* ti2 = (TRACK*)t2;
+     values[kDMA] = TMath::Sqrt((ti1->HelixX()-ti2->HelixX())*(ti1->HelixX()-ti2->HelixX())+
+                                (ti1->HelixY()-ti2->HelixY())*(ti1->HelixY()-ti2->HelixY())) -
+                                ti1->HelixR()-ti2->HelixR();
   }
   
-  if((fgUsedVars[kPairLegTPCchi2] || fgUsedVars[kPairLegTPCchi2+1]) && (t1->IsA()==TRACK::Class()) && (t2->IsA()==TRACK::Class())) {
-     TRACK* ti1=(TRACK*)t1; TRACK* ti2=(TRACK*)t2;
-     values[kPairLegTPCchi2] = ti1->TPCchi2();
+  if((fgUsedVars[kPairLegTPCchi2] || fgUsedVars[kPairLegTPCchi2+1]) && (t1->IsA()==TRACK::Class()) &&
+     (t2->IsA()==TRACK::Class())) {
+     TRACK* ti1 = (TRACK*)t1;
+     TRACK* ti2 = (TRACK*)t2;
+     values[kPairLegTPCchi2]   = ti1->TPCchi2();
      values[kPairLegTPCchi2+1] = ti2->TPCchi2();
   }
-  if((fgUsedVars[kPairLegITSchi2] || fgUsedVars[kPairLegITSchi2+1]) && (t1->IsA()==TRACK::Class()) && (t2->IsA()==TRACK::Class())) {
-     TRACK* ti1=(TRACK*)t1; TRACK* ti2=(TRACK*)t2;
-    values[kPairLegITSchi2] = ti1->ITSchi2();
+  if((fgUsedVars[kPairLegITSchi2] || fgUsedVars[kPairLegITSchi2+1]) && (t1->IsA()==TRACK::Class()) &&
+     (t2->IsA()==TRACK::Class())) {
+    TRACK* ti1 = (TRACK*)t1;
+    TRACK* ti2 = (TRACK*)t2;
+    values[kPairLegITSchi2]   = ti1->ITSchi2();
     values[kPairLegITSchi2+1] = ti2->ITSchi2();
   }
   
-  if( (t1->IsA()==TRACK::Class()) && (t2->IsA()==TRACK::Class()) && 
-     (fgEvent->IsA()==EVENT::Class())) {
-     TRACK* ti1=(TRACK*)t1; 
-     TRACK* ti2=(TRACK*)t2;
+  if((t1->IsA()==TRACK::Class()) && (t2->IsA()==TRACK::Class()) && (fgEvent->IsA()==EVENT::Class())) {
+     TRACK* ti1 = (TRACK*)t1;
+     TRACK* ti2 = (TRACK*)t2;
      AliKFParticle pairKF = BuildKFcandidate(ti1,m1,ti2,m2);
      Double_t errPseudoProperTime2;
      Double_t errPseudoProperTimeXYZ2;
      EVENT* eventInfo = (EVENT*)fgEvent;
      AliKFParticle primVtx = BuildKFvertex(eventInfo);
-     if (pairKF.GetNDF())
-        values[kPairChi2prNDOF] = pairKF.GetChi2()/pairKF.GetNDF();
-     else
-        values[kPairChi2prNDOF] = -999.;
+     if(pairKF.GetNDF()) values[kPairChi2prNDOF] = pairKF.GetChi2()/pairKF.GetNDF();
+     else                values[kPairChi2prNDOF] = -999.;
 
      // Changed by Gauthier
      if(fgUsedVars[kPseudoProperDecayTime]) {
         values[kPseudoProperDecayTime] = pairKF.GetPseudoProperDecayTime(primVtx, fgkPairMass[type],
-                                                                         &errPseudoProperTime2);
+                                                                          &errPseudoProperTime2);
         //values[kPseudoProperDecayTimeXYZ] = pairKF.GetPseudoProperDecayTimeXYZ(primVtx, fgkPairMass[type], &errPseudoProperTimeXYZ2);
         if(errPseudoProperTime2 >= 0.)
-          values[kPseudoProperTimeError] = TMath::Sqrt(errPseudoProperTime2);
+          values[kPseudoProperDecayTimeError] = TMath::Sqrt(errPseudoProperTime2);
         if(errPseudoProperTimeXYZ2 >= 0.)
-          values[kPseudoProperTimeXYZError] = TMath::Sqrt(errPseudoProperTimeXYZ2);
+          values[kPseudoProperDecayTimeXYZError] = TMath::Sqrt(errPseudoProperTimeXYZ2);
      }
 
-     Double_t deltaPrimSecVtx[3]; //vector between the reference point and the V0 vertex
+     Double_t deltaPrimSecVtx[3];  // vector between the reference point and the V0 vertex
      deltaPrimSecVtx[0] = pairKF.X() - primVtx.X();
      deltaPrimSecVtx[1] = pairKF.Y() - primVtx.Y();
      deltaPrimSecVtx[2] = pairKF.Z() - primVtx.Z();
@@ -2275,17 +2281,18 @@ void AliReducedVarManager::FillPairInfo(BASETRACK* t1, BASETRACK* t2, Int_t type
                                  deltaPrimSecVtx[2]*deltaPrimSecVtx[2];
      Double_t deltaPrimSecVtxXY2 = deltaPrimSecVtx[0]*deltaPrimSecVtx[0] +
                                    deltaPrimSecVtx[1]*deltaPrimSecVtx[1];
-     Double_t momV02    = p.Px()*p.Px() + p.Py()*p.Py() + p.Pz()*p.Pz();
-     Double_t test = p.Px()*p.Px() + p.Py()*p.Py();
+     Double_t momV02 = p.Px()*p.Px() + p.Py()*p.Py() + p.Pz()*p.Pz();
+     Double_t test   = p.Px()*p.Px() + p.Py()*p.Py();
 
      //values[kPairLxy] = ( deltaPrimSecVtx[0]*p.Px() + deltaPrimSecVtx[1]*p.Py() )/p.Pt();
-     values[kPairLxy] = ( deltaPrimSecVtx[0]*p.Px() + deltaPrimSecVtx[1]*p.Py() )/TMath::Sqrt(test);
-     values[kPairLxyz] = ( deltaPrimSecVtx[0]*p.Px() + deltaPrimSecVtx[1]*p.Py() + deltaPrimSecVtx[2]*p.Pz())/TMath::Sqrt(momV02);
+     values[kPairLxy]  = (deltaPrimSecVtx[0]*p.Px() + deltaPrimSecVtx[1]*p.Py()) / TMath::Sqrt(test);
+     values[kPairLxyz] = (deltaPrimSecVtx[0]*p.Px() + deltaPrimSecVtx[1]*p.Py() + deltaPrimSecVtx[2]*p.Pz()) /
+                         TMath::Sqrt(momV02);
      values[kPairCosPointingAngle]   = values[kPairLxyz] / TMath::Sqrt(deltaPrimSecVtx2);
      values[kPairCosPointingAngleXY] = values[kPairLxy]  / TMath::Sqrt(deltaPrimSecVtxXY2);
      pairKF.TransportToParticle(primVtx);
-     values[kPairDCAXY] = -sin(p.Phi())*pairKF.X() + cos(p.Phi())*pairKF.Y() + sin(p.Phi())*primVtx.X()
-                          -cos(p.Phi())*primVtx.Y();
+     values[kPairDCAXY] = - sin(p.Phi())*pairKF.X() + cos(p.Phi())*pairKF.Y() + sin(p.Phi())*primVtx.X()
+                          - cos(p.Phi())*primVtx.Y();
      values[kPairDCAZ]  = pairKF.Z() - primVtx.Z();
   }
 
@@ -2306,63 +2313,73 @@ void AliReducedVarManager::FillPairInfo(BASETRACK* t1, BASETRACK* t2, Int_t type
      
      PAIR pMC;
      if(pinfo1 && pinfo2 && !pinfo1->IsMCTruth() && !pinfo2->IsMCTruth())
-        pMC.PxPyPz(pinfo1->MCmom(0)+pinfo2->MCmom(0), pinfo1->MCmom(1)+pinfo2->MCmom(1), pinfo1->MCmom(2)+pinfo2->MCmom(2));
+        pMC.PxPyPz(pinfo1->MCmom(0)+pinfo2->MCmom(0), pinfo1->MCmom(1)+pinfo2->MCmom(1),
+                   pinfo1->MCmom(2)+pinfo2->MCmom(2));
      else
         pMC.PxPyPz(t1->Px()+t2->Px(), t1->Py()+t2->Py(), t1->Pz()+t2->Pz());
      pMC.CandidateId(type);
 
      if(fgUsedVars[kPtMC]) values[kPtMC] = pMC.Pt();
-     if(fgUsedVars[kPMC]) values[kPMC] = pMC.P();
+     if(fgUsedVars[kPMC])  values[kPMC]  = pMC.P();
      values[kPxMC] = pMC.Px();
      values[kPyMC] = pMC.Py();
      values[kPzMC] = pMC.Pz();
-     values[kPt_weight]=0.0;
-     if(fgUsedVars[kPt_weight]) values[kPt_weight] =  CalculateWeightFactor(values[kPtMC],values[kCentVZERO]);
+     values[kPt_weight] = 0.0;
+     if(fgUsedVars[kPt_weight]) values[kPt_weight] = CalculateWeightFactor(values[kPtMC],values[kCentVZERO]);
 
-     if(fgUsedVars[kPairEff_weight]){
-       if(pinfo1 && pinfo2 && !pinfo1->IsMCTruth() && !pinfo2->IsMCTruth()){
-         if(fgUsePinForLegEffPropagation == kTRUE){
-           values[kPairEffDown_weight] = GetPairEffWeightFactor(values[kCentVZERO], pinfo1->Pin(), pinfo2->Pin(), pinfo1->Eta(), pinfo2->Eta(), 0);
-           values[kPairEff_weight] = GetPairEffWeightFactor(values[kCentVZERO], pinfo1->Pin(), pinfo2->Pin(), pinfo1->Eta(), pinfo2->Eta(), 1);
-           values[kPairEffUp_weight] = GetPairEffWeightFactor(values[kCentVZERO], pinfo1->Pin(), pinfo2->Pin(), pinfo1->Eta(), pinfo2->Eta(), 2);
-         }else{
-           values[kPairEffDown_weight] = GetPairEffWeightFactor(values[kCentVZERO], pinfo1->P(), pinfo2->P(), pinfo1->Eta(), pinfo2->Eta(), 0);
-           values[kPairEff_weight] = GetPairEffWeightFactor(values[kCentVZERO], pinfo1->P(), pinfo2->P(), pinfo1->Eta(), pinfo2->Eta(), 1);
-           values[kPairEffUp_weight] = GetPairEffWeightFactor(values[kCentVZERO], pinfo1->P(), pinfo2->P(), pinfo1->Eta(), pinfo2->Eta(), 2);
+     if(fgUsedVars[kPairEff_weight]) {
+       if(pinfo1 && pinfo2 && !pinfo1->IsMCTruth() && !pinfo2->IsMCTruth()) {
+         if(fgUsePinForLegEffPropagation == kTRUE) {
+           values[kPairEffDown_weight] = GetPairEffWeightFactor(values[kCentVZERO], pinfo1->Pin(),
+                                                                pinfo2->Pin(), pinfo1->Eta(), pinfo2->Eta(), 0);
+           values[kPairEff_weight]     = GetPairEffWeightFactor(values[kCentVZERO], pinfo1->Pin(),
+                                                                pinfo2->Pin(), pinfo1->Eta(), pinfo2->Eta(), 1);
+           values[kPairEffUp_weight]   = GetPairEffWeightFactor(values[kCentVZERO], pinfo1->Pin(),
+                                                                pinfo2->Pin(), pinfo1->Eta(), pinfo2->Eta(), 2);
          }
-       }else{
-         values[kPairEffDown_weight]=0.;
-         values[kPairEff_weight]=0.;
-         values[kPairEffUp_weight]=0.;
+         else {
+           values[kPairEffDown_weight] = GetPairEffWeightFactor(values[kCentVZERO], pinfo1->P(), pinfo2->P(),
+                                                                pinfo1->Eta(), pinfo2->Eta(), 0);
+           values[kPairEff_weight]     = GetPairEffWeightFactor(values[kCentVZERO], pinfo1->P(), pinfo2->P(),
+                                                                pinfo1->Eta(), pinfo2->Eta(), 1);
+           values[kPairEffUp_weight]   = GetPairEffWeightFactor(values[kCentVZERO], pinfo1->P(), pinfo2->P(),
+                                                                pinfo1->Eta(), pinfo2->Eta(), 2);
+         }
+       }
+       else {
+         values[kPairEffDown_weight] = 0.;
+         values[kPairEff_weight]     = 0.;
+         values[kPairEffUp_weight]   = 0.;
        }
      }
 
      if(fgUsedVars[kPtTimesPairEff_weight]){
        values[kPtTimesPairEffDown_weight] = values[kPt_weight]*values[kPairEffDown_weight];
-       values[kPtTimesPairEff_weight] = values[kPt_weight]*values[kPairEff_weight];
-       values[kPtTimesPairEffUp_weight] = values[kPt_weight]*values[kPairEffUp_weight];
+       values[kPtTimesPairEff_weight]     = values[kPt_weight]*values[kPairEff_weight];
+       values[kPtTimesPairEffUp_weight]   = values[kPt_weight]*values[kPairEffUp_weight];
      }
  
      if(fgUsedVars[kThetaMC]) values[kThetaMC] = pMC.Theta();
-     if(fgUsedVars[kEtaMC]) values[kEtaMC] = pMC.Eta();
-     if(fgUsedVars[kPhiMC]) values[kPhiMC] = pMC.Phi();
+     if(fgUsedVars[kEtaMC])   values[kEtaMC]   = pMC.Eta();
+     if(fgUsedVars[kPhiMC])   values[kPhiMC]   = pMC.Phi();
      if(fgUsedVars[kMassMC]) {
         if(pinfo1 && pinfo2 && !pinfo1->IsMCTruth() && !pinfo2->IsMCTruth())
-           values[kMassMC] = m1*m1+m2*m2 + 
-              2.0*(TMath::Sqrt(m1*m1+pinfo1->PMC()*pinfo1->PMC())*TMath::Sqrt(m2*m2+pinfo2->PMC()*pinfo2->PMC()) - 
+           values[kMassMC] = m1*m1+m2*m2 +
+              2.0*(TMath::Sqrt(m1*m1+pinfo1->PMC()*pinfo1->PMC())*TMath::Sqrt(m2*m2+pinfo2->PMC()*pinfo2->PMC()) -
               pinfo1->MCmom(0)*pinfo2->MCmom(0) - pinfo1->MCmom(1)*pinfo2->MCmom(1) - pinfo1->MCmom(2)*pinfo2->MCmom(2));
          else
-            values[kMassMC] = m1*m1+m2*m2 + 
+            values[kMassMC] = m1*m1+m2*m2 +
                2.0*(TMath::Sqrt(m1*m1+t1->P()*t1->P())*TMath::Sqrt(m2*m2+t2->P()*t2->P()) - 
                t1->Px()*t2->Px() - t1->Py()*t2->Py() - t1->Pz()*t2->Pz());
          if(values[kMassMC]<0.0) {
             cout << "FillPairInfo(track, track, type, values): Warning: Very small squared mass found. "
-            << "   Could be negative due to resolution of Float_t so it will be set to a small positive value." << endl; 
+            << "   Could be negative due to resolution of Float_t so it will be set to a small positive value."
+            << endl;
             cout << "   massMC2: " << values[kMassMC] << endl;
             values[kMassMC] = 0.0;
          }
          else
-         values[kMassMC] = TMath::Sqrt(values[kMassMC]);
+           values[kMassMC] = TMath::Sqrt(values[kMassMC]);
      }
      
      // TODO: think about whether to use the PDG mass or the calculated mass from the legs for rapidity
@@ -2490,17 +2507,25 @@ void AliReducedVarManager::FillPairInfo(BASETRACK* t1, BASETRACK* t2, Int_t type
     values[kPairOpeningAngle] = v1.Angle(v2);
   }
   
-  if(  t1->IsA()==TRACK::Class() && t2->IsA()==TRACK::Class()     ) {
-    TRACK* ti1=(TRACK*)t1;
-    TRACK* ti2=(TRACK*)t2;
+  if(t1->IsA()==TRACK::Class() && t2->IsA()==TRACK::Class()) {
+    TRACK* ti1 = (TRACK*)t1;
+    TRACK* ti2 = (TRACK*)t2;
 
-    if( fgUsedVars[kPairDca]   ) values[kPairDca]   = TMath::Sqrt(ti1->DCAxy() * ti1->DCAxy() + ti2->DCAxy() * ti2->DCAxy() + ti1->DCAz() * ti1->DCAz() + ti2->DCAz() * ti2->DCAz());
-    if( fgUsedVars[kPairDcaXY] ) values[kPairDcaXY] = TMath::Sqrt( ti1->DCAxy() * ti1->DCAxy() + ti2->DCAxy() * ti2->DCAxy() );
-    if( fgUsedVars[kPairDcaZ]  ) values[kPairDcaZ]  = TMath::Sqrt(ti1->DCAz() * ti1->DCAz() + ti2->DCAz() * ti2->DCAz() );
+    if(fgUsedVars[kPairDca])
+      values[kPairDca]   = TMath::Sqrt(ti1->DCAxy()*ti1->DCAxy() + ti2->DCAxy()*ti2->DCAxy() +
+                                       ti1->DCAz()*ti1->DCAz()   + ti2->DCAz()*ti2->DCAz());
+    if(fgUsedVars[kPairDcaXY])
+      values[kPairDcaXY] = TMath::Sqrt(ti1->DCAxy()*ti1->DCAxy() + ti2->DCAxy()*ti2->DCAxy() );
+    if(fgUsedVars[kPairDcaZ])
+      values[kPairDcaZ]  = TMath::Sqrt(ti1->DCAz()*ti1->DCAz()   + ti2->DCAz()*ti2->DCAz() );
 
-    if( fgUsedVars[kPairDcaSqrt]   ) values[kPairDcaSqrt]   = TMath::Power(ti1->DCAxy() * ti1->DCAxy() + ti2->DCAxy() * ti2->DCAxy() + ti1->DCAz() * ti1->DCAz() + ti2->DCAz() * ti2->DCAz(), 0.25);
-    if( fgUsedVars[kPairDcaXYSqrt] ) values[kPairDcaXYSqrt] = TMath::Power( ti1->DCAxy() * ti1->DCAxy() + ti2->DCAxy() * ti2->DCAxy(), 0.25);
-    if( fgUsedVars[kPairDcaZSqrt]  ) values[kPairDcaZSqrt]  = TMath::Power(ti1->DCAz() * ti1->DCAz() + ti2->DCAz() * ti2->DCAz(), 0.25);
+    if(fgUsedVars[kPairDcaSqrt])
+      values[kPairDcaSqrt]   = TMath::Power(ti1->DCAxy()*ti1->DCAxy() + ti2->DCAxy()*ti2->DCAxy() +
+                                            ti1->DCAz()*ti1->DCAz()   + ti2->DCAz()*ti2->DCAz(), 0.25);
+    if(fgUsedVars[kPairDcaXYSqrt])
+      values[kPairDcaXYSqrt] = TMath::Power(ti1->DCAxy()*ti1->DCAxy() + ti2->DCAxy()*ti2->DCAxy(), 0.25);
+    if(fgUsedVars[kPairDcaZSqrt])
+      values[kPairDcaZSqrt]  = TMath::Power(ti1->DCAz()*ti1->DCAz()   + ti2->DCAz()*ti2->DCAz(), 0.25);
 
     if( fgUsedVars[kOpAngDcaPtCorr] ) {
       Float_t a = -1.56316e-03;
@@ -3835,56 +3860,71 @@ void AliReducedVarManager::SetDefaultVarNames() {
     fgVariableNames[kCosNPhi+iHarmonic] = Form("cos(%d#varphi)",iHarmonic+1); fgVariableUnits[kCosNPhi+iHarmonic] = "";
     fgVariableNames[kSinNPhi+iHarmonic] = Form("sin(%d#varphi)",iHarmonic+1); fgVariableUnits[kSinNPhi+iHarmonic] = "";
   }
-  fgVariableNames[kPtSquared]     = "p_{T}^{2}";     fgVariableUnits[kPtSquared]     = "GeV^{2}/c^{2}";
-  fgVariableNames[kOneOverSqrtPt] = "1/sqrt(p_{T})"; fgVariableUnits[kOneOverSqrtPt] = "GeV^{-1/2}";
-  fgVariableNames[kMass]      = "m";         fgVariableUnits[kMass]        = "GeV/c^{2}";
-  fgVariableNames[kMassMC]      = "m^{MC}";         fgVariableUnits[kMassMC]        = "GeV/c^{2}";
-  fgVariableNames[kMassMCfromLegs]      = "m^{MC-legs}";         fgVariableUnits[kMassMCfromLegs]        = "GeV/c^{2}";
-  fgVariableNames[kRap]       = "y";          fgVariableUnits[kRap]         = "";
-  fgVariableNames[kRapAbs]    = "|y|";        fgVariableUnits[kRapAbs]      = "";
-  fgVariableNames[kRapMC]     = "y^{MC}";     fgVariableUnits[kRapMC]       = "";
-  fgVariableNames[kRapMCAbs]  = "|y^{MC}|";   fgVariableUnits[kRapMCAbs]    = "";
-  fgVariableNames[kRapMCfromLegs]       = "y^{MC-legs}";         fgVariableUnits[kRapMCfromLegs]         = "";
-  fgVariableNames[kPdgMC]       = "PDG code";          fgVariableUnits[kPdgMC]         = "";
-  fgVariableNames[kPdgMC+1]  = "mother's PDG code";     fgVariableUnits[kPdgMC+1]         = "";
-  fgVariableNames[kPdgMC+2]  = "grand-mother's PDG code";     fgVariableUnits[kPdgMC+2]         = "";
-  fgVariableNames[kPdgMC+3]  = "grand-grand-mother's PDG code";     fgVariableUnits[kPdgMC+3]         = "";
+  fgVariableNames[kPtSquared]      = "p_{T}^{2}";     fgVariableUnits[kPtSquared]      = "GeV^{2}/c^{2}";
+  fgVariableNames[kOneOverSqrtPt]  = "1/sqrt(p_{T})"; fgVariableUnits[kOneOverSqrtPt]  = "GeV^{-1/2}";
+  fgVariableNames[kMass]           = "m";             fgVariableUnits[kMass]           = "GeV/c^{2}";
+  fgVariableNames[kMassMC]         = "m^{MC}";        fgVariableUnits[kMassMC]         = "GeV/c^{2}";
+  fgVariableNames[kMassMCfromLegs] = "m^{MC-legs}";   fgVariableUnits[kMassMCfromLegs] = "GeV/c^{2}";
+  fgVariableNames[kRap]            = "y";             fgVariableUnits[kRap]         = "";
+  fgVariableNames[kRapAbs]         = "|y|";           fgVariableUnits[kRapAbs]      = "";
+  fgVariableNames[kRapMC]          = "y^{MC}";        fgVariableUnits[kRapMC]       = "";
+  fgVariableNames[kRapMCAbs]       = "|y^{MC}|";      fgVariableUnits[kRapMCAbs]    = "";
+  fgVariableNames[kRapMCfromLegs]  = "y^{MC-legs}";                   fgVariableUnits[kRapMCfromLegs] = "";
+  fgVariableNames[kPdgMC]          = "PDG code";                      fgVariableUnits[kPdgMC]         = "";
+  fgVariableNames[kPdgMC+1]        = "mother's PDG code";             fgVariableUnits[kPdgMC+1]       = "";
+  fgVariableNames[kPdgMC+2]        = "grand-mother's PDG code";       fgVariableUnits[kPdgMC+2]       = "";
+  fgVariableNames[kPdgMC+3]        = "grand-grand-mother's PDG code"; fgVariableUnits[kPdgMC+3]       = "";
   
-  fgVariableNames[kCandidateId]       = "pair id.";              fgVariableUnits[kCandidateId]       = "";
-  fgVariableNames[kPairType]          = "pair type";             fgVariableUnits[kPairType]          = "";
-  fgVariableNames[kPairTypeSPD]          = "pair type spd legs";             fgVariableUnits[kPairTypeSPD]          = "";
-  fgVariableNames[kMassV0]            = "m_{K^{0}_{S}}";         fgVariableUnits[kMassV0]            = "GeV/c^{2}";
-  fgVariableNames[kMassV0+1]          = "m_{#Lambda^{0}}";       fgVariableUnits[kMassV0+1]          = "GeV/c^{2}";
-  fgVariableNames[kMassV0+2]          = "m_{#bar{#Lambda^{0}}}"; fgVariableUnits[kMassV0+2]          = "GeV/c^{2}";
-  fgVariableNames[kMassV0+3]          = "m_{#gamma}";            fgVariableUnits[kMassV0+3]          = "GeV/c^{2}";
-  fgVariableNames[kPairChisquare]     = "pair #chi^{2}";         fgVariableUnits[kPairChisquare]     = "";
-  fgVariableNames[kPairLxy]           = "L_{xy}";                fgVariableUnits[kPairLxy]           = "cm.";
-  fgVariableNames[kPairLxyz]           = "L_{xyz}";              fgVariableUnits[kPairLxyz]           = "cm.";
-  fgVariableNames[kPseudoProperDecayTime]  = "t";                fgVariableUnits[kPseudoProperDecayTime]  = "cm./c";
-  fgVariableNames[kPseudoProperDecayTimeMC]  = "t_{MC}";         fgVariableUnits[kPseudoProperDecayTimeMC]  = "cm./c";
-  fgVariableNames[kPairOpeningAngle]  = "pair opening angle";    fgVariableUnits[kPairOpeningAngle]  = "rad.";    
-  fgVariableNames[kPairPointingAngle] = "#theta_{pointing}";     fgVariableUnits[kPairPointingAngle] = "rad.";
-  fgVariableNames[kPairCosPointingAngle] = "cos(#theta_{pointing})";     fgVariableUnits[kPairCosPointingAngle] = "";
-  fgVariableNames[kPairThetaCS]       = "cos(#theta^{*}_{CS})";  fgVariableUnits[kPairThetaCS]       = "";  
-  fgVariableNames[kPairPhiCS]         = "#varphi^{*}_{CS}";      fgVariableUnits[kPairPhiCS]         = "rad.";  
-  fgVariableNames[kPairThetaHE]       = "cos(#theta^{*}_{HE})";  fgVariableUnits[kPairThetaHE]       = "";  
-  fgVariableNames[kPairPhiHE]         = "#varphi^{*}_{HE}";      fgVariableUnits[kPairPhiHE]         = "rad.";
-  fgVariableNames[kPairPhiV]          = "#varphi^{*}_{v}";       fgVariableUnits[kPairPhiV]          = "rad.";
-  fgVariableNames[kPairEff]           = "pair eff.";             fgVariableUnits[kPairEff]           = "";
-  fgVariableNames[kOneOverPairEff]    = "1/pair eff.";           fgVariableUnits[kOneOverPairEff]    = "";
-  fgVariableNames[kOneOverPairEffSq]  = "1/pair eff. squared";   fgVariableUnits[kOneOverPairEffSq]  = "";
+  fgVariableNames[kCandidateId]             = "pair id.";              fgVariableUnits[kCandidateId] = "";
+  fgVariableNames[kPairType]                = "pair type";             fgVariableUnits[kPairType]    = "";
+  fgVariableNames[kPairTypeSPD]             = "pair type spd legs";    fgVariableUnits[kPairTypeSPD] = "";
+  fgVariableNames[kMassV0]                  = "m_{K^{0}_{S}}";         fgVariableUnits[kMassV0]   = "GeV/c^{2}";
+  fgVariableNames[kMassV0+1]                = "m_{#Lambda^{0}}";       fgVariableUnits[kMassV0+1] = "GeV/c^{2}";
+  fgVariableNames[kMassV0+2]                = "m_{#bar{#Lambda^{0}}}"; fgVariableUnits[kMassV0+2] = "GeV/c^{2}";
+  fgVariableNames[kMassV0+3]                = "m_{#gamma}";            fgVariableUnits[kMassV0+3] = "GeV/c^{2}";
+  fgVariableNames[kPairChisquare]           = "pair #chi^{2}";         fgVariableUnits[kPairChisquare] = "";
+  fgVariableNames[kPairLxy]                 = "L_{xy}";                fgVariableUnits[kPairLxy]       = "cm.";
+  fgVariableNames[kPairLxyz]                = "L_{xyz}";               fgVariableUnits[kPairLxyz]      = "cm.";
+  fgVariableNames[kPseudoProperDecayTime]         = "t";
+  fgVariableUnits[kPseudoProperDecayTime]         = "cm./c";
+  fgVariableNames[kPseudoProperDecayTimeError]    = "t err";
+  fgVariableUnits[kPseudoProperDecayTimeError]    = "cm./c";
+  fgVariableNames[kPseudoProperDecayTimeMC]       = "t_{MC}";
+  fgVariableUnits[kPseudoProperDecayTimeMC]       = "cm./c";
+  fgVariableNames[kPseudoProperDecayTimeXYZ]      = "t_{xyz}";
+  fgVariableUnits[kPseudoProperDecayTimeXYZ]      = "cm./c";
+  fgVariableNames[kPseudoProperDecayTimeXYZError] = "t_{xyz} err";
+  fgVariableUnits[kPseudoProperDecayTimeXYZError] = "cm./c";
+  fgVariableNames[kPairOpeningAngle]       = "pair opening angle";
+  fgVariableUnits[kPairOpeningAngle]       = "rad.";
+  fgVariableNames[kPairPointingAngle]      = "#theta_{pointing}";
+  fgVariableUnits[kPairPointingAngle]      = "rad.";
+  fgVariableNames[kPairCosPointingAngle]   = "cos(#theta_{pointing})";
+  fgVariableUnits[kPairCosPointingAngle]   = "";
+  fgVariableNames[kPairCosPointingAngleXY] = "cos(#theta_{pointing xy})";
+  fgVariableUnits[kPairCosPointingAngleXY] = "";
+  fgVariableNames[kPairDCAXY]        = "DCA_{xy,pair KFParticle}"; fgVariableUnits[kPairDCAXY] = "cm.";
+  fgVariableNames[kPairDCAZ]         = "DCA_{z,pair KFParticle}"; fgVariableUnits[kPairDCAZ]  = "cm.";
+  fgVariableNames[kPairThetaCS]      = "cos(#theta^{*}_{CS})"; fgVariableUnits[kPairThetaCS]      = "";
+  fgVariableNames[kPairPhiCS]        = "#varphi^{*}_{CS}";     fgVariableUnits[kPairPhiCS]        = "rad.";
+  fgVariableNames[kPairThetaHE]      = "cos(#theta^{*}_{HE})"; fgVariableUnits[kPairThetaHE]      = "";
+  fgVariableNames[kPairPhiHE]        = "#varphi^{*}_{HE}";     fgVariableUnits[kPairPhiHE]        = "rad.";
+  fgVariableNames[kPairPhiV]         = "#varphi^{*}_{v}";      fgVariableUnits[kPairPhiV]         = "rad.";
+  fgVariableNames[kPairEff]          = "pair eff.";            fgVariableUnits[kPairEff]          = "";
+  fgVariableNames[kOneOverPairEff]   = "1/pair eff.";          fgVariableUnits[kOneOverPairEff]   = "";
+  fgVariableNames[kOneOverPairEffSq] = "1/pair eff. squared";  fgVariableUnits[kOneOverPairEffSq] = "";
   for(Int_t i=0;i<2;++i) {
      fgVariableNames[kPairLegTPCchi2+i] = Form("TPC #chi^{2}, leg %d", i+1);
      fgVariableUnits[kPairLegTPCchi2+i] = "";
      fgVariableNames[kPairLegITSchi2+i] = Form("ITS #chi^{2}, leg %d", i+1);
      fgVariableUnits[kPairLegITSchi2+i] = "";
-     fgVariableNames[kPairLegPt+i] = Form("Leg%d p_{T}", i+1);
-     fgVariableNames[kPairLegPtMC+i] = Form("Leg%d p^{MC}_{T}", i+1);
-     fgVariableUnits[kPairLegPt+i] = "GeV/c"; fgVariableUnits[kPairLegPtMC+i] = "GeV/c";
+     fgVariableNames[kPairLegPt+i]      = Form("Leg%d p_{T}", i+1);
+     fgVariableNames[kPairLegPtMC+i]    = Form("Leg%d p^{MC}_{T}", i+1);
+     fgVariableUnits[kPairLegPt+i]      = "GeV/c"; fgVariableUnits[kPairLegPtMC+i] = "GeV/c";
      fgVariableNames[kPairLegEMCALmatchedEnergy+i] = Form("Leg%d E_{calo cluster}", i+1);
      fgVariableUnits[kPairLegEMCALmatchedEnergy+i] = "GeV";
   }
-  fgVariableNames[kPairLegPtSum] = "Pair leg p_{T,1} + p_{T,2}"; fgVariableUnits[kPairLegPtSum] = "GeV/c";
+  fgVariableNames[kPairLegPtSum]   = "Pair leg p_{T,1} + p_{T,2}"; fgVariableUnits[kPairLegPtSum] = "GeV/c";
   fgVariableNames[kPairLegPtMCSum] = "Pair leg p^{MC}_{T,1} + p^{MC}_{T,2}"; fgVariableUnits[kPairLegPtMCSum] = "GeV/c";
   fgVariableNames[kPairMCMap] = "Pair MC Map"; fgVariableUnits[kPairMCMap] = "";
   
@@ -3892,7 +3932,7 @@ void AliReducedVarManager::SetDefaultVarNames() {
   fgVariableNames[kPhiTPC]            = "#varphi^{TPC}";                fgVariableUnits[kPhiTPC] = "rad.";
   fgVariableNames[kEtaTPC]            = "#eta^{TPC}";                   fgVariableUnits[kEtaTPC] = "";
   fgVariableNames[kPin]               = "p_{IN}";                       fgVariableUnits[kPin] = "GeV/c";
-  fgVariableNames[kDcaXY]             = "DCA_{xy}";                     fgVariableUnits[kDcaXY] = "cm.";  
+  fgVariableNames[kDcaXY]             = "DCA_{xy}";                     fgVariableUnits[kDcaXY] = "cm.";
   fgVariableNames[kDcaZ]              = "DCA_{z}";                      fgVariableUnits[kDcaZ] = "cm.";  
   fgVariableNames[kPairDca]           = "DCA_{pair}";                   fgVariableUnits[kPairDca] = "cm";
   fgVariableNames[kPairDcaXY]         = "DCA_{xy,pair}";                fgVariableUnits[kPairDcaXY] = "cm";

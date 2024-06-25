@@ -102,11 +102,11 @@ class AliReducedPairInfo : public AliReducedBaseTrack {
                                // cosThetaxy, cosThetaxyz, dcaxy, dcaz (reduced=divided by error)
   Int_t fNTracksRegions[24];  // Multiplicity in regions with respect to the pair
                               // (3 regions, 8 track cuts possible)
-                              // 0 to 7 is toward, 8 to 15 is transverse, 16 to 23 is aw
+                              // 0 to 7 is toward, 8 to 15 is transverse, 16 to 23 is away
   
   AliReducedPairInfo& operator = (const AliReducedPairInfo &c);
 
-  ClassDef(AliReducedPairInfo, 4);
+  ClassDef(AliReducedPairInfo, 5);
 };
 
 

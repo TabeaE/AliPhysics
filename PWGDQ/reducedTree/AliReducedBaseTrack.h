@@ -19,17 +19,17 @@ class AliReducedBaseTrack : public TObject {
     virtual ~AliReducedBaseTrack();
   
     // getters
-    UShort_t TrackId() const {return fTrackId;}
-    Float_t Px()       const {return (fIsCartesian ? fP[0] : TMath::Abs(fP[0])*TMath::Cos(fP[1]));}
-    Float_t Py()       const {return (fIsCartesian ? fP[1] : TMath::Abs(fP[0])*TMath::Sin(fP[1]));}
-    Float_t Pz()       const {return (fIsCartesian ? fP[2] : TMath::Abs(fP[0])*TMath::SinH(fP[2]));}
-    Float_t P()        const {return (fIsCartesian ? TMath::Sqrt(fP[0]*fP[0]+fP[1]*fP[1]+fP[2]*fP[2]) :
-                                                     TMath::Abs(fP[0])*TMath::CosH(fP[2]));}
-    Float_t Phi()      const;
-    Float_t Pt()       const {return (fIsCartesian ? TMath::Sqrt(fP[0]*fP[0]+fP[1]*fP[1]) : fP[0]);}
-    Float_t Eta()      const;
-    Float_t PhiMother() const {return (fP[4]);}
+    UShort_t TrackId()  const {return fTrackId;}
+    Float_t Px()        const {return (fIsCartesian ? fP[0] : TMath::Abs(fP[0])*TMath::Cos(fP[1]));}
+    Float_t Py()        const {return (fIsCartesian ? fP[1] : TMath::Abs(fP[0])*TMath::Sin(fP[1]));}
+    Float_t Pz()        const {return (fIsCartesian ? fP[2] : TMath::Abs(fP[0])*TMath::SinH(fP[2]));}
+    Float_t P()         const {return (fIsCartesian ? TMath::Sqrt(fP[0]*fP[0]+fP[1]*fP[1]+fP[2]*fP[2])
+                                                    : TMath::Abs(fP[0])*TMath::CosH(fP[2]));}
+    Float_t Phi()       const;
+    Float_t Pt()        const {return (fIsCartesian ? TMath::Sqrt(fP[0]*fP[0]+fP[1]*fP[1]) : fP[0]);}
+    Float_t Eta()       const;
     Float_t PtMother()  const {return (fP[3]);}
+    Float_t PhiMother() const {return (fP[4]);}
     Float_t EtaMother() const {return (fP[5]);}
     Float_t Rapidity(Float_t massAssumption) const;
     Float_t Theta()                          const;
@@ -39,7 +39,7 @@ class AliReducedBaseTrack : public TObject {
     ULong_t GetFlags()                       const {return fFlags;}
     Int_t   Charge()                         const {return fCharge;}
     Bool_t  IsCartesian()                    const {return fIsCartesian;}
-    
+
     ULong_t GetQualityFlags()                const {return fQualityFlags;}
     UInt_t  GetFirstHalfOfQualityFlags()     const;
     UInt_t  GetSecondHalfOfQualityFlags()    const;
@@ -57,10 +57,10 @@ class AliReducedBaseTrack : public TObject {
     Bool_t  IsPureLambdaLeg()                const {return fQualityFlags&(ULong_t(1)<<10);}
     Bool_t  IsALambdaLeg()                   const {return fQualityFlags&(ULong_t(1)<<4);}
     Bool_t  IsPureALambdaLeg()               const {return fQualityFlags&(ULong_t(1)<<11);}
-    Bool_t  IsKink(Int_t i=0)                const {return (i>=0 && i<3 ? (fQualityFlags&(ULong_t(1)<<(5+i))) :
-                                                    kFALSE);}
-    Bool_t  IsKinkNegativeLabel(Int_t i=0)   const {return (i>=0 && i<3 ? (fQualityFlags&(ULong_t(1)<<(12+i))) :
-                                                    kFALSE);}
+    Bool_t  IsKink(Int_t i=0)                const {return (i>=0 && i<3 ? (fQualityFlags&(ULong_t(1)<<(5+i)))
+                                                                        : kFALSE);}
+    Bool_t  IsKinkNegativeLabel(Int_t i=0)   const {return (i>=0 && i<3 ? (fQualityFlags&(ULong_t(1)<<(12+i)))
+                                                                        : kFALSE);}
     Float_t GetBayesProb(Int_t specie)       const {return (fQualityFlags&(ULong_t(1)<<(15+specie)) ?
                                                            (fQualityFlags&(ULong_t(1)<<21) ? 0.9 :
                                                            (fQualityFlags&(ULong_t(1)<<20) ? 0.8 :
@@ -107,12 +107,12 @@ class AliReducedBaseTrack : public TObject {
     void   SetIsMCTruth(Bool_t flag=kTRUE)  {fIsMCTruth = flag;}
    
   protected:
-    UShort_t fTrackId;     // track id
-    Float_t fP[6];         // 3-momentum vector + 3-momentum vector in pt-phi-eta coordinates for mother (MC)
-    Bool_t  fIsCartesian;  // if false then the 3-momentum vector is in spherical coordinates (pt,phi,eta)
-    Char_t  fCharge;       // electrical charge
-    ULong_t fFlags;        // flags reserved for various operations
-    ULong_t fQualityFlags;        // BIT0 toggled if track used for TPC event plane
+    UShort_t fTrackId;       // track id
+    Float_t  fP[6];          // 3-momentum vector + 3-momentum vector in pt-phi-eta coordinates for mother (MC)
+    Bool_t   fIsCartesian;   // if false then the 3-momentum vector is in spherical coordinates (pt,phi,eta)
+    Char_t   fCharge;        // electrical charge
+    ULong_t  fFlags;         // flags reserved for various operations
+    ULong_t  fQualityFlags;  // BIT0 toggled if track used for TPC event plane
                                               // BIT1 toggled if track belongs to a gamma conversion
                                               // BIT2 toggled if track belongs to a K0s
                                               // BIT3 toggled if track belongs to a Lambda
@@ -131,18 +131,18 @@ class AliReducedBaseTrack : public TObject {
                                               // BIT(15+i) toggled if track has filter bit 0+i , 0 <= i <= 10
                                               // BIT26 toggled if this is a track matched in TRD
                                               // BIT27 toggled if the track was used in the vertex determination
-                                                   
+
                                               // For AliReducedPairInfo objects
                                               // BIT1 toggled for pure V0 K0s candidates
                                               // BIT2 toggled for pure V0 Lambda candidates
                                               // BIT3 toggled for pure V0 anti-Lambda candidates
                                               // BIT4 toggled for pure V0 photon candidates
     UInt_t fMCFlags;    // flags used to encode Monte-Carlo information
-    Bool_t fIsMCTruth;  // TRUE: if the particle is pure MC track; FALSE: if the particle is a reconstructed track
+    Bool_t fIsMCTruth;  // kTRUE: particle is pure MC track; kFALSE: particle is reconstructed track
         
     AliReducedBaseTrack& operator= (const AliReducedBaseTrack &c);
     
-    ClassDef(AliReducedBaseTrack, 6)
+    ClassDef(AliReducedBaseTrack, 7)
 };
 
 //_______________________________________________________________________________
