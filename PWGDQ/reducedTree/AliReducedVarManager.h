@@ -354,9 +354,9 @@ class AliReducedVarManager : public TObject {
     kSPDnTracklets10EtaVtxCorr = kSPDntrackletsEtaBin + 32,
     kNGlobalTracks,                     // Filled only when event is accepted, else -999
                                         // Max. 8 possible cutsets
-    kNGlobalTracksToward = kNGlobalTracks + kNMaxCutsGlobalTracks,   //regions to Jpsi/randomphi and regions to leading pt
-    kNGlobalTracksTransverse = kNGlobalTracksToward + 2*kNMaxCutsGlobalTracks,
-    kNGlobalTracksAway = kNGlobalTracksTransverse + 2*kNMaxCutsGlobalTracks,
+    kNGlobalTracksToward     = kNGlobalTracks + kNMaxCutsGlobalTracks,   //regions to Jpsi/randomphi and regions to leading pt
+    kNGlobalTracksTransverse = kNGlobalTracksToward     + 2*kNMaxCutsGlobalTracks,
+    kNGlobalTracksAway       = kNGlobalTracksTransverse + 2*kNMaxCutsGlobalTracks,
     kVZEROTotalMult = kNGlobalTracksAway + 2*kNMaxCutsGlobalTracks,
     kVZEROATotalMult,
     kVZEROCTotalMult,
@@ -579,10 +579,10 @@ class AliReducedVarManager : public TObject {
     kPairLxy, 
     kPairLxyz,          
     kPseudoProperDecayTime,
+    kPseudoProperDecayTimeError,
     kPseudoProperDecayTimeMC,
-    kPseudoProperTimeError,
     kPseudoProperDecayTimeXYZ,
-    kPseudoProperTimeXYZError,
+    kPseudoProperDecayTimeXYZError,
     kPairOpeningAngle,  
     kPairPointingAngle, 
     kPairCosPointingAngle,
@@ -593,8 +593,10 @@ class AliReducedVarManager : public TObject {
     kPairPhiCS,                  // phi* in Collins-Soper frame
     kPairThetaHE,                // cos (theta*) in helicity frame       
     kPairPhiHE,                  // phi* in helicity frame
-    kPairVZEROFlowNom,           // Nominator of combinatorial pair flow for VZERO, 6 harmonics, 3 VZERO sides (A, C and A&C)
-    kPairVZEROFlowDenom=kPairVZEROFlowNom+6*3,  // Denominator of combinatorial pair flow for VZERO, 6 harmonics, 3 VZERO sides (A, C and A&C)
+    kPairVZEROFlowNom,           // Nominator of combinatorial pair flow for VZERO, 6 harmonics,
+                                 // 3 VZERO sides (A, C and A&C)
+    kPairVZEROFlowDenom=kPairVZEROFlowNom+6*3,  // Denominator of combinatorial pair flow for VZERO,
+                                                // 6 harmonics, 3 VZERO sides (A, C and A&C)
     kPairTPCFlowNom=kPairVZEROFlowDenom+6*3,
     kPairTPCFlowDenom=kPairTPCFlowNom+6,
     kPairVZEROFlowSPNom=kPairTPCFlowDenom+6,     // Nominator of combinatorial Scalar Product pair flow for VZERO, 6 harmonics, 3 VZERO sides (A, C and A&C)
@@ -964,14 +966,14 @@ class AliReducedVarManager : public TObject {
                                       Float_t mh2, AliReducedTrackInfo* track3, Float_t mh3,
                                       Double_t& doubletAssocDistance, Double_t& doubletAssocDeviation);
   
-  static TH2F* fgTPCelectronCentroidMap;    // TPC electron centroid 2D map
-  static TH2F* fgTPCelectronWidthMap;       // TPC electron width 2D map
-  static Variables fgVarDependencyX;        // varX in the 2-D electron correction maps
-  static Variables fgVarDependencyY;        // varY in the 2-D electron correction maps
-  static THnF* fgTPCpidCalibCentroid[3];    // TPC calib centroid 4D maps; [0] - electron, [1] - pion, [2] - proton
-  static THnF* fgTPCpidCalibWidth[3];       // TPC calib width 4D map
-  static THnI* fgTPCpidCalibStatus[3];      // TPC calib status 4D map
-  static Variables fgTPCpidCalibVars[4];    // variables used for TPC pid 4D calibration
+  static TH2F* fgTPCelectronCentroidMap;   // TPC electron centroid 2D map
+  static TH2F* fgTPCelectronWidthMap;      // TPC electron width 2D map
+  static Variables fgVarDependencyX;       // varX in the 2-D electron correction maps
+  static Variables fgVarDependencyY;       // varY in the 2-D electron correction maps
+  static THnF* fgTPCpidCalibCentroid[3];   // TPC calib centroid 4D maps; [0] - electron, [1] - pion, [2] - proton
+  static THnF* fgTPCpidCalibWidth[3];      // TPC calib width 4D map
+  static THnI* fgTPCpidCalibStatus[3];     // TPC calib status 4D map
+  static Variables fgTPCpidCalibVars[4];   // variables used for TPC pid 4D calibration
   static TH1*      fgPairEffMap;                 // pair efficiency map
   static Variables fgEffMapVarDependencyX;       // varX in the pair eff maps
   static Variables fgEffMapVarDependencyY;       // varY in the pair eff maps
@@ -996,30 +998,30 @@ class AliReducedVarManager : public TObject {
   static TGraphErrors* fgRunInstLumi;         // time dependence of the instantaneous lumi for the current run, AliLumiTools::GetLumiFromCTP(run)
   static std::vector<Int_t> fgRunNumbers;     // vector with run numbers (for histograms vs. run number)
   static Int_t fgRunID;                       // run ID
-  static TH1* fgAvgMultVsVtxGlobal      [kNMultiplicityEstimators];        // average multiplicity vs. z-vertex position (global)
-  static TH1* fgAvgMultVsVtxRunwise     [kNMultiplicityEstimators];        // average multiplicity vs. z-vertex position (run-by-run)
-  static TH1* fgAvgMultVsRun            [kNMultiplicityEstimators];           // average multiplicity vs. run number
-  static TH2* fgAvgMultVsVtxAndRun      [kNMultiplicityEstimators];  // 2D : average multiplicity vs. run number and z-vertex position
+  static TH1* fgAvgMultVsVtxGlobal      [kNMultiplicityEstimators];  // average multiplicity vs. z-vertex position (global)
+  static TH1* fgAvgMultVsVtxRunwise     [kNMultiplicityEstimators];  // average multiplicity vs. z-vertex position (run-by-run)
+  static TH1* fgAvgMultVsRun            [kNMultiplicityEstimators];  // average multiplicity vs. run number
+  static TH2* fgAvgMultVsVtxAndRun      [kNMultiplicityEstimators];  // 2D: average multiplicity vs. run number and z-vertex position
   static Double_t fgRefMultVsVtxGlobal  [kNMultiplicityEstimators] [kNReferenceMultiplicities];  // reference multiplicity for z-vertex correction (global)
   static Double_t fgRefMultVsVtxRunwise [kNMultiplicityEstimators] [kNReferenceMultiplicities];  // reference multiplicity for z-vertex correction (run-by-run)
   static Double_t fgRefMultVsRun        [kNMultiplicityEstimators] [kNReferenceMultiplicities];  // reference multiplicity for run correction
   static Double_t fgRefMultVsVtxAndRun  [kNMultiplicityEstimators] [kNReferenceMultiplicities];  // reference multiplicity for run, vtx correction
-  static TString fgVZEROCalibrationPath;       // path to the VZERO calibration histograms
-  static TProfile2D* fgAvgVZEROChannelMult[64];       // average multiplicity in VZERO channels vs (vtxZ,centSPD)
-  static TProfile2D* fgVZEROqVecRecentering[4];       // (vtxZ,centSPD) maps of the VZERO A and C recentering Qvector offsets
-  static TProfile2D* fgTPCqVecRecentering[2];       // (vtxZ,centV0) maps of the TPC recentering Qvector offsets
-  static Bool_t fgOptionCalibrateVZEROqVec;         //option to calibrate V0
-  static Bool_t fgOptionRecenterVZEROqVec;         //option to do Q vector recentering for V0
-  static Bool_t fgOptionRecenterTPCqVec;           //option to do Q vector recentering for TPC
-  static Bool_t fgOptionEventRes;                 //option to divide by resolution
-  static TH1F* fgReweightMCpt;  // ratio between nature pt shape and gernareted pT shape
-  static TH3F* fgLegEfficiency; // Leg efficiency for its propagation to the pair level
-  static Bool_t fgUsePinForLegEffPropagation;   //option to propagate leg pid efficiency as a function of pin instead of p
+  static TString fgVZEROCalibrationPath;         // path to the VZERO calibration histograms
+  static TProfile2D* fgAvgVZEROChannelMult[64];  // average multiplicity in VZERO channels vs (vtxZ,centSPD)
+  static TProfile2D* fgVZEROqVecRecentering[4];  // (vtxZ,centSPD) maps of the VZERO A and C recentering Qvector offsets
+  static TProfile2D* fgTPCqVecRecentering[2];    // (vtxZ,centV0) maps of the TPC recentering Qvector offsets
+  static Bool_t fgOptionCalibrateVZEROqVec;      // option to calibrate V0
+  static Bool_t fgOptionRecenterVZEROqVec;       // option to do Q vector recentering for V0
+  static Bool_t fgOptionRecenterTPCqVec;         // option to do Q vector recentering for TPC
+  static Bool_t fgOptionEventRes;                // option to divide by resolution
+  static TH1F* fgReweightMCpt;   // ratio between nature pt shape and gernareted pT shape
+  static TH3F* fgLegEfficiency;  // Leg efficiency for its propagation to the pair level
+  static Bool_t fgUsePinForLegEffPropagation;    // option to propagate leg pid efficiency as a function of pin instead of p
   
   AliReducedVarManager(AliReducedVarManager const&);
   AliReducedVarManager& operator=(AliReducedVarManager const&);  
   
-  ClassDef(AliReducedVarManager, 17);
+  ClassDef(AliReducedVarManager, 18);
 };
 
 #endif

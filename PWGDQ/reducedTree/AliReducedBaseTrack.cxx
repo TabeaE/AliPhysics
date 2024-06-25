@@ -26,6 +26,7 @@ AliReducedBaseTrack::AliReducedBaseTrack() :
   // Constructor
   //
   fP[0]=0.0; fP[1]=0.0; fP[2]=0.0;
+  fP[3]=0.0; fP[4]=0.0; fP[5]=0.0;
 }
 
 //_______________________________________________________________________________
@@ -42,8 +43,9 @@ AliReducedBaseTrack::AliReducedBaseTrack(const AliReducedBaseTrack &c) :
   //
   // Copy constructor
   //
-  if(c.IsCartesian()) {fP[0]=c.Px();fP[1]=c.Py();fP[2]=c.Pz();}
-  else {fP[0]=c.Pt();fP[1]=c.Phi();fP[2]=c.Eta();}
+  if(c.IsCartesian()) {fP[0]=c.Px(); fP[1]=c.Py();  fP[2]=c.Pz();}
+  else                {fP[0]=c.Pt(); fP[1]=c.Phi(); fP[2]=c.Eta();}
+  fP[3]=c.PtMother(); fP[4]=c.PhiMother(); fP[5]=c.EtaMother();
 }
 
 //_______________________________________________________________________________

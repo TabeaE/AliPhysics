@@ -192,7 +192,7 @@ void AliReducedAnalysisFilterTrees::Init() {
 
   AliReducedVarManager::SetUseVariable(AliReducedVarManager::kPseudoProperDecayTime);
   AliReducedVarManager::SetUseVariable(AliReducedVarManager::kPseudoProperDecayTimeMC);
-  AliReducedVarManager::SetUseVariable(AliReducedVarManager::kPseudoProperTimeError);
+  AliReducedVarManager::SetUseVariable(AliReducedVarManager::kPseudoProperDecayTimeError);
   AliReducedVarManager::SetUseVariable(AliReducedVarManager::kTriggerPseudoProperDecayTime);
   AliReducedVarManager::SetUseVariable(AliReducedVarManager::kTripletPseudoProperDecayTime);
 
@@ -300,14 +300,12 @@ void AliReducedAnalysisFilterTrees::Process() {
         fHistosManager->FillHistClass(Form("pPb_5TeV_MC_cutMode_%d",  cutMode+100), fValues);
       }
       // HM triggered
-      if(kFALSE) {
-//       if(fValues[AliReducedVarManager::kHighMultV0Triggered] || GetRunOverMC()) {
+      if(fValues[AliReducedVarManager::kHighMultV0Triggered] || GetRunOverMC()) {
         fHistosManager->FillHistClass(Form("pPb_5TeV_Data_cutMode_%d",cutMode+101), fValues);
         fHistosManager->FillHistClass(Form("pPb_5TeV_MC_cutMode_%d",  cutMode+101), fValues);
       }
       // Inclusive (MB or HM triggered)
-      if(kFALSE) {
-//       if(fValues[AliReducedVarManager::kINT7Triggered] || fValues[AliReducedVarManager::kHighMultV0Triggered]) {
+      if(fValues[AliReducedVarManager::kINT7Triggered] || fValues[AliReducedVarManager::kHighMultV0Triggered]) {
         fHistosManager->FillHistClass(Form("pPb_5TeV_Data_cutMode_%d",cutMode+102), fValues);
         fHistosManager->FillHistClass(Form("pPb_5TeV_MC_cutMode_%d",  cutMode+102), fValues);
       }
@@ -409,7 +407,7 @@ void AliReducedAnalysisFilterTrees::CreateFilteredEvent() {
     WriteFilteredTracks();
     if(!fWriteFilteredTracksCandidatesOnly) WriteFilteredTracks(2);
   }
-  
+
   if(fComputeMult) {
     FillMultiplicity(kTRUE);
     for(Int_t icut=0; icut<GetNMeasMultCuts(); icut++) {
@@ -891,7 +889,8 @@ void AliReducedAnalysisFilterTrees::RunSameEventPairing() {
                         leg1Track->MCLabel(1)==leg2Track->MCLabel(1) && leg1Track->MCPdg(1)==443;
         isJpsiFromB = isJpsi && ((abs(leg1Track->MCPdg(2))>500  && abs(leg1Track->MCPdg(2))<599) ||
                                  (abs(leg1Track->MCPdg(2))>5000 && abs(leg1Track->MCPdg(2))<5999));
-        fValues[AliReducedVarManager::kPairMCMap] = isJpsi+2*isJpsiFromB;  // TODO implement with fMCMap|=(UShort_t(1)<<i
+        // TODO implement with fMCMap|=(UShort_t(1)<<i
+        fValues[AliReducedVarManager::kPairMCMap] = isJpsi+2*isJpsiFromB;
       }
 
       ULong_t pairCutMask = IsCandidatePairSelected(fValues);
@@ -1082,8 +1081,8 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions /*= kFALSE*/
             }
             else {
               // Regions relative to jpsi
-              float phiIcut   = fValues[AliReducedVarManager::kPhiLeading+icut];
-              float delta_phi = abs(track->Phi()-phi);
+              Float_t phiIcut   = fValues[AliReducedVarManager::kPhiLeading+icut];
+              Float_t delta_phi = abs(track->Phi()-phi);
               if(phi == fValues[AliReducedVarManager::kPhiLeading])
                 delta_phi = abs(track->Phi()-phiIcut);
               if(delta_phi<M_PI/3. || delta_phi>5*M_PI/3.)
@@ -1095,7 +1094,7 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions /*= kFALSE*/
                 fValues[AliReducedVarManager::kNGlobalTracksAway+icut] += 1.;
 
               // Regions relative to leading particle
-              float delta_phi_leading = abs(track->Phi()-phiIcut);
+              Float_t delta_phi_leading = abs(track->Phi()-phiIcut);
               if(delta_phi_leading<M_PI/3. || delta_phi_leading>5*M_PI/3.) 
                 fValues[AliReducedVarManager::kNGlobalTracksToward+
                         AliReducedVarManager::kNMaxCutsGlobalTracks+icut] += 1.;
@@ -1126,7 +1125,7 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions /*= kFALSE*/
         }
         else {
           // Regions relative to jpsi
-          float delta_phi = abs(track->Phi()-phi);
+          Float_t delta_phi = abs(track->Phi()-phi);
           if(delta_phi<M_PI/3. || delta_phi>5*M_PI/3.) 
             fValues[AliReducedVarManager::kMCNch09Toward] += 1.;
           else if((delta_phi>  M_PI/3. && delta_phi<2*M_PI/3.) ||
@@ -1136,7 +1135,7 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions /*= kFALSE*/
             fValues[AliReducedVarManager::kMCNch09Away] += 1.;
 
           // Regions relative to leading particle
-          float delta_phi_leading = abs(track->Phi()-fValues[AliReducedVarManager::kPhiLeading]);
+          Float_t delta_phi_leading = abs(track->Phi()-fValues[AliReducedVarManager::kPhiLeading]);
           if(delta_phi_leading<M_PI/3. || delta_phi_leading>5*M_PI/3.) 
             fValues[AliReducedVarManager::kMCNch09Toward+1] += 1.;
           else if((delta_phi_leading>  M_PI/3. && delta_phi_leading<2*M_PI/3.) ||
@@ -1369,20 +1368,20 @@ ULong_t AliReducedAnalysisFilterTrees::IsCandidatePairSelected(Float_t* values) 
 }
 
 
-// //___________________________________________________________________________
-// Bool_t AliReducedAnalysisFilterTrees::IsCandidatePairSelected(Float_t* values) {
-//   //
-//   // apply pair cuts to the built candidates
-//   //
-//
-//   if(fCandidatePairCuts.GetEntries()==0) return kTRUE;
-//   // loop over all the cuts and make a logical and between all cuts in the list
-//   for(Int_t i=0; i<fCandidatePairCuts.GetEntries(); ++i) {
-//     AliReducedInfoCut* cut = (AliReducedInfoCut*)fCandidatePairCuts.At(i);
-//     if(!cut->IsSelected(values)) return kFALSE;
-//   }
-//   return kTRUE;
-// }
+//___________________________________________________________________________
+/*Bool_t AliReducedAnalysisFilterTrees::IsCandidatePairSelected(Float_t* values) {
+  //
+  // apply pair cuts to the built candidates
+  //
+
+  if(fCandidatePairCuts.GetEntries()==0) return kTRUE;
+  // loop over all the cuts and make a logical and between all cuts in the list
+  for(Int_t i=0; i<fCandidatePairCuts.GetEntries(); ++i) {
+    AliReducedInfoCut* cut = (AliReducedInfoCut*)fCandidatePairCuts.At(i);
+    if(!cut->IsSelected(values)) return kFALSE;
+  }
+  return kTRUE;
+}*/
 
 
 //___________________________________________________________________________
@@ -1454,28 +1453,32 @@ void AliReducedAnalysisFilterTrees::SetupPair(AliReducedPairInfo* pair, Float_t*
   //pair->SetPairTopology(values[AliReducedVarManager::kPairLxy], 3);
   pair->SetPairTopology(values[AliReducedVarManager::kPseudoProperDecayTime],    4);
   pair->SetPairTopology(values[AliReducedVarManager::kPseudoProperDecayTimeXYZ], 5);
-  if(values[AliReducedVarManager::kPseudoProperTimeError] > 0.) {
+  if(values[AliReducedVarManager::kPseudoProperDecayTimeError] > 0.) {
     pair->SetPairTopology(values[AliReducedVarManager::kPseudoProperDecayTime] /
-                          values[AliReducedVarManager::kPseudoProperTimeError], 6);
+                          values[AliReducedVarManager::kPseudoProperDecayTimeError], 6);
   }
-  if(values[AliReducedVarManager::kPseudoProperTimeXYZError] > 0.) {
+  if(values[AliReducedVarManager::kPseudoProperDecayTimeXYZError] > 0.) {
     pair->SetPairTopology(values[AliReducedVarManager::kPseudoProperDecayTimeXYZ] /
-                          values[AliReducedVarManager::kPseudoProperTimeXYZError], 7);
+                          values[AliReducedVarManager::kPseudoProperDecayTimeXYZError], 7);
   }
   pair->SetPairTopology(values[AliReducedVarManager::kPairCosPointingAngle],   8);
   pair->SetPairTopology(values[AliReducedVarManager::kPairCosPointingAngleXY], 9);
   pair->SetPairTopology(values[AliReducedVarManager::kPairDCAXY], 10);
   pair->SetPairTopology(values[AliReducedVarManager::kPairDCAZ],  11);
-
+/* TODO uncommenting this leads to different nof entries in Pair_Candidate and Track_WriteFilteredTracks
+ * histograms. I guess it has to do with flags being overriden in FillMultiplicity. Possible solution would be
+ * to either
+ * - fix the using of the same flags for mult and electron cuts or
+ * - to use different flags.
   if(fComputeMult) {
     FillMultiplicity(kTRUE);
-    // Fill mult regions relative to jpsi
-    for(Int_t icut=0; icut<GetNMeasMultCuts(); icut++) {
-      pair->SetNTracksRegions(fValues[AliReducedVarManager::kNGlobalTracksToward+icut],     0, icut);
-      pair->SetNTracksRegions(fValues[AliReducedVarManager::kNGlobalTracksTransverse+icut], 1, icut);
-      pair->SetNTracksRegions(fValues[AliReducedVarManager::kNGlobalTracksAway+icut],       2, icut);
-    }
-  }
+//     // Fill mult regions relative to jpsi
+//     for(Int_t icut=0; icut<GetNMeasMultCuts(); icut++) {
+//       pair->SetNTracksRegions(fValues[AliReducedVarManager::kNGlobalTracksToward+icut],     0, icut);
+//       pair->SetNTracksRegions(fValues[AliReducedVarManager::kNGlobalTracksTransverse+icut], 1, icut);
+//       pair->SetNTracksRegions(fValues[AliReducedVarManager::kNGlobalTracksAway+icut],       2, icut);
+//     }
+  }*/
 }
 
 
@@ -1531,6 +1534,7 @@ void AliReducedAnalysisFilterTrees::FillCandidatePairHistograms(TString histClas
     }
   }
 }*/
+
 
 //___________________________________________________________________________
 void AliReducedAnalysisFilterTrees::FillCandidatePairHistograms(ULong_t trackMask, ULong_t pairMask,
@@ -1828,7 +1832,7 @@ void AliReducedAnalysisFilterTrees::LoopOverMCTracks(Int_t trackArray /*=1*/) {
       if(!IsCandidateLegSelected(daughter2Det)) continue;
 
       AliReducedVarManager::FillPairInfo(daughter1Det, daughter2Det, fCandidateType, fValues);
-      for(int icutleg=0; icutleg<GetNCandidateLegCuts(); icutleg++) {
+      for(Int_t icutleg=0; icutleg<GetNCandidateLegCuts(); icutleg++) {
         if(!daughter1Det->TestFlag(icutleg) || !daughter2Det->TestFlag(icutleg)) continue;
         fHistosManager->FillHistClass(Form("PureMCTRUTH_DetectedDaughters_%s_%s",
                                            fJpsiMotherMCcuts.At(iCut)->GetName(),

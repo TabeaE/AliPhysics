@@ -201,7 +201,7 @@ class AliReducedTrackInfo : public AliReducedBaseTrack {
 
   AliReducedTrackInfo& operator= (const AliReducedTrackInfo &c);
   
-  ClassDef(AliReducedTrackInfo, 11);
+  ClassDef(AliReducedTrackInfo, 12);
 };
 
 //_______________________________________________________________________________

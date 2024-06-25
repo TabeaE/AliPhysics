@@ -52,7 +52,7 @@ AliReducedPairInfo::AliReducedPairInfo() :
   fLegIds[0] = 0; fLegIds[1] = 0;
   fMass[0]=-999.; fMass[1]=-999.; fMass[2]=-999.; fMass[3]=-999.;
   for(Int_t i=0; i<24; i++) fNTracksRegions[i] = 0;
-  for(Int_t i=0; i<10; i++) fPairTopology[i]   = -999.;
+  for(Int_t i=0; i<12; i++) fPairTopology[i]   = -999.;  // TODO <12 or <10?
 }
 
 
