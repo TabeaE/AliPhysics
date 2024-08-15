@@ -280,14 +280,6 @@ void AliReducedAnalysisFilterTrees::Process() {
       fHistosManager->FillHistClass(Form("EventMult_%s_NoVtxzCut",GetMeasMultcutName(icut)), fValues);
   }
   if(abs(fValues[AliReducedVarManager::kVtxZ]) > 10) isEventSelected = kFALSE;
-  
-  // Reset the multiplicity estimators if event was not selected  TODO: needed? glegras has it not
-  if(!isEventSelected) {
-    for(Int_t iest=AliReducedVarManager::kMultiplicity;
-        iest<AliReducedVarManager::kMultiplicity+AliReducedVarManager::kNMultiplicityEstimators; iest++)
-      fValues[iest] = -9999.;
-    fValues[AliReducedVarManager::kMCNch09+2] = -9999.;
-  }
 
 
   // Apply event selection
@@ -990,12 +982,12 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions /*= kFALSE*/
   //
   // Fill multiplicity values (global if regions = false; in the regions if regions = true).
   //
-  //
   
   // Fill global tracks (both signal and MC and MC truth number of Jpsi)
   if(!regions) {
     for(Int_t icut=0; icut<GetNMeasMultCuts(); icut++)
       fValues[AliReducedVarManager::kNGlobalTracks+icut] = 0.;
+    fValues[AliReducedVarManager::kMCNch]   = 0.;
     fValues[AliReducedVarManager::kMCNch09] = 0.;
     fValues[AliReducedVarManager::kMCNJpsi] = 0.;
   }
@@ -1069,6 +1061,7 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions /*= kFALSE*/
       // TODO kMCNch is filled here again, because in the AliReducedVarManager such that it includes pileup
       //      tracks if one has MC with pileup. The same thing could also be achieved by introducing a
       //      TrueMultTrackCut for |eta|<1, but atm this code is not safe for multiple TrueMultTrackCuts.
+      // TODO kMCNch excludes tracks from jpsi daughters per default. Is this done properly here? Since I test this on MC w/o pileup, I would think kMCNch should not include pileup and be "correct".
       if(!regions && track->IsMCTruth() && track->Charge() && abs(track->Eta()) < 1.)
         fValues[AliReducedVarManager::kMCNch] ++;
 
@@ -1272,7 +1265,6 @@ Bool_t AliReducedAnalysisFilterTrees::IsTrackMeasuredMultSelected(AliReducedBase
   
   if(fMeasuredMultTrackCuts.GetEntries() == 0) return kTRUE;
   if(track->IsMCTruth()) return kFALSE;
-
   track->ResetMultFlags();
   
   for(Int_t i=0; i<fMeasuredMultTrackCuts.GetEntries(); ++i) {

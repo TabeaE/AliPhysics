@@ -392,18 +392,18 @@ class AliReducedVarManager : public TObject {
     kVZEROYaXc       = kVZEROXaYc+6,                            
     kVZEROYaYc       = kVZEROYaXc+6,                            
     kVZEROXcYc       = kVZEROYaYc+6,                            
-    kVZEROdeltaRPac  = kVZEROXcYc+6,         // Psi_VZEROA-Psi_VZEROC
-    kVZEROflowV2TPC  = kVZEROdeltaRPac+6,     // vzero v2 using TPC event plane        
-    kVZEROQaQcSP     = kVZEROflowV2TPC+64,     // scalar product for VZERO-A Q  times  VZERO-C Q  (just the cosine term)
-    kVZEROQaQcSPsine = kVZEROQaQcSP + 6,     // sine term from the scalar product
+    kVZEROdeltaRPac  = kVZEROXcYc+6,        // Psi_VZEROA-Psi_VZEROC
+    kVZEROflowV2TPC  = kVZEROdeltaRPac+6,   // vzero v2 using TPC event plane
+    kVZEROQaQcSP     = kVZEROflowV2TPC+64,  // scalar product for VZERO-A Q  times  VZERO-C Q  (just the cosine term)
+    kVZEROQaQcSPsine = kVZEROQaQcSP + 6,    // sine term from the scalar product
     // TPC event plane variables
-    kTPCQvecX = kVZEROQaQcSPsine+6,   // TPC Q-vector components for harmonics 1-6     
+    kTPCQvecX = kVZEROQaQcSPsine+6, // TPC Q-vector components for harmonics 1-6
     kTPCQvecY = kTPCQvecX+6,                                                           
-    kTPCRP    = kTPCQvecY+6,                // Event plane using TPC                    
-    kTPCRPres = kTPCRP+6,                // Event plane resolution variables sqrt(n*(RPtpc-RPvzeroa)),sqrt(n*(RPtpc-RPvzeroc))
-    kVZEROARPres=kTPCRPres+6,           //event plane resolution using V0A as reference detector 
-    kVZEROCRPres=kVZEROARPres+6,       //event plane resolution using V0C as reference detector
-    kVZEROTPCRPres=kVZEROCRPres+6,    //event plane resolution using tpc as reference detector
+    kTPCRP    = kTPCQvecY+6,        // Event plane using TPC
+    kTPCRPres = kTPCRP+6,           // Event plane resolution variables sqrt(n*(RPtpc-RPvzeroa)),sqrt(n*(RPtpc-RPvzeroc))
+    kVZEROARPres=kTPCRPres+6,       // event plane resolution using V0A as reference detector
+    kVZEROCRPres=kVZEROARPres+6,    // event plane resolution using V0C as reference detector
+    kVZEROTPCRPres=kVZEROCRPres+6,  // event plane resolution using tpc as reference detector
     
     // Correlations between TPC and VZERO event planes
     kRPXtpcXvzeroa    = kVZEROTPCRPres+6*2,          
@@ -488,12 +488,13 @@ class AliReducedVarManager : public TObject {
     kEMCEGATriggered,
     kEMCEGAHighTriggered,
     kEtaBinForSPDtracklets,
-    kMCNch,                             // number of primary charged particles in the MC, in |eta|<1
-    kMCNch09,                           // number of primary charged particles in the MC, in |eta|<0.9, 
-                                        // filled only if MC event is accepted (nch09>0, zvtx<10)
-                                        // Second variable is the same only if MC event is triggered and accepted, else -999
-                                        // Third variable is the same only if MC event is triggered and accepted (nch09>0, zvtx<10),
-                                        // and the reconstructed event is accepted, else -999
+    kMCNch,                              // number of primary charged particles in the MC, in |eta|<1
+    kMCNch09,                            // number of primary charged particles in the MC, in |eta|<0.9,
+                                         // filled only if MC event is accepted (nch09>0, zvtx<10)
+                                         // kMCNch09+1: same as kMCNch09 if MC event is triggered and accepted,
+                                         //             else -9999.
+                                         // kMCNch09+2: same as kMCNch09 if MC event is triggered and accepted
+                                         //             and the reconstructed event is accepted, else -9999.
     kMCNch09Toward=kMCNch09+3,
     kMCNch09Away=kMCNch09Toward+2,       // regions to Jpsi/randomphi and regions to leading pt (leading pt chosen with cutset 1)
     kMCNch09Transverse=kMCNch09Away+2,
@@ -510,9 +511,9 @@ class AliReducedVarManager : public TObject {
     kRelDiff2NchSPDaccSPDtrklts,
     kSPDntrackletsInCurrentEtaBin,
     kPtLeading,
-    kPhiLeading = kPtLeading + kNMaxCutsGlobalTracks,       // 8 possible cutsets
+    kPhiLeading = kPtLeading + kNMaxCutsGlobalTracks,   // 8 possible cutsets
     kEtaLeading = kPhiLeading + kNMaxCutsGlobalTracks,
-    kNEventVars = kEtaLeading + kNMaxCutsGlobalTracks,                               // number of event variables
+    kNEventVars = kEtaLeading + kNMaxCutsGlobalTracks,  // number of event variables
     // Particle variables --------------------------------------
     // Common pair/track variables
     kPt=kNEventVars,
@@ -560,10 +561,10 @@ class AliReducedVarManager : public TObject {
     kRapMCfromLegs,
     kPdgMC,
     kCharge = kPdgMC+4,
-    kVZEROFlowVn,                     // v_n using VZERO RP
-    kVZERODeltaPhiPsiN = kVZEROFlowVn+6*3,   // delta phi = phi - Psi  for VZERO event plane
+    kVZEROFlowVn,                           // v_n using VZERO RP
+    kVZERODeltaPhiPsiN = kVZEROFlowVn+6*3,  // delta phi = phi - Psi  for VZERO event plane
     kTPCFlowVn=kVZERODeltaPhiPsiN+6*3,      // v_n using TPC RP
-    kTPCDeltaPhiPsiN=kTPCFlowVn+6,         // delta phi = phi - Psi  for TPC event plane
+    kTPCDeltaPhiPsiN=kTPCFlowVn+6,          // delta phi = phi - Psi  for TPC event plane
     kVZEROFlowSine=kTPCDeltaPhiPsiN+6,      // sin(n*(phi-Psi)) using VZERO RP
     kTPCFlowSine=kVZEROFlowSine+6*3,  // sin(n*(phi-Psi)) using TPC RP
     kVZEROuQ = kTPCFlowSine+6,        // cosine term from the u*Q products from VZERO (harmonics 1-6; VZERO-A and VZERO-C)
@@ -599,8 +600,9 @@ class AliReducedVarManager : public TObject {
                                                 // 6 harmonics, 3 VZERO sides (A, C and A&C)
     kPairTPCFlowNom=kPairVZEROFlowDenom+6*3,
     kPairTPCFlowDenom=kPairTPCFlowNom+6,
-    kPairVZEROFlowSPNom=kPairTPCFlowDenom+6,     // Nominator of combinatorial Scalar Product pair flow for VZERO, 6 harmonics, 3 VZERO sides (A, C and A&C)
-    kPairVZEROFlowSPDenom=kPairVZEROFlowSPNom+6*3,  // Denominator of combinatorial pair flow for VZERO, 6 harmonics, 3 VZERO sides (A, C and A&C) 
+    kPairVZEROFlowSPNom=kPairTPCFlowDenom+6,        // Nominator of combinatorial Scalar Product pair flow for
+                                                    // VZERO, 6 harmonics, 3 VZERO sides (A, C and A&C)
+    kPairVZEROFlowSPDenom=kPairVZEROFlowSPNom+6*3,  // Denominator of combinatorial pair flow for VZERO, 6 harmonics, 3 VZERO sides (A, C and A&C)
     kPairTPCFlowSPNom=kPairVZEROFlowSPDenom+6*3,
     kPairTPCFlowSPDenom=kPairTPCFlowSPNom+6,
     kPairQualityFlag=kPairTPCFlowSPDenom+6,
@@ -613,19 +615,19 @@ class AliReducedVarManager : public TObject {
     kPairDcaSqrt,                // square root of pair DCA
     kPairDcaXYSqrt,
     kPairDcaZSqrt,
-    kMassDcaPtCorr,             // invariant mass, corrected for DCA and pT effects
-    kOpAngDcaPtCorr,            // opening angle, corrected for DCA and pT effects
-    kPairEff,                     // pair efficiency
+    kMassDcaPtCorr,              // invariant mass, corrected for DCA and pT effects
+    kOpAngDcaPtCorr,             // opening angle, corrected for DCA and pT effects
+    kPairEff,                    // pair efficiency
     kOneOverPairEff,             // 1 / pair efficiency (correction factor) 
-    kOneOverPairEffSq,             // 1 / pair efficiency squared (correction factor)
-    kPairLegITSchi2,              // the ITS chi2 for the pair legs, used in correlations between pair legs
-    kPairLegTPCchi2=kPairLegITSchi2+2,              // the TPC chi2 for the pair legs, used in correlations between pair legs
-    kPairLegPt=kPairLegTPCchi2+2,                 // pair leg pt
-    kPairLegPtSum=kPairLegPt+2,                   // sum of the pt of the two legs
-    kPairLegPtMC,                                // MC truth pair leg pt
-    kPairLegPtMCSum=kPairLegPtMC+2,               // sum of the MC truth leg pt's
-    kPairLegEMCALmatchedEnergy,                   // pair leg EMCal cluster energy
-    kPairMCMap,                                   // Is the pair really from one only Jpsi? Is this Jpsi from B?
+    kOneOverPairEffSq,           // 1 / pair efficiency squared (correction factor)
+    kPairLegITSchi2,             // the ITS chi2 for the pair legs, used in correlations between pair legs
+    kPairLegTPCchi2=kPairLegITSchi2+2,  // the TPC chi2 for the pair legs, used in correlations between pair legs
+    kPairLegPt=kPairLegTPCchi2+2,       // pair leg pt
+    kPairLegPtSum=kPairLegPt+2,         // sum of the pt of the two legs
+    kPairLegPtMC,                       // MC truth pair leg pt
+    kPairLegPtMCSum=kPairLegPtMC+2,     // sum of the MC truth leg pt's
+    kPairLegEMCALmatchedEnergy,         // pair leg EMCal cluster energy
+    kPairMCMap,                         // Is the pair really from one only Jpsi? Is this Jpsi from B?
 
     // Track-only variables -------------------------------------
     kPtTPC=kPairLegEMCALmatchedEnergy+2,
@@ -667,7 +669,7 @@ class AliReducedVarManager : public TObject {
     kTPCsignalN,
     kTPCdEdxQmax,                 // dEdx info from Qmax (IROC, medium OROC, long OROC, all OROC)
     kTPCdEdxQtot=kTPCdEdxQmax+4,  // dEdx info from Qtot (IROC, medium OROC, long OROC, all OROC)
-    kTPCdEdxQmaxOverQtot=kTPCdEdxQtot+4,    // Qmax / Qtot
+    kTPCdEdxQmaxOverQtot=kTPCdEdxQtot+4,  // Qmax / Qtot
     kTPCnSig=kTPCdEdxQmaxOverQtot+4,  
     kTPCnSigCorrected=kTPCnSig+4,
     kTOFbeta=kTPCnSigCorrected+4,
@@ -694,12 +696,12 @@ class AliReducedVarManager : public TObject {
     kEMCALmatchedDeltaEta,
     kEMCALmatchedDistance,
     kEMCALmatchedNSigmaElectron,
-    kNTrackVars,            // variable to mark end of track vars, introduce new tracks vars before this one
+    kNTrackVars,  // variable to mark end of track vars, introduce new tracks vars before this one
     // Calorimeter cluster variables --------------------------------------
     kEMCALclusterEnergy,        
     kEMCALclusterDx,            
     kEMCALclusterDz,            
-    kEMCALdetector,         // 0 - EMCAL; 1 - PHOS     
+    kEMCALdetector,         // 0 - EMCAL; 1 - PHOS
     kEMCALm20,
     kEMCALm02,
     kEMCALdispersion,
@@ -753,7 +755,7 @@ class AliReducedVarManager : public TObject {
     kPairChi2prNDOF,                        // chi2 of legs pair
     kTripletChi2prNDOF,                     // chi2 of legs + associated track (B candidate)
     kTripletLegPtSum,                       // sum of pt of three legs of B candidate
-    //kTripletDca,                            // DCA of B candidate
+    //kTripletDca,                          // DCA of B candidate
     //kTripletDcaXY,                
     //kTripletDcaZ, 
     kTripletLxy,

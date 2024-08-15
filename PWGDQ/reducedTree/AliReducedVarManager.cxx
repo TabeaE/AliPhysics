@@ -1694,7 +1694,7 @@ void AliReducedVarManager::FillTrackInfo(BASETRACK* p, Float_t* values) {
            // compute delta phi = phi - Psi
            values[kVZERODeltaPhiPsiN+iVZEROside*6+ih] = values[kPhi] - values[kVZERORP+iVZEROside*6+ih];
            // transform to the interval [0; 2*pi/n]
-           values[kVZERODeltaPhiPsiN+iVZEROside*6+ih] -= 
+           values[kVZERODeltaPhiPsiN+iVZEROside*6+ih] -=
                  2.0*TMath::Pi()/Double_t(ih+1) * TMath::Floor(Double_t(ih+1)/2.0/TMath::Pi()*values[kVZERODeltaPhiPsiN+iVZEROside*6+ih]);
            // transform to [0; pi/n]
            if(values[kVZERODeltaPhiPsiN+iVZEROside*6+ih] > TMath::Pi()/Double_t(ih+1))
@@ -1704,13 +1704,13 @@ void AliReducedVarManager::FillTrackInfo(BASETRACK* p, Float_t* values) {
            if(fgUsedVars[kVZEROuQ+iVZEROside*6+ih]) {
               values[kVZEROuQ+iVZEROside*6+ih] = TMath::Cos((values[kPhi]-values[kVZERORP+iVZEROside*6+ih])*(ih+1));
               values[kVZEROuQ+iVZEROside*6+ih] *= TMath::Sqrt(values[kVZEROQvecX+iVZEROside*6+ih]*values[kVZEROQvecX+iVZEROside*6+ih] +
-              values[kVZEROQvecY+iVZEROside*6+ih]*values[kVZEROQvecY+iVZEROside*6+ih]); 
+              values[kVZEROQvecY+iVZEROside*6+ih]*values[kVZEROQvecY+iVZEROside*6+ih]);
            }
            if(fgUsedVars[kVZEROuQsine+iVZEROside*6+ih]) {
               values[kVZEROuQsine+iVZEROside*6+ih] = TMath::Sin((values[kPhi]-values[kVZERORP+iVZEROside*6+ih])*(ih+1));
               values[kVZEROuQsine+iVZEROside*6+ih] *= TMath::Sqrt(values[kVZEROQvecX+iVZEROside*6+ih]*values[kVZEROQvecX+iVZEROside*6+ih] +
-              values[kVZEROQvecY+iVZEROside*6+ih]*values[kVZEROQvecY+iVZEROside*6+ih]); 
-           }	    
+              values[kVZEROQvecY+iVZEROside*6+ih]*values[kVZEROQvecY+iVZEROside*6+ih]);
+           }
         }
      }  // end loop over harmonics
   }  // end loop over VZERO sides
@@ -1773,15 +1773,15 @@ void AliReducedVarManager::FillTrackInfo(BASETRACK* p, Float_t* values) {
            // compute delta phi = phi - Psi
            values[kTPCDeltaPhiPsiN+ih] = values[kPhi] - values[kTPCRPtree+ih];
            // transform to the interval [0; 2*pi/n]
-           values[kTPCDeltaPhiPsiN+ih] -= 
+           values[kTPCDeltaPhiPsiN+ih] -=
                  2.0*TMath::Pi()/Double_t(ih+1) * TMath::Floor(Double_t(ih+1)/2.0/TMath::Pi()*values[kTPCDeltaPhiPsiN+ih]);
            // transform to [0; pi/n]
            if(values[kTPCDeltaPhiPsiN+ih] > TMath::Pi()/Double_t(ih+1))
              values[kTPCDeltaPhiPsiN+ih] = 2.0*TMath::Pi()/Double_t(ih+1) - values[kTPCDeltaPhiPsiN+ih];
         }
-            
-           //values[kTPCDeltaPhiPsiN+ih] = (values[kPhi]>TMath::Pi() ? values[kPhi]-2.0*TMath::Pi() : values[kPhi])/Double_t(ih+1)-values[kTPCRPtree+ih];  
-        if(fgUsedVars[kTPCFlowSine+ih]) 
+
+           //values[kTPCDeltaPhiPsiN+ih] = (values[kPhi]>TMath::Pi() ? values[kPhi]-2.0*TMath::Pi() : values[kPhi])/Double_t(ih+1)-values[kTPCRPtree+ih];
+        if(fgUsedVars[kTPCFlowSine+ih])
            values[kTPCFlowSine+ih] = TMath::Sin(DeltaPhi(values[kPhi],values[kTPCRPtree+ih])*(ih+1));
         if(fgUsedVars[kTPCuQ+ih]) {
            values[kTPCuQ+ih] = TMath::Cos((values[kPhi]-values[kTPCRPtree+ih])*(ih+1));
@@ -3814,14 +3814,14 @@ void AliReducedVarManager::SetDefaultVarNames() {
     fgVariableUnits[kTPCRPnegTree+iHarmonic]    = "rad.";
   }  // end loop over harmonics 
   
-  fgVariableNames[kMCNch] = "N_{ch} in |#eta|<1"; fgVariableUnits[kMCNch] = "";
-  fgVariableNames[kMCNch09] = "N_{ch} in |#eta|<0.9"; fgVariableUnits[kMCNch09] = "";
+  fgVariableNames[kMCNch]     = "N_{ch} in |#eta|<1";   fgVariableUnits[kMCNch] = "";
+  fgVariableNames[kMCNch09]   = "N_{ch} in |#eta|<0.9"; fgVariableUnits[kMCNch09] = "";
   fgVariableNames[kMCNch09+1] = "N_{ch} in |#eta|<0.9"; fgVariableUnits[kMCNch09+1] = "";
   fgVariableNames[kMCNch09+2] = "N_{ch} in |#eta|<0.9"; fgVariableUnits[kMCNch09+2] = "";
-  fgVariableNames[kMCNch09Toward] = "N_{ch} Toward in |#eta|<0.9"; fgVariableUnits[kMCNch09+2] = "";
+  fgVariableNames[kMCNch09Toward]     = "N_{ch} Toward in |#eta|<0.9";     fgVariableUnits[kMCNch09+2] = "";
   fgVariableNames[kMCNch09Transverse] = "N_{ch} Transverse in |#eta|<0.9"; fgVariableUnits[kMCNch09+2] = "";
-  fgVariableNames[kMCNch09Away] = "N_{ch} Away in |#eta|<0.9"; fgVariableUnits[kMCNch09+2] = "";
-  fgVariableNames[kMCNchSPDacc] = "N_{ch} in SPD acceptance"; fgVariableUnits[kMCNchSPDacc] = "";
+  fgVariableNames[kMCNch09Away]       = "N_{ch} Away in |#eta|<0.9";       fgVariableUnits[kMCNch09+2] = "";
+  fgVariableNames[kMCNchSPDacc]       = "N_{ch} in SPD acceptance";        fgVariableUnits[kMCNchSPDacc] = "";
   fgVariableNames[kEtaBinForSPDtracklets] = "#eta"; fgVariableUnits[kEtaBinForSPDtracklets] = "";
   fgVariableNames[kMCNchNegSide] = "N_{ch} in -1<#eta<0"; fgVariableUnits[kMCNchNegSide] = "";
   fgVariableNames[kMCNchPosSide] = "N_{ch} in 0<#eta<1"; fgVariableUnits[kMCNchPosSide] = "";
