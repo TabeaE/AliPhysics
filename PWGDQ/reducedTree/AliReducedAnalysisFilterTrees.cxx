@@ -219,13 +219,13 @@ void AliReducedAnalysisFilterTrees::Process() {
   fEventCounter++;
   
   AliReducedVarManager::SetEvent(fEvent);
-  // reset the values array, keep only the run wise data (LHC and ALICE GRP information)
+  // Reset the values array, keep only the run wise data (LHC and ALICE GRP information)
   // NOTE: The run wise data will be updated automatically in the VarManager in case a run number change
   //       is detected.
   for(Int_t i=AliReducedVarManager::kNRunWiseVariables; i<AliReducedVarManager::kNVars; ++i)
     fValues[i] = -9999.;
   
-  // fill event information before event cuts
+  // Fill event information before event cuts
   AliReducedVarManager::FillEventInfo(fEvent, fValues);
   
   if(fComputeMult) FillMultiplicity(kFALSE);
@@ -253,7 +253,8 @@ void AliReducedAnalysisFilterTrees::Process() {
     }
   }
   
-  
+
+  // Fill histograms for event selection efficiencies
   Bool_t isEventSelected = IsEventSelected(fEvent);
   
   // Trigger efficiency
@@ -280,17 +281,21 @@ void AliReducedAnalysisFilterTrees::Process() {
   }
   if(abs(fValues[AliReducedVarManager::kVtxZ]) > 10) isEventSelected = kFALSE;
   
-  // Reset the multiplicity estimators if event was not selected
+  // Reset the multiplicity estimators if event was not selected  TODO: needed? glegras has it not
   if(!isEventSelected) {
     for(Int_t iest=AliReducedVarManager::kMultiplicity;
         iest<AliReducedVarManager::kMultiplicity+AliReducedVarManager::kNMultiplicityEstimators; iest++)
       fValues[iest] = -9999.;
     fValues[AliReducedVarManager::kMCNch09+2] = -9999.;
   }
+
+
+  // Apply event selection
+  if(!isEventSelected) return;
   
 
+  // Fill histograms for multiplicity unfolding
   if(isEventUnbiased) {
-    // For multiplicity unfolding
     // For MC, only the smearing matrix is important (supposed to be independent of the trigger)
     // => HM filled even if no HM triggered events
     for(Int_t cutMode=0; cutMode<4*nGlobalEstimators; cutMode=cutMode+4) {
@@ -334,16 +339,13 @@ void AliReducedAnalysisFilterTrees::Process() {
     }*/
   }
   
-  // apply event selection
-  if(!isEventSelected) return;
-  
   if(fOptionRunOverMC) {
     fSkipMCEvent = kFALSE;
     FillMCTruthHistograms();
     if(fSkipMCEvent) return;
   }
   
-  // fill event info histograms after cuts
+  // Fill event info histograms after cuts
   if(isEventUnbiased) {
     fHistosManager->FillHistClass("Event_AfterCuts", fValues);
     for(Int_t icut=0; icut<nGlobalEstimators; icut++)
