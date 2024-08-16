@@ -985,11 +985,10 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions /*= kFALSE*/
   
   // Fill global tracks (both signal and MC and MC truth number of Jpsi)
   if(!regions) {
-    for(Int_t icut=0; icut<GetNMeasMultCuts(); icut++)
-      fValues[AliReducedVarManager::kNGlobalTracks+icut] = 0.;
-    fValues[AliReducedVarManager::kMCNch]   = 0.;
-    fValues[AliReducedVarManager::kMCNch09] = 0.;
-    fValues[AliReducedVarManager::kMCNJpsi] = 0.;
+    for(Int_t icut=0; icut<GetNMeasMultCuts(); icut++) fValues[AliReducedVarManager::kNGlobalTracks+icut] = 0.;
+    fValues[AliReducedVarManager::kMCNchWoPileup] = 0.;
+    fValues[AliReducedVarManager::kMCNch09]       = 0.;
+    fValues[AliReducedVarManager::kMCNJpsi]       = 0.;
   }
   Float_t phi = 0;
   if(regions) {
@@ -1058,12 +1057,13 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions /*= kFALSE*/
         fValues[i] = -9999.;
       AliReducedVarManager::FillTrackInfo(track, fValues);
 
-      // TODO kMCNch is filled here again, because in the AliReducedVarManager such that it includes pileup
-      //      tracks if one has MC with pileup. The same thing could also be achieved by introducing a
-      //      TrueMultTrackCut for |eta|<1, but atm this code is not safe for multiple TrueMultTrackCuts.
-      // TODO kMCNch excludes tracks from jpsi daughters per default. Is this done properly here? Since I test this on MC w/o pileup, I would think kMCNch should not include pileup and be "correct".
+      // TODO kMCNchWoPileup is filled here, because kMCNch is defined such that it includes pileup tracks if
+      //      one has MC with pileup. The same thing could also be achieved by introducing a TrueMultTrackCut
+      //      for |eta|<1, but atm this code is not safe for multiple TrueMultTrackCuts.
+      // TODO kMCNch excludes tracks from jpsi daughters per default. Is this done properly here? Since I test
+      //      this on MC w/o pileup, I would think kMCNch should not include pileup and be "correct".
       if(!regions && track->IsMCTruth() && track->Charge() && abs(track->Eta()) < 1.)
-        fValues[AliReducedVarManager::kMCNch] ++;
+        fValues[AliReducedVarManager::kMCNchWoPileup] ++;
 
       // Get measured multiplicity (track has to be reconstructed & selected by at least one meas mult cut)
       if(!(track->IsMCTruth()) && IsTrackMeasuredMultSelected(track,fValues)) {
@@ -1163,20 +1163,9 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions /*= kFALSE*/
   // some quantities necessary to compute efficiency/contamination TODO is this implemented properly?
   if(!regions) {
     fValues[AliReducedVarManager::kMCNch09+1] = fValues[AliReducedVarManager::kMCNch09];
-    fValues[AliReducedVarManager::kMCNch09+2] = fValues[AliReducedVarManager::kMCNch09];
-    
-    Bool_t isTriggered = kTRUE;
-    if(!isTriggered) {
-      fValues[AliReducedVarManager::kMCNch09+1] = -9999.;
-      fValues[AliReducedVarManager::kMCNch09+2] = -9999.;
-    }
-
-    Bool_t isMCAccepted = (fValues[AliReducedVarManager::kMCNch]>0) &&
-                          (abs(fValues[AliReducedVarManager::kVtxZMC])<=10.);
+    Bool_t isMCAccepted = (abs(fValues[AliReducedVarManager::kVtxZMC])<=10.);
     if(!isMCAccepted) {
-      fValues[AliReducedVarManager::kMCNch09]   = -9999.;
       fValues[AliReducedVarManager::kMCNch09+1] = -9999.;
-      fValues[AliReducedVarManager::kMCNch09+2] = -9999.;
     }
   }
 }

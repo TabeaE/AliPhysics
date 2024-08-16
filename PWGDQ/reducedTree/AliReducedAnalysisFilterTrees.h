@@ -77,19 +77,19 @@ public:
   }
   
   void AddEventCut                          (AliReducedInfoCut* cut) {fEventCuts.Add(cut);}
-  void SetWriteFilteredTracks               (Bool_t option=kTRUE) {fWriteFilteredTracks = option;}
-  void SetWriteFilteredPairs                (Bool_t option=kTRUE) {fWriteFilteredPairs = option;}
-  void SetWriteFilteredTracksCandidatesOnly (Bool_t option=kTRUE) {fWriteFilteredTracksCandidatesOnly=option;}
-  void SetFillTrackV0Histograms             (Bool_t option)       {fFillTrackV0Histograms = option;}
-  void SetRejectEmptyEvents                 (Bool_t option=kTRUE) {fRejectEmptyEvents = option;}
-  void SetMCJpsiPtWeights                   (TH1F* weights)       {fMCJpsiPtWeights = weights;}
-  void SetReweightCut                       (Int_t ncut)          {fReweightCut = ncut;}
+  void SetWriteFilteredTracks               (Bool_t option=kTRUE)    {fWriteFilteredTracks = option;}
+  void SetWriteFilteredPairs                (Bool_t option=kTRUE)    {fWriteFilteredPairs = option;}
+  void SetWriteFilteredTracksCandidatesOnly (Bool_t option=kTRUE)    {fWriteFilteredTracksCandidatesOnly=option;}
+  void SetFillTrackV0Histograms             (Bool_t option)          {fFillTrackV0Histograms = option;}
+  void SetRejectEmptyEvents                 (Bool_t option=kTRUE)    {fRejectEmptyEvents = option;}
+  void SetMCJpsiPtWeights                   (TH1F* weights)          {fMCJpsiPtWeights = weights;}
+  void SetReweightCut                       (Int_t ncut)             {fReweightCut = ncut;}
   void SetBuildCandidatePairs(AliReducedPairInfo::CandidateType type) {fBuildCandidatePairs=kTRUE;
                                                                        fCandidateType=type;}
-  void SetBuildCandidateLikePairs           (Bool_t option=kTRUE)     {fBuildCandidateLikePairs=option;}
-  void AddCandidateLeg1Cut                  (AliReducedInfoCut* cut)  {fLeg1Cuts.Add(cut);}
-  void AddCandidateLeg2Cut                  (AliReducedInfoCut* cut)  {fLeg2Cuts.Add(cut);}
-  void AddCandidatePairCut                  (AliReducedInfoCut* cut)  {fCandidatePairCuts.Add(cut);}
+  void SetBuildCandidateLikePairs           (Bool_t option=kTRUE)    {fBuildCandidateLikePairs=option;}
+  void AddCandidateLeg1Cut                  (AliReducedInfoCut* cut) {fLeg1Cuts.Add(cut);}
+  void AddCandidateLeg2Cut                  (AliReducedInfoCut* cut) {fLeg2Cuts.Add(cut);}
+  void AddCandidatePairCut                  (AliReducedInfoCut* cut) {fCandidatePairCuts.Add(cut);}
   void SetRunCandidatePrefilter             (Bool_t option=kTRUE) {fRunCandidatePrefilter = option;}
   void SetRunCandidatePrefilterOnSameCharge (Bool_t option=kTRUE) {fRunCandidatePrefilterOnSameCharge=option;}
   void SetRunEventMixing                    (Bool_t option)       {fOptionRunMixing     = option;};
@@ -223,7 +223,8 @@ protected:
   
   Bool_t fOptionRunMixingMult;
   Bool_t fOptionRunMixing;  // true: run event mixing, false: no event mixing
-  Bool_t fOptionRunOverMC;  // true: trees contain MC info -> fill histos to compute efficiencies, false: run normally as on data
+  Bool_t fOptionRunOverMC;  // true: trees contain MC info -> fill histos to compute efficiencies,
+                            // false: run normally as on data
   // Selection based on the MC truth information of the reconstructed leg candidates.
   // NOTE: The list is a list of AliReducedInfoCut objects which can be used to apply cuts on the MC flags of
   //       the tracks.
