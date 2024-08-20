@@ -254,10 +254,10 @@ void AliReducedAnalysisFilterTrees::Process() {
   }
   
 
-  // Fill histograms for event selection efficiencies
   Bool_t isEventSelected = IsEventSelected(fEvent);
-  
-  // Trigger efficiency
+  // Fill histograms for event selection efficiencies
+  // TODO Event selection for efficiency calculation should not be hardcoded here. Commented out for now.
+  /*// Trigger efficiency
   if(isEventUnbiased && isEventSelected && GetRunOverMC() && (fValues[AliReducedVarManager::kMCNch]>0)) {
     fHistosManager->FillHistClass("Event_INELGT0", fValues);
     for(Int_t icut=0; icut<nGlobalEstimators; icut++)
@@ -279,7 +279,7 @@ void AliReducedAnalysisFilterTrees::Process() {
     for(Int_t icut=0; icut<nGlobalEstimators; icut++)
       fHistosManager->FillHistClass(Form("EventMult_%s_NoVtxzCut",GetMeasMultcutName(icut)), fValues);
   }
-  if(abs(fValues[AliReducedVarManager::kVtxZ]) > 10) isEventSelected = kFALSE;
+  if(abs(fValues[AliReducedVarManager::kVtxZ]) > 10) isEventSelected = kFALSE;*/
 
 
   // Apply event selection

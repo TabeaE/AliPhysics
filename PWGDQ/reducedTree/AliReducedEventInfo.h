@@ -71,8 +71,8 @@ class AliReducedEventInfo : public AliReducedBaseEvent {
   Int_t     SPDnSingleClusters()              const {return fSPDnSingle;}
   Int_t     TracksPerTrackingFlag(Int_t flag) const {return (flag>=0 && flag<32 ? fNtracksPerTrackingFlag[flag] : -999);}
   Int_t     TracksWithTPCout()                const {return fNtracksTPCout;}
-  Int_t     Nch16 (Bool_t exclJpsiDau = kFALSE )  const {return (exclJpsiDau? fNch[0] : fNch[1] );}
-  Int_t     Nch10 (Bool_t exclJpsiDau = kFALSE )  const {return (exclJpsiDau? fNch[2] : fNch[3] );}
+  Int_t     Nch16 (Bool_t exclJpsiDau = kFALSE ) const {return (exclJpsiDau? fNch[0] : fNch[1] );}
+  Int_t     Nch10 (Bool_t exclJpsiDau = kFALSE ) const {return (exclJpsiDau? fNch[2] : fNch[3] );}
   Int_t     NchV0A(Bool_t exclJpsiDau = kFALSE ) const {return (exclJpsiDau? fNch[4] : fNch[5] );}
   Int_t     NchV0C(Bool_t exclJpsiDau = kFALSE ) const {return (exclJpsiDau? fNch[6] : fNch[7] );}
   
@@ -208,28 +208,28 @@ class AliReducedEventInfo : public AliReducedBaseEvent {
   Int_t     fSPDnSingle;            // number of clusters in SPD layer 1, not associated to a tracklet on SPD layer 2
   Int_t     fNtracksPerTrackingFlag[32];  // number of tracks for each tracking status bit                
   Int_t     fNtracksTPCout;          // number of kTPCout tracks in ESDs
-  Int_t     fNch[8];                // number of MCtruth charged particles in different eta regions (for MC with pileup this includes pileup tracks)
-  Float_t   fVZEROMult[64];         // VZERO multiplicity in all 64 channels
-  Float_t   fVZEROTotalMult[2];    // Total VZERO multiplicity
+  Int_t     fNch[8];                 // number of MCtruth charged particles in different eta regions (for MC with pileup this includes pileup tracks)
+  Float_t   fVZEROMult[64];          // VZERO multiplicity in all 64 channels
+  Float_t   fVZEROTotalMult[2];      // Total VZERO multiplicity
   Float_t   fZDCnEnergy[10];         // neutron ZDC energy in all 8 channels
   Float_t   fZDCpEnergy[10];         // proton ZDC energy in all 8 channels
-  Float_t   fZDCnTotalEnergy[2];   // total neutron ZDC energy
-  Float_t   fZDCpTotalEnergy[2];  // total proton ZDC energy
-  Float_t   fT0amplitude[26];         // T0 amplitude in all 24 channels
+  Float_t   fZDCnTotalEnergy[2];     // total neutron ZDC energy
+  Float_t   fZDCpTotalEnergy[2];     // total proton ZDC energy
+  Float_t   fT0amplitude[26];        // T0 amplitude in all 24 channels
   Float_t   fT0TOF[3];               // T0 timing for A&C, A, and C (first time)
   Float_t   fT0TOFbest[3];           // T0 timing for A&C, A, and C (best time)
-  Float_t   fT0zVertex;                // T0 z vertex estimation
+  Float_t   fT0zVertex;              // T0 z vertex estimation
   Float_t   fT0start;                // T0 timing
   Bool_t    fT0pileup;               // TZERO pileup flag
   Bool_t    fT0sattelite;            // TZERO flag for collisions from sattelite bunches
   Float_t   fDiamondDim[3];          // Diamond size (x,y,z) 
   Float_t   fDiamondCov[3];          // Diamond covariance matrix
     
-  Int_t     fNCaloClusters;         // number of calorimeter clusters  
-  TClonesArray* fCaloClusters;        //->   array containing calorimeter clusters
-  static TClonesArray* fgCaloClusters;     // calorimeter clusters
-  TClonesArray* fFMD;            //->   array containing fmd readout          (NEW)
-  static TClonesArray* fgFMD;    //       fmd readout			      (NEW)
+  Int_t     fNCaloClusters;             // number of calorimeter clusters
+  TClonesArray* fCaloClusters;          //->   array containing calorimeter clusters
+  static TClonesArray* fgCaloClusters;  // calorimeter clusters
+  TClonesArray* fFMD;                   //->   array containing fmd readout          (NEW)
+  static TClonesArray* fgFMD;           //       fmd readout			      (NEW)
 
   //AliReducedEventPlaneInfo* fEventPlane;     //-> container for event plane information
   AliReducedEventPlaneInfo fEventPlane;     // container for event plane information
