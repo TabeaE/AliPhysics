@@ -9,8 +9,8 @@
  *       The histograms can be set via the SetHistograms() methods.
  *       An initialized AliResonanceFits can be reused multiple times, and these histograms can be reset.
  *   2) Specifying dimensions / variables
- *       The AliResonanceFits needs to know what kind of variable corresponds to a given axis in the THnF, but not all axes
- *       have to be described. See below how the variables are used.
+ *       The AliResonanceFits needs to know what kind of variable corresponds to a given axis in the THnF, but
+ *       not all axes have to be described. See below how the variables are used.
  *       
  *       Event - wise variables
  *       AliResonanceFits is designed to do matching / fitting in each possible event category. 
@@ -147,14 +147,16 @@ public:
   // setters
   //void Reset();
   // User input
-  void SetHistograms(THnF* seos, THnF* meos = 0x0, 
-                     THnF* selsLeg1=0x0, THnF* selsLeg2=0x0, THnF* melsLeg1=0x0, THnF* melsLeg2=0x0);
-  void SetSEOSHistogram(THnF* hist) {fSEOS = hist; fMatchingIsDone = kFALSE;};
-  void SetSELSHistograms(THnF* hLeg1, THnF* hLeg2) {fSELSleg1 = hLeg1; fSELSleg2 = hLeg2; fMatchingIsDone = kFALSE;};
-  void SetMEOSHistogram(THnF* hist) {fMEOS = hist; fMatchingIsDone = kFALSE;};
-  void SetMELSHistograms(THnF* hLeg1, THnF* hLeg2) {fMELSleg1 = hLeg1; fMELSleg2 = hLeg2; fMatchingIsDone = kFALSE;}
+  void SetHistograms    (THnF* seos, THnF* meos = 0x0, THnF* selsLeg1=0x0, THnF* selsLeg2=0x0,
+                         THnF* melsLeg1=0x0, THnF* melsLeg2=0x0);
+  void SetSEOSHistogram (THnF* hist)               {fSEOS = hist; fMatchingIsDone = kFALSE;};
+  void SetSELSHistograms(THnF* hLeg1, THnF* hLeg2) {fSELSleg1 = hLeg1; fSELSleg2 = hLeg2;
+                                                    fMatchingIsDone = kFALSE;};
+  void SetMEOSHistogram (THnF* hist)               {fMEOS = hist; fMatchingIsDone = kFALSE;};
+  void SetMELSHistograms(THnF* hLeg1, THnF* hLeg2) {fMELSleg1 = hLeg1; fMELSleg2 = hLeg2;
+                                                    fMatchingIsDone = kFALSE;}
   void SetSEOSMCHistogram(THnF* hist) {fSEOS_MCtruth = hist;}
-  void SetSignalMCshape(TH1* shape)   {fSignalMCshape = shape;}
+  void SetSignalMCshape  (TH1* shape) {fSignalMCshape = shape;}
   
   // add variables and set ranges on the THnF
   void AddVariables(Int_t nVars, Int_t* vars, Int_t* indices);
@@ -164,32 +166,37 @@ public:
   
   // indicate the special mass and pt variables
   void SetMassVariable(Int_t var) {fMassVariable = var; fMatchingIsDone = kFALSE;}
-  void SetPtVariable(Int_t var)   {fPtVariable = var; fMatchingIsDone = kFALSE;}
+  void SetPtVariable  (Int_t var) {fPtVariable = var; fMatchingIsDone = kFALSE;}
   
   // set various options (see also defaults)
-  void SetBkgMethod(Int_t method)                {fOptionBkgMethod = method; fMatchingIsDone = kFALSE;}
-  void SetMEMatchingMethod(Int_t option)         {fgOptionMEMatching = option; fMatchingIsDone = kFALSE;}
-  void SetUseRfactorCorrection(Bool_t use=kTRUE) {fOptionUseRfactorCorrection = use; fMatchingIsDone = kFALSE;}
-  void SetUse2DMatching(Bool_t flag=kTRUE)       {fgOptionUse2DMatching = flag; fMatchingIsDone = kFALSE;}
-  void SetScalingOption(Int_t option)            {fOptionScale = option; fMatchingIsDone = kFALSE;}
-  void SetLSmethod(Int_t option)                 {fOptionLSmethod = option; fMatchingIsDone = kFALSE;}
-  void SetWeightedAveragePower(Double_t power)   {fWeightedAveragePower = power; fMatchingIsDone = kFALSE;}
-  void SetMinuitFitOption(Float_t option)        {fOptionMinuit = option; fMatchingIsDone = kFALSE;}
-  void SetUseSignificantZero(Bool_t option)      {fgOptionUseSignificantZero = option; fMatchingIsDone = kFALSE;}
-  void SetScaleSummedBkg(Bool_t option)          {fOptionScaleSummedBkg = option; fMatchingIsDone = kFALSE;}
-  void SetDebugMode(Bool_t option)               {fOptionDebug=option; fMatchingIsDone = kFALSE;}
-  void SetSignalFromMC(Bool_t option)            {fOptionSignalFromMC=option; fMatchingIsDone = kFALSE;}
-  void SetDoMeanPt(Bool_t option)                {fOptionMeanPt = option;}
+  void SetBkgMethod(Int_t method)                 {fOptionBkgMethod   = method; fMatchingIsDone = kFALSE;}
+  void SetMEMatchingMethod(Int_t option)          {fgOptionMEMatching = option; fMatchingIsDone = kFALSE;}
+  void SetUseRfactorCorrection(Bool_t use=kTRUE)  {fOptionUseRfactorCorrection = use;
+                                                   fMatchingIsDone       = kFALSE;}
+  void SetUse2DMatching(Bool_t flag=kTRUE)        {fgOptionUse2DMatching = flag;   fMatchingIsDone = kFALSE;}
+  void SetScalingOption(Int_t option)             {fOptionScale          = option; fMatchingIsDone = kFALSE;}
+  void SetLSmethod(Int_t option)                  {fOptionLSmethod       = option; fMatchingIsDone = kFALSE;}
+  void SetWeightedAveragePower(Double_t power)    {fWeightedAveragePower = power;  fMatchingIsDone = kFALSE;}
+  void SetMinuitFitOption(Float_t option)         {fOptionMinuit         = option; fMatchingIsDone = kFALSE;}
+  void SetUseSignificantZero(Bool_t option)       {fgOptionUseSignificantZero = option;
+                                                   fMatchingIsDone       = kFALSE;}
+  void SetScaleSummedBkg(Bool_t option)           {fOptionScaleSummedBkg = option; fMatchingIsDone = kFALSE;}
+  void SetDebugMode(Bool_t option)                {fOptionDebug          = option; fMatchingIsDone = kFALSE;}
+  void SetSignalFromMC(Bool_t option)             {fOptionSignalFromMC   = option; fMatchingIsDone = kFALSE;}
+  void SetDoMeanPt(Bool_t option)                 {fOptionMeanPt         = option;}
   void SetFitMeanPtAdditionalError(Bool_t option) {fFitMeanPtAdditionalErrors = option;}
-  void SetBkgFitOption(TString option)            {fBkgFitOption = option;}
+  void SetBkgFitOption(TString option)            {fBkgFitOption        = option;}
   void SetBkgFitFunctionCorr(TH1* hBkgCorr)       {fBkgFitFunction_corr = hBkgCorr;}
-  void SetAlphaHistogram(TH1* alpha)              {fAlpha = alpha;}
+  void SetAlphaHistogram(TH1* alpha)              {fAlpha               = alpha;}
   
   // set various ranges
   void SetMassFitRange(Double_t min, Double_t max) {fgMassFitRange[0] = min+1.0e-6;
-    fgMassFitRange[1] = max-1.0e-6; fUserEnabledMassFitRange = kTRUE; fMatchingIsDone = kFALSE;}
-  void SetPtFitRange(Double_t min, Double_t max)   {fgPtFitRange[0] = min+1.0e-6; fgPtFitRange[1] = max-1.0e-6;
-    fUserEnabledPtFitRange = kTRUE; fMatchingIsDone = kFALSE;}
+                                                    fgMassFitRange[1] = max-1.0e-6;
+                                                    fUserEnabledMassFitRange = kTRUE;
+                                                    fMatchingIsDone = kFALSE;}
+  void SetPtFitRange(Double_t min, Double_t max)   {fgPtFitRange[0] = min+1.0e-6;
+                                                    fgPtFitRange[1] = max-1.0e-6;
+                                                    fUserEnabledPtFitRange = kTRUE; fMatchingIsDone = kFALSE;}
   void AddMassExclusionRange(Double_t min, Double_t max) {
     if(fgNMassExclusionRanges==10) return;        // maximum 10 mass exclusion ranges
     fgMassExclusionRanges[fgNMassExclusionRanges][0] = min + 1.0e-6;
@@ -226,15 +233,15 @@ public:
    */
   // Getters
   TH1* GetSplusB() const {return (fMatchingIsDone ? fSplusB : 0x0);}
-  TH1* GetBkg()    const {return (fMatchingIsDone ? fBkg : 0x0);}
-  TH1* GetSignal() const {return (fMatchingIsDone ? fSig : 0x0);}
+  TH1* GetBkg()    const {return (fMatchingIsDone ? fBkg    : 0x0);}
+  TH1* GetSignal() const {return (fMatchingIsDone ? fSig    : 0x0);}
   TH1* GetSoverB(Bool_t fromMCshape=kFALSE) const {return (fMatchingIsDone ?
                                                    (fromMCshape ? fSoverBfromMCshape : fSoverB) : 0x0);}
   TH1* GetSplusResidualBkg() const {return (fMatchingIsDone ? fSplusResidualBkg : 0x0);}
   TH1* GetBkgCombinatorial() const {return (fMatchingIsDone ? fBkgCombinatorial : 0x0);}
-  TH1* GetResidualBkg() const {return (fMatchingIsDone ? fBkgResidual : 0x0);}
-  TH1* GetSignalMC()    const {return (fMatchingIsDone ? fSignalMCshape : 0x0);}
-  TH1* GetAlpha()       const {return (fMatchingIsDone ? fAlpha : 0x0);}
+  TH1* GetResidualBkg()      const {return (fMatchingIsDone ? fBkgResidual : 0x0);}
+  TH1* GetSignalMC()         const {return (fMatchingIsDone ? fSignalMCshape : 0x0);}
+  TH1* GetAlpha()            const {return (fMatchingIsDone ? fAlpha : 0x0);}
   
   Int_t GetBkgMethod()        const {return fOptionBkgMethod;}
   Int_t GetScalingOption()    const {return fOptionScale;}
@@ -242,7 +249,8 @@ public:
   Int_t GetMinuitFitOption()  const {return fOptionMinuit;}
   Double_t* GetMassFitRange() const {return fgMassFitRange;}
   Int_t     GetNMassExclusionRanges()        const {return fgNMassExclusionRanges;}
-  Double_t* GetMassExclusionRange(Int_t i=0) const {return (i<fgNMassExclusionRanges ? fgMassExclusionRanges[i] : 0x0);}
+  Double_t* GetMassExclusionRange(Int_t i=0) const {return (i<fgNMassExclusionRanges ?
+                                                    fgMassExclusionRanges[i] : 0x0);}
   const Double_t* GetFitValues()  const {return fFitValues;}
   TF1*   GetResidualFitFunction() const {return fResidualFitFunc;}
   TF1*   GetBkgFitFunction()      const {return fBkgFitFunction;}
@@ -250,7 +258,7 @@ public:
   Bool_t GetDebugMode()           const {return fOptionDebug;}
   
 private:
-  // User input data --------------------------------------------------------------------------------------------
+  // User input data ----------------------------------------------------------------------------------------
   THnF* fSEOS;
   THnF* fSELSleg1;
   THnF* fSELSleg2;
@@ -261,13 +269,14 @@ private:
   
   Int_t    fNVariables;                    // number of variables to be handled
   Int_t    fVariables[kNMaxVariables];     // list of variables
-  Double_t fVarLimits[kNMaxVariables][2];  // variable limits used for integrating and fitting the mass (or mass-pt) distribution
+  Double_t fVarLimits[kNMaxVariables][2];  // variable limits used for integrating and fitting the mass
+                                           // (or mass-pt) distribution
   // NOTE: These limits are the most inclusive, such that both signal counting, 
   //       plotting and fit ranges are included.
   Int_t fVarBinLimits[kNMaxVariables][2];
   Int_t fVarIndices[kNMaxVariables];  // indices of variables in the THnF
   
-  Int_t fMassVariable;  // the mass variable among the fNVariables  (defaults to AliReducedVarManager::kMass)
+  Int_t fMassVariable;  // the mass variable among the fNVariables (defaults to AliReducedVarManager::kMass)
   Int_t fPtVariable;    // the transverse momentum variable among the fNVariables (defaults to -1 -> not set)
   
   // Temporary variables
@@ -277,7 +286,7 @@ private:
   static TH1* fgTempSignal;  // pointer to temporary signal histogram used during fitting
   static TH1* fgTempBkg;     // pointer to temporary bkg histogram used during fitting
   
-  // User options -----------------------------------------------------------------------------------------------
+  // User options -------------------------------------------------------------------------------------------
   static Bool_t fgOptionUse2DMatching;  // FALSE (default): match inv.mass projections;
                                         // TRUE: match (m,pt) projections
   Int_t fOptionBkgMethod;               // either one of these: kBkgMixedEvent (default), kBkgLikeSign,
@@ -287,8 +296,8 @@ private:
   Int_t  fOptionScale;     // either one of these: kScaleEntries (default), kScaleWeightedAverage, kScaleFit
   Int_t  fOptionLSmethod;  // either one of these: kLSGeometricMean (default),
                            //                      kLSArithmeticMean (used for low stat situations)
-  Double_t fWeightedAveragePower;  // (default: 2.0) power of the inverse statistical error used as weights for
-                                   // the weighted average
+  Double_t fWeightedAveragePower;  // (default: 2.0) power of the inverse statistical error used as weights
+                                   // for the weighted average
   Int_t         fOptionMinuit;     // either kMinuitMethodChi2 (default) or kMinuitMethodLikelihood
   static Bool_t fgOptionUseSignificantZero;  // if true, assume zero entries as significant and error of 1
                                              // during the chi2 calculation
@@ -300,9 +309,9 @@ private:
   
   Bool_t fOptionSignalFromMC;
   // Matching / fit ranges
-  // NOTE: Mass and pt ranges used for matching / fitting can in principle be different (a sub-interval only) wrt
-  //       ranges in fVarLimits. If the dedicated setter function are not called by user, these ranges will be
-  //       made same as in fVarLimits at Initialize() time.
+  // NOTE: Mass and pt ranges used for matching / fitting can in principle be different (a sub-interval only)
+  //       wrt ranges in fVarLimits. If the dedicated setter function are not called by user, these ranges
+  //       will be made same as in fVarLimits at Initialize() time.
   static Double_t fgMassFitRange[2];  // mass range used in the bkg to signal matching or in the fit procedure
   Bool_t fUserEnabledMassFitRange;    // default: false, enabled when SetMassFitRange() is called
   static Double_t fgPtFitRange[2];    // pt range used in the bkg to signal matching or in the fit procedure
@@ -332,7 +341,7 @@ private:
   TH1* fSplusResidualBkg;  // combinatorial bkg subtracted minv distribution (signal + residual bkg)   
   TH1* fSplusBblind;       // bkg minv distribution; signal blind (area around signal excluded)   
   TH1* fBkgCombinatorial;  // combinatorial bkg (used when the residual bkg fit option is switched on)
-  TH1* fBkgResidual;       // residual bkg obtained after fitting the combinatorial bkg subtracted distribution
+  TH1* fBkgResidual;       // residual bkg obtained after fitting the combinatorial bkg subtracted distr
   ////////////////////////////////
   
   TH1* fSoverB;                // S/B projection
@@ -344,9 +353,9 @@ private:
   
   TMinuit* fMinuitFitter;  // used if fit option is required
   ///////////////////////////////////////////////////
-  TF1*        fResidualFitFunc;  // fit function used to fit the combinatorial bkg subtracted minv distribution
-  static TF1* fSignalFitFunc;    // fit function used to fit the combinatorial bkg subtracted minv distribution
-  TString     fBkgFitOption;     // String used to define fit options for the background function
+  TF1* fResidualFitFunc;  // fit function used to fit the combinatorial bkg subtracted minv distribution
+  static TF1* fSignalFitFunc;  // fit function used to fit the combinatorial bkg subtracted minv distribution
+  TString     fBkgFitOption;   // String used to define fit options for the background function
   
   ////////////////////////////////////////////////////
   
