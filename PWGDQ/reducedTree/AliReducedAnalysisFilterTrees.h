@@ -117,6 +117,9 @@ public:
 
   virtual AliHistogramManager* GetHistogramManager () const {return fHistosManager;}
   virtual AliMixingHandler*    GetMixingHandler    () const {return fMixingHandler;}
+  Int_t         GetNEventCuts              ()         const {return fEventCuts.GetEntries();}
+  const Char_t* GetEventCutName            (Int_t i)  const {return (i<fEventCuts.GetEntries() ?
+                                                             fEventCuts.At(i)->GetName() : "");}
   Bool_t        GetWriteFilteredTracks     ()         const {return fWriteFilteredTracks;}
   Bool_t        GetFillTrackV0Histograms   ()         const {return fFillTrackV0Histograms;}
   Int_t         GetNTrackCuts              ()         const {return fTrackCuts.GetEntries();}
