@@ -38,44 +38,44 @@ AliReducedEventInputHandler::~AliReducedEventInputHandler()
 //______________________________________________________________________________
 Bool_t AliReducedEventInputHandler::Init(TTree* tree, Option_t* opt)
 {
-    // Initialisation necessary for each new tree
-    fTree = tree;
-    if (!fTree) return kFALSE;
-    fTree->GetEntries();
+  // Initialisation necessary for each new tree
+  fTree = tree;
+  if (!fTree) return kFALSE;
+  fTree->GetEntries();
 
-    SwitchOffBranches();
-    SwitchOnBranches();
-    
-    // Get pointer to the event
-    if (!fReducedEvent) {
-       switch(fEventInputOption) {
-          case kReducedEventInfo:
-             fReducedEvent = new AliReducedEventInfo();
-             break;
-          default:   
-             fReducedEvent = new AliReducedBaseEvent();   
-       }
+  SwitchOffBranches();
+  SwitchOnBranches();
+
+  // Get pointer to the event
+  if (!fReducedEvent) {
+    switch(fEventInputOption) {
+      case kReducedEventInfo:
+        fReducedEvent = new AliReducedEventInfo();
+        break;
+      default:
+        fReducedEvent = new AliReducedBaseEvent();
     }
-    
-    tree->SetBranchAddress("Event",&fReducedEvent);
-    
-    return kTRUE;
+  }
+
+  tree->SetBranchAddress("Event",&fReducedEvent);
+
+  return kTRUE;
 }
 
 
 //______________________________________________________________________________
 Bool_t AliReducedEventInputHandler::BeginEvent(Long64_t entry)
 {
-    // Begin event
-    static Int_t prevRunNumber = -1;
-    if (prevRunNumber != fReducedEvent->RunNo() ) {
-      prevRunNumber = fReducedEvent->RunNo();
-    } 
-    fTree->GetTree()->GetEvent(entry);
-    // set transient pointer to event inside tracks
-    // fEvent->ConnectTracks();
+  // Begin event
+  static Int_t prevRunNumber = -1;
+  if (prevRunNumber != fReducedEvent->RunNo() ) {
+    prevRunNumber = fReducedEvent->RunNo();
+  }
+  fTree->GetTree()->GetEvent(entry);
+  // set transient pointer to event inside tracks
+  // fEvent->ConnectTracks();
 
-    return kTRUE;
+  return kTRUE;
 }
 
 

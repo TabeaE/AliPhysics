@@ -523,6 +523,14 @@ void AliAnalysisTaskReducedTreeMaker::UserExec(Option_t *option)
   UChar_t trdtrgtype   = 0;
   UInt_t  emcaltrgtype = 0;
 
+  // In AliESDInputHandler.cxx in BeginEvent():
+  //   fIsSelectedResult = fEventCuts->GetSelectionMask((AliESDEvent*)fEvent);
+  // fEventCuts is a AliVCuts*, set with AliInputEventHandler::SetEventSelection()
+  // In AliPhysicsSelection.h : AliAnalysisCuts : AliVCuts:
+  //   GetSelectionMask(const TObject* obj) { return IsCollisionCandidate((const AliVEvent*) obj);}
+  // In AliPhysicsSelection::IsCollisionCandidate():
+  // -> AliPhysicsSelection::EvaluateTriggerLogic():
+  // -> AliTriggerAnalysis::EvaluateTrigger()
   if((isESD && inputHandler->GetEventSelection()) || isAOD) {
     isPhysSel = inputHandler->IsEventSelected();
     isPhysAndTrigSel = isPhysSel & fTriggerMask;

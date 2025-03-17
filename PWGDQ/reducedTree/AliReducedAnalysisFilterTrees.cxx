@@ -227,23 +227,19 @@ void AliReducedAnalysisFilterTrees::Process() {
   
   // Fill event information before applying event cuts
   AliReducedVarManager::FillEventInfo(fEvent, fValues);
-  
   if(fComputeMult) FillMultiplicity(kFALSE);
   Int_t nGlobalEstimators = (fComputeMult ? GetNMeasMultCuts() : 0);
-  
   // Assuming that we have selected 2% unbiased events only for data and not for MC
   Bool_t isEventUnbiased = fEvent->TestEventTag(14) || GetRunOverMC();
-  
   if(isEventUnbiased) {
-    fHistosManager->FillHistClass("Event_MB_BeforeCuts", fValues);
+    fHistosManager->FillHistClass("Event_BeforeCuts", fValues);
     for(UShort_t ibit=0; ibit<64; ++ibit) {
       AliReducedVarManager::FillEventTagInput(fEvent, ibit, fValues);
-      fHistosManager->FillHistClass("EventTag_MB_BeforeCuts", fValues);
+      fHistosManager->FillHistClass("EventTag_BeforeCuts", fValues);
       AliReducedVarManager::FillEventOnlineTrigger(ibit, fValues);
-      fHistosManager->FillHistClass("EventTriggers_MB_BeforeCuts", fValues);
+      fHistosManager->FillHistClass("EventTriggers_BeforeCuts", fValues);
     }
-  }
-  else {
+  } else {
     fHistosManager->FillHistClass("Event_noTag14_BeforeCuts", fValues);
     for(UShort_t ibit=0; ibit<64; ++ibit) {
       AliReducedVarManager::FillEventTagInput(fEvent, ibit, fValues);
@@ -252,7 +248,6 @@ void AliReducedAnalysisFilterTrees::Process() {
       fHistosManager->FillHistClass("EventTriggers_noTag14_BeforeCuts", fValues);
     }
   }
-  
   
   // Histograms for event selection efficiencies
   if(isEventUnbiased) {
@@ -267,11 +262,9 @@ void AliReducedAnalysisFilterTrees::Process() {
     }
   }
 
-  
   // Apply event selection
   if(!IsEventSelected(fEvent)) return;
   
-
   // Fill histograms for multiplicity unfolding
   if(isEventUnbiased) {
     // For MC, only the smearing matrix is important (supposed to be independent of the trigger)
@@ -328,18 +321,15 @@ void AliReducedAnalysisFilterTrees::Process() {
     fHistosManager->FillHistClass("Event_AfterCuts", fValues);
     for(Int_t icut=0; icut<nGlobalEstimators; icut++)
       fHistosManager->FillHistClass(Form("EventMult_%s",GetMeasMultcutName(icut)), fValues);
-    
     // Correlations between different multiplicity estimators
     fHistosManager->FillHistClass("CorrelMult", fValues);
-    
     for(UShort_t ibit=0; ibit<64; ++ibit) {
       AliReducedVarManager::FillEventTagInput(fEvent, ibit, fValues);
       fHistosManager->FillHistClass("EventTag_AfterCuts", fValues);
       AliReducedVarManager::FillEventOnlineTrigger(ibit, fValues);
       fHistosManager->FillHistClass("EventTriggers_AfterCuts", fValues);
     }
-  }
-  else {
+  } else {
     fHistosManager->FillHistClass("Event_noTag14_AfterCuts", fValues);
     for(UShort_t ibit=0; ibit<64; ++ibit) {
       AliReducedVarManager::FillEventTagInput(fEvent, ibit, fValues);
@@ -348,7 +338,6 @@ void AliReducedAnalysisFilterTrees::Process() {
       fHistosManager->FillHistClass("EventTriggers_noTag14_AfterCuts", fValues);
     }
   }
-  
   
   CreateFilteredEvent();
   if(fRejectEmptyEvents && (fFilteredEvent->NPairs()+fFilteredEvent->NTracks1()+fFilteredEvent->NTracks2())==0)
