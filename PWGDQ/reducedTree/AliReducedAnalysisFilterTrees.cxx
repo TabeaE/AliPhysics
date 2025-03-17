@@ -716,7 +716,41 @@ void AliReducedAnalysisFilterTrees::RunCandidateLegsSelection(Int_t arrayOption 
       }
     }
   }  // end loop over tracks
-  
+
+  // TEST
+  TIter iterLeg1(&fLeg1Tracks);
+  TIter iterLeg2(&fLeg2Tracks);
+
+  AliReducedTrackInfo* leg1Track = 0;
+  AliReducedTrackInfo* leg2Track = 0;
+
+  for(Int_t it1=0; it1<fLeg1Tracks.GetEntries(); ++it1) {
+    leg1Track = (AliReducedTrackInfo*)iterLeg1();
+
+    iterLeg2.Reset();
+    for(Int_t it2=0; it2<fLeg2Tracks.GetEntries(); ++it2) {
+      leg2Track = (AliReducedTrackInfo*)iterLeg2();
+
+      // verify that the two current tracks have at least 1 common bit
+      ULong_t compatibilityMask = CheckTrackCompatibility(leg1Track, leg2Track, isAsymmetricDecayChannel);
+      if(!compatibilityMask) continue;
+      AliReducedVarManager::FillPairInfo(leg1Track, leg2Track, fCandidateType, fValues);
+
+      Bool_t isJpsiFromB = kFALSE;
+      if(fOptionRunOverMC) {
+        Bool_t isJpsi = abs(leg1Track->MCPdg(0))==11 && abs(leg2Track->MCPdg(0))==11 &&
+                        leg1Track->MCLabel(1)==leg2Track->MCLabel(1) && leg1Track->MCPdg(1)==443;
+        isJpsiFromB = isJpsi && ((abs(leg1Track->MCPdg(2))>500  && abs(leg1Track->MCPdg(2))<599) ||
+                                 (abs(leg1Track->MCPdg(2))>5000 && abs(leg1Track->MCPdg(2))<5999));
+        // TODO implement with fMCMap|=(UShort_t(1)<<i
+        fValues[AliReducedVarManager::kPairMCMap] = isJpsi+2*isJpsiFromB;
+      }
+
+      FillCandidatePairHistograms(compatibilityMask, 0, 1, "Pair_Candidate_AfterTrackCut",
+                                  isAsymmetricDecayChannel,
+                                  (fOptionRunOverMC?CheckReconstructedLegMCTruth(leg1Track,leg2Track):0));
+    }
+  }
 }
 
 
@@ -859,6 +893,11 @@ void AliReducedAnalysisFilterTrees::RunSameEventPairing() {
         // TODO implement with fMCMap|=(UShort_t(1)<<i
         fValues[AliReducedVarManager::kPairMCMap] = isJpsi+2*isJpsiFromB;
       }
+
+      // TEST
+      FillCandidatePairHistograms(compatibilityMask, 0, 1, "Pair_Candidate_AfterPrefilter",
+                                  isAsymmetricDecayChannel,
+                                  (fOptionRunOverMC?CheckReconstructedLegMCTruth(leg1Track,leg2Track):0));
 
       ULong_t pairCutMask = IsCandidatePairSelected(fValues);
       if(!pairCutMask) continue;

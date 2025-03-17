@@ -437,33 +437,33 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
   //
   // Basic event information
 
-  values[kVtxX]                      = baseEvent->Vertex(0);
-  values[kVtxY]                       = baseEvent->Vertex(1);
-  values[kVtxZ]                      = baseEvent->Vertex(2);
-  values[kNVtxContributors]= baseEvent->VertexNContributors(); 
+  values[kVtxX]             = baseEvent->Vertex(0);
+  values[kVtxY]             = baseEvent->Vertex(1);
+  values[kVtxZ]             = baseEvent->Vertex(2);
+  values[kNVtxContributors] = baseEvent->VertexNContributors();
   
-  values[kCentVZERO]        = baseEvent->CentralityVZERO();
-  values[kCentSPD]          = baseEvent->CentralitySPD();
-  values[kCentTPC]          = baseEvent->CentralityTPC();
-  values[kCentZDC]          = baseEvent->CentralityZEMvsZDC();
-  values[kCentVZEROA]       = baseEvent->CentralityVZEROA();
-  values[kCentVZEROC]       = baseEvent->CentralityVZEROC();
-  values[kCentZNA]          = baseEvent->CentralityZNA();
-  values[kCentV0MNew]       = baseEvent->CentralityV0MNew();
+  values[kCentVZERO]         = baseEvent->CentralityVZERO();
+  values[kCentSPD]           = baseEvent->CentralitySPD();
+  values[kCentTPC]           = baseEvent->CentralityTPC();
+  values[kCentZDC]           = baseEvent->CentralityZEMvsZDC();
+  values[kCentVZEROA]        = baseEvent->CentralityVZEROA();
+  values[kCentVZEROC]        = baseEvent->CentralityVZEROC();
+  values[kCentZNA]           = baseEvent->CentralityZNA();
+  values[kCentV0MNew]        = baseEvent->CentralityV0MNew();
   values[kCentV0MNewPlus10]  = baseEvent->CentralityV0MNewPlus10();
   values[kCentV0MNewMinus10] = baseEvent->CentralityV0MNewMinus10();
   values[kCentV0MNewPlus05]  = baseEvent->CentralityV0MNewPlus05();
   values[kCentV0MNewMinus05] = baseEvent->CentralityV0MNewMinus05();
-  values[kCentV0MPlus10]  = baseEvent->CentralityV0MPlus10();
-  values[kCentV0MMinus10] = baseEvent->CentralityV0MMinus10();
-  values[kCentV0MPlus05]  = baseEvent->CentralityV0MPlus05();
-  values[kCentV0MMinus05] = baseEvent->CentralityV0MMinus05();
-  values[kCentQuality]      = baseEvent->CentralityQuality();
+  values[kCentV0MPlus10]     = baseEvent->CentralityV0MPlus10();
+  values[kCentV0MMinus10]    = baseEvent->CentralityV0MMinus10();
+  values[kCentV0MPlus05]     = baseEvent->CentralityV0MPlus05();
+  values[kCentV0MMinus05]    = baseEvent->CentralityV0MMinus05();
+  values[kCentQuality]       = baseEvent->CentralityQuality();
   
-  values[kNV0total]             = baseEvent->NV0CandidatesTotal();
-  values[kNV0selected]       = baseEvent->NV0Candidates();
-  values[kNtracksTotal]       = baseEvent->NTracksTotal();
-  values[kNtracksSelected] = baseEvent->NTracks();
+  values[kNV0total]         = baseEvent->NV0CandidatesTotal();
+  values[kNV0selected]      = baseEvent->NV0Candidates();
+  values[kNtracksTotal]     = baseEvent->NTracksTotal();
+  values[kNtracksSelected]  = baseEvent->NTracks();
   values[kNtracks1Selected] = baseEvent->NTracks1();
   values[kNtracks2Selected] = baseEvent->NTracks2();
   
@@ -481,81 +481,89 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
   if(fgCurrentRunNumber!=baseEvent->RunNo()) {
     fgCurrentRunNumber = baseEvent->RunNo();
     // GRP and LHC information
-    if(fgRunTotalLuminosity) values[kTotalLuminosity] = fgRunTotalLuminosity->GetBinContent(fgRunTotalLuminosity->GetXaxis()->FindBin(Form("%d",fgCurrentRunNumber)));
-    if(fgRunTotalIntensity0) values[kBeamIntensity0] = fgRunTotalIntensity0->GetBinContent(fgRunTotalIntensity0->GetXaxis()->FindBin(Form("%d",fgCurrentRunNumber)));
-    if(fgRunTotalIntensity1) values[kBeamIntensity1] = fgRunTotalIntensity1->GetBinContent(fgRunTotalIntensity1->GetXaxis()->FindBin(Form("%d",fgCurrentRunNumber)));
-    if(fgRunLHCFillNumber) values[kLHCFillNumber] = fgRunLHCFillNumber->GetBinContent(fgRunLHCFillNumber->GetXaxis()->FindBin(Form("%d",fgCurrentRunNumber)));
-    if(fgRunDipolePolarity) values[kDipolePolarity] = fgRunDipolePolarity->GetBinContent(fgRunDipolePolarity->GetXaxis()->FindBin(Form("%d",fgCurrentRunNumber)));
-    if(fgRunL3Polarity) values[kL3Polarity] = fgRunL3Polarity->GetBinContent(fgRunL3Polarity->GetXaxis()->FindBin(Form("%d",fgCurrentRunNumber)));
-    if(fgRunTimeStart) values[kRunTimeStart] = fgRunTimeStart->GetBinContent(fgRunTimeStart->GetXaxis()->FindBin(Form("%d",fgCurrentRunNumber)));
-    if(fgRunTimeEnd) values[kRunTimeEnd] = fgRunTimeEnd->GetBinContent(fgRunTimeEnd->GetXaxis()->FindBin(Form("%d",fgCurrentRunNumber)));
+    if(fgRunTotalLuminosity)
+      values[kTotalLuminosity] = fgRunTotalLuminosity->GetBinContent(fgRunTotalLuminosity->GetXaxis()->FindBin(Form("%d",fgCurrentRunNumber)));
+    if(fgRunTotalIntensity0)
+      values[kBeamIntensity0] = fgRunTotalIntensity0->GetBinContent(fgRunTotalIntensity0->GetXaxis()->FindBin(Form("%d",fgCurrentRunNumber)));
+    if(fgRunTotalIntensity1)
+      values[kBeamIntensity1] = fgRunTotalIntensity1->GetBinContent(fgRunTotalIntensity1->GetXaxis()->FindBin(Form("%d",fgCurrentRunNumber)));
+    if(fgRunLHCFillNumber)
+      values[kLHCFillNumber] = fgRunLHCFillNumber->GetBinContent(fgRunLHCFillNumber->GetXaxis()->FindBin(Form("%d",fgCurrentRunNumber)));
+    if(fgRunDipolePolarity)
+      values[kDipolePolarity] = fgRunDipolePolarity->GetBinContent(fgRunDipolePolarity->GetXaxis()->FindBin(Form("%d",fgCurrentRunNumber)));
+    if(fgRunL3Polarity)
+      values[kL3Polarity] = fgRunL3Polarity->GetBinContent(fgRunL3Polarity->GetXaxis()->FindBin(Form("%d",fgCurrentRunNumber)));
+    if(fgRunTimeStart)
+      values[kRunTimeStart] = fgRunTimeStart->GetBinContent(fgRunTimeStart->GetXaxis()->FindBin(Form("%d",fgCurrentRunNumber)));
+    if(fgRunTimeEnd)
+      values[kRunTimeEnd] = fgRunTimeEnd->GetBinContent(fgRunTimeEnd->GetXaxis()->FindBin(Form("%d",fgCurrentRunNumber)));
     if(fgGRPfile) {
        fgRunInstLumi = (TGraphErrors*)fgGRPfile->Get(Form("InstLumi_Run%d", fgCurrentRunNumber));
        //cout << "Lumi hist loaded " << fgRunInstLumi << endl;
     }
     
     // VZERO calibration
-    if(fgVZEROCalibrationPath.Data()[0]!='\0') {
+    if(fgVZEROCalibrationPath.Data()[0] != '\0') {
        cout << "AliReducedVarManager::Info  Attempting to load VZERO calibration and/or recentering histograms from path: " << endl << fgVZEROCalibrationPath.Data() << endl;
-      TFile* calibFile = TFile::Open(Form("%s/000%d/dstAnalysisHistograms.root", fgVZEROCalibrationPath.Data(), fgCurrentRunNumber));
-      THashList* mainList = (THashList*)calibFile->Get("jpsi2eeHistos");
+      TFile* calibFile = TFile::Open(Form("%s/000%d/dstAnalysisHistograms.root",fgVZEROCalibrationPath.Data(),
+                                          fgCurrentRunNumber));
+      THashList* mainList  = (THashList*)calibFile->Get("jpsi2eeHistos");
       THashList* calibList = (THashList*)mainList->FindObject("Event_AfterCuts");
       if(!calibList) {
          cout << "AliReducedVarManager::Info  Cannot open calibration file for run " << fgCurrentRunNumber << endl;
          cout << "                        Will run uncalibrated and not-recentered!" << endl;
          fgOptionCalibrateVZEROqVec = kFALSE;
-         fgOptionRecenterVZEROqVec = kFALSE;
-         fgOptionRecenterTPCqVec = kFALSE;
+         fgOptionRecenterVZEROqVec  = kFALSE;
+         fgOptionRecenterTPCqVec    = kFALSE;
       }
       cout << "AliReducedVarManager::Info  Loading VZERO calibration and/or recentering parameters for run " << fgCurrentRunNumber << endl;
       if(fgOptionCalibrateVZEROqVec) {
         for(Int_t iCh=0; iCh<64; ++iCh) {
-           
-           fgAvgVZEROChannelMult[iCh] = (TProfile2D*)calibList->FindObject(Form("VZEROmult_ch%d_VtxCent_prof", iCh))->Clone(Form("run%d_ch%d", fgCurrentRunNumber, iCh));
+           fgAvgVZEROChannelMult[iCh] = (TProfile2D*)calibList->FindObject(Form("VZEROmult_ch%d_VtxCent_prof",iCh))->Clone(Form("run%d_ch%d",fgCurrentRunNumber,iCh));
            fgAvgVZEROChannelMult[iCh]->SetDirectory(0x0);
         }
       }
-      if(fgOptionRecenterVZEROqVec){
-         fgVZEROqVecRecentering[0] = (TProfile2D*)calibList->FindObject(Form("QvecX_sideA_h2_CentSPDVtxZ_prof"))->Clone(Form("run%d_QvecX_VZEROA", fgCurrentRunNumber));
+      if(fgOptionRecenterVZEROqVec) {
+         fgVZEROqVecRecentering[0] = (TProfile2D*)calibList->FindObject(Form("QvecX_sideA_h2_CentSPDVtxZ_prof"))->Clone(Form("run%d_QvecX_VZEROA",fgCurrentRunNumber));
          fgVZEROqVecRecentering[0]->SetDirectory(0x0);
-         fgVZEROqVecRecentering[1] = (TProfile2D*)calibList->FindObject(Form("QvecY_sideA_h2_CentSPDVtxZ_prof"))->Clone(Form("run%d_QvecY_VZEROA", fgCurrentRunNumber));
+         fgVZEROqVecRecentering[1] = (TProfile2D*)calibList->FindObject(Form("QvecY_sideA_h2_CentSPDVtxZ_prof"))->Clone(Form("run%d_QvecY_VZEROA",fgCurrentRunNumber));
          fgVZEROqVecRecentering[1]->SetDirectory(0x0);
-         fgVZEROqVecRecentering[2] = (TProfile2D*)calibList->FindObject(Form("QvecX_sideC_h2_CentSPDVtxZ_prof"))->Clone(Form("run%d_QvecX_VZEROC", fgCurrentRunNumber));
+         fgVZEROqVecRecentering[2] = (TProfile2D*)calibList->FindObject(Form("QvecX_sideC_h2_CentSPDVtxZ_prof"))->Clone(Form("run%d_QvecX_VZEROC",fgCurrentRunNumber));
          fgVZEROqVecRecentering[2]->SetDirectory(0x0);
-         fgVZEROqVecRecentering[3] = (TProfile2D*)calibList->FindObject(Form("QvecY_sideC_h2_CentSPDVtxZ_prof"))->Clone(Form("run%d_QvecY_VZEROC", fgCurrentRunNumber));
+         fgVZEROqVecRecentering[3] = (TProfile2D*)calibList->FindObject(Form("QvecY_sideC_h2_CentSPDVtxZ_prof"))->Clone(Form("run%d_QvecY_VZEROC",fgCurrentRunNumber));
          fgVZEROqVecRecentering[3]->SetDirectory(0x0);
         
       }
       
-      if(fgOptionRecenterTPCqVec){
-         fgTPCqVecRecentering[0] = (TProfile2D*)calibList->FindObject(Form("QvecX_TPC_h2_CentV0VtxZ_prof"))->Clone(Form("run%d_QvecX_TPC", fgCurrentRunNumber));
+      if(fgOptionRecenterTPCqVec) {
+         fgTPCqVecRecentering[0] = (TProfile2D*)calibList->FindObject(Form("QvecX_TPC_h2_CentV0VtxZ_prof"))->Clone(Form("run%d_QvecX_TPC",fgCurrentRunNumber));
          fgTPCqVecRecentering[0]->SetDirectory(0x0);
-         fgTPCqVecRecentering[1] = (TProfile2D*)calibList->FindObject(Form("QvecY_TPC_h2_CentV0VtxZ_prof"))->Clone(Form("run%d_QvecY_TPC", fgCurrentRunNumber));
+         fgTPCqVecRecentering[1] = (TProfile2D*)calibList->FindObject(Form("QvecY_TPC_h2_CentV0VtxZ_prof"))->Clone(Form("run%d_QvecY_TPC",fgCurrentRunNumber));
          fgTPCqVecRecentering[1]->SetDirectory(0x0);
          
       }
       calibFile->Close();
     }
 
-    if(fgUsedVars[kRunID] && fgRunNumbers.size() && fgRunID < 0  ){
-      for( fgRunID = 0; fgRunNumbers[ fgRunID ] != fgCurrentRunNumber && fgRunID< (Int_t) fgRunNumbers.size() ; ++fgRunID );
+    if(fgUsedVars[kRunID] && fgRunNumbers.size() && fgRunID<0) {
+      for(fgRunID=0; fgRunNumbers[fgRunID]!=fgCurrentRunNumber && fgRunID<(Int_t)fgRunNumbers.size(); ++fgRunID);
     }
-    for( int iEstimator =0 ; iEstimator < kNMultiplicityEstimators ; ++iEstimator ){
-      if( fgAvgMultVsVtxAndRun[iEstimator] ){
+    for(int iEstimator=0; iEstimator<kNMultiplicityEstimators; ++iEstimator) {
+      if(fgAvgMultVsVtxAndRun[iEstimator]) {
         Bool_t fillGlobal = !fgAvgMultVsVtxGlobal[iEstimator];
-        fgAvgMultVsVtxRunwise  [iEstimator] = fgAvgMultVsVtxAndRun[iEstimator]->ProjectionY( Form("AvgMultVsVtxRunwise%d",iEstimator ), fgRunID, fgRunID );
-        if( fillGlobal ){
-          fgAvgMultVsVtxGlobal [iEstimator] = fgAvgMultVsVtxAndRun[iEstimator]->ProjectionY( Form("AvgMultVsVtxGlobal%d", iEstimator) );
-          fgAvgMultVsVtxGlobal [iEstimator] -> Scale(1. / fgAvgMultVsVtxAndRun[iEstimator]->GetXaxis()->GetNbins());
-          fgAvgMultVsRun       [iEstimator] = fgAvgMultVsVtxAndRun[iEstimator]->ProjectionX( Form("AvgMultVsRun%d", iEstimator)  );
-          fgAvgMultVsRun       [iEstimator] -> Scale(1. / fgAvgMultVsVtxAndRun[iEstimator]->GetYaxis()->GetNbins());
+        fgAvgMultVsVtxRunwise[iEstimator] = fgAvgMultVsVtxAndRun[iEstimator]->ProjectionY(Form("AvgMultVsVtxRunwise%d",iEstimator), fgRunID, fgRunID);
+        if(fillGlobal) {
+          fgAvgMultVsVtxGlobal[iEstimator] = fgAvgMultVsVtxAndRun[iEstimator]->ProjectionY( Form("AvgMultVsVtxGlobal%d",iEstimator));
+          fgAvgMultVsVtxGlobal[iEstimator]->Scale(1./fgAvgMultVsVtxAndRun[iEstimator]->GetXaxis()->GetNbins());
+          fgAvgMultVsRun[iEstimator] = fgAvgMultVsVtxAndRun[iEstimator]->ProjectionX( Form("AvgMultVsRun%d",iEstimator));
+          fgAvgMultVsRun[iEstimator]->Scale(1./fgAvgMultVsVtxAndRun[iEstimator]->GetYaxis()->GetNbins());
         }
-        for( int iReference = 0; iReference < kNReferenceMultiplicities; ++ iReference  ){
+        for(int iReference=0; iReference<kNReferenceMultiplicities; ++iReference) {
           Double_t refVsVtx, refVsVtxGlobal, refVsRun, refVsVtxAndRun;
-          switch ( iReference ){
+          switch (iReference) {
             case kMaximumMultiplicity :
               refVsVtx = fgAvgMultVsVtxRunwise[iEstimator]->GetMaximum();
-              if( fillGlobal ){
+              if(fillGlobal) {
                 refVsVtxGlobal = fgAvgMultVsVtxGlobal[iEstimator]->GetMaximum();
                 refVsRun       = fgAvgMultVsRun[iEstimator]->GetMaximum();
                 refVsVtxAndRun = fgAvgMultVsVtxAndRun[iEstimator]->GetMaximum();
@@ -563,23 +571,23 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
               break;
             case kMinimumMultiplicity :
               refVsVtx = fgAvgMultVsVtxRunwise[iEstimator]->GetMinimum();
-              if( fillGlobal ){
+              if(fillGlobal) {
                 refVsVtxGlobal = fgAvgMultVsVtxGlobal[iEstimator]->GetMinimum();
                 refVsRun       = fgAvgMultVsRun[iEstimator]->GetMinimum();
                 refVsVtxAndRun = fgAvgMultVsVtxAndRun[iEstimator]->GetMinimum();
               }
               break;
             case kMeanMultiplicity :
-              refVsVtx = 0.5 * ( fgAvgMultVsVtxRunwise[iEstimator]->GetMaximum() +  fgAvgMultVsVtxRunwise[iEstimator]->GetMinimum() );
-              if( fillGlobal ){
-                refVsVtxGlobal = 0.5 * ( fgAvgMultVsVtxGlobal[iEstimator]->GetMaximum() + fgAvgMultVsVtxGlobal[iEstimator]->GetMinimum() ) ;
-                refVsRun       = 0.5 * ( fgAvgMultVsRun[iEstimator]->GetMaximum() + fgAvgMultVsRun[iEstimator]->GetMinimum() );
-                refVsVtxAndRun = 0.5 * ( fgAvgMultVsVtxAndRun[iEstimator]->GetMaximum() + fgAvgMultVsVtxAndRun[iEstimator]->GetMinimum() );
+              refVsVtx = 0.5 * (fgAvgMultVsVtxRunwise[iEstimator]->GetMaximum() +  fgAvgMultVsVtxRunwise[iEstimator]->GetMinimum());
+              if(fillGlobal) {
+                refVsVtxGlobal = 0.5 * (fgAvgMultVsVtxGlobal[iEstimator]->GetMaximum() + fgAvgMultVsVtxGlobal[iEstimator]->GetMinimum());
+                refVsRun       = 0.5 * (fgAvgMultVsRun[iEstimator]->GetMaximum() + fgAvgMultVsRun[iEstimator]->GetMinimum());
+                refVsVtxAndRun = 0.5 * (fgAvgMultVsVtxAndRun[iEstimator]->GetMaximum() + fgAvgMultVsVtxAndRun[iEstimator]->GetMinimum());
               }
               break;
           }
           fgRefMultVsVtxRunwise  [iEstimator][iReference] = refVsVtx;
-          if(fillGlobal){
+          if(fillGlobal) {
             fgRefMultVsVtxGlobal [iEstimator][iReference] = refVsVtxGlobal;
             fgRefMultVsRun       [iEstimator][iReference] = refVsRun;
             fgRefMultVsVtxAndRun [iEstimator][iReference] = refVsVtxAndRun;
@@ -592,42 +600,42 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
   values[kRunNo] = fgCurrentRunNumber;
   values[kRunID] = fgRunID;
 
-  values[kEventNumberInFile]    = event->EventNumberInFile();
-  values[kBC]                   = event->BC();
-  values[kTimeStamp]            = event->TimeStamp();
-  Int_t timeSOR = 0; Int_t timeEOR = 0;
+  values[kEventNumberInFile] = event->EventNumberInFile();
+  values[kBC]                = event->BC();
+  values[kTimeStamp]         = event->TimeStamp();
+  Int_t timeSOR = 0;
+  Int_t timeEOR = 0;
   if(fgUsedVars[kTimeRelativeSOR] || fgUsedVars[kTimeRelativeSORfraction]) {
-     timeSOR = (fgRunTimeStart ? fgRunTimeStart->GetBinContent(fgRunTimeStart->GetXaxis()->FindBin(Form("%d",fgCurrentRunNumber))) : 0);
-     timeEOR = (fgRunTimeEnd ? fgRunTimeEnd->GetBinContent(fgRunTimeEnd->GetXaxis()->FindBin(Form("%d",fgCurrentRunNumber))) : 0);
+    timeSOR = (fgRunTimeStart ? fgRunTimeStart->GetBinContent(fgRunTimeStart->GetXaxis()->FindBin(Form("%d",fgCurrentRunNumber))) : 0);
+    timeEOR = (fgRunTimeEnd ? fgRunTimeEnd->GetBinContent(fgRunTimeEnd->GetXaxis()->FindBin(Form("%d",fgCurrentRunNumber))) : 0);
   }
   if(fgUsedVars[kTimeRelativeSOR]) {
-     values[kTimeRelativeSOR] = Double_t(event->TimeStamp() - timeSOR) / 60.;     // in minutes
+    values[kTimeRelativeSOR] = Double_t(event->TimeStamp()-timeSOR) / 60.;  // in minutes
   }
-  if(fgUsedVars[kTimeRelativeSORfraction] && 
-     (values[kRunTimeEnd]-values[kRunTimeStart])>1.)   // the run should be longer than 1 second ... 
-     values[kTimeRelativeSORfraction] = (event->TimeStamp() - timeSOR) / (timeEOR - timeSOR);
+  if(fgUsedVars[kTimeRelativeSORfraction] && (values[kRunTimeEnd]-values[kRunTimeStart])>1.)  // the run should be longer than 1 second ...
+    values[kTimeRelativeSORfraction] = (event->TimeStamp()-timeSOR) / (timeEOR-timeSOR);
   if(fgRunInstLumi) {
-     values[kInstLumi]          = fgRunInstLumi->Eval(event->TimeStamp()); 
+    values[kInstLumi] = fgRunInstLumi->Eval(event->TimeStamp());
   }
-  values[kEventType]            = event->EventType();
-  values[kTriggerMask]          = event->TriggerMask();
-  values[kINT7Triggered]        = (event->TriggerMask() & kINT7) ?1:0;
+  values[kEventType]               = event->EventType();
+  values[kTriggerMask]             = event->TriggerMask();
+  values[kINT7Triggered]           = (event->TriggerMask() & kINT7) ?1:0;
   values[kCentralTriggered]        = event->TriggerMask() & kCentral ?1:0;
-  values[kSemiCentralTriggered]        = event->TriggerMask() & kSemiCentral ?1:0;
-  values[kINT7orCentTriggered]  = (event->TriggerMask() & kINT7) | (event->TriggerMask() & kCentral) ?1:0;
+  values[kSemiCentralTriggered]    = event->TriggerMask() & kSemiCentral ?1:0;
+  values[kINT7orCentTriggered]     = (event->TriggerMask() & kINT7) | (event->TriggerMask() & kCentral) ?1:0;
   values[kINT7orSemiCentTriggered] = (event->TriggerMask() & kINT7) | (event->TriggerMask() & kSemiCentral) ?1:0;
   values[kTRDTriggeredType]     = event->TRDfired();
   values[kHighMultV0Triggered]  = (event->TriggerMask() & kHighMultV0) ?1:0;
-  values[kHighMultSPDTriggered]  = (event->TriggerMask() & kHighMultSPD) ?1:0;
+  values[kHighMultSPDTriggered] = (event->TriggerMask() & kHighMultSPD) ?1:0;
   values[kEMCEGATriggered]      = event->TriggerMask() & kEMCEGA ?1:0;
   values[kEMCEGAHighTriggered]  = 0;
-  if (values[kEMCEGATriggered]) {
+  if(values[kEMCEGATriggered]) {
     TString trgClasses = event->TriggerClass();
-    if (trgClasses.Contains("EG1") || trgClasses.Contains("DG1")) values[kEMCEGAHighTriggered] = 1;
+    if(trgClasses.Contains("EG1") || trgClasses.Contains("DG1")) values[kEMCEGAHighTriggered] = 1;
   }
 
-  if (event->TriggerMask() & kINT7) event->SetEventTag(AliReducedBaseEvent::kIsMBTriggered);
-  if (event->TriggerMask() & kHighMultV0) event->SetEventTag(AliReducedBaseEvent::kIsHMTriggered);
+  if(event->TriggerMask() & kINT7)       event->SetEventTag(AliReducedBaseEvent::kIsMBTriggered);
+  if(event->TriggerMask() & kHighMultV0) event->SetEventTag(AliReducedBaseEvent::kIsHMTriggered);
 
   values[kIsPhysicsSelection]   = (event->IsPhysicsSelection() ? 1.0 : 0.0);
   values[kIsSPDPileup]          = event->IsSPDPileup();
@@ -650,22 +658,22 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
   values[kVtxYspd]              = event->VertexSPD(1);
   values[kVtxZspd]              = event->VertexSPD(2);
   values[kNVtxSPDContributors]  = event->VertexSPDContributors();
-  if(fgUsedVars[kDeltaVtxZ]) values[kDeltaVtxZ] = values[kVtxZ] - values[kVtxZtpc];
+  if(fgUsedVars[kDeltaVtxZ])    values[kDeltaVtxZ]    = values[kVtxZ] - values[kVtxZtpc];
   if(fgUsedVars[kDeltaVtxZspd]) values[kDeltaVtxZspd] = values[kVtxZ] - values[kVtxZspd];
   values[kTPCpileupZAC]         = event->TPCpileupZ();
   values[kTPCpileupZA]          = event->TPCpileupZ(1);
   values[kTPCpileupZC]          = event->TPCpileupZ(2);
-  values[kTPCpileupContributorsAC] = event->TPCpileupContributors();
-  values[kTPCpileupContributorsA]  = event->TPCpileupContributors(1);
-  values[kTPCpileupContributorsC]  = event->TPCpileupContributors(2);
-  values[kTPCpileupZAC2]         = event->TPCpileupZ2();
-  values[kTPCpileupZA2]          = event->TPCpileupZ2(1);
-  values[kTPCpileupZC2]          = event->TPCpileupZ2(2);
+  values[kTPCpileupContributorsAC]  = event->TPCpileupContributors();
+  values[kTPCpileupContributorsA]   = event->TPCpileupContributors(1);
+  values[kTPCpileupContributorsC]   = event->TPCpileupContributors(2);
+  values[kTPCpileupZAC2]            = event->TPCpileupZ2();
+  values[kTPCpileupZA2]             = event->TPCpileupZ2(1);
+  values[kTPCpileupZC2]             = event->TPCpileupZ2(2);
   values[kTPCpileupContributorsAC2] = event->TPCpileupContributors2();
   values[kTPCpileupContributorsA2]  = event->TPCpileupContributors2(1);
   values[kTPCpileupContributorsC2]  = event->TPCpileupContributors2(2);  
   
-  for(Int_t iflag=0;iflag<32;++iflag) 
+  for(Int_t iflag=0; iflag<32; ++iflag)
     values[kNTracksPerTrackingStatus+iflag] = event->TracksPerTrackingFlag(iflag);
   values[kNTracksTPCoutBeforeClean] = event->TracksWithTPCout();
   
@@ -676,91 +684,100 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
   fgUsedVars[kNTracksTRDoutVsTPCout] = kTRUE;
   fgUsedVars[kNTracksTOFoutVsTPCout] = kTRUE;
   fgUsedVars[kNTracksTOFoutVsTRDout] = kTRUE;
-  if(TMath::Abs(values[kNTracksPerTrackingStatus+kITSout])>0.01) {
-    values[kNTracksTPCoutVsITSout] = values[kNTracksPerTrackingStatus+kTPCout]/values[kNTracksPerTrackingStatus+kITSout];
-    values[kNTracksTRDoutVsITSout] = values[kNTracksPerTrackingStatus+kTRDout]/values[kNTracksPerTrackingStatus+kITSout]; 
-    values[kNTracksTOFoutVsITSout] = values[kNTracksPerTrackingStatus+kTOFout]/values[kNTracksPerTrackingStatus+kITSout];
+  if(TMath::Abs(values[kNTracksPerTrackingStatus+kITSout]) > 0.01) {
+    values[kNTracksTPCoutVsITSout] = values[kNTracksPerTrackingStatus+kTPCout] /
+                                     values[kNTracksPerTrackingStatus+kITSout];
+    values[kNTracksTRDoutVsITSout] = values[kNTracksPerTrackingStatus+kTRDout] /
+                                     values[kNTracksPerTrackingStatus+kITSout];
+    values[kNTracksTOFoutVsITSout] = values[kNTracksPerTrackingStatus+kTOFout] /
+                                     values[kNTracksPerTrackingStatus+kITSout];
   }
   else {
-     // if these values are undefined, set fgUsedVars as false such that the values are not filled in histograms
-     fgUsedVars[kNTracksTPCoutVsITSout] = kFALSE; fgUsedVars[kNTracksTRDoutVsITSout] = kFALSE; fgUsedVars[kNTracksTOFoutVsITSout] = kFALSE;
+    // if these values are undefined, set fgUsedVars as false such that the values are not filled in histograms
+    fgUsedVars[kNTracksTPCoutVsITSout] = kFALSE;
+    fgUsedVars[kNTracksTRDoutVsITSout] = kFALSE;
+    fgUsedVars[kNTracksTOFoutVsITSout] = kFALSE;
   }
   
-  if(TMath::Abs(values[kNTracksPerTrackingStatus+kTPCout])>0.01) {
-    values[kNTracksTRDoutVsTPCout] = values[kNTracksPerTrackingStatus+kTRDout]/values[kNTracksPerTrackingStatus+kTPCout];
-    values[kNTracksTOFoutVsTPCout] = values[kNTracksPerTrackingStatus+kTOFout]/values[kNTracksPerTrackingStatus+kTPCout];
+  if(TMath::Abs(values[kNTracksPerTrackingStatus+kTPCout]) > 0.01) {
+    values[kNTracksTRDoutVsTPCout] = values[kNTracksPerTrackingStatus+kTRDout] /
+                                     values[kNTracksPerTrackingStatus+kTPCout];
+    values[kNTracksTOFoutVsTPCout] = values[kNTracksPerTrackingStatus+kTOFout] /
+                                     values[kNTracksPerTrackingStatus+kTPCout];
   }
   else {
-     fgUsedVars[kNTracksTRDoutVsTPCout] = kFALSE; fgUsedVars[kNTracksTOFoutVsTPCout] = kFALSE; 
+    fgUsedVars[kNTracksTRDoutVsTPCout] = kFALSE;
+    fgUsedVars[kNTracksTOFoutVsTPCout] = kFALSE;
   }
   
-  if(TMath::Abs(values[kNTracksPerTrackingStatus+kTRDout])>0.01)
-    values[kNTracksTOFoutVsTRDout] = values[kNTracksPerTrackingStatus+kTOFout]/values[kNTracksPerTrackingStatus+kTRDout];
+  if(TMath::Abs(values[kNTracksPerTrackingStatus+kTRDout]) > 0.01)
+    values[kNTracksTOFoutVsTRDout] = values[kNTracksPerTrackingStatus+kTOFout] /
+                                     values[kNTracksPerTrackingStatus+kTRDout];
   else
      fgUsedVars[kNTracksTOFoutVsTRDout] = kFALSE;
 
   // Multiplicity estimators
   
-  values[ kVZEROATotalMult ] = event->MultVZEROA();
-  values[ kVZEROCTotalMult ] = event->MultVZEROC();
-  values[ kVZEROTotalMult  ] = event->MultVZERO();
+  values[kVZEROATotalMult] = event->MultVZEROA();
+  values[kVZEROCTotalMult] = event->MultVZEROC();
+  values[kVZEROTotalMult ] = event->MultVZERO();
   
-  values[ kVZEROATotalMultFromChannels ] = event->MultVZEROA(kTRUE);
-  values[ kVZEROCTotalMultFromChannels ] = event->MultVZEROC(kTRUE);
-  values[ kVZEROTotalMultFromChannels  ] = event->MultVZERO(kTRUE);
-  if(TMath::Abs(values[kVZEROTotalMultFromChannels])>1.0e-6) 
+  values[kVZEROATotalMultFromChannels] = event->MultVZEROA(kTRUE);
+  values[kVZEROCTotalMultFromChannels] = event->MultVZEROC(kTRUE);
+  values[kVZEROTotalMultFromChannels]  = event->MultVZERO(kTRUE);
+  if(TMath::Abs(values[kVZEROTotalMultFromChannels]) > 1.0e-6)
      values[kVZEROTPCoutDiff] = (values[kVZEROTotalMultFromChannels]-values[kNTracksPerTrackingStatus+kTPCout]) / (values[kVZEROTotalMultFromChannels]);
   else
      values[kVZEROTPCoutDiff] = 0.0;
 
-  values[ kVZEROACTotalMult ] = event->MultVZEROA() + event->MultVZEROC();
+  values[kVZEROACTotalMult] = event->MultVZEROA() + event->MultVZEROC();
 
-  values[ kSPDntracklets ]   = event->SPDntracklets();
-  values[ kSPDntracklets08 ] = 0.;
-  values[ kSPDntracklets16 ] = 0.;
-  values[ kSPDntrackletsOuterEta ] = 0.;
-  values[ kSPDnTracklets10EtaVtxCorr ] = 0.;
+  values[kSPDntracklets]   = event->SPDntracklets();
+  values[kSPDntracklets08] = 0.;
+  values[kSPDntracklets16] = 0.;
+  values[kSPDntrackletsOuterEta]     = 0.;
+  values[kSPDnTracklets10EtaVtxCorr] = 0.;
   
   
-  for(Int_t ieta=0;ieta<32;++ieta) {
-    values[ kSPDntrackletsEtaBin+ieta ] = event->SPDntracklets(ieta);
-    if( ieta > 7 && ieta < 24 ) values[ kSPDntracklets08 ] += event->SPDntracklets(ieta);
-    if( ieta < 8 || ieta > 23 ) values[ kSPDntrackletsOuterEta ] += event->SPDntracklets(ieta);
+  for(Int_t ieta=0; ieta<32; ++ieta) {
+    values[kSPDntrackletsEtaBin+ieta] = event->SPDntracklets(ieta);
+    if(ieta>7 && ieta<24) values[kSPDntracklets08]       += event->SPDntracklets(ieta);
+    if(ieta<8 || ieta>23) values[kSPDntrackletsOuterEta] += event->SPDntracklets(ieta);
   }
 
 
-  for( Int_t iEstimator = 0; iEstimator < kNMultiplicityEstimators; ++iEstimator){
+  for(Int_t iEstimator=0; iEstimator<kNMultiplicityEstimators; ++iEstimator) {
     Int_t estimator = kMultiplicity + iEstimator;
-    if( fgAvgMultVsVtxAndRun[iEstimator] ){
-      Int_t vtxBin = fgAvgMultVsVtxAndRun[iEstimator]->GetYaxis()->FindBin( values[kVtxZ] );
-      Int_t runBin = fgAvgMultVsVtxAndRun[iEstimator]->GetXaxis()->FindBin( values[kRunID] );
-      Double_t multRaw = values[ estimator ];
-      for( Int_t iCorrection = 0; iCorrection < kNCorrections; ++iCorrection  ){
-        for(Int_t iReference = 0 ; iReference <  kNReferenceMultiplicities; ++iReference ){
-          Int_t indexNotSmeared = GetCorrectedMultiplicity( estimator, iCorrection, iReference, kNoSmearing );
-          Int_t indexSmeared    = GetCorrectedMultiplicity( estimator, iCorrection, iReference, kPoissonSmearing );
+    if(fgAvgMultVsVtxAndRun[iEstimator]) {
+      Int_t vtxBin = fgAvgMultVsVtxAndRun[iEstimator]->GetYaxis()->FindBin(values[kVtxZ]);
+      Int_t runBin = fgAvgMultVsVtxAndRun[iEstimator]->GetXaxis()->FindBin(values[kRunID]);
+      Double_t multRaw = values[estimator];
+      for(Int_t iCorrection=0; iCorrection<kNCorrections; ++iCorrection) {
+        for(Int_t iReference=0; iReference<kNReferenceMultiplicities; ++iReference ) {
+          Int_t indexNotSmeared = GetCorrectedMultiplicity(estimator, iCorrection, iReference, kNoSmearing);
+          Int_t indexSmeared    = GetCorrectedMultiplicity(estimator, iCorrection, iReference, kPoissonSmearing);
           Double_t multCorr        = multRaw;
           Double_t multCorrSmeared = multRaw;
-    // apply vertex and gain loss correction simultaneously
-          if( iCorrection == kVertexCorrection2D  ){
-            Double_t localAvg = fgAvgMultVsVtxAndRun[iEstimator]->GetBinContent( runBin, vtxBin );
+          // apply vertex and gain loss correction simultaneously
+          if(iCorrection == kVertexCorrection2D) {
+            Double_t localAvg = fgAvgMultVsVtxAndRun[iEstimator]->GetBinContent(runBin, vtxBin);
             Double_t refMult  = fgRefMultVsVtxAndRun[iEstimator][iReference];
-            multCorr *=  localAvg ?  refMult / localAvg : 1.;
-            Double_t deltaM =  localAvg ?  multRaw * ( refMult/localAvg - 1) : 0.;
+            multCorr *= localAvg ? refMult/localAvg : 1.;
+            Double_t deltaM = localAvg ? multRaw*(refMult/localAvg-1) : 0.;
             multCorrSmeared += (deltaM>0 ? 1. : -1.) * gRandom->Poisson(TMath::Abs(deltaM));
           }
-          else{
-    // first apply vertex correction
-            Double_t localAvgVsVtx , refMultVsVtx  ;
-            switch( iCorrection ){
+          else {
+          // first apply vertex correction
+            Double_t localAvgVsVtx, refMultVsVtx;
+            switch(iCorrection) {
               case kVertexCorrectionGlobal:
               case kVertexCorrectionGlobalGainLoss:
-                localAvgVsVtx = fgAvgMultVsVtxGlobal[iEstimator]->GetBinContent( vtxBin );
+                localAvgVsVtx = fgAvgMultVsVtxGlobal[iEstimator]->GetBinContent(vtxBin);
                 refMultVsVtx  = fgRefMultVsVtxGlobal[iEstimator][iReference];
                 break;
               case kVertexCorrectionRunwise:
               case kVertexCorrectionRunwiseGainLoss:
-                localAvgVsVtx = fgAvgMultVsVtxRunwise[iEstimator]->GetBinContent( vtxBin );
+                localAvgVsVtx = fgAvgMultVsVtxRunwise[iEstimator]->GetBinContent(vtxBin);
                 refMultVsVtx  = fgRefMultVsVtxRunwise[iEstimator][iReference];
                 break;
               default:
@@ -768,55 +785,57 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
                 refMultVsVtx  = 0.;
                 break;  
             }
-            multCorr        *= localAvgVsVtx > 0. ? refMultVsVtx / localAvgVsVtx : 1.;
-            Double_t deltaM  = localAvgVsVtx > 0. ? multRaw  * ( refMultVsVtx/localAvgVsVtx - 1) : 0.;
+            multCorr        *= localAvgVsVtx>0. ? refMultVsVtx/localAvgVsVtx : 1.;
+            Double_t deltaM  = localAvgVsVtx>0. ? multRaw*(refMultVsVtx/localAvgVsVtx-1) : 0.;
             multCorrSmeared += (deltaM>0 ? 1. : -1.) * gRandom->Poisson(TMath::Abs(deltaM));
-    // then apply gain loss correction
-            if( iCorrection == kVertexCorrectionGlobalGainLoss || 
-                iCorrection == kVertexCorrectionRunwiseGainLoss || 
-                iCorrection == kGainLossCorrection   ){
-              Double_t localAvgVsRun = fgAvgMultVsRun[iEstimator]->GetBinContent( runBin );
+            // then apply gain loss correction
+            if(iCorrection == kVertexCorrectionGlobalGainLoss  ||
+               iCorrection == kVertexCorrectionRunwiseGainLoss ||
+               iCorrection == kGainLossCorrection) {
+              Double_t localAvgVsRun = fgAvgMultVsRun[iEstimator]->GetBinContent(runBin);
               Double_t refMultVsRun  = fgRefMultVsRun[iEstimator][iReference];
-              multCorr        *= localAvgVsRun ? refMultVsRun / localAvgVsRun : 1.;
-              deltaM           = localAvgVsRun ? multCorrSmeared  * ( refMultVsRun/localAvgVsRun - 1) : 0;
+              multCorr        *= localAvgVsRun ? refMultVsRun/localAvgVsRun : 1.;
+              deltaM           = localAvgVsRun ? multCorrSmeared*(refMultVsRun/localAvgVsRun-1) : 0;
               multCorrSmeared += (deltaM>0 ? 1. : -1.) * gRandom->Poisson(TMath::Abs(deltaM));
             }
           }
-          values[ indexNotSmeared ] = multCorr;
-          values[ indexSmeared ]    = multCorrSmeared;
-          fgUsedVars [indexNotSmeared] = kTRUE;
-          fgUsedVars [indexSmeared] = kTRUE;
+          values[indexNotSmeared] = multCorr;
+          values[indexSmeared]    = multCorrSmeared;
+          fgUsedVars[indexNotSmeared] = kTRUE;
+          fgUsedVars[indexSmeared]    = kTRUE;
         }
       }
     }
-    else if( ( estimator == kVZEROACTotalMult && fgAvgMultVsVtxAndRun[kVZEROATotalMult-kMultiplicity] && fgAvgMultVsVtxAndRun[kVZEROCTotalMult-kMultiplicity]  )  
-      || (estimator == kSPDnTracklets10EtaVtxCorr && fgAvgMultVsVtxAndRun[kSPDntrackletsEtaBin-kMultiplicity] ) ){
-      for( Int_t iCorrection = 0; iCorrection < kNCorrections; ++iCorrection  ){
-        for(Int_t iReference = 0 ; iReference <  kNReferenceMultiplicities; ++iReference ){
+    else if( (estimator==kVZEROACTotalMult && fgAvgMultVsVtxAndRun[kVZEROATotalMult-kMultiplicity] &&
+              fgAvgMultVsVtxAndRun[kVZEROCTotalMult-kMultiplicity])
+          || (estimator==kSPDnTracklets10EtaVtxCorr && fgAvgMultVsVtxAndRun[kSPDntrackletsEtaBin-kMultiplicity])
+            ) {
+      for(Int_t iCorrection=0; iCorrection<kNCorrections; ++iCorrection) {
+        for(Int_t iReference=0; iReference<kNReferenceMultiplicities; ++iReference) {
           Int_t indexNotSmeared = GetCorrectedMultiplicity( estimator, iCorrection, iReference, kNoSmearing );
           Int_t indexSmeared    = GetCorrectedMultiplicity( estimator, iCorrection, iReference, kPoissonSmearing );
           values[indexNotSmeared] = 0.;
-          values[indexSmeared] = 0.;
-          if( estimator == kSPDnTracklets10EtaVtxCorr ){
-            for( Int_t ieta=6; ieta<26; ++ieta ) {
-              Int_t vtxBin = fgAvgMultVsVtxAndRun[kSPDntrackletsEtaBin+ieta-kMultiplicity]->GetYaxis()->FindBin( values[kVtxZ] );
-              if( fgAvgMultVsVtxGlobal[kSPDntrackletsEtaBin+ieta-kMultiplicity]->GetBinContent( vtxBin ) > .3 ){
-                Int_t indexBinNotSmeared = GetCorrectedMultiplicity( kSPDntrackletsEtaBin+ieta, iCorrection, iReference, kNoSmearing );
-                Int_t indexBinSmeared    = GetCorrectedMultiplicity( kSPDntrackletsEtaBin+ieta, iCorrection, iReference, kPoissonSmearing );
-                if( fgUsedVars[indexBinNotSmeared]) values[ indexNotSmeared ] += values[ indexBinNotSmeared ];
-                if( fgUsedVars[indexBinSmeared]) values[ indexSmeared ] += values[ indexBinSmeared ];
+          values[indexSmeared]    = 0.;
+          if(estimator == kSPDnTracklets10EtaVtxCorr) {
+            for(Int_t ieta=6; ieta<26; ++ieta) {
+              Int_t vtxBin = fgAvgMultVsVtxAndRun[kSPDntrackletsEtaBin+ieta-kMultiplicity]->GetYaxis()->FindBin( values[kVtxZ]);
+              if(fgAvgMultVsVtxGlobal[kSPDntrackletsEtaBin+ieta-kMultiplicity]->GetBinContent(vtxBin) > .3 ) {
+                Int_t indexBinNotSmeared = GetCorrectedMultiplicity(kSPDntrackletsEtaBin+ieta, iCorrection, iReference, kNoSmearing);
+                Int_t indexBinSmeared    = GetCorrectedMultiplicity(kSPDntrackletsEtaBin+ieta, iCorrection, iReference, kPoissonSmearing);
+                if(fgUsedVars[indexBinNotSmeared]) values[indexNotSmeared] += values[indexBinNotSmeared];
+                if(fgUsedVars[indexBinSmeared])    values[indexSmeared]    += values[indexBinSmeared];
               }
             }
           }
-          else{
-            Int_t indexAnotSmeared = GetCorrectedMultiplicity( kVZEROATotalMult, iCorrection, iReference, kNoSmearing );
-            Int_t indexCnotSmeared = GetCorrectedMultiplicity( kVZEROCTotalMult, iCorrection, iReference, kNoSmearing );
+          else {
+            Int_t indexAnotSmeared = GetCorrectedMultiplicity(kVZEROATotalMult, iCorrection, iReference, kNoSmearing);
+            Int_t indexCnotSmeared = GetCorrectedMultiplicity(kVZEROCTotalMult, iCorrection, iReference, kNoSmearing);
 
-            Int_t indexAsmeared = GetCorrectedMultiplicity( kVZEROATotalMult, iCorrection, iReference, kPoissonSmearing );
-            Int_t indexCsmeared = GetCorrectedMultiplicity( kVZEROCTotalMult, iCorrection, iReference, kPoissonSmearing );
+            Int_t indexAsmeared = GetCorrectedMultiplicity(kVZEROATotalMult, iCorrection, iReference, kPoissonSmearing);
+            Int_t indexCsmeared = GetCorrectedMultiplicity(kVZEROCTotalMult, iCorrection, iReference, kPoissonSmearing);
 
-            values[ indexNotSmeared ] = values[ indexAnotSmeared ] + values[ indexCnotSmeared ];
-            values[ indexSmeared ]    = values[ indexAsmeared ]    + values[ indexCsmeared ];
+            values[indexNotSmeared] = values[indexAnotSmeared] + values[indexCnotSmeared];
+            values[indexSmeared]    = values[indexAsmeared]    + values[indexCsmeared];
           }
         }
       }
@@ -827,7 +846,7 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
   fgUsedVars[kNTracksTPCoutVsSPDtracklets] = kTRUE;
   fgUsedVars[kNTracksTRDoutVsSPDtracklets] = kTRUE;
   fgUsedVars[kNTracksTOFoutVsSPDtracklets] = kTRUE;
-  if(values[kSPDntracklets]>0.01) {
+  if(values[kSPDntracklets] > 0.01) {
     values[kNTracksITSoutVsSPDtracklets] = values[kNTracksPerTrackingStatus+kITSout] / values[kSPDntracklets];
     values[kNTracksTPCoutVsSPDtracklets] = values[kNTracksPerTrackingStatus+kTPCout] / values[kSPDntracklets];
     values[kNTracksTRDoutVsSPDtracklets] = values[kNTracksPerTrackingStatus+kTRDout] / values[kSPDntracklets];
@@ -840,47 +859,46 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
      fgUsedVars[kNTracksTOFoutVsSPDtracklets] = kFALSE;
   }
     
-  values[kNCaloClusters]   = event->GetNCaloClusters();
-  values[kNTPCclusters]    = event->NTPCClusters();
+  values[kNCaloClusters] = event->GetNCaloClusters();
+  values[kNTPCclusters]  = event->NTPCClusters();
 
   
-  
-  for(Int_t i=0;i<2;++i) values[kSPDFiredChips+i] = event->SPDFiredChips(i+1);
-  for(Int_t i=0;i<6;++i) values[kITSnClusters+i] = event->ITSClusters(i+1);
+  for(Int_t i=0; i<2; ++i) values[kSPDFiredChips+i] = event->SPDFiredChips(i+1);
+  for(Int_t i=0; i<6; ++i) values[kITSnClusters+i]  = event->ITSClusters(i+1);
   values[kSPDnSingleClusters] = event->SPDnSingleClusters();
   if(fgUsedVars[kSDDandSSDclusters]) {
      values[kSDDandSSDclusters] = 0.0;
-     for(Int_t i=2;i<6;++i) values[kSDDandSSDclusters] += event->ITSClusters(i+1);  
+     for(Int_t i=2; i<6; ++i) values[kSDDandSSDclusters] += event->ITSClusters(i+1);
   }
   
   //VZERO detector information
   fgUsedVars[kNTracksTPCoutVsVZEROTotalMult] = kTRUE;
   if(values[kVZEROTotalMult]>1.0e-5)
-     values[kNTracksTPCoutVsVZEROTotalMult] = values[kNTracksPerTrackingStatus+kTPCout] / values[kVZEROTotalMult];
+     values[kNTracksTPCoutVsVZEROTotalMult] = values[kNTracksPerTrackingStatus+kTPCout]/values[kVZEROTotalMult];
   else
      fgUsedVars[kNTracksTPCoutVsVZEROTotalMult] = kFALSE;
   
   values[kVZEROAemptyChannels] = 0;
   values[kVZEROCemptyChannels] = 0;
-  for(Int_t ich=0;ich<64;++ich) fgUsedVars[kVZEROChannelMult+ich] = kTRUE; 
+  for(Int_t ich=0; ich<64; ++ich) fgUsedVars[kVZEROChannelMult+ich] = kTRUE;
   Float_t theta=0.0;
-  for(Int_t ich=0;ich<64;++ich) {
+  for(Int_t ich=0; ich<64; ++ich) {
     if(fgUsedVars[kVZEROChannelMult+ich]) {
       values[kVZEROChannelMult+ich] = event->MultChannelVZERO(ich);
-      if(values[kVZEROChannelMult+ich]<fgkVZEROminMult) {
-        fgUsedVars[kVZEROChannelMult+ich] = kFALSE;   // will not be filled in histograms by the histogram manager
+      if(values[kVZEROChannelMult+ich] < fgkVZEROminMult) {
+        fgUsedVars[kVZEROChannelMult+ich] = kFALSE;  // will not be filled in histograms by the histogram manager
         if(ich<32) values[kVZEROCemptyChannels] += 1;
-        else values[kVZEROAemptyChannels] += 1;
+        else       values[kVZEROAemptyChannels] += 1;
       }
     }
     if(fgUsedVars[kVZEROChannelEta+ich]) {
       if(ich<32) theta = TMath::ATan(fgkVZEROChannelRadii[ich]/(fgkVZEROCz-values[kVtxZ]));
-      else theta = TMath::Pi()-TMath::ATan(fgkVZEROChannelRadii[ich]/(fgkVZEROAz-values[kVtxZ]));
+      else       theta = TMath::Pi()-TMath::ATan(fgkVZEROChannelRadii[ich]/(fgkVZEROAz-values[kVtxZ]));
       values[kVZEROChannelEta+ich] = -1.0*TMath::Log(TMath::Tan(theta/2.0));
     }
   }
   
-  if(values[kVZEROTotalMultFromChannels]>0.0) 
+  if(values[kVZEROTotalMultFromChannels] > 0.0)
      values[kNTracksTPCoutFromPileup] = values[kNTracksTPCoutBeforeClean] - (-3.2+TMath::Sqrt(3.2*3.2+4.0*1.6e-5*values[kVZEROTotalMultFromChannels]))/(2.0*1.6e-5);
   
   Float_t tpcClustersExpectationWOpileup = 0.001;
@@ -1114,9 +1132,6 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
   }// end loop over harmonics
   
  
-     
-    
-   
   
   if(eventF) {
    for(Int_t ih=0; ih<6; ++ih) {
@@ -1227,14 +1242,17 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
     } 
   }  // end if (eventF)
     
-  for(Int_t izdc=0;izdc<10;++izdc) values[kZDCnEnergyCh+izdc] = event->EnergyZDCnTree(izdc);
-  for(Int_t izdc=0;izdc<10;++izdc) values[kZDCpEnergyCh+izdc] = event->EnergyZDCpTree(izdc);
-  for(Int_t itzero=0;itzero<26;++itzero) values[kTZEROAmplitudeCh+itzero] = event->AmplitudeTZEROch(itzero);
-  for(Int_t itzero=0;itzero<3;++itzero) values[kTZEROTOF+itzero] = event->EventTZEROStartTimeTOFfirst(itzero);
-  for(Int_t itzero=0;itzero<3;++itzero) values[kTZEROTOFbest+itzero] = event->EventTZEROStartTimeTOFbest(itzero);
-  values[kTZEROzVtx] = event->VertexTZERO();
+  for(Int_t izdc=0; izdc<10; ++izdc) values[kZDCnEnergyCh+izdc] = event->EnergyZDCnTree(izdc);
+  for(Int_t izdc=0; izdc<10; ++izdc) values[kZDCpEnergyCh+izdc] = event->EnergyZDCpTree(izdc);
+  for(Int_t itzero=0; itzero<26; ++itzero)
+    values[kTZEROAmplitudeCh+itzero] = event->AmplitudeTZEROch(itzero);
+  for(Int_t itzero=0; itzero<3; ++itzero)
+    values[kTZEROTOF+itzero] = event->EventTZEROStartTimeTOFfirst(itzero);
+  for(Int_t itzero=0; itzero<3; ++itzero)
+    values[kTZEROTOFbest+itzero] = event->EventTZEROStartTimeTOFbest(itzero);
+  values[kTZEROzVtx]      = event->VertexTZERO();
   values[kTZEROstartTime] = event->EventTZEROStartTime();
-  values[kTZEROpileup] = event->IsPileupTZERO();
+  values[kTZEROpileup]    = event->IsPileupTZERO();
   values[kTZEROsatellite] = event->IsSatteliteCollisionTZERO();  
 
   values[kMultEstimatorV0M]          = event->MultEstimatorV0M();
@@ -1251,9 +1269,9 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
   values[kMultEstimatorRefMult05]    = event->MultEstimatorRefMult05();
   values[kMultEstimatorRefMult08]    = event->MultEstimatorRefMult08();
 
-  values[kMultEstimatorPercentileV0M]    = event->MultEstimatorPercentileV0M();
-  values[kMultEstimatorPercentileV0A]    = event->MultEstimatorPercentileV0A();
-  values[kMultEstimatorPercentileV0C]    = event->MultEstimatorPercentileV0C();
+  values[kMultEstimatorPercentileV0M]          = event->MultEstimatorPercentileV0M();
+  values[kMultEstimatorPercentileV0A]          = event->MultEstimatorPercentileV0A();
+  values[kMultEstimatorPercentileV0C]          = event->MultEstimatorPercentileV0C();
   values[kMultEstimatorPercentileOnlineV0M]    = event->MultEstimatorPercentileOnlineV0M();
   values[kMultEstimatorPercentileOnlineV0A]    = event->MultEstimatorPercentileOnlineV0A();
   values[kMultEstimatorPercentileOnlineV0C]    = event->MultEstimatorPercentileOnlineV0C();
