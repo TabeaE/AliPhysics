@@ -190,6 +190,7 @@ void AliReducedAnalysisFilterTrees::Init() {
 
   AliReducedVarManager::SetDefaultVarNames();
 
+  AliReducedVarManager::SetUseVariable(AliReducedVarManager::kDeltaVtxZMC);
   AliReducedVarManager::SetUseVariable(AliReducedVarManager::kPseudoProperDecayTime);
   AliReducedVarManager::SetUseVariable(AliReducedVarManager::kPseudoProperDecayTimeMC);
   AliReducedVarManager::SetUseVariable(AliReducedVarManager::kPseudoProperDecayTimeError);

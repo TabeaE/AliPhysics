@@ -233,18 +233,26 @@ void AliReducedVarManager::SetVariableDependencies() {
   // Set as used those variables on which other variables calculation depends
   //
   if(fgUsedVars[kDeltaVtxZ]) {
-    fgUsedVars[kVtxZ] = kTRUE;
+    fgUsedVars[kVtxZ]    = kTRUE;
     fgUsedVars[kVtxZtpc] = kTRUE;
+  }
+  if(fgUsedVars[kDeltaVtxZMC]) {
+    fgUsedVars[kVtxZ]   = kTRUE;
+    fgUsedVars[kVtxZMC] = kTRUE;
+  }
+  if(fgUsedVars[kDeltaVtxZspd]) {
+    fgUsedVars[kVtxZ]    = kTRUE;
+    fgUsedVars[kVtxZspd] = kTRUE;
   }
   if(fgUsedVars[kRap] || fgUsedVars[kRapAbs]) {
     fgUsedVars[kMass] = kTRUE;
-    fgUsedVars[kP] = kTRUE;
-    fgUsedVars[kEta] = kTRUE;
+    fgUsedVars[kP]    = kTRUE;
+    fgUsedVars[kEta]  = kTRUE;
   }
   if(fgUsedVars[kTriggerRap] || fgUsedVars[kTriggerRapAbs]) {
 	  fgUsedVars[kMass] = kTRUE;
-	  fgUsedVars[kP] = kTRUE;
-	  fgUsedVars[kEta] = kTRUE;
+	  fgUsedVars[kP]    = kTRUE;
+	  fgUsedVars[kEta]  = kTRUE;
   }
 
   if(fgUsedVars[kEta]) fgUsedVars[kP] = kTRUE;
@@ -330,14 +338,16 @@ void AliReducedVarManager::SetVariableDependencies() {
       fgUsedVars[kVZEROChannelMult+ich] = kTRUE; fgUsedVars[kTPCRP+1] = kTRUE;
     }
   }
-  if(fgUsedVars[kPtSquared]) fgUsedVars[kPt]=kTRUE;  
+  if(fgUsedVars[kPtSquared]) fgUsedVars[kPt] = kTRUE;
   if(fgUsedVars[kTPCnSigCorrected+kElectron]) fgUsedVars[kTPCnSig+kElectron] = kTRUE; 
-  if(fgUsedVars[kTPCnSigCorrected+kPion])     fgUsedVars[kTPCnSig+kPion] = kTRUE; 
-  if(fgUsedVars[kTPCnSigCorrected+kProton])   fgUsedVars[kTPCnSig+kProton] = kTRUE;
-  if(fgUsedVars[kTPCnSigCorrected+kElectron] || fgUsedVars[kTPCnSigCorrected+kPion] || fgUsedVars[kTPCnSigCorrected+kProton]) {
+  if(fgUsedVars[kTPCnSigCorrected+kPion])     fgUsedVars[kTPCnSig+kPion]     = kTRUE;
+  if(fgUsedVars[kTPCnSigCorrected+kProton])   fgUsedVars[kTPCnSig+kProton]   = kTRUE;
+  if(fgUsedVars[kTPCnSigCorrected+kElectron] || fgUsedVars[kTPCnSigCorrected+kPion] ||
+     fgUsedVars[kTPCnSigCorrected+kProton])
+  {
      fgUsedVars[fgVarDependencyX] = kTRUE; 
      fgUsedVars[fgVarDependencyY] = kTRUE;
-     for(Int_t i=0;i<4;++i) fgUsedVars[fgTPCpidCalibVars[i]] = kTRUE;
+     for(Int_t i=0; i<4; ++i) fgUsedVars[fgTPCpidCalibVars[i]] = kTRUE;
   }
   
   
@@ -385,11 +395,11 @@ void AliReducedVarManager::SetVariableDependencies() {
     fgUsedVars[kPairDcaXYSqrt]    = kTRUE;
   }
   if(fgUsedVars[kNTPCclustersFromPileupRelative]) {
-    fgUsedVars[kNTPCclusters] = kTRUE;
+    fgUsedVars[kNTPCclusters]           = kTRUE;
     fgUsedVars[kNTPCclustersFromPileup] = kTRUE;
   }
   if(fgUsedVars[kNTracksTPCoutFromPileup]) {
-    fgUsedVars[kNTracksTPCoutBeforeClean] = kTRUE;
+    fgUsedVars[kNTracksTPCoutBeforeClean]   = kTRUE;
     fgUsedVars[kVZEROTotalMultFromChannels] = kTRUE;
   }
   if(fgUsedVars[kPairEffDown_weight] || fgUsedVars[kPairEffUp_weight]) {
@@ -399,15 +409,15 @@ void AliReducedVarManager::SetVariableDependencies() {
     fgUsedVars[kPtTimesPairEff_weight] = kTRUE;
   }
   if(fgUsedVars[kPairEff_weight]) {
-    fgUsedVars[kPairEffUp_weight] = kTRUE;
+    fgUsedVars[kPairEffUp_weight]   = kTRUE;
     fgUsedVars[kPairEffDown_weight] = kTRUE;
   }
   if(fgUsedVars[kPtTimesPairEff_weight]) {
-    fgUsedVars[kPt_weight] = kTRUE;
-    fgUsedVars[kPairEff_weight] = kTRUE;
-    fgUsedVars[kPairEffUp_weight] = kTRUE;
-    fgUsedVars[kPairEffDown_weight] = kTRUE;
-    fgUsedVars[kPtTimesPairEffUp_weight] = kTRUE;
+    fgUsedVars[kPt_weight]                 = kTRUE;
+    fgUsedVars[kPairEff_weight]            = kTRUE;
+    fgUsedVars[kPairEffUp_weight]          = kTRUE;
+    fgUsedVars[kPairEffDown_weight]        = kTRUE;
+    fgUsedVars[kPtTimesPairEffUp_weight]   = kTRUE;
     fgUsedVars[kPtTimesPairEffDown_weight] = kTRUE;
   }
 }
@@ -660,6 +670,7 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
   values[kNVtxSPDContributors]  = event->VertexSPDContributors();
   if(fgUsedVars[kDeltaVtxZ])    values[kDeltaVtxZ]    = values[kVtxZ] - values[kVtxZtpc];
   if(fgUsedVars[kDeltaVtxZspd]) values[kDeltaVtxZspd] = values[kVtxZ] - values[kVtxZspd];
+  if(fgUsedVars[kDeltaVtxZMC])  values[kDeltaVtxZMC]  = values[kVtxZ] - values[kVtxZMC];
   values[kTPCpileupZAC]         = event->TPCpileupZ();
   values[kTPCpileupZA]          = event->TPCpileupZ(1);
   values[kTPCpileupZC]          = event->TPCpileupZ(2);
@@ -714,7 +725,7 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
     values[kNTracksTOFoutVsTRDout] = values[kNTracksPerTrackingStatus+kTOFout] /
                                      values[kNTracksPerTrackingStatus+kTRDout];
   else
-     fgUsedVars[kNTracksTOFoutVsTRDout] = kFALSE;
+    fgUsedVars[kNTracksTOFoutVsTRDout] = kFALSE;
 
   // Multiplicity estimators
   
@@ -726,15 +737,16 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
   values[kVZEROCTotalMultFromChannels] = event->MultVZEROC(kTRUE);
   values[kVZEROTotalMultFromChannels]  = event->MultVZERO(kTRUE);
   if(TMath::Abs(values[kVZEROTotalMultFromChannels]) > 1.0e-6)
-     values[kVZEROTPCoutDiff] = (values[kVZEROTotalMultFromChannels]-values[kNTracksPerTrackingStatus+kTPCout]) / (values[kVZEROTotalMultFromChannels]);
+    values[kVZEROTPCoutDiff] = (values[kVZEROTotalMultFromChannels]-values[kNTracksPerTrackingStatus+kTPCout]) /
+                               (values[kVZEROTotalMultFromChannels]);
   else
-     values[kVZEROTPCoutDiff] = 0.0;
+    values[kVZEROTPCoutDiff] = 0.0;
 
   values[kVZEROACTotalMult] = event->MultVZEROA() + event->MultVZEROC();
 
-  values[kSPDntracklets]   = event->SPDntracklets();
-  values[kSPDntracklets08] = 0.;
-  values[kSPDntracklets16] = 0.;
+  values[kSPDntracklets]             = event->SPDntracklets();
+  values[kSPDntracklets08]           = 0.;
+  values[kSPDntracklets16]           = 0.;
   values[kSPDntrackletsOuterEta]     = 0.;
   values[kSPDnTracklets10EtaVtxCorr] = 0.;
   
@@ -754,17 +766,17 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
       Double_t multRaw = values[estimator];
       for(Int_t iCorrection=0; iCorrection<kNCorrections; ++iCorrection) {
         for(Int_t iReference=0; iReference<kNReferenceMultiplicities; ++iReference ) {
-          Int_t indexNotSmeared = GetCorrectedMultiplicity(estimator, iCorrection, iReference, kNoSmearing);
-          Int_t indexSmeared    = GetCorrectedMultiplicity(estimator, iCorrection, iReference, kPoissonSmearing);
+          Int_t indexNotSmeared = GetCorrectedMultiplicity(estimator, iCorrection, iReference,kNoSmearing);
+          Int_t indexSmeared    = GetCorrectedMultiplicity(estimator, iCorrection, iReference,kPoissonSmearing);
           Double_t multCorr        = multRaw;
           Double_t multCorrSmeared = multRaw;
           // apply vertex and gain loss correction simultaneously
           if(iCorrection == kVertexCorrection2D) {
             Double_t localAvg = fgAvgMultVsVtxAndRun[iEstimator]->GetBinContent(runBin, vtxBin);
             Double_t refMult  = fgRefMultVsVtxAndRun[iEstimator][iReference];
-            multCorr *= localAvg ? refMult/localAvg : 1.;
-            Double_t deltaM = localAvg ? multRaw*(refMult/localAvg-1) : 0.;
-            multCorrSmeared += (deltaM>0 ? 1. : -1.) * gRandom->Poisson(TMath::Abs(deltaM));
+            multCorr         *= localAvg ? refMult/localAvg : 1.;
+            Double_t deltaM   = localAvg ? multRaw*(refMult/localAvg-1) : 0.;
+            multCorrSmeared  += (deltaM>0 ? 1. : -1.) * gRandom->Poisson(TMath::Abs(deltaM));
           }
           else {
           // first apply vertex correction
@@ -790,8 +802,8 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
             multCorrSmeared += (deltaM>0 ? 1. : -1.) * gRandom->Poisson(TMath::Abs(deltaM));
             // then apply gain loss correction
             if(iCorrection == kVertexCorrectionGlobalGainLoss  ||
-               iCorrection == kVertexCorrectionRunwiseGainLoss ||
-               iCorrection == kGainLossCorrection) {
+               iCorrection == kVertexCorrectionRunwiseGainLoss || iCorrection == kGainLossCorrection)
+            {
               Double_t localAvgVsRun = fgAvgMultVsRun[iEstimator]->GetBinContent(runBin);
               Double_t refMultVsRun  = fgRefMultVsRun[iEstimator][iReference];
               multCorr        *= localAvgVsRun ? refMultVsRun/localAvgVsRun : 1.;
@@ -799,40 +811,46 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
               multCorrSmeared += (deltaM>0 ? 1. : -1.) * gRandom->Poisson(TMath::Abs(deltaM));
             }
           }
-          values[indexNotSmeared] = multCorr;
-          values[indexSmeared]    = multCorrSmeared;
+          values[indexNotSmeared]     = multCorr;
+          values[indexSmeared]        = multCorrSmeared;
           fgUsedVars[indexNotSmeared] = kTRUE;
           fgUsedVars[indexSmeared]    = kTRUE;
         }
       }
     }
-    else if( (estimator==kVZEROACTotalMult && fgAvgMultVsVtxAndRun[kVZEROATotalMult-kMultiplicity] &&
-              fgAvgMultVsVtxAndRun[kVZEROCTotalMult-kMultiplicity])
-          || (estimator==kSPDnTracklets10EtaVtxCorr && fgAvgMultVsVtxAndRun[kSPDntrackletsEtaBin-kMultiplicity])
-            ) {
+    else if((estimator==kVZEROACTotalMult && fgAvgMultVsVtxAndRun[kVZEROATotalMult-kMultiplicity] &&
+             fgAvgMultVsVtxAndRun[kVZEROCTotalMult-kMultiplicity]) ||
+            (estimator==kSPDnTracklets10EtaVtxCorr && fgAvgMultVsVtxAndRun[kSPDntrackletsEtaBin-kMultiplicity]))
+    {
       for(Int_t iCorrection=0; iCorrection<kNCorrections; ++iCorrection) {
         for(Int_t iReference=0; iReference<kNReferenceMultiplicities; ++iReference) {
-          Int_t indexNotSmeared = GetCorrectedMultiplicity( estimator, iCorrection, iReference, kNoSmearing );
-          Int_t indexSmeared    = GetCorrectedMultiplicity( estimator, iCorrection, iReference, kPoissonSmearing );
+          Int_t indexNotSmeared = GetCorrectedMultiplicity(estimator, iCorrection, iReference, kNoSmearing);
+          Int_t indexSmeared    = GetCorrectedMultiplicity(estimator, iCorrection, iReference,kPoissonSmearing);
           values[indexNotSmeared] = 0.;
           values[indexSmeared]    = 0.;
           if(estimator == kSPDnTracklets10EtaVtxCorr) {
             for(Int_t ieta=6; ieta<26; ++ieta) {
               Int_t vtxBin = fgAvgMultVsVtxAndRun[kSPDntrackletsEtaBin+ieta-kMultiplicity]->GetYaxis()->FindBin( values[kVtxZ]);
-              if(fgAvgMultVsVtxGlobal[kSPDntrackletsEtaBin+ieta-kMultiplicity]->GetBinContent(vtxBin) > .3 ) {
-                Int_t indexBinNotSmeared = GetCorrectedMultiplicity(kSPDntrackletsEtaBin+ieta, iCorrection, iReference, kNoSmearing);
-                Int_t indexBinSmeared    = GetCorrectedMultiplicity(kSPDntrackletsEtaBin+ieta, iCorrection, iReference, kPoissonSmearing);
+              if(fgAvgMultVsVtxGlobal[kSPDntrackletsEtaBin+ieta-kMultiplicity]->GetBinContent(vtxBin) > .3) {
+                Int_t indexBinNotSmeared = GetCorrectedMultiplicity(kSPDntrackletsEtaBin+ieta, iCorrection,
+                                                                    iReference, kNoSmearing);
+                Int_t indexBinSmeared    = GetCorrectedMultiplicity(kSPDntrackletsEtaBin+ieta, iCorrection,
+                                                                    iReference, kPoissonSmearing);
                 if(fgUsedVars[indexBinNotSmeared]) values[indexNotSmeared] += values[indexBinNotSmeared];
                 if(fgUsedVars[indexBinSmeared])    values[indexSmeared]    += values[indexBinSmeared];
               }
             }
           }
           else {
-            Int_t indexAnotSmeared = GetCorrectedMultiplicity(kVZEROATotalMult, iCorrection, iReference, kNoSmearing);
-            Int_t indexCnotSmeared = GetCorrectedMultiplicity(kVZEROCTotalMult, iCorrection, iReference, kNoSmearing);
+            Int_t indexAnotSmeared = GetCorrectedMultiplicity(kVZEROATotalMult, iCorrection, iReference,
+                                                              kNoSmearing);
+            Int_t indexCnotSmeared = GetCorrectedMultiplicity(kVZEROCTotalMult, iCorrection, iReference,
+                                                              kNoSmearing);
 
-            Int_t indexAsmeared = GetCorrectedMultiplicity(kVZEROATotalMult, iCorrection, iReference, kPoissonSmearing);
-            Int_t indexCsmeared = GetCorrectedMultiplicity(kVZEROCTotalMult, iCorrection, iReference, kPoissonSmearing);
+            Int_t indexAsmeared = GetCorrectedMultiplicity(kVZEROATotalMult, iCorrection, iReference,
+                                                           kPoissonSmearing);
+            Int_t indexCsmeared = GetCorrectedMultiplicity(kVZEROCTotalMult, iCorrection, iReference,
+                                                           kPoissonSmearing);
 
             values[indexNotSmeared] = values[indexAnotSmeared] + values[indexCnotSmeared];
             values[indexSmeared]    = values[indexAsmeared]    + values[indexCsmeared];
@@ -867,8 +885,8 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
   for(Int_t i=0; i<6; ++i) values[kITSnClusters+i]  = event->ITSClusters(i+1);
   values[kSPDnSingleClusters] = event->SPDnSingleClusters();
   if(fgUsedVars[kSDDandSSDclusters]) {
-     values[kSDDandSSDclusters] = 0.0;
-     for(Int_t i=2; i<6; ++i) values[kSDDandSSDclusters] += event->ITSClusters(i+1);
+    values[kSDDandSSDclusters] = 0.0;
+    for(Int_t i=2; i<6; ++i) values[kSDDandSSDclusters] += event->ITSClusters(i+1);
   }
   
   //VZERO detector information
@@ -881,7 +899,7 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
   values[kVZEROAemptyChannels] = 0;
   values[kVZEROCemptyChannels] = 0;
   for(Int_t ich=0; ich<64; ++ich) fgUsedVars[kVZEROChannelMult+ich] = kTRUE;
-  Float_t theta=0.0;
+  Float_t theta = 0.0;
   for(Int_t ich=0; ich<64; ++ich) {
     if(fgUsedVars[kVZEROChannelMult+ich]) {
       values[kVZEROChannelMult+ich] = event->MultChannelVZERO(ich);
@@ -899,47 +917,48 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
   }
   
   if(values[kVZEROTotalMultFromChannels] > 0.0)
-     values[kNTracksTPCoutFromPileup] = values[kNTracksTPCoutBeforeClean] - (-3.2+TMath::Sqrt(3.2*3.2+4.0*1.6e-5*values[kVZEROTotalMultFromChannels]))/(2.0*1.6e-5);
+    values[kNTracksTPCoutFromPileup] = values[kNTracksTPCoutBeforeClean] - (-3.2+TMath::Sqrt(3.2*3.2+4.0*1.6e-5*values[kVZEROTotalMultFromChannels]))/(2.0*1.6e-5);
   
   Float_t tpcClustersExpectationWOpileup = 0.001;
   if(fgUsedVars[kNTPCclustersFromPileup] && values[kVZEROTotalMultFromChannels]>0.0) {
-     tpcClustersExpectationWOpileup = (-0.0132+TMath::Sqrt(0.0132*0.0132-4.0*(-200.0-values[kVZEROTotalMultFromChannels])*1.4e-9))/2.0/1.4e-9;
-     values[kNTPCclustersFromPileup] = values[kNTPCclusters] - tpcClustersExpectationWOpileup;
+    tpcClustersExpectationWOpileup = (-0.0132+TMath::Sqrt(0.0132*0.0132-4.0*(-200.0-values[kVZEROTotalMultFromChannels])*1.4e-9))/2.0/1.4e-9;
+    values[kNTPCclustersFromPileup] = values[kNTPCclusters] - tpcClustersExpectationWOpileup;
   }
   else 
-     values[kNTPCclustersFromPileup] = 0.0;
+    values[kNTPCclustersFromPileup] = 0.0;
   
   if(fgUsedVars[kNTPCclustersFromPileupRelative] && values[kNTPCclusters]>0.0)
-     values[kNTPCclustersFromPileupRelative] = values[kNTPCclustersFromPileup] / tpcClustersExpectationWOpileup;
+    values[kNTPCclustersFromPileupRelative] = values[kNTPCclustersFromPileup] / tpcClustersExpectationWOpileup;
   
   if(fgUsedVars[kVZEROQvecX+0*6+1] || fgUsedVars[kVZEROQvecY+0*6+1] || fgUsedVars[kVZERORP+0*6+1]) {
     Double_t qvecVZEROA[EVENTPLANE::fgkNMaxHarmonics][2] = {{0.0}};
     Double_t qvecVZEROC[EVENTPLANE::fgkNMaxHarmonics][2] = {{0.0}};
     if(fgOptionCalibrateVZEROqVec && fgAvgVZEROChannelMult[0]) {
-       Float_t calibVZEROMult[64] = {0.};
-       Float_t refMult=0;
+      Float_t calibVZEROMult[64] = {0.};
+      Float_t refMult=0;
       for(Int_t ich=0;ich<64;++ich) fgUsedVars[kVZEROChannelMultCalib+ich] = kTRUE; 
        
       for(Int_t iCh=0; iCh<64; ++iCh) {
-         if(event->MultChannelVZERO(iCh)>=fgkVZEROminMult) {
+        if(event->MultChannelVZERO(iCh)>=fgkVZEROminMult) {
                          
-            Float_t avMult = fgAvgVZEROChannelMult[iCh]->GetBinContent(fgAvgVZEROChannelMult[iCh]->FindBin(event->Vertex(2), event->CentralitySPD()));
-            Int_t refCh = iCh-(iCh%8);
-            if(iCh==refCh)
-                refMult=fgAvgVZEROChannelMult[iCh]->GetBinContent(fgAvgVZEROChannelMult[iCh]->GetXaxis()->FindBin(0.0),fgAvgVZEROChannelMult[iCh]->GetYaxis()->FindBin(event->CentralitySPD()));
+          Float_t avMult = fgAvgVZEROChannelMult[iCh]->GetBinContent(fgAvgVZEROChannelMult[iCh]->FindBin(
+            event->Vertex(2),event->CentralitySPD()));
+          Int_t refCh = iCh-(iCh%8);
+          if(iCh==refCh)
+            refMult = fgAvgVZEROChannelMult[iCh]->GetBinContent(
+              fgAvgVZEROChannelMult[iCh]->GetXaxis()->FindBin(0.0),
+              fgAvgVZEROChannelMult[iCh]->GetYaxis()->FindBin(event->CentralitySPD()));
             
-            calibVZEROMult[iCh] = event->MultChannelVZERO(iCh) / (avMult>1.0e-6 ? avMult : 1.0)*refMult;
-            values[kVZEROChannelMultCalib+iCh]=calibVZEROMult[iCh];
+          calibVZEROMult[iCh] = event->MultChannelVZERO(iCh) / (avMult>1.0e-6 ?avMult:1.0) * refMult;
+          values[kVZEROChannelMultCalib+iCh] = calibVZEROMult[iCh];
             
           //  cout<<"V0 channel"<<" "<<iCh<<" "<<"Reference Channel "<<refCh<<" "<<"Reference multiplicity"<<refMult<<"Avg mult"<<avMult<<" "<<values[kVZEROChannelMult+iCh]<<" "<<values[kVZEROChannelMultCalib+iCh]<<endl;
-            
-         }
-         else
-             fgUsedVars[kVZEROChannelMultCalib+iCh] = kFALSE; // will not be filled in histograms by the histogram manager
+        }
+        else
+          fgUsedVars[kVZEROChannelMultCalib+iCh] = kFALSE; // will not be filled in histograms by the histogram manager
       }
       event->GetVZEROQvector(qvecVZEROA, EVENTPLANE::kVZEROA, calibVZEROMult);
       event->GetVZEROQvector(qvecVZEROC, EVENTPLANE::kVZEROC, calibVZEROMult);
-      
      
     }
     else {
@@ -947,301 +966,302 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
       event->GetVZEROQvector(qvecVZEROC, EVENTPLANE::kVZEROC);
     }
     if(fgOptionRecenterVZEROqVec && fgVZEROqVecRecentering[0]) {
-         Float_t recenterOffset = fgVZEROqVecRecentering[0]->GetBinContent(fgVZEROqVecRecentering[0]->FindBin(event->CentralitySPD(), event->Vertex(2)));
-         Float_t widthEqVZERO = fgVZEROqVecRecentering[0]->GetBinError(fgVZEROqVecRecentering[0]->FindBin(event->CentralitySPD(), event->Vertex(2)));
+      Float_t recenterOffset = fgVZEROqVecRecentering[0]->GetBinContent(fgVZEROqVecRecentering[0]->FindBin(
+        event->CentralitySPD(), event->Vertex(2)));
+      Float_t widthEqVZERO = fgVZEROqVecRecentering[0]->GetBinError(fgVZEROqVecRecentering[0]->FindBin(
+        event->CentralitySPD(), event->Vertex(2)));
 
-         qvecVZEROA[1][0] -= recenterOffset;
-           if(widthEqVZERO >0.0)
-             qvecVZEROA[1][0] /=widthEqVZERO;
-           else
-             qvecVZEROA[1][0]=0;
-                
-        recenterOffset = fgVZEROqVecRecentering[1]->GetBinContent(fgVZEROqVecRecentering[1]->FindBin(event->CentralitySPD(), event->Vertex(2)));
-        widthEqVZERO = fgVZEROqVecRecentering[1]->GetBinError(fgVZEROqVecRecentering[1]->FindBin(event->CentralitySPD(), event->Vertex(2)));
-        qvecVZEROA[1][1] -= recenterOffset;
-           if(widthEqVZERO >0.0)
-              qvecVZEROA[1][1] /=widthEqVZERO;
-           else
-            qvecVZEROA[1][1]=0;
-          
-        recenterOffset = fgVZEROqVecRecentering[2]->GetBinContent(fgVZEROqVecRecentering[2]->FindBin(event->CentralitySPD(), event->Vertex(2)));
-        widthEqVZERO = fgVZEROqVecRecentering[2]->GetBinError(fgVZEROqVecRecentering[2]->FindBin(event->CentralitySPD(), event->Vertex(2)));
-        qvecVZEROC[1][0] -= recenterOffset;
-           if(widthEqVZERO >0.0)
-              qvecVZEROC[1][0] /=widthEqVZERO;
-           else
-              qvecVZEROC[1][0]=0;
-       
-        recenterOffset = fgVZEROqVecRecentering[3]->GetBinContent(fgVZEROqVecRecentering[3]->FindBin(event->CentralitySPD(), event->Vertex(2)));
-        widthEqVZERO = fgVZEROqVecRecentering[3]->GetBinError(fgVZEROqVecRecentering[3]->FindBin(event->CentralitySPD(), event->Vertex(2)));
-        qvecVZEROC[1][1] -= recenterOffset;
-           if(widthEqVZERO >0.0)
-              qvecVZEROC[1][1] /=widthEqVZERO;
-           else
-              qvecVZEROC[1][1]=0;
+      qvecVZEROA[1][0] -= recenterOffset;
+      if(widthEqVZERO > 0.0) qvecVZEROA[1][0] /= widthEqVZERO;
+      else                   qvecVZEROA[1][0]  = 0;
+
+      recenterOffset = fgVZEROqVecRecentering[1]->GetBinContent(fgVZEROqVecRecentering[1]->FindBin(
+        event->CentralitySPD(), event->Vertex(2)));
+      widthEqVZERO = fgVZEROqVecRecentering[1]->GetBinError(fgVZEROqVecRecentering[1]->FindBin(
+        event->CentralitySPD(), event->Vertex(2)));
+      qvecVZEROA[1][1] -= recenterOffset;
+      if(widthEqVZERO > 0.0) qvecVZEROA[1][1] /= widthEqVZERO;
+      else                   qvecVZEROA[1][1]  = 0;
+
+      recenterOffset = fgVZEROqVecRecentering[2]->GetBinContent(fgVZEROqVecRecentering[2]->FindBin(
+        event->CentralitySPD(), event->Vertex(2)));
+      widthEqVZERO = fgVZEROqVecRecentering[2]->GetBinError(fgVZEROqVecRecentering[2]->FindBin(
+        event->CentralitySPD(), event->Vertex(2)));
+      qvecVZEROC[1][0] -= recenterOffset;
+      if(widthEqVZERO > 0.0) qvecVZEROC[1][0] /= widthEqVZERO;
+      else                   qvecVZEROC[1][0]  = 0;
+
+      recenterOffset = fgVZEROqVecRecentering[3]->GetBinContent(fgVZEROqVecRecentering[3]->FindBin(
+        event->CentralitySPD(), event->Vertex(2)));
+      widthEqVZERO = fgVZEROqVecRecentering[3]->GetBinError(fgVZEROqVecRecentering[3]->FindBin(
+        event->CentralitySPD(), event->Vertex(2)));
+      qvecVZEROC[1][1] -= recenterOffset;
+      if(widthEqVZERO > 0.0) qvecVZEROC[1][1] /= widthEqVZERO;
+      else                   qvecVZEROC[1][1]  = 0;
      
     }
     for(Int_t ih=1; ih<2; ++ih) {
-       // VZERO event plane variables
-       values[kVZEROQvecX+0*6+ih] = qvecVZEROA[ih][0];
-       values[kVZEROQvecY+0*6+ih] = qvecVZEROA[ih][1];
-       values[kVZEROQvecX+1*6+ih] = qvecVZEROC[ih][0];
-       values[kVZEROQvecY+1*6+ih] = qvecVZEROC[ih][1];
-       values[kVZERORP+0*6+ih] = TMath::ATan2(qvecVZEROA[ih][1], qvecVZEROA[ih][0])/Double_t(ih+1);
-       values[kVZERORP+1*6+ih] = TMath::ATan2(qvecVZEROC[ih][1], qvecVZEROC[ih][0])/Double_t(ih+1);
-       values[kVZEROQvecX+2*6+ih] = qvecVZEROA[ih][0] + qvecVZEROC[ih][0];
-       values[kVZEROQvecY+2*6+ih] = qvecVZEROA[ih][1] + qvecVZEROC[ih][1];
-       values[kVZERORP   +2*6+ih] = TMath::ATan2(values[kVZEROQvecY+2*6+ih], values[kVZEROQvecX+2*6+ih])/Double_t(ih+1);
-     
-       if(fgUsedVars[kVZEROQaQcSP+ih]) {
-          values[kVZEROQaQcSP+ih] = TMath::Cos((ih+1)*(values[kVZERORP+0*6+ih]-values[kVZERORP+1*6+ih]));
-          values[kVZEROQaQcSP+ih] *= TMath::Sqrt(values[kVZEROQvecX+0*6+ih]*values[kVZEROQvecX+0*6+ih]+
-          values[kVZEROQvecY+0*6+ih]*values[kVZEROQvecY+0*6+ih]);
-          values[kVZEROQaQcSP+ih] *= TMath::Sqrt(values[kVZEROQvecX+1*6+ih]*values[kVZEROQvecX+1*6+ih]+
-          values[kVZEROQvecY+1*6+ih]*values[kVZEROQvecY+1*6+ih]);
-       }
-       values[kVZEROQaQcSPsine+ih] = TMath::Sin((ih+1)*(values[kVZERORP+0*6+ih]-values[kVZERORP+1*6+ih]));
-       values[kVZEROQaQcSPsine+ih] *= TMath::Sqrt(values[kVZEROQvecX+0*6+ih]*values[kVZEROQvecX+0*6+ih]+
-       values[kVZEROQvecY+0*6+ih]*values[kVZEROQvecY+0*6+ih]);
-       values[kVZEROQaQcSPsine+ih] *= TMath::Sqrt(values[kVZEROQvecX+1*6+ih]*values[kVZEROQvecX+1*6+ih]+
-       values[kVZEROQvecY+1*6+ih]*values[kVZEROQvecY+1*6+ih]);
-       values[kVZERORP   +2*6+ih] = TMath::ATan2(values[kVZEROQvecY+2*6+ih],values[kVZEROQvecX+2*6+ih])/Double_t(ih+1);
-       // cos (n*(psi_A-psi_C))
-       if(fgUsedVars[kVZERORPres + ih]) {
-          values[kVZERORPres + ih] = DeltaPhi(values[kVZERORP+0*6+ih], values[kVZERORP+1*6+ih]);
-          values[kVZERORPres + ih] = TMath::Cos(values[kVZERORPres + ih]*(ih+1));
-       }
-       // Qx,Qy correlations for VZERO
-       if(fgUsedVars[kVZEROXaXc+ih]) 
-          values[kVZEROXaXc+ih] = qvecVZEROA[ih][0]*qvecVZEROC[ih][0];
-       if(fgUsedVars[kVZEROXaYa+ih]) 
-          values[kVZEROXaYa+ih] = qvecVZEROA[ih][0]*qvecVZEROA[ih][1];
-       if(fgUsedVars[kVZEROXaYc+ih]) 
-          values[kVZEROXaYc+ih] = qvecVZEROA[ih][0]*qvecVZEROC[ih][1];
-       if(fgUsedVars[kVZEROYaXc+ih]) 
-          values[kVZEROYaXc+ih] = qvecVZEROA[ih][1]*qvecVZEROC[ih][0];
-       if(fgUsedVars[kVZEROYaYc+ih]) 
-          values[kVZEROYaYc+ih] = qvecVZEROA[ih][1]*qvecVZEROC[ih][1];
-       if(fgUsedVars[kVZEROXcYc+ih]) 
-          values[kVZEROXcYc+ih] = qvecVZEROC[ih][0]*qvecVZEROC[ih][1];
-       // Psi_A - Psi_C
-       if(fgUsedVars[kVZEROdeltaRPac+ih])
-          values[kVZEROdeltaRPac+ih] = DeltaPhi(values[kVZERORP+0*6+ih], values[kVZERORP+1*6+ih]);
-    }    // end loop over harmonics
-  }
-  
-  // Get the TPC event plane in case it was written in the trees 
-  for(Int_t ih=0; ih<3; ++ih) {
-     if(event->GetEventPlaneStatus(EVENTPLANE::kTPC,ih+1)!=EVENTPLANE::kUnset) {
-        values[kTPCQvecXtree+ih] = event->GetQx(EVENTPLANE::kTPC,ih+1);
-        values[kTPCQvecYtree+ih] = event->GetQy(EVENTPLANE::kTPC,ih+1);
-        values[kTPCRPtree+ih] = event->GetEventPlane(EVENTPLANE::kTPC,ih+1);
-        
-          //TPC Q vector recentering       
-          if(fgOptionRecenterTPCqVec && fgTPCqVecRecentering[0] && ih==1) {
-            Float_t recenterOffsetTPC = fgTPCqVecRecentering[0]->GetBinContent(fgTPCqVecRecentering[0]->FindBin(event->CentralityVZERO(), event->Vertex(2)));
-            Double_t widthEqTPC = fgTPCqVecRecentering[0]->GetBinError(fgTPCqVecRecentering[0]->FindBin(event->CentralityVZERO(), event->Vertex(2)));
-            values[kTPCQvecXtree+1] -= recenterOffsetTPC;
+      // VZERO event plane variables
+      values[kVZEROQvecX+0*6+ih] = qvecVZEROA[ih][0];
+      values[kVZEROQvecY+0*6+ih] = qvecVZEROA[ih][1];
+      values[kVZEROQvecX+1*6+ih] = qvecVZEROC[ih][0];
+      values[kVZEROQvecY+1*6+ih] = qvecVZEROC[ih][1];
+      values[kVZERORP+0*6+ih]    = TMath::ATan2(qvecVZEROA[ih][1], qvecVZEROA[ih][0])/Double_t(ih+1);
+      values[kVZERORP+1*6+ih]    = TMath::ATan2(qvecVZEROC[ih][1], qvecVZEROC[ih][0])/Double_t(ih+1);
+      values[kVZEROQvecX+2*6+ih] = qvecVZEROA[ih][0] + qvecVZEROC[ih][0];
+      values[kVZEROQvecY+2*6+ih] = qvecVZEROA[ih][1] + qvecVZEROC[ih][1];
+      values[kVZERORP   +2*6+ih] = TMath::ATan2(values[kVZEROQvecY+2*6+ih],
+                                                values[kVZEROQvecX+2*6+ih])/Double_t(ih+1);
 
-                if(widthEqTPC >0.0)
-                   values[kTPCQvecXtree+1] /=widthEqTPC;
-                else
-                   values[kTPCQvecXtree+1]=0;
-                
-            recenterOffsetTPC = fgTPCqVecRecentering[1]->GetBinContent(fgTPCqVecRecentering[1]->FindBin(event->CentralityVZERO(), event->Vertex(2)));
-            widthEqTPC = fgTPCqVecRecentering[1]->GetBinError(fgTPCqVecRecentering[1]->FindBin(event->CentralityVZERO(), event->Vertex(2)));
-            values[kTPCQvecYtree+1] -= recenterOffsetTPC;
-                
-                if(widthEqTPC >0.0)
-                   values[kTPCQvecYtree+1] /=widthEqTPC;
-                else
-                   values[kTPCQvecYtree+1]=0;
-                 
-            values[kTPCRPtree+ih]=TMath::ATan2(values[kTPCQvecYtree+1],values[kTPCQvecXtree+1])/Double_t(ih+1);
-      
-        }
- 
-     }
-     if(event->GetEventPlaneStatus(EVENTPLANE::kTPCptWeights,ih+1)!=EVENTPLANE::kUnset) {
-        values[kTPCQvecXptWeightsTree+ih] = event->GetQx(EVENTPLANE::kTPCptWeights,ih+1);
-        values[kTPCQvecYptWeightsTree+ih] = event->GetQy(EVENTPLANE::kTPCptWeights,ih+1);
-        values[kTPCRPptWeightsTree+ih] = event->GetEventPlane(EVENTPLANE::kTPCptWeights,ih+1);
-     }
-     if(event->GetEventPlaneStatus(EVENTPLANE::kTPCpos,ih+1)!=EVENTPLANE::kUnset) {
-        values[kTPCQvecXposTree+ih] = event->GetQx(EVENTPLANE::kTPCpos,ih+1);
-        values[kTPCQvecYposTree+ih] = event->GetQy(EVENTPLANE::kTPCpos,ih+1);
-        values[kTPCRPposTree+ih] = event->GetEventPlane(EVENTPLANE::kTPCpos,ih+1);
-     }
-     if(event->GetEventPlaneStatus(EVENTPLANE::kTPCneg,ih+1)!=EVENTPLANE::kUnset) {
-        values[kTPCQvecXnegTree+ih] = event->GetQx(EVENTPLANE::kTPCneg,ih+1);
-        values[kTPCQvecYnegTree+ih] = event->GetQy(EVENTPLANE::kTPCneg,ih+1);
-        values[kTPCRPnegTree+ih] = event->GetEventPlane(EVENTPLANE::kTPCneg,ih+1);
-     }
-     
-      // TPC VZERO Q-vector correlations
-     if(fgUsedVars[kRPXtpcXvzeroa+ih]) 
-	values[kRPXtpcXvzeroa+ih] = values[kTPCQvecXtree+ih]*values[kVZEROQvecX+ih];
-     if(fgUsedVars[kRPXtpcXvzeroc+ih]) 
-	values[kRPXtpcXvzeroc+ih] = values[kTPCQvecXtree+ih]*values[kVZEROQvecX+6+ih];
-     if(fgUsedVars[kRPYtpcYvzeroa+ih]) 
-	values[kRPYtpcYvzeroa+ih] = values[kTPCQvecYtree+ih]*values[kVZEROQvecY+ih];
-     if(fgUsedVars[kRPYtpcYvzeroc+ih]) 
-	values[kRPYtpcYvzeroc+ih] = values[kTPCQvecYtree+ih]*values[kVZEROQvecY+6+ih];
-     if(fgUsedVars[kRPXtpcYvzeroa+ih]) 
-	values[kRPXtpcYvzeroa+ih] = values[kTPCQvecXtree+ih]*values[kVZEROQvecY+ih];
-     if(fgUsedVars[kRPXtpcYvzeroc+ih]) 
-	values[kRPXtpcYvzeroc+ih] = values[kTPCQvecXtree+ih]*values[kVZEROQvecY+6+ih];
-     if(fgUsedVars[kRPYtpcXvzeroa+ih]) 
-	values[kRPYtpcXvzeroa+ih] = values[kTPCQvecYtree+ih]*values[kVZEROQvecX+ih];
-     if(fgUsedVars[kRPYtpcXvzeroc+ih]) 
-	values[kRPYtpcXvzeroc+ih] = values[kTPCQvecYtree+ih]*values[kVZEROQvecX+6+ih];
-      // Psi_TPC - Psi_VZERO A/C      
-     if(fgUsedVars[kRPdeltaVZEROAtpc+ih]) 
-	values[kRPdeltaVZEROAtpc+ih] = DeltaPhi(values[kVZERORP+0*6+ih], values[kTPCRPtree+ih]);
-     if(fgUsedVars[kRPdeltaVZEROCtpc+ih])
-        values[kRPdeltaVZEROCtpc+ih] = DeltaPhi(values[kVZERORP+1*6+ih], values[kTPCRPtree+ih]);
-     
-     
-     // cos(n(EPtpc-EPvzero A/C))
-     for(Int_t iVZEROside=0; iVZEROside<2; ++iVZEROside) {
-          if(fgUsedVars[kTPCRPres+iVZEROside*6+ih]) {
-	  values[kTPCRPres+iVZEROside*6+ih] = DeltaPhi(values[kTPCRPtree+ih], values[kVZERORP+iVZEROside*6+ih]);
-          values[kTPCRPres+iVZEROside*6+ih] = TMath::Cos(values[kTPCRPres+iVZEROside*6+ih]*(ih+1));
-	}
-      }
-     // cout<<values[kCentVZERO]<<" "<<values[kCentSPD]<<" "<<values[kVtxZ]<<" "<<values[kTPCRPres+1*6+ih]<<" "<<values[kTPCRPres+0*6+ih]<<" "<<values[kVZERORPres+ih]<<endl;
-//      cout<<values[kTPCRPres+0*6+ih]<<endl;
-//      cout<<values[kTPCRPres+1*6+ih]<<endl;
-//      cout<<values[kVZERORPres+ih]<<endl;
-      //resolution of V0A, V0C or TPC as reference detector
-      if(fgOptionEventRes && (fgUsedVars[kVZEROARPres+ih]||fgUsedVars[kVZEROCRPres+ih]||fgUsedVars[kVZEROTPCRPres+ih])){
-         
-         if(values[kTPCRPres+1*6+ih]>1.0e-7 && values[kTPCRPres+0*6+ih]>1.0e-7 && values[kVZERORPres+ih]>1.0e-7){
-    
-          values[kVZEROARPres+ih] = TMath::Sqrt(values[kTPCRPres+1*6+ih]/(values[kVZERORPres + ih]*values[kTPCRPres+0*6+ih]));
-          values[kVZEROCRPres+ih] = TMath::Sqrt(values[kTPCRPres+0*6+ih]/(values[kVZERORPres + ih]*values[kTPCRPres+1*6+ih]));
-          values[kVZEROTPCRPres+ih] = TMath::Sqrt(values[kVZERORPres+ih]/(values[kTPCRPres+0*6 + ih]*values[kTPCRPres+1*6+ih]));
-        }
-        else{
-          values[kVZEROARPres+ih]=0;
-          values[kVZEROCRPres+ih]=0;
-          values[kVZEROTPCRPres+ih]=0;
-        }
-    }//end if fgOptionEventRes
-     
-  }// end loop over harmonics
-  
- 
-  
-  if(eventF) {
-   for(Int_t ih=0; ih<6; ++ih) {
-     // VZERO event plane variables
-     values[kVZEROQvecX+2*6+ih] = 0.0;
-     values[kVZEROQvecY+2*6+ih] = 0.0;
-     values[kVZERORP   +2*6+ih] = 0.0;
-     for(Int_t iVZEROside=0; iVZEROside<2; ++iVZEROside) {
-       values[kVZEROQvecX+iVZEROside*6+ih] = eventF->Qx(EVENTPLANE::kVZEROA+iVZEROside, ih+1);
-       values[kVZEROQvecY+iVZEROside*6+ih] = eventF->Qy(EVENTPLANE::kVZEROA+iVZEROside, ih+1);
-       if(fgUsedVars[kVZERORP+iVZEROside*6+ih]) 
-        values[kVZERORP+iVZEROside*6+ih] = eventF->EventPlane(EVENTPLANE::kVZEROA+iVZEROside, ih+1);
-	if(fgUsedVars[kVZEROQvecX+2*6+ih])
-	  values[kVZEROQvecX+2*6+ih] += values[kVZEROQvecX+iVZEROside*6+ih];
-	if(fgUsedVars[kVZEROQvecY+2*6+ih])
-	  values[kVZEROQvecY+2*6+ih] += values[kVZEROQvecY+iVZEROside*6+ih];
-	// cos(n(EPtpc-EPvzero A/C))	
-        if(fgUsedVars[kTPCRPres+iVZEROside*6+ih]) {
-	  values[kTPCRPres+iVZEROside*6+ih] = DeltaPhi(eventF->EventPlane(EVENTPLANE::kTPC, ih+1), eventF->EventPlane(EVENTPLANE::kVZEROA+iVZEROside, ih+1));
-          values[kTPCRPres+iVZEROside*6+ih] = TMath::Cos(values[kTPCRPres+iVZEROside*6+ih]*(ih+1));
-	}
-      }
-      
       if(fgUsedVars[kVZEROQaQcSP+ih]) {
-        values[kVZEROQaQcSP+ih] = TMath::Cos((ih+1)*(values[kVZERORP+0*6+ih]-values[kVZERORP+1*6+ih]));
+        values[kVZEROQaQcSP+ih]  = TMath::Cos((ih+1)*(values[kVZERORP+0*6+ih]-values[kVZERORP+1*6+ih]));
         values[kVZEROQaQcSP+ih] *= TMath::Sqrt(values[kVZEROQvecX+0*6+ih]*values[kVZEROQvecX+0*6+ih]+
                                                values[kVZEROQvecY+0*6+ih]*values[kVZEROQvecY+0*6+ih]);
         values[kVZEROQaQcSP+ih] *= TMath::Sqrt(values[kVZEROQvecX+1*6+ih]*values[kVZEROQvecX+1*6+ih]+
                                                values[kVZEROQvecY+1*6+ih]*values[kVZEROQvecY+1*6+ih]);
       }
-      values[kVZEROQaQcSPsine+ih] = TMath::Sin((ih+1)*(values[kVZERORP+0*6+ih]-values[kVZERORP+1*6+ih]));
+      values[kVZEROQaQcSPsine+ih]  = TMath::Sin((ih+1)*(values[kVZERORP+0*6+ih]-values[kVZERORP+1*6+ih]));
       values[kVZEROQaQcSPsine+ih] *= TMath::Sqrt(values[kVZEROQvecX+0*6+ih]*values[kVZEROQvecX+0*6+ih]+
-                                             values[kVZEROQvecY+0*6+ih]*values[kVZEROQvecY+0*6+ih]);
+                                                 values[kVZEROQvecY+0*6+ih]*values[kVZEROQvecY+0*6+ih]);
       values[kVZEROQaQcSPsine+ih] *= TMath::Sqrt(values[kVZEROQvecX+1*6+ih]*values[kVZEROQvecX+1*6+ih]+
-                                             values[kVZEROQvecY+1*6+ih]*values[kVZEROQvecY+1*6+ih]);
-      values[kVZERORP   +2*6+ih] = TMath::ATan2(values[kVZEROQvecY+2*6+ih],values[kVZEROQvecX+2*6+ih])/Double_t(ih+1);
+                                                 values[kVZEROQvecY+1*6+ih]*values[kVZEROQvecY+1*6+ih]);
+      values[kVZERORP   +2*6+ih]   = TMath::ATan2(values[kVZEROQvecY+2*6+ih],
+                                                  values[kVZEROQvecX+2*6+ih])/Double_t(ih+1);
       // cos (n*(psi_A-psi_C))
-      if(fgUsedVars[kVZERORPres + ih]) {
-	values[kVZERORPres + ih] = DeltaPhi(eventF->EventPlane(EVENTPLANE::kVZEROA, ih+1), 
-					    eventF->EventPlane(EVENTPLANE::kVZEROC, ih+1));
-        values[kVZERORPres + ih] = TMath::Cos(values[kVZERORPres + ih]*(ih+1));
+      if(fgUsedVars[kVZERORPres+ih]) {
+        values[kVZERORPres+ih] = DeltaPhi(values[kVZERORP+0*6+ih], values[kVZERORP+1*6+ih]);
+        values[kVZERORPres+ih] = TMath::Cos(values[kVZERORPres+ih] * (ih+1));
       }
       // Qx,Qy correlations for VZERO
-      if(fgUsedVars[kVZEROXaXc+ih]) 
-	values[kVZEROXaXc+ih] = eventF->Qx(EVENTPLANE::kVZEROA, ih+1)*eventF->Qx(EVENTPLANE::kVZEROC, ih+1);
-      if(fgUsedVars[kVZEROXaYa+ih]) 
-	values[kVZEROXaYa+ih] = eventF->Qx(EVENTPLANE::kVZEROA, ih+1)*eventF->Qy(EVENTPLANE::kVZEROA, ih+1);
-      if(fgUsedVars[kVZEROXaYc+ih]) 
-	values[kVZEROXaYc+ih] = eventF->Qx(EVENTPLANE::kVZEROA, ih+1)*eventF->Qy(EVENTPLANE::kVZEROC, ih+1);
-      if(fgUsedVars[kVZEROYaXc+ih]) 
-	values[kVZEROYaXc+ih] = eventF->Qy(EVENTPLANE::kVZEROA, ih+1)*eventF->Qx(EVENTPLANE::kVZEROC, ih+1);
-      if(fgUsedVars[kVZEROYaYc+ih]) 
-	values[kVZEROYaYc+ih] = eventF->Qy(EVENTPLANE::kVZEROA, ih+1)*eventF->Qy(EVENTPLANE::kVZEROC, ih+1);
-      if(fgUsedVars[kVZEROXcYc+ih]) 
-	values[kVZEROXcYc+ih] = eventF->Qx(EVENTPLANE::kVZEROC, ih+1)*eventF->Qy(EVENTPLANE::kVZEROC, ih+1);
+      if(fgUsedVars[kVZEROXaXc+ih])
+        values[kVZEROXaXc+ih] = qvecVZEROA[ih][0]*qvecVZEROC[ih][0];
+      if(fgUsedVars[kVZEROXaYa+ih])
+        values[kVZEROXaYa+ih] = qvecVZEROA[ih][0]*qvecVZEROA[ih][1];
+      if(fgUsedVars[kVZEROXaYc+ih])
+        values[kVZEROXaYc+ih] = qvecVZEROA[ih][0]*qvecVZEROC[ih][1];
+      if(fgUsedVars[kVZEROYaXc+ih])
+        values[kVZEROYaXc+ih] = qvecVZEROA[ih][1]*qvecVZEROC[ih][0];
+      if(fgUsedVars[kVZEROYaYc+ih])
+        values[kVZEROYaYc+ih] = qvecVZEROA[ih][1]*qvecVZEROC[ih][1];
+      if(fgUsedVars[kVZEROXcYc+ih])
+        values[kVZEROXcYc+ih] = qvecVZEROC[ih][0]*qvecVZEROC[ih][1];
       // Psi_A - Psi_C
       if(fgUsedVars[kVZEROdeltaRPac+ih])
-        values[kVZEROdeltaRPac+ih] = DeltaPhi(eventF->EventPlane(EVENTPLANE::kVZEROA, ih+1), 
-	  				      eventF->EventPlane(EVENTPLANE::kVZEROC, ih+1));
-      
+        values[kVZEROdeltaRPac+ih] = DeltaPhi(values[kVZERORP+0*6+ih], values[kVZERORP+1*6+ih]);
+    }  // end loop over harmonics
+  }
+  
+  // Get the TPC event plane in case it was written in the trees
+  for(Int_t ih=0; ih<3; ++ih) {
+    if(event->GetEventPlaneStatus(EVENTPLANE::kTPC,ih+1) != EVENTPLANE::kUnset) {
+      values[kTPCQvecXtree+ih] = event->GetQx(EVENTPLANE::kTPC,ih+1);
+      values[kTPCQvecYtree+ih] = event->GetQy(EVENTPLANE::kTPC,ih+1);
+      values[kTPCRPtree+ih]    = event->GetEventPlane(EVENTPLANE::kTPC,ih+1);
+
+      //TPC Q vector recentering
+      if(fgOptionRecenterTPCqVec && fgTPCqVecRecentering[0] && ih==1) {
+        Float_t recenterOffsetTPC = fgTPCqVecRecentering[0]->GetBinContent(fgTPCqVecRecentering[0]->FindBin(
+          event->CentralityVZERO(), event->Vertex(2)));
+        Double_t widthEqTPC = fgTPCqVecRecentering[0]->GetBinError(fgTPCqVecRecentering[0]->FindBin(
+          event->CentralityVZERO(), event->Vertex(2)));
+        values[kTPCQvecXtree+1] -= recenterOffsetTPC;
+
+        if(widthEqTPC > 0.0) values[kTPCQvecXtree+1] /= widthEqTPC;
+        else                 values[kTPCQvecXtree+1]  = 0;
+
+        recenterOffsetTPC = fgTPCqVecRecentering[1]->GetBinContent(fgTPCqVecRecentering[1]->FindBin(
+          event->CentralityVZERO(), event->Vertex(2)));
+        widthEqTPC = fgTPCqVecRecentering[1]->GetBinError(fgTPCqVecRecentering[1]->FindBin(
+          event->CentralityVZERO(), event->Vertex(2)));
+        values[kTPCQvecYtree+1] -= recenterOffsetTPC;
+
+        if(widthEqTPC > 0.0) values[kTPCQvecYtree+1] /= widthEqTPC;
+        else                 values[kTPCQvecYtree+1]  = 0;
+
+        values[kTPCRPtree+ih] = TMath::ATan2(values[kTPCQvecYtree+1],values[kTPCQvecXtree+1])/Double_t(ih+1);
+
+      }
+
+    }
+    if(event->GetEventPlaneStatus(EVENTPLANE::kTPCptWeights,ih+1) != EVENTPLANE::kUnset) {
+      values[kTPCQvecXptWeightsTree+ih] = event->GetQx(EVENTPLANE::kTPCptWeights,ih+1);
+      values[kTPCQvecYptWeightsTree+ih] = event->GetQy(EVENTPLANE::kTPCptWeights,ih+1);
+      values[kTPCRPptWeightsTree+ih]    = event->GetEventPlane(EVENTPLANE::kTPCptWeights,ih+1);
+    }
+    if(event->GetEventPlaneStatus(EVENTPLANE::kTPCpos,ih+1) != EVENTPLANE::kUnset) {
+      values[kTPCQvecXposTree+ih] = event->GetQx(EVENTPLANE::kTPCpos,ih+1);
+      values[kTPCQvecYposTree+ih] = event->GetQy(EVENTPLANE::kTPCpos,ih+1);
+      values[kTPCRPposTree+ih]    = event->GetEventPlane(EVENTPLANE::kTPCpos,ih+1);
+    }
+    if(event->GetEventPlaneStatus(EVENTPLANE::kTPCneg,ih+1) != EVENTPLANE::kUnset) {
+      values[kTPCQvecXnegTree+ih] = event->GetQx(EVENTPLANE::kTPCneg,ih+1);
+      values[kTPCQvecYnegTree+ih] = event->GetQy(EVENTPLANE::kTPCneg,ih+1);
+      values[kTPCRPnegTree+ih]    = event->GetEventPlane(EVENTPLANE::kTPCneg,ih+1);
+    }
+
+    // TPC VZERO Q-vector correlations
+    if(fgUsedVars[kRPXtpcXvzeroa+ih])
+      values[kRPXtpcXvzeroa+ih] = values[kTPCQvecXtree+ih]*values[kVZEROQvecX+ih];
+    if(fgUsedVars[kRPXtpcXvzeroc+ih])
+      values[kRPXtpcXvzeroc+ih] = values[kTPCQvecXtree+ih]*values[kVZEROQvecX+6+ih];
+    if(fgUsedVars[kRPYtpcYvzeroa+ih])
+      values[kRPYtpcYvzeroa+ih] = values[kTPCQvecYtree+ih]*values[kVZEROQvecY+ih];
+    if(fgUsedVars[kRPYtpcYvzeroc+ih])
+      values[kRPYtpcYvzeroc+ih] = values[kTPCQvecYtree+ih]*values[kVZEROQvecY+6+ih];
+    if(fgUsedVars[kRPXtpcYvzeroa+ih])
+      values[kRPXtpcYvzeroa+ih] = values[kTPCQvecXtree+ih]*values[kVZEROQvecY+ih];
+    if(fgUsedVars[kRPXtpcYvzeroc+ih])
+      values[kRPXtpcYvzeroc+ih] = values[kTPCQvecXtree+ih]*values[kVZEROQvecY+6+ih];
+    if(fgUsedVars[kRPYtpcXvzeroa+ih])
+      values[kRPYtpcXvzeroa+ih] = values[kTPCQvecYtree+ih]*values[kVZEROQvecX+ih];
+    if(fgUsedVars[kRPYtpcXvzeroc+ih])
+      values[kRPYtpcXvzeroc+ih] = values[kTPCQvecYtree+ih]*values[kVZEROQvecX+6+ih];
+    // Psi_TPC - Psi_VZERO A/C
+    if(fgUsedVars[kRPdeltaVZEROAtpc+ih])
+      values[kRPdeltaVZEROAtpc+ih] = DeltaPhi(values[kVZERORP+0*6+ih], values[kTPCRPtree+ih]);
+    if(fgUsedVars[kRPdeltaVZEROCtpc+ih])
+      values[kRPdeltaVZEROCtpc+ih] = DeltaPhi(values[kVZERORP+1*6+ih], values[kTPCRPtree+ih]);
+
+
+    // cos(n(EPtpc-EPvzero A/C))
+    for(Int_t iVZEROside=0; iVZEROside<2; ++iVZEROside) {
+      if(fgUsedVars[kTPCRPres+iVZEROside*6+ih]) {
+        values[kTPCRPres+iVZEROside*6+ih] = DeltaPhi(values[kTPCRPtree+ih], values[kVZERORP+iVZEROside*6+ih]);
+        values[kTPCRPres+iVZEROside*6+ih] = TMath::Cos(values[kTPCRPres+iVZEROside*6+ih]*(ih+1));
+      }
+    }
+    // cout<<values[kCentVZERO]<<" "<<values[kCentSPD]<<" "<<values[kVtxZ]<<" "<<values[kTPCRPres+1*6+ih]<<" "<<values[kTPCRPres+0*6+ih]<<" "<<values[kVZERORPres+ih]<<endl;
+    //      cout<<values[kTPCRPres+0*6+ih]<<endl;
+    //      cout<<values[kTPCRPres+1*6+ih]<<endl;
+    //      cout<<values[kVZERORPres+ih]<<endl;
+    //resolution of V0A, V0C or TPC as reference detector
+    if(fgOptionEventRes && (fgUsedVars[kVZEROARPres+ih]||fgUsedVars[kVZEROCRPres+ih]||fgUsedVars[kVZEROTPCRPres+ih])) {
+      if(values[kTPCRPres+1*6+ih]>1.0e-7 && values[kTPCRPres+0*6+ih]>1.0e-7 && values[kVZERORPres+ih]>1.0e-7) {
+        values[kVZEROARPres+ih] = TMath::Sqrt(values[kTPCRPres+1*6+ih]/(values[kVZERORPres+ih]*values[kTPCRPres+0*6+ih]));
+        values[kVZEROCRPres+ih] = TMath::Sqrt(values[kTPCRPres+0*6+ih]/(values[kVZERORPres+ih]*values[kTPCRPres+1*6+ih]));
+        values[kVZEROTPCRPres+ih] = TMath::Sqrt(values[kVZERORPres+ih]/(values[kTPCRPres+0*6+ih]*values[kTPCRPres+1*6+ih]));
+      }
+      else {
+        values[kVZEROARPres+ih]   = 0;
+        values[kVZEROCRPres+ih]   = 0;
+        values[kVZEROTPCRPres+ih] = 0;
+      }
+    }  // end if fgOptionEventRes
+
+  }  // end loop over harmonics
+
+ 
+  if(eventF) {
+    for(Int_t ih=0; ih<6; ++ih) {
+      // VZERO event plane variables
+      values[kVZEROQvecX+2*6+ih] = 0.0;
+      values[kVZEROQvecY+2*6+ih] = 0.0;
+      values[kVZERORP   +2*6+ih] = 0.0;
+      for(Int_t iVZEROside=0; iVZEROside<2; ++iVZEROside) {
+        values[kVZEROQvecX+iVZEROside*6+ih] = eventF->Qx(EVENTPLANE::kVZEROA+iVZEROside, ih+1);
+        values[kVZEROQvecY+iVZEROside*6+ih] = eventF->Qy(EVENTPLANE::kVZEROA+iVZEROside, ih+1);
+        if(fgUsedVars[kVZERORP+iVZEROside*6+ih])
+          values[kVZERORP+iVZEROside*6+ih] = eventF->EventPlane(EVENTPLANE::kVZEROA+iVZEROside, ih+1);
+        if(fgUsedVars[kVZEROQvecX+2*6+ih])
+          values[kVZEROQvecX+2*6+ih] += values[kVZEROQvecX+iVZEROside*6+ih];
+        if(fgUsedVars[kVZEROQvecY+2*6+ih])
+          values[kVZEROQvecY+2*6+ih] += values[kVZEROQvecY+iVZEROside*6+ih];
+        // cos(n(EPtpc-EPvzero A/C))
+        if(fgUsedVars[kTPCRPres+iVZEROside*6+ih]) {
+          values[kTPCRPres+iVZEROside*6+ih] = DeltaPhi(eventF->EventPlane(EVENTPLANE::kTPC,ih+1),
+                                                      eventF->EventPlane(EVENTPLANE::kVZEROA+iVZEROside,ih+1));
+          values[kTPCRPres+iVZEROside*6+ih] = TMath::Cos(values[kTPCRPres+iVZEROside*6+ih]*(ih+1));
+        }
+      }
+
+      if(fgUsedVars[kVZEROQaQcSP+ih]) {
+        values[kVZEROQaQcSP+ih]  = TMath::Cos((ih+1)*(values[kVZERORP+0*6+ih]-values[kVZERORP+1*6+ih]));
+        values[kVZEROQaQcSP+ih] *= TMath::Sqrt(values[kVZEROQvecX+0*6+ih]*values[kVZEROQvecX+0*6+ih]+
+        values[kVZEROQvecY+0*6+ih]*values[kVZEROQvecY+0*6+ih]);
+        values[kVZEROQaQcSP+ih] *= TMath::Sqrt(values[kVZEROQvecX+1*6+ih]*values[kVZEROQvecX+1*6+ih]+
+        values[kVZEROQvecY+1*6+ih]*values[kVZEROQvecY+1*6+ih]);
+      }
+      values[kVZEROQaQcSPsine+ih]  = TMath::Sin((ih+1)*(values[kVZERORP+0*6+ih]-values[kVZERORP+1*6+ih]));
+      values[kVZEROQaQcSPsine+ih] *= TMath::Sqrt(values[kVZEROQvecX+0*6+ih]*values[kVZEROQvecX+0*6+ih]+
+      values[kVZEROQvecY+0*6+ih]*values[kVZEROQvecY+0*6+ih]);
+      values[kVZEROQaQcSPsine+ih] *= TMath::Sqrt(values[kVZEROQvecX+1*6+ih]*values[kVZEROQvecX+1*6+ih]+
+      values[kVZEROQvecY+1*6+ih]*values[kVZEROQvecY+1*6+ih]);
+      values[kVZERORP+2*6+ih]      = TMath::ATan2(values[kVZEROQvecY+2*6+ih],values[kVZEROQvecX+2*6+ih]) /
+      Double_t(ih+1);
+      // cos (n*(psi_A-psi_C))
+      if(fgUsedVars[kVZERORPres+ih]) {
+        values[kVZERORPres+ih] = DeltaPhi(eventF->EventPlane(EVENTPLANE::kVZEROA, ih+1),
+                                          eventF->EventPlane(EVENTPLANE::kVZEROC, ih+1));
+        values[kVZERORPres+ih] = TMath::Cos(values[kVZERORPres+ih]*(ih+1));
+      }
+      // Qx,Qy correlations for VZERO
+      if(fgUsedVars[kVZEROXaXc+ih])
+        values[kVZEROXaXc+ih] = eventF->Qx(EVENTPLANE::kVZEROA,ih+1) * eventF->Qx(EVENTPLANE::kVZEROC,ih+1);
+      if(fgUsedVars[kVZEROXaYa+ih])
+        values[kVZEROXaYa+ih] = eventF->Qx(EVENTPLANE::kVZEROA,ih+1) * eventF->Qy(EVENTPLANE::kVZEROA,ih+1);
+      if(fgUsedVars[kVZEROXaYc+ih])
+        values[kVZEROXaYc+ih] = eventF->Qx(EVENTPLANE::kVZEROA,ih+1) * eventF->Qy(EVENTPLANE::kVZEROC,ih+1);
+      if(fgUsedVars[kVZEROYaXc+ih])
+        values[kVZEROYaXc+ih] = eventF->Qy(EVENTPLANE::kVZEROA,ih+1) * eventF->Qx(EVENTPLANE::kVZEROC,ih+1);
+      if(fgUsedVars[kVZEROYaYc+ih])
+        values[kVZEROYaYc+ih] = eventF->Qy(EVENTPLANE::kVZEROA,ih+1) * eventF->Qy(EVENTPLANE::kVZEROC,ih+1);
+      if(fgUsedVars[kVZEROXcYc+ih])
+        values[kVZEROXcYc+ih] = eventF->Qx(EVENTPLANE::kVZEROC,ih+1) * eventF->Qy(EVENTPLANE::kVZEROC,ih+1);
+      // Psi_A - Psi_C
+      if(fgUsedVars[kVZEROdeltaRPac+ih])
+        values[kVZEROdeltaRPac+ih] = DeltaPhi(eventF->EventPlane(EVENTPLANE::kVZEROA, ih+1),
+                                              eventF->EventPlane(EVENTPLANE::kVZEROC, ih+1));
+
       // TPC event plane
       values[kTPCQvecX+ih] = eventF->Qx(EVENTPLANE::kTPC, ih+1);
       values[kTPCQvecY+ih] = eventF->Qy(EVENTPLANE::kTPC, ih+1);
-      if(fgUsedVars[kTPCRP+ih]) 
-	values[kTPCRP+ih] = eventF->EventPlane(EVENTPLANE::kTPC, ih+1);
+      if(fgUsedVars[kTPCRP+ih])
+        values[kTPCRP+ih] = eventF->EventPlane(EVENTPLANE::kTPC, ih+1);
       // TPC VZERO Q-vector correlations
-      if(fgUsedVars[kRPXtpcXvzeroa+ih]) 
-	values[kRPXtpcXvzeroa+ih] = values[kTPCQvecX+ih]*values[kVZEROQvecX+ih];
-      if(fgUsedVars[kRPXtpcXvzeroc+ih]) 
-	values[kRPXtpcXvzeroc+ih] = values[kTPCQvecX+ih]*values[kVZEROQvecX+6+ih];
-      if(fgUsedVars[kRPYtpcYvzeroa+ih]) 
-	values[kRPYtpcYvzeroa+ih] = values[kTPCQvecY+ih]*values[kVZEROQvecY+ih];
-      if(fgUsedVars[kRPYtpcYvzeroc+ih]) 
-	values[kRPYtpcYvzeroc+ih] = values[kTPCQvecY+ih]*values[kVZEROQvecY+6+ih];
-      if(fgUsedVars[kRPXtpcYvzeroa+ih]) 
-	values[kRPXtpcYvzeroa+ih] = values[kTPCQvecX+ih]*values[kVZEROQvecY+ih];
-      if(fgUsedVars[kRPXtpcYvzeroc+ih]) 
-	values[kRPXtpcYvzeroc+ih] = values[kTPCQvecX+ih]*values[kVZEROQvecY+6+ih];
-      if(fgUsedVars[kRPYtpcXvzeroa+ih]) 
-	values[kRPYtpcXvzeroa+ih] = values[kTPCQvecY+ih]*values[kVZEROQvecX+ih];
-      if(fgUsedVars[kRPYtpcXvzeroc+ih]) 
-	values[kRPYtpcXvzeroc+ih] = values[kTPCQvecY+ih]*values[kVZEROQvecX+6+ih];
-      // Psi_TPC - Psi_VZERO A/C      
-      if(fgUsedVars[kRPdeltaVZEROAtpc+ih]) 
-	values[kRPdeltaVZEROAtpc+ih] = DeltaPhi(values[kVZERORP+0*6+ih], values[kTPCRP+ih]);
+      if(fgUsedVars[kRPXtpcXvzeroa+ih])
+        values[kRPXtpcXvzeroa+ih] = values[kTPCQvecX+ih]*values[kVZEROQvecX+ih];
+      if(fgUsedVars[kRPXtpcXvzeroc+ih])
+        values[kRPXtpcXvzeroc+ih] = values[kTPCQvecX+ih]*values[kVZEROQvecX+6+ih];
+      if(fgUsedVars[kRPYtpcYvzeroa+ih])
+        values[kRPYtpcYvzeroa+ih] = values[kTPCQvecY+ih]*values[kVZEROQvecY+ih];
+      if(fgUsedVars[kRPYtpcYvzeroc+ih])
+        values[kRPYtpcYvzeroc+ih] = values[kTPCQvecY+ih]*values[kVZEROQvecY+6+ih];
+      if(fgUsedVars[kRPXtpcYvzeroa+ih])
+        values[kRPXtpcYvzeroa+ih] = values[kTPCQvecX+ih]*values[kVZEROQvecY+ih];
+      if(fgUsedVars[kRPXtpcYvzeroc+ih])
+        values[kRPXtpcYvzeroc+ih] = values[kTPCQvecX+ih]*values[kVZEROQvecY+6+ih];
+      if(fgUsedVars[kRPYtpcXvzeroa+ih])
+        values[kRPYtpcXvzeroa+ih] = values[kTPCQvecY+ih]*values[kVZEROQvecX+ih];
+      if(fgUsedVars[kRPYtpcXvzeroc+ih])
+        values[kRPYtpcXvzeroc+ih] = values[kTPCQvecY+ih]*values[kVZEROQvecX+6+ih];
+      // Psi_TPC - Psi_VZERO A/C
+      if(fgUsedVars[kRPdeltaVZEROAtpc+ih])
+        values[kRPdeltaVZEROAtpc+ih] = DeltaPhi(values[kVZERORP+0*6+ih], values[kTPCRP+ih]);
       if(fgUsedVars[kRPdeltaVZEROCtpc+ih])
         values[kRPdeltaVZEROCtpc+ih] = DeltaPhi(values[kVZERORP+1*6+ih], values[kTPCRP+ih]);
       // TPC event planes with sub-event method
       values[kTPCQvecXleft+ih] = eventF->Qx(EVENTPLANE::kTPCneg, ih+1);
       values[kTPCQvecYleft+ih] = eventF->Qy(EVENTPLANE::kTPCneg, ih+1);
       if(fgUsedVars[kTPCRPleft+ih])
-	values[kTPCRPleft+ih] = eventF->EventPlane(EVENTPLANE::kTPCneg, ih+1);
+        values[kTPCRPleft+ih] = eventF->EventPlane(EVENTPLANE::kTPCneg, ih+1);
       values[kTPCQvecXright+ih] = eventF->Qx(EVENTPLANE::kTPCpos, ih+1);
       values[kTPCQvecYright+ih] = eventF->Qy(EVENTPLANE::kTPCpos, ih+1);
       if(fgUsedVars[kTPCRPright+ih])
-        values[kTPCRPright+ih] = eventF->EventPlane(EVENTPLANE::kTPCpos, ih+1); 
-      if(fgUsedVars[kTPCsubResCos+ih]) 
-	values[kTPCsubResCos+ih] = TMath::Cos(Double_t(ih+1)*(values[kTPCRPleft+ih]-values[kTPCRPright+ih]));
+        values[kTPCRPright+ih] = eventF->EventPlane(EVENTPLANE::kTPCpos, ih+1);
+      if(fgUsedVars[kTPCsubResCos+ih])
+        values[kTPCsubResCos+ih] = TMath::Cos(Double_t(ih+1)*(values[kTPCRPleft+ih]-values[kTPCRPright+ih]));
     }  // end loop over harmonics
-    
+
     // VZERO v2 using TPC event plane
     Double_t vzeroChannelPhi[8] = {0.3927, 1.1781, 1.9635, 2.7489, -2.7489, -1.9635, -1.1781, -0.3927};
-    
+
     for(Int_t ich=0; ich<64; ++ich) {
       if(fgUsedVars[kVZEROflowV2TPC+ich])
-	values[kVZEROflowV2TPC+ich] = values[kVZEROChannelMult+ich]*
+        values[kVZEROflowV2TPC+ich] = values[kVZEROChannelMult+ich] *
                                       TMath::Cos(2.0*DeltaPhi(vzeroChannelPhi[ich%8],values[kTPCRP+1]));
-    } 
+    }
   }  // end if (eventF)
-    
+
   for(Int_t izdc=0; izdc<10; ++izdc) values[kZDCnEnergyCh+izdc] = event->EnergyZDCnTree(izdc);
   for(Int_t izdc=0; izdc<10; ++izdc) values[kZDCpEnergyCh+izdc] = event->EnergyZDCpTree(izdc);
   for(Int_t itzero=0; itzero<26; ++itzero)
@@ -3281,77 +3301,81 @@ void AliReducedVarManager::SetDefaultVarNames() {
     fgVariableNames[ivar] = "DEFAULT NOT DEFINED"; fgVariableUnits[ivar] = "n/a";
   }
   
-  fgVariableNames[kEventTag]             = "Event tag";                       fgVariableUnits[kEventTag]             = "";
-  fgVariableNames[kEventNumberInFile]    = "Event no. in ESD file";           fgVariableUnits[kEventNumberInFile]    = "";
-  fgVariableNames[kL0TriggerInput]       = "  ";               fgVariableUnits[kL0TriggerInput]       = "";
-  fgVariableNames[kL1TriggerInput]       = "  ";               fgVariableUnits[kL1TriggerInput]       = "";
-  fgVariableNames[kL2TriggerInput]       = "  ";               fgVariableUnits[kL2TriggerInput]       = "";
-  fgVariableNames[kL0TriggerInput2]       = "  ";               fgVariableUnits[kL0TriggerInput2]       = "";
-  fgVariableNames[kL1TriggerInput2]       = "  ";               fgVariableUnits[kL1TriggerInput2]       = "";
-  fgVariableNames[kL2TriggerInput2]       = "  ";               fgVariableUnits[kL2TriggerInput2]       = "";
-  fgVariableNames[kRunNo]                = "Run number";                      fgVariableUnits[kRunNo]                = "";
-  fgVariableNames[kRunID]                = "Run ID";                      fgVariableUnits[kRunID]                = "";
-  fgVariableNames[kLHCFillNumber]        = "LHC fill number";                 fgVariableUnits[kLHCFillNumber]        = ""; 
-  fgVariableNames[kBeamEnergy]           = "Beam energy";                     fgVariableUnits[kBeamEnergy]           = "GeV";
-  fgVariableNames[kInstLumi]             = "Instantaneous luminosity";        fgVariableUnits[kInstLumi]             = "Hz/mb";   
-  fgVariableNames[kDetectorMask]         = "Detector mask";                   fgVariableUnits[kDetectorMask]         = "";
-  fgVariableNames[kNumberOfDetectors]    = "Number of active detectors";      fgVariableUnits[kNumberOfDetectors]    = "";  
-  fgVariableNames[kDipolePolarity]       = "Dipole magnet polarity";          fgVariableUnits[kDipolePolarity]       = "";
-  fgVariableNames[kL3Polarity]           = "L3 magnet polarity";              fgVariableUnits[kL3Polarity]           = "";
-  fgVariableNames[kTotalLuminosity]  = "Run luminosity";                    fgVariableUnits[kTotalLuminosity]  = "";
-  fgVariableNames[kBeamIntensity0]       = "Beam 0 intensity";                fgVariableUnits[kBeamIntensity0]       = "";
-  fgVariableNames[kBeamIntensity1]       = "Beam 1 intensity";                fgVariableUnits[kBeamIntensity1]       = "";
-  fgVariableNames[kRunTimeStart]         = "Run start time";                fgVariableUnits[kRunTimeStart] = "sec";
-  fgVariableNames[kRunTimeEnd]         = "Run end time";                fgVariableUnits[kRunTimeEnd] = "sec";
-  fgVariableNames[kBC]                   = "Bunch crossing";                  fgVariableUnits[kBC]                   = "";
-  fgVariableNames[kTimeStamp]            = "Time stamp";                      fgVariableUnits[kTimeStamp]            = "";
-  fgVariableNames[kTimeRelativeSOR]   = "Event time from SOR";      fgVariableUnits[kTimeRelativeSOR]  = "min";
-  fgVariableNames[kTimeRelativeSORfraction] = "Event time from SOR";   fgVariableUnits[kTimeRelativeSORfraction] = "fraction of total run duration";
-  fgVariableNames[kEventType]            = "Event type";                      fgVariableUnits[kEventType]            = "";
-  fgVariableNames[kTriggerMask]          = "Trigger mask";                    fgVariableUnits[kTriggerMask]          = "";
-  fgVariableNames[kOnlineTrigger]        = "Online trigger";                  fgVariableUnits[kOnlineTrigger]        = "";
-  fgVariableNames[kOnlineTriggerFired]   = "  ";            fgVariableUnits[kOnlineTriggerFired]   = "";
-  fgVariableNames[kOnlineTriggerFired2]  = "  ";           fgVariableUnits[kOnlineTriggerFired2]  = "";
-  fgVariableNames[kIsPhysicsSelection]   = "Physics selection ON";            fgVariableUnits[kIsPhysicsSelection]   = "";
-  fgVariableNames[kIsSPDPileup]          = "SPD pileup ON";                   fgVariableUnits[kIsSPDPileup]          = "";
-  fgVariableNames[kIsSPDPileup5]          = "SPD pileup (5 contributors) ON";                   fgVariableUnits[kIsSPDPileup5]          = "";
-  fgVariableNames[kIsPileupMV]          = "MV pileup ON";                   fgVariableUnits[kIsPileupMV]          = "";
-  fgVariableNames[kIsSPDPileupMultBins]  = "SPD pileup multiplicity bins ON"; fgVariableUnits[kIsSPDPileupMultBins]  = "";
-  fgVariableNames[kNSPDpileups]          = "Number of SPD pileup events";     fgVariableUnits[kNSPDpileups]          = "";
-  fgVariableNames[kNTrackPileups]        = "Number of track pileup events";   fgVariableUnits[kNTrackPileups]        = "";
-  fgVariableNames[kIRIntClosestIntMap]   = "Closest out of bunch int. IRInt1";fgVariableUnits[kIRIntClosestIntMap]   = "";
-  fgVariableNames[kIRIntClosestIntMap+1] = "Closest out of bunch int. IRInt2";fgVariableUnits[kIRIntClosestIntMap+1] = "";
-  fgVariableNames[kNPMDtracks]           = "Number of PMD tracks";            fgVariableUnits[kNPMDtracks]           = "";
-  fgVariableNames[kNTRDtracks]           = "Number of TRD tracks";            fgVariableUnits[kNTRDtracks]           = "";
-  fgVariableNames[kNTRDtracklets]        = "Number of TRD tracklets";         fgVariableUnits[kNTRDtracklets]        = "";
-  fgVariableNames[kNVtxContributors]     = "Number of vtx. contributors";     fgVariableUnits[kNVtxContributors]     = "";
-  fgVariableNames[kNVtxTPCContributors]  = "Number of TPC vtx. contributors"; fgVariableUnits[kNVtxTPCContributors]  = "";
-  fgVariableNames[kNVtxSPDContributors]  = "Number of SPD vtx. contributors"; fgVariableUnits[kNVtxSPDContributors]  = "";
-  fgVariableNames[kVtxX]                 = "Vtx X";                           fgVariableUnits[kVtxX]                 = "cm";
-  fgVariableNames[kVtxY]                 = "Vtx Y";                           fgVariableUnits[kVtxY]                 = "cm";
-  fgVariableNames[kVtxZ]                 = "Vtx Z";                           fgVariableUnits[kVtxZ]                 = "cm";
-  fgVariableNames[kVtxXtpc]              = "Vtx X TPC";                       fgVariableUnits[kVtxXtpc]              = "cm";
-  fgVariableNames[kVtxYtpc]              = "Vtx Y TPC";                       fgVariableUnits[kVtxYtpc]              = "cm";
-  fgVariableNames[kVtxZtpc]              = "Vtx Z TPC";                       fgVariableUnits[kVtxZtpc]              = "cm";
-  fgVariableNames[kDeltaVtxZ]            = "#Delta Z";                        fgVariableUnits[kDeltaVtxZ]            = "cm";
-  fgVariableNames[kVtxXspd]              = "Vtx X SPD";                       fgVariableUnits[kVtxXspd]              = "cm";
-  fgVariableNames[kVtxYspd]              = "Vtx Y SPD";                       fgVariableUnits[kVtxYspd]              = "cm";
-  fgVariableNames[kVtxZspd]              = "Vtx Z SPD";                       fgVariableUnits[kVtxZspd]              = "cm";
-  fgVariableNames[kDeltaVtxZspd]         = "#Delta Z (global-SPD)";           fgVariableUnits[kDeltaVtxZspd]         = "cm";
-  fgVariableNames[kTPCpileupZAC]         = "TPC pileup Z from A&C sides";     fgVariableUnits[kTPCpileupZAC]         = "cm";
-  fgVariableNames[kTPCpileupZA]          = "TPC pileup Z from A side";        fgVariableUnits[kTPCpileupZA]          = "cm";
-  fgVariableNames[kTPCpileupZC]          = "TPC pileup Z from C side";        fgVariableUnits[kTPCpileupZC]          = "cm";
+  fgVariableNames[kEventTag]          = "Event tag";                  fgVariableUnits[kEventTag] = "";
+  fgVariableNames[kEventNumberInFile] = "Event no. in ESD file";      fgVariableUnits[kEventNumberInFile] = "";
+  fgVariableNames[kL0TriggerInput]    = "  ";                         fgVariableUnits[kL0TriggerInput]  = "";
+  fgVariableNames[kL1TriggerInput]    = "  ";                         fgVariableUnits[kL1TriggerInput]  = "";
+  fgVariableNames[kL2TriggerInput]    = "  ";                         fgVariableUnits[kL2TriggerInput]  = "";
+  fgVariableNames[kL0TriggerInput2]   = "  ";                         fgVariableUnits[kL0TriggerInput2] = "";
+  fgVariableNames[kL1TriggerInput2]   = "  ";                         fgVariableUnits[kL1TriggerInput2] = "";
+  fgVariableNames[kL2TriggerInput2]   = "  ";                         fgVariableUnits[kL2TriggerInput2] = "";
+  fgVariableNames[kRunNo]             = "Run number";                 fgVariableUnits[kRunNo] = "";
+  fgVariableNames[kRunID]             = "Run ID";                     fgVariableUnits[kRunID] = "";
+  fgVariableNames[kLHCFillNumber]     = "LHC fill number";            fgVariableUnits[kLHCFillNumber] = "";
+  fgVariableNames[kBeamEnergy]        = "Beam energy";                fgVariableUnits[kBeamEnergy] = "GeV";
+  fgVariableNames[kInstLumi]          = "Instantaneous luminosity";   fgVariableUnits[kInstLumi] = "Hz/mb";
+  fgVariableNames[kDetectorMask]      = "Detector mask";              fgVariableUnits[kDetectorMask] = "";
+  fgVariableNames[kNumberOfDetectors] = "Number of active detectors"; fgVariableUnits[kNumberOfDetectors] = "";
+  fgVariableNames[kDipolePolarity]    = "Dipole magnet polarity";     fgVariableUnits[kDipolePolarity] = "";
+  fgVariableNames[kL3Polarity]        = "L3 magnet polarity";         fgVariableUnits[kL3Polarity] = "";
+  fgVariableNames[kTotalLuminosity]   = "Run luminosity";             fgVariableUnits[kTotalLuminosity] = "";
+  fgVariableNames[kBeamIntensity0]    = "Beam 0 intensity";           fgVariableUnits[kBeamIntensity0] = "";
+  fgVariableNames[kBeamIntensity1]    = "Beam 1 intensity";           fgVariableUnits[kBeamIntensity1] = "";
+  fgVariableNames[kRunTimeStart]      = "Run start time";             fgVariableUnits[kRunTimeStart] = "sec";
+  fgVariableNames[kRunTimeEnd]        = "Run end time";               fgVariableUnits[kRunTimeEnd] = "sec";
+  fgVariableNames[kBC]                = "Bunch crossing";             fgVariableUnits[kBC] = "";
+  fgVariableNames[kTimeStamp]         = "Time stamp";                 fgVariableUnits[kTimeStamp] = "";
+  fgVariableNames[kTimeRelativeSOR]         = "Event time from SOR";  fgVariableUnits[kTimeRelativeSOR] = "min";
+  fgVariableNames[kTimeRelativeSORfraction] = "Event time from SOR";  fgVariableUnits[kTimeRelativeSORfraction] = "fraction of total run duration";
+  fgVariableNames[kEventType]           = "Event type";     fgVariableUnits[kEventType]     = "";
+  fgVariableNames[kTriggerMask]         = "Trigger mask";   fgVariableUnits[kTriggerMask]   = "";
+  fgVariableNames[kOnlineTrigger]       = "Online trigger"; fgVariableUnits[kOnlineTrigger] = "";
+  fgVariableNames[kOnlineTriggerFired]  = "  ";             fgVariableUnits[kOnlineTriggerFired]  = "";
+  fgVariableNames[kOnlineTriggerFired2] = "  ";             fgVariableUnits[kOnlineTriggerFired2] = "";
+  fgVariableNames[kIsPhysicsSelection]  = "Physics selection ON"; fgVariableUnits[kIsPhysicsSelection] = "";
+  fgVariableNames[kIsSPDPileup]         = "SPD pileup ON";                  fgVariableUnits[kIsSPDPileup]  = "";
+  fgVariableNames[kIsSPDPileup5]        = "SPD pileup (5 contributors) ON"; fgVariableUnits[kIsSPDPileup5] = "";
+  fgVariableNames[kIsPileupMV]          = "MV pileup ON";                   fgVariableUnits[kIsPileupMV]   = "";
+  fgVariableNames[kIsSPDPileupMultBins] = "SPD pileup multiplicity bins ON"; fgVariableUnits[kIsSPDPileupMultBins] = "";
+  fgVariableNames[kNSPDpileups]         = "Number of SPD pileup events";   fgVariableUnits[kNSPDpileups] = "";
+  fgVariableNames[kNTrackPileups]       = "Number of track pileup events"; fgVariableUnits[kNTrackPileups] = "";
+  fgVariableNames[kIRIntClosestIntMap]  = "Closest out of bunch int. IRInt1"; fgVariableUnits[kIRIntClosestIntMap] = "";
+  fgVariableNames[kIRIntClosestIntMap+1] = "Closest out of bunch int. IRInt2"; fgVariableUnits[kIRIntClosestIntMap+1] = "";
+  fgVariableNames[kNPMDtracks]          = "Number of PMD tracks";       fgVariableUnits[kNPMDtracks]       = "";
+  fgVariableNames[kNTRDtracks]          = "Number of TRD tracks";       fgVariableUnits[kNTRDtracks]       = "";
+  fgVariableNames[kNTRDtracklets]       = "Number of TRD tracklets";    fgVariableUnits[kNTRDtracklets]    = "";
+  fgVariableNames[kNVtxContributors]    = "Number of vtx contributors"; fgVariableUnits[kNVtxContributors] = "";
+  fgVariableNames[kNVtxTPCContributors] = "Number of TPC vtx contributors"; fgVariableUnits[kNVtxTPCContributors] = "";
+  fgVariableNames[kNVtxSPDContributors] = "Number of SPD vtx contributors"; fgVariableUnits[kNVtxSPDContributors] = "";
+  fgVariableNames[kVtxX]                = "Vtx X";                fgVariableUnits[kVtxX]         = "cm";
+  fgVariableNames[kVtxY]                = "Vtx Y";                fgVariableUnits[kVtxY]         = "cm";
+  fgVariableNames[kVtxZ]                = "Vtx Z";                fgVariableUnits[kVtxZ]         = "cm";
+  fgVariableNames[kVtxXMC]              = "Vtx X MC";             fgVariableUnits[kVtxX]         = "cm";
+  fgVariableNames[kVtxYMC]              = "Vtx Y MC";             fgVariableUnits[kVtxY]         = "cm";
+  fgVariableNames[kVtxZMC]              = "Vtx Z MC";             fgVariableUnits[kVtxZ]         = "cm";
+  fgVariableNames[kDeltaVtxZMC]         = "#Delta Z (global-MC)"; fgVariableUnits[kDeltaVtxZMC]  = "cm";
+  fgVariableNames[kVtxXtpc]             = "Vtx X TPC";            fgVariableUnits[kVtxXtpc]      = "cm";
+  fgVariableNames[kVtxYtpc]             = "Vtx Y TPC";            fgVariableUnits[kVtxYtpc]      = "cm";
+  fgVariableNames[kVtxZtpc]             = "Vtx Z TPC";            fgVariableUnits[kVtxZtpc]      = "cm";
+  fgVariableNames[kDeltaVtxZ]           = "#Delta Z";             fgVariableUnits[kDeltaVtxZ]    = "cm";
+  fgVariableNames[kVtxXspd]             = "Vtx X SPD";            fgVariableUnits[kVtxXspd]      = "cm";
+  fgVariableNames[kVtxYspd]             = "Vtx Y SPD";            fgVariableUnits[kVtxYspd]      = "cm";
+  fgVariableNames[kVtxZspd]             = "Vtx Z SPD";            fgVariableUnits[kVtxZspd]      = "cm";
+  fgVariableNames[kDeltaVtxZspd]        = "#Delta Z (global-SPD)";       fgVariableUnits[kDeltaVtxZspd] = "cm";
+  fgVariableNames[kTPCpileupZAC]        = "TPC pileup Z from A&C sides"; fgVariableUnits[kTPCpileupZAC] = "cm";
+  fgVariableNames[kTPCpileupZA]         = "TPC pileup Z from A side";    fgVariableUnits[kTPCpileupZA]  = "cm";
+  fgVariableNames[kTPCpileupZC]         = "TPC pileup Z from C side";    fgVariableUnits[kTPCpileupZC]  = "cm";
   fgVariableNames[kTPCpileupContributorsAC] = "TPC pileup n-contributors from A&C sides"; fgVariableUnits[kTPCpileupContributorsAC] = "";
   fgVariableNames[kTPCpileupContributorsA]  = "TPC pileup n-contributors from A side"; fgVariableUnits[kTPCpileupContributorsA] = "";
   fgVariableNames[kTPCpileupContributorsC]  = "TPC pileup n-contributors from C side"; fgVariableUnits[kTPCpileupContributorsC] = "";
-  fgVariableNames[kTPCpileupZAC2]         = "TPC pileup Z (2) from A&C sides";     fgVariableUnits[kTPCpileupZAC2]         = "cm";
-  fgVariableNames[kTPCpileupZA2]          = "TPC pileup Z (2) from A side";        fgVariableUnits[kTPCpileupZA2]          = "cm";
-  fgVariableNames[kTPCpileupZC2]          = "TPC pileup Z (2) from C side";        fgVariableUnits[kTPCpileupZC2]          = "cm";
+  fgVariableNames[kTPCpileupZAC2] = "TPC pileup Z (2) from A&C sides"; fgVariableUnits[kTPCpileupZAC2] = "cm";
+  fgVariableNames[kTPCpileupZA2]  = "TPC pileup Z (2) from A side";    fgVariableUnits[kTPCpileupZA2]  = "cm";
+  fgVariableNames[kTPCpileupZC2]  = "TPC pileup Z (2) from C side";    fgVariableUnits[kTPCpileupZC2]  = "cm";
   fgVariableNames[kTPCpileupContributorsAC2] = "TPC pileup n-contributors (2) from A&C sides"; fgVariableUnits[kTPCpileupContributorsAC2] = "";
   fgVariableNames[kTPCpileupContributorsA2]  = "TPC pileup n-contributors (2) from A side"; fgVariableUnits[kTPCpileupContributorsA2] = "";
   fgVariableNames[kTPCpileupContributorsC2]  = "TPC pileup n-contributors (2) from C side"; fgVariableUnits[kTPCpileupContributorsC2] = "";
   for(Int_t iflag=0; iflag<kNTrackingStatus; ++iflag) {
-    fgVariableNames[kNTracksPerTrackingStatus+iflag] = Form("Tracks with %s on", fgkTrackingStatusNames[iflag]); 
+    fgVariableNames[kNTracksPerTrackingStatus+iflag] = Form("Tracks with %s on",fgkTrackingStatusNames[iflag]);
     fgVariableUnits[kNTracksPerTrackingStatus+iflag] = ""; 
   }
   fgVariableNames[kNTracksTPCoutBeforeClean] = "Number of kTPCout before ESD cleanup"; fgVariableUnits[kNTracksTPCoutBeforeClean] = "";

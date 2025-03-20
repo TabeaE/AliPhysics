@@ -258,6 +258,7 @@ class AliReducedVarManager : public TObject {
     kVtxXMC,            // vtx X MC
     kVtxYMC,            // vtx Y MC
     kVtxZMC,            // vtx Z MC
+    kDeltaVtxZMC,       // vtxZ - vtxZMC
     kVtxXtpc,           // vtx X from tpc
     kVtxYtpc,           // vtx Y from tpc
     kVtxZtpc,           // vtx Z from tpc
