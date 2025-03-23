@@ -19,13 +19,13 @@
 #include "AliReducedInfoCut.h"
 
 class AliMixingHandler : public TNamed {
-   
+
 public:
-   enum Constants {
-      kMixResonanceLegs=0,         // event mixing for resonance inv mass bkg
-      kMixCorrelation,                 // event mixing for correlations
-      kNMaxVariables = 10
-   };
+  enum Constants {
+    kMixResonanceLegs = 0,         // event mixing for resonance inv mass bkg
+    kMixCorrelation,               // event mixing for correlations
+    kNMaxVariables = 10
+  };
 
 public:
   AliMixingHandler(Int_t mixingSetup=kMixResonanceLegs);
@@ -56,7 +56,7 @@ public:
     fLikePairsLeg1Cuts.Add(cut);
     fLikePairsLeg2Cuts.Add(cut);
   }
-  
+
   // getters
   Int_t GetDepth() const {return fPoolDepth;}
   Float_t GetMixingThreshold() const {return fMixingThreshold;}
@@ -69,7 +69,7 @@ public:
   TString GetHistClassNames() const {return fHistClassNames;};
   Int_t GetNMixingVariables() const {return fNMixingVariables;}
   Int_t GetMixingSetup() const {return fMixingSetup;}
-  
+
   void Init();
   Int_t FindEventCategory(Float_t* values);
   Int_t GetBinFromCategory(Int_t iVar, Int_t category) const;
@@ -80,37 +80,37 @@ public:
   ULong_t IsPairSelected(Float_t* values, Int_t pairType);
   
 private:
-   AliMixingHandler(const AliMixingHandler& handler);             
-   AliMixingHandler& operator=(const AliMixingHandler& handler);      
-   
+  AliMixingHandler(const AliMixingHandler& handler);
+  AliMixingHandler& operator=(const AliMixingHandler& handler);
+
   // User options
-  Int_t    fMixingSetup;          //  see Constants for various options 
-  Int_t fPoolDepth;              // depth of the event mixing pool
+  Int_t   fMixingSetup;       //  see Constants for various options
+  Int_t   fPoolDepth;         // depth of the event mixing pool
   // TODO: Add option to trigger the event mixing when a certain number of tracks in a given pool is reached
   // TODO: Add option for rolling buffer mixing
-  Float_t fMixingThreshold;      // within a (centrality,vtx,ep) mix all pools with entries > fMixingThreshold*fPoolDepth
-  Float_t fDownscaleEvents;      // random downscale adding events to the pools
-  Float_t fDownscaleTracks;      // random downscale adding tracks fo the pools
-  
-  TClonesArray fPoolsLeg1;         // array of pools
-  TClonesArray fPoolsLeg2;         // array of pools
-  Int_t fNParallelCuts;            // number of parallel cuts which are run
-  Int_t fNParallelPairCuts;        // number of parallel pair cuts which are run
-  TString fHistClassNames;         // name of the histogram classes for each cut, separated by a semicolon ";"
-  TArrayI fPoolSize;               // counters for the pool sizes
-  Bool_t fIsInitialized;           // check if the mixing handler is initialized
-  Bool_t fMixLikeSign;             // mix or not like-sign tracks (default is true)
-  
+  Float_t fMixingThreshold;   // within a (centrality,vtx,ep) mix all pools with entries > fMixingThreshold*fPoolDepth
+  Float_t fDownscaleEvents;   // random downscale adding events to the pools
+  Float_t fDownscaleTracks;   // random downscale adding tracks fo the pools
+
+  TClonesArray fPoolsLeg1;    // array of pools
+  TClonesArray fPoolsLeg2;    // array of pools
+  Int_t fNParallelCuts;       // number of parallel cuts which are run
+  Int_t fNParallelPairCuts;   // number of parallel pair cuts which are run
+  TString fHistClassNames;    // name of the histogram classes for each cut, separated by a semicolon ";"
+  TArrayI fPoolSize;          // counters for the pool sizes
+  Bool_t fIsInitialized;      // check if the mixing handler is initialized
+  Bool_t fMixLikeSign;        // mix or not like-sign tracks (default is true)
+
   TArrayF fVariableLimits[kNMaxVariables];
-  Int_t fVariables[kNMaxVariables];
-  Int_t  fNMixingVariables;
+  Int_t   fVariables[kNMaxVariables];
+  Int_t   fNMixingVariables;
   
-  AliHistogramManager* fHistos;    // histogram manager
-  
-  TList fCrossPairsCuts;         // cut object for cross pairs 
-  TList fLikePairsLeg1Cuts;    // cut object for LEG1 like pairs
-  TList fLikePairsLeg2Cuts;    // cut object for LEG2 like pairs
-  
+  AliHistogramManager* fHistos;  // histogram manager
+
+  TList fCrossPairsCuts;         // cut object for cross pairs
+  TList fLikePairsLeg1Cuts;      // cut object for LEG1 like pairs
+  TList fLikePairsLeg2Cuts;      // cut object for LEG2 like pairs
+
   void RunEventMixing(TClonesArray* leg1Pool, TClonesArray* leg2Pool, ULong_t mixingMask, Int_t type, Float_t* values);
   ULong_t IncrementPoolSizes(TList* list1, TList* list2, Int_t eventCategory);
   void ResetPoolSizes(ULong_t mixingMask, Int_t category);  

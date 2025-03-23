@@ -14,37 +14,37 @@ class AliReducedPairInfo;
 //_________________________________________________________________________
 class AliReducedBaseEvent : public TObject {
 
-  friend class AliAnalysisTaskReducedTreeMaker;     // friend analysis task which fills the object
+  friend class AliAnalysisTaskReducedTreeMaker;  // friend analysis task which fills the object
   friend class AliReducedAnalysisFilterTrees;
   
  public:
   enum ETrackOption {
-     kNoInit=0,
-     kUseBaseTracks,            // use AliReducedBaseTrack for the track array
-     kUseReducedTracks            // use AliReducedTrackInfo for the track array
+    kNoInit=0,
+    kUseBaseTracks,       // use AliReducedBaseTrack for the track array
+    kUseReducedTracks     // use AliReducedTrackInfo for the track array
   };
   
   // bits toggled in the fEventTag data member
   enum EventTagBits {      
-     kAnaUtils2013pPb=0,   // 0 - 2013 p-Pb event selection
-     kAnaUtilPileupMV,     // 1 - multi-vertexer (MV) pileup 
-     kAnaUtilPileupMV2,    // 2 - MV pileup without bunch-crossing check
-     kAnaUtilPileupMV3,    // 3 - MV pileup with min weighted distance 10 (instead of 15)
-     kAnaUtilPileupMV4,    // 4 - MV pileup with min weighted distance 5 (instead of 15)
-     kIsPileupFromSPD1,    // 5 - event->IsPileupFromSPD(3,0.6,3.,2.,5.)
-     kIsPileupFromSPD2,    // 6 - event->IsPileupFromSPD(4,0.6,3.,2.,5.)
-     kIsPileupFromSPD3,    // 7 - event->IsPileupFromSPD(5,0.6,3.,2.,5.)
-     kIsPileupFromSPD4,    // 8 - event->IsPileupFromSPD(6,0.6,3.,2.,5.)
-     kIsPileupFromSPD5,    // 9 - event->IsPileupFromSPD(3,0.8,3.,2.,5.)
-     kIsPileupFromSPD6,    // 10 - event->IsPileupFromSPD(4,0.8,3.,2.,5.)
-     kIsPileupFromSPD7,    // 11 - event->IsPileupFromSPD(5,0.8,3.,2.,5.)
-     kIsPileupFromSPD8,    // 12 - event->IsPileupFromSPD(6,0.8,3.,2.,5.)
-     kVtxDistanceSelected, // 13 - Improved cut on the distance between SPD and track vertices 
-     kUnbiasedEvent,       // 14 - event selected for writing in the trees on a random basis 
-     kTimeRange,           // 15 - selected by AliTimeRangeCut (to be rejected)
-     kIsMBTriggered,       // 16 - is MB triggered
-     kIsHMTriggered,       // 17 - is HM triggered
-     kNEventTagBits
+    kAnaUtils2013pPb=0,   // 0 - 2013 p-Pb event selection
+    kAnaUtilPileupMV,     // 1 - multi-vertexer (MV) pileup
+    kAnaUtilPileupMV2,    // 2 - MV pileup without bunch-crossing check
+    kAnaUtilPileupMV3,    // 3 - MV pileup with min weighted distance 10 (instead of 15)
+    kAnaUtilPileupMV4,    // 4 - MV pileup with min weighted distance 5 (instead of 15)
+    kIsPileupFromSPD1,    // 5 - event->IsPileupFromSPD(3,0.6,3.,2.,5.)
+    kIsPileupFromSPD2,    // 6 - event->IsPileupFromSPD(4,0.6,3.,2.,5.)
+    kIsPileupFromSPD3,    // 7 - event->IsPileupFromSPD(5,0.6,3.,2.,5.)
+    kIsPileupFromSPD4,    // 8 - event->IsPileupFromSPD(6,0.6,3.,2.,5.)
+    kIsPileupFromSPD5,    // 9 - event->IsPileupFromSPD(3,0.8,3.,2.,5.)
+    kIsPileupFromSPD6,    // 10 - event->IsPileupFromSPD(4,0.8,3.,2.,5.)
+    kIsPileupFromSPD7,    // 11 - event->IsPileupFromSPD(5,0.8,3.,2.,5.)
+    kIsPileupFromSPD8,    // 12 - event->IsPileupFromSPD(6,0.8,3.,2.,5.)
+    kVtxDistanceSelected, // 13 - Improved cut on the distance between SPD and track vertices
+    kUnbiasedEvent,       // 14 - event selected for writing in the trees on a random basis
+    kTimeRange,           // 15 - selected by AliTimeRangeCut (to be rejected)
+    kIsMBTriggered,       // 16 - is MB triggered
+    kIsHMTriggered,       // 17 - is HM triggered
+    kNEventTagBits
   };
   
  public:
@@ -80,45 +80,46 @@ class AliReducedBaseEvent : public TObject {
   Int_t     CentralityQuality()               const {return fCentQuality;}
   Int_t     NTracksTotal()                    const {return fNtracks[0];}
   Int_t     NTracks()                         const {return fNtracks[1];}
-  Int_t     NTracks1()                        const {return (fTracks ? fTracks->GetEntries() : 0);}
+  Int_t     NTracks1()                        const {return (fTracks  ? fTracks->GetEntries()  : 0);}
   Int_t     NTracks2()                        const {return (fTracks2 ? fTracks2->GetEntries() : 0);}
-  Int_t     NGlobalTracks(Int_t icut=0)       const {return fNGlobalTracks[icut];}
+  Int_t     NGlobalTracks (Int_t icut=0)      const {return fNGlobalTracks[icut];}
   Int_t     NTracksRegions(Int_t iRegion, bool regionToJpsi=true, Int_t icut=0)
-                                              const {return ((iRegion>=0 && iRegion<=2) ?
-                                                     fNTracksRegions[16*iRegion+8*(!regionToJpsi)+icut] : 0);}
+            const {return ((iRegion>=0 && iRegion<=2) ? fNTracksRegions[16*iRegion+8*(!regionToJpsi)+icut] : 0);}
   Float_t   GetLeadingPt (Int_t icut=0)   const {return fLeading[3*icut];}
   Float_t   GetLeadingPhi(Int_t icut=0)   const {return fLeading[3*icut+1];}
   Float_t   GetLeadingEta(Int_t icut=0)   const {return fLeading[3*icut+2];}
   Int_t     NV0CandidatesTotal()          const {return fNV0candidates[0];}
   Int_t     NV0Candidates()               const {return fNV0candidates[1];}
   Int_t     NPairs()                      const {return fCandidates->GetEntries();}
-  
-  AliReducedBaseTrack* GetTrack(Int_t i)  const {return (fTracks && i>=0 && i<fTracks->GetEntries() ?
+
+  AliReducedBaseTrack* GetTrack (Int_t i) const {return (fTracks && i>=0 && i<fTracks->GetEntries() ?
                                                  (AliReducedBaseTrack*)fTracks->At(i) : 0x0);}
   AliReducedBaseTrack* GetTrack2(Int_t i) const {return (fTracks2 && i>=0 && i<fTracks2->GetEntries() ?
                                                  (AliReducedBaseTrack*)fTracks2->At(i) : 0x0);}
-  TClonesArray* GetTracks()               const {return fTracks;}
-  TClonesArray* GetTracks2()              const {return fTracks2;}
-  
-  AliReducedPairInfo* GetV0Pair(Int_t i)  const {return (i>=0 && i<fNV0candidates[1] ?
+  TClonesArray*        GetTracks ()       const {return fTracks;}
+  TClonesArray*        GetTracks2()       const {return fTracks2;}
+
+  AliReducedPairInfo*  GetV0Pair(Int_t i) const {return (i>=0 && i<fNV0candidates[1] ?
                                                  (AliReducedPairInfo*)fCandidates->At(i) : 0x0);}
-  AliReducedPairInfo* GetPair(Int_t i)    const {return (i>=0 && i<fCandidates->GetEntries() ?
+  AliReducedPairInfo*  GetPair  (Int_t i) const {return (i>=0 && i<fCandidates->GetEntries() ?
                                                  (AliReducedPairInfo*)fCandidates->At(i) : 0x0);}
-  TClonesArray* GetPairs()                const {return fCandidates;}
-  
+  TClonesArray*        GetPairs()         const {return fCandidates;}
+
   Bool_t    TestEventTag(UShort_t iflag)  const {return (iflag<8*sizeof(ULong64_t) ?
                                                  fEventTag&(ULong64_t(1)<<iflag) : kFALSE);}
-  Bool_t    SetEventTag(UShort_t iflag)         {if (iflag>=8*sizeof(ULong64_t)) return kFALSE;
+  Bool_t    SetEventTag(UShort_t iflag)         {if(iflag>=8*sizeof(ULong64_t)) return kFALSE;
                                                  fEventTag|=(ULong64_t(1)<<iflag); return kTRUE;}
-  
-  void SetNGlobalTracks(Int_t n, Int_t icut) {if (n>=0) fNGlobalTracks[icut] = n;} // set when running on the reduced tree, for the ith multiplicity estimator
-  void SetNTracksRegions(Int_t n, Int_t iRegion, bool regionToJpsi = true, Int_t icut = 0) {if (n>=0 && iRegion>=0 && iRegion<=2) fNTracksRegions[16*iRegion + 8*(!regionToJpsi) + icut] = n;} 
-   // set when running on the reduced tree, for the ith multiplicity estimator
-  void SetLeadingParticle(float pt, float phi, float eta, Int_t icut) {fLeading[0+3*icut] = pt; fLeading[1+3*icut] = phi; fLeading[2+3*icut] = eta;}
-   // set pt phi eta for the cutset i
+  // set when running on the reduced tree, for the ith multiplicity estimator
+  void SetNGlobalTracks(Int_t n, Int_t icut) {if(n>=0) fNGlobalTracks[icut] = n;}
+  // set when running on the reduced tree, for the ith multiplicity estimator
+  void SetNTracksRegions(Int_t n, Int_t iRegion, bool regionToJpsi=true, Int_t icut=0) {
+    if(n>=0 && iRegion>=0 && iRegion<=2) fNTracksRegions[16*iRegion+8*(!regionToJpsi)+icut] = n;}
+  // set pt phi eta for the cutset i
+  void SetLeadingParticle(float pt, float phi, float eta, Int_t icut) {
+    fLeading[0+3*icut] = pt; fLeading[1+3*icut] = phi; fLeading[2+3*icut] = eta;}
 
   virtual void ClearEvent();
-  
+
  protected:
   ULong64_t fEventTag;            // Event tags to be used either during analysis or to filter events
   Int_t     fRunNo;               // run number
@@ -143,10 +144,10 @@ class AliReducedBaseEvent : public TObject {
 
   TClonesArray*        fTracks2;     //->   array containing additional particles
   static TClonesArray* fgTracks2;    //     global tracks
-  
+
   TClonesArray*        fCandidates;   //->   array containing pair candidates
   static TClonesArray* fgCandidates;  // pair candidates
-  
+
   AliReducedBaseEvent& operator = (const AliReducedBaseEvent &c);
   AliReducedBaseEvent(const AliReducedBaseEvent &c);
 
