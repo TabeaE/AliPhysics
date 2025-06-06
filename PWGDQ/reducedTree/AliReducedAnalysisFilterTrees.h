@@ -7,14 +7,14 @@
 
 #include <TList.h>
 
+#include "AliHistogramManager.h"
+#include "AliMixingHandler.h"
 #include "AliReducedAnalysisTaskSE.h"
 #include "AliReducedInfoCut.h"
 #include "AliReducedBaseEvent.h"
 #include "AliReducedBaseTrack.h"
 #include "AliReducedTrackInfo.h"
 #include "AliReducedPairInfo.h"
-#include "AliHistogramManager.h"
-#include "AliMixingHandler.h"
 
 //________________________________________________________________
 class AliReducedAnalysisFilterTrees : public AliReducedAnalysisTaskSE {
@@ -92,9 +92,9 @@ public:
   void AddCandidatePairCut                  (AliReducedInfoCut* cut)  {fCandidatePairCuts.Add(cut);}
   void SetRunCandidatePrefilter             (Bool_t option=kTRUE) {fRunCandidatePrefilter = option;}
   void SetRunCandidatePrefilterOnSameCharge (Bool_t option=kTRUE) {fRunCandidatePrefilterOnSameCharge = option;}
-  void SetRunEventMixing                    (Bool_t option)       {fOptionRunMixing     = option;};
-  void SetRunEventMixingMult                (Bool_t option)       {fOptionRunMixingMult = option;};
-  void SetComputeMult                       (Bool_t option)       {fComputeMult         = option;};
+  void SetRunEventMixing                    (Bool_t option)       {fOptionRunMixing       = option;};
+  void SetRunEventMixingMult                (Bool_t option)       {fOptionRunMixingMult   = option;};
+  void SetComputeMult                       (Bool_t option)       {fComputeMult           = option;};
   void AddTrueMultTrackCut                  (AliReducedInfoCut* cut) {fTrueMultTrackCuts.Add(cut);}
   void AddCandidateLeg1PrefilterCut         (AliReducedInfoCut* cut) {fLeg1PrefilterCuts.Add(cut);}
   void AddCandidateLeg2PrefilterCut         (AliReducedInfoCut* cut) {fLeg2PrefilterCuts.Add(cut);}
@@ -197,52 +197,52 @@ protected:
   Float_t              fMultBinsMixing[1000];  // Multiplicity bins for mixing in multiplicity bins
   Int_t                fNMultBinsMixing;       // Number of multiplicity bins for mixing in multiplicity bins
   
-  TList  fEventCuts;            // array of event cuts used for filtering
-  TList  fTrackCuts;            // array of track cuts used for filtering
-  Bool_t fWriteFilteredTracks;  // filter the track list
-  Bool_t fWriteFilteredTracksCandidatesOnly;  // Write only the tracks associated to a pair candidate
-  Bool_t fFillTrackV0Histograms;              // Fill track histograms for V0 candidates
-  TList  fPairCuts;            // array of pair cuts used for filtering
-  Bool_t fWriteFilteredPairs;  // filter the pair list
-  Bool_t fRejectEmptyEvents;   // if true, do not write events without tracks or pairs
-  Bool_t fMCTruthJpsi2eeOnly;  // if true, store only MCtruth for Jpsi which decay into dielectron
-  Bool_t fRegionsToMCTruth;    // if true, the regions are defined relative to true particles, else they are 
-                               //   defined relative to measured tracks
-  Bool_t fDefaultRandomPhi;    // if true, when regions are calculated relative to Jpsi and there is no Jpsi, 
-                               //   we choose a random phi, else we take phi leading
+  TList   fEventCuts;            // array of event cuts used for filtering
+  TList   fTrackCuts;            // array of track cuts used for filtering
+  Bool_t  fWriteFilteredTracks;  // filter the track list
+  Bool_t  fWriteFilteredTracksCandidatesOnly;  // Write only the tracks associated to a pair candidate
+  Bool_t  fFillTrackV0Histograms;              // Fill track histograms for V0 candidates
+  TList   fPairCuts;            // array of pair cuts used for filtering
+  Bool_t  fWriteFilteredPairs;  // filter the pair list
+  Bool_t  fRejectEmptyEvents;   // if true, do not write events without tracks or pairs
+  Bool_t  fMCTruthJpsi2eeOnly;  // if true, store only MCtruth for Jpsi which decay into dielectron
+  Bool_t  fRegionsToMCTruth;    // if true, the regions are defined relative to true particles, else they are 
+                                //   defined relative to measured tracks
+  Bool_t  fDefaultRandomPhi;    // if true, when regions are calculated relative to Jpsi and there is no Jpsi, 
+                                //   we choose a random phi, else we take phi leading
   Float_t fMinPtLeading;
   
-  TF1* fJpsiMassDist;  // Real jpsi mass distribution (Crystal-ball)
+  TF1*    fJpsiMassDist;        // Real jpsi mass distribution (Crystal-ball)
   
-  Bool_t fComputeMult;              // if true, count the tracks to compute true and measured multiplicity
-  Bool_t fBuildCandidatePairs;      // if true, build additional candidate pairs from selected tracks 
-  Bool_t fBuildCandidateLikePairs;  // if true, build also like pairs (e.g. LS for symmetric decay channels)
-  Int_t fCandidateType;           // candidate type, see AliReducedPairInfo::CandidateType 
-  TList fLeg1Cuts;                // list of track cuts for LEG1  (these cuts will be used also for LEG2 if 
-                                  //   the decay channel is symmetric)
-  TList fLeg2Cuts;                // list of tracks cuts for LEG2 (NOTE: fLeg1Cuts and fLeg2Cuts must contain 
-                                  //   the same number of cuts)
-  TList fCandidatePairCuts;       // list of cuts for pair candidates
-  Bool_t fRunCandidatePrefilter;  // if true, run a prefilter on the selected legs
-  Bool_t fRunCandidatePrefilterOnSameCharge;  // default FALSE (unlike charged pairs only);
-                                              //   if true, run the prefilter on same charge pairs also;
-  TList fMeasMultTrackCuts;      // cuts for tracks for determination of measured multiplicity
-  TList fWeightsTrackCuts;       // histograms giving weights applied to tracks, to smear the efficiency,
-                                 // vs pt vs run number 
-  TList fTrueMultTrackCuts;      // cuts for MC tracks for determination of true multiplicity
-  TList fLeg1PrefilterCuts;      // cuts for tracks used in the prefilter for LEG1  
-  TList fLeg2PrefilterCuts;      // cuts for tracks used in the prefilter for LEG2
-  TList fLeg1PairPrefilterCuts;  // cuts on the prefilter pairs for LEG1
-  TList fLeg2PairPrefilterCuts;  // cuts on the prefilter pairs for LEG2
-  TList fLeg1Tracks;             // list of selected LEG1 tracks in the current event
-  TList fLeg2Tracks;             // list of selected LEG2 tracks in the current event
-  TList fLeg1PrefilteredTracks;  // list of prefilter selected LEG1 tracks in the current event
-  TList fLeg2PrefilteredTracks;  // list of prefilter selected LEG2 tracks in the current event
+  Bool_t  fComputeMult;              // if true, count the tracks to compute true and measured multiplicity
+  Bool_t  fBuildCandidatePairs;      // if true, build additional candidate pairs from selected tracks 
+  Bool_t  fBuildCandidateLikePairs;  // if true, build also like pairs (e.g. LS for symmetric decay channels)
+  Int_t   fCandidateType;            // candidate type, see AliReducedPairInfo::CandidateType 
+  TList   fLeg1Cuts;                 // list of track cuts for LEG1  (these cuts will be used also for LEG2 if 
+                                     //   the decay channel is symmetric)
+  TList   fLeg2Cuts;                 // list of tracks cuts for LEG2 (NOTE: fLeg1Cuts and fLeg2Cuts must 
+                                     // contain the same number of cuts)
+  TList   fCandidatePairCuts;        // list of cuts for pair candidates
+  Bool_t  fRunCandidatePrefilter;    // if true, run a prefilter on the selected legs
+  Bool_t  fRunCandidatePrefilterOnSameCharge;  // default FALSE (unlike charged pairs only);
+                                               // if true, run the prefilter on same charge pairs also;
+  TList   fMeasMultTrackCuts;      // cuts for tracks for determination of measured multiplicity
+  TList   fWeightsTrackCuts;       // histograms giving weights applied to tracks, to smear the efficiency,
+                                   // vs pt vs run number 
+  TList   fTrueMultTrackCuts;      // cuts for MC tracks for determination of true multiplicity
+  TList   fLeg1PrefilterCuts;      // cuts for tracks used in the prefilter for LEG1  
+  TList   fLeg2PrefilterCuts;      // cuts for tracks used in the prefilter for LEG2
+  TList   fLeg1PairPrefilterCuts;  // cuts on the prefilter pairs for LEG1
+  TList   fLeg2PairPrefilterCuts;  // cuts on the prefilter pairs for LEG2
+  TList   fLeg1Tracks;             // list of selected LEG1 tracks in the current event
+  TList   fLeg2Tracks;             // list of selected LEG2 tracks in the current event
+  TList   fLeg1PrefilteredTracks;  // list of prefilter selected LEG1 tracks in the current event
+  TList   fLeg2PrefilteredTracks;  // list of prefilter selected LEG2 tracks in the current event
   
-  Bool_t fOptionRunMixingMult;
-  Bool_t fOptionRunMixing;  // true: run event mixing, false: no event mixing
-  Bool_t fOptionRunOverMC;  // true: trees contain MC info -> fill histos to compute efficiencies,
-                            // false: run normally as on data
+  Bool_t  fOptionRunMixingMult;
+  Bool_t  fOptionRunMixing;  // true: run event mixing, false: no event mixing
+  Bool_t  fOptionRunOverMC;  // true: trees contain MC info -> fill histos to compute efficiencies,
+                             // false: run normally as on data
   // Selection based on the MC truth information of the reconstructed leg candidates.
   // NOTE: The list is a list of AliReducedInfoCut objects which can be used to apply cuts on the MC flags of
   //       the tracks.
@@ -268,7 +268,7 @@ protected:
   
   Bool_t IsEventSelected                (AliReducedBaseEvent* event, Float_t* values=0x0);
   Bool_t IsTrackSelected                (AliReducedBaseTrack* track, Float_t* values=0x0);
-  Bool_t IsPairSelected                 (AliReducedPairInfo*  pair,  Float_t* values=0x0);
+  Bool_t IsPairSelected                 (AliReducedPairInfo* pair, Float_t* values=0x0);
   void   CreateFilteredEvent            ();
   UInt_t CheckReconstructedLegMCTruth   (AliReducedBaseTrack* ptrack, AliReducedBaseTrack* ntrack);
   UInt_t CheckReconstructedLegMCTruth   (AliReducedBaseTrack* track);
@@ -278,18 +278,18 @@ protected:
   UInt_t CheckMotherMCTruth             (AliReducedTrackInfo* mother);
   UInt_t CheckDaughterMCTruth           (AliReducedTrackInfo* daughter); 
   
-  void    FillMultiplicity        (Bool_t regions=kFALSE);
-  Bool_t  TrackIsCandidateLeg     (AliReducedBaseTrack* track);
-  void    WriteFilteredPairs      ();
-  void    WriteFilteredTracks     (Int_t array=1);
-  Bool_t  IsTrackMeasMultSelected (AliReducedBaseTrack* track, Float_t* values=0x0);
-  Bool_t  IsTrackTrueMultSelected (AliReducedBaseTrack* track, Float_t* values=0x0);
-  Bool_t  IsCandidateLegSelected  (AliReducedBaseTrack* track, Float_t* values=0x0, Int_t whichLeg=1);
-  ULong_t IsCandidatePairSelected (Float_t* values);
+  void    FillMultiplicity                (Bool_t regions=kFALSE);
+  Bool_t  TrackIsCandidateLeg             (AliReducedBaseTrack* track);
+  void    WriteFilteredPairs              ();
+  void    WriteFilteredTracks             (Int_t array=1);
+  Bool_t  IsTrackMeasMultSelected         (AliReducedBaseTrack* track, Float_t* values=0x0);
+  Bool_t  IsTrackTrueMultSelected         (AliReducedBaseTrack* track, Float_t* values=0x0);
+  Bool_t  IsCandidateLegSelected          (AliReducedBaseTrack* track, Float_t* values=0x0, Int_t whichLeg=1);
+  ULong_t IsCandidatePairSelected         (Float_t* values);
   Bool_t  IsCandidateLegPrefilterSelected (AliReducedBaseTrack* track, Float_t* values=0x0, Int_t whichLeg=1);
   Bool_t  IsCandidateLegPairPrefilterSelected (Float_t* values, Int_t whichLeg=1);
   void    BuildCandidatePairs         ();
-  void    RunCandidateLegsSelection   (Int_t arrayOption/*=1*/);
+  void    RunCandidateLegsSelection   (Int_t arrayOption);
   void    RunCandidateLegsPrefilter   (Int_t leg);
   void    RunSameEventPairing         ();
   void    SetupPair                   (AliReducedPairInfo* pair, Float_t* values);
@@ -299,11 +299,10 @@ protected:
                                        Bool_t isAsymmetricDecayChannel);
 //   void FillCandidatePairHistograms(TString histClass, AliReducedPairInfo* pair,
 //                                    Bool_t isAsymmetricDecayChannel);
-  void    FillCandidatePairHistograms (ULong_t trackMask, ULong_t pairMask, Int_t pairType,
-                                       TString pairClass/*="Pair_Candidate"*/,
-                                       Bool_t isAsymmetricDecayChannel, UInt_t mcDecisions/*=0*/);
+  void    FillCandidatePairHistograms (ULong_t trackMask, ULong_t pairMask, Int_t pairType, TString pairClass, 
+                                       Bool_t isAsymmetricDecayChannel, UInt_t mcDecisions);
   
-  ClassDef(AliReducedAnalysisFilterTrees,4);
+  ClassDef(AliReducedAnalysisFilterTrees, 4);
 };
 
 #endif
