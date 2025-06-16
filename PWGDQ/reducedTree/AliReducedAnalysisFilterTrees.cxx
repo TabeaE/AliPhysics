@@ -74,7 +74,12 @@ fLegCandidatesMCcuts_RequestSameMother(),
 fJpsiMotherMCcuts(),
 fMCJpsiPtWeights(0x0),
 fSkipMCEvent(kFALSE),
-fJpsiElectronMCcuts()
+fJpsiElectronMCcuts(),
+fWeightsTrue(),
+fWeightsMeas(),
+fSharePCCWeights(kFALSE),
+fReweightPC(kFALSE),
+fMCPCWeights(0x0)
 {
   //
   // default constructor
@@ -132,7 +137,12 @@ fLegCandidatesMCcuts_RequestSameMother(),
 fJpsiMotherMCcuts(),
 fMCJpsiPtWeights(0x0),
 fSkipMCEvent(kFALSE),
-fJpsiElectronMCcuts()  
+fJpsiElectronMCcuts(),
+fWeightsTrue(),
+fWeightsMeas(),
+fSharePCCWeights(kFALSE),
+fReweightPC(kFALSE),
+fMCPCWeights(0x0)
 {
   //
   // named constructor
@@ -1061,7 +1071,8 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions/*= kFALSE*/)
     fValues[AliReducedVarManager::kMCNch09Away+1]       = 0.;
   }
   
-
+  std::vector<int> weightsTrue;
+  std::vector<int> weightsMeas;
   // Loop over both arrays
   for(Int_t iArray=1; iArray<=2; iArray++) {
     AliReducedTrackInfo* track;
@@ -1083,8 +1094,10 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions/*= kFALSE*/)
         fValues[AliReducedVarManager::kMCNchWoPileup] ++;
 
       // Get measured multiplicity (track has to be reconstructed & selected by at least one meas mult cut)
-      if(!track->IsMCTruth() && !regions && IsTrackMeasMultSelected(track,fValues)) {
+      if(!track->IsMCTruth() && IsTrackMeasMultSelected(track,fValues)) {
         Float_t particleWeight = 1.;
+        if(fOptionRunOverMC && fReweightPC) particleWeight = GetParticleWeight(track);
+
         for(Int_t icut=0; icut<GetNMeasMultCuts(); icut++) {
           if(track->TestMultFlag(icut)) {
             TH2F* hWeightsTrack = (TH2F*) fWeightsTrackCuts.At(icut);
@@ -1093,7 +1106,7 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions/*= kFALSE*/)
             Int_t weight = (Int_t) trackWeight;
             Float_t res  = trackWeight - weight;
             if(gRandom->Rndm() <= res) weight++;
-            
+
             if(!regions) {
               fValues[AliReducedVarManager::kNGlobalTracks+icut] += weight;
               // Look for leading particle
@@ -1108,26 +1121,28 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions/*= kFALSE*/)
               Float_t phiIcut   = fValues[AliReducedVarManager::kPhiLeading+icut];
               Float_t delta_phi = abs(track->Phi()-phi);
               if(phi == fValues[AliReducedVarManager::kPhiLeading]) delta_phi = abs(track->Phi()-phiIcut);
-              if(delta_phi<M_PI/3. || delta_phi>5*M_PI/3.)
-                fValues[AliReducedVarManager::kNGlobalTracksToward+icut] += 1.;
-              else if((delta_phi>  M_PI/3. && delta_phi<2*M_PI/3.) ||
-                      (delta_phi>4*M_PI/3. && delta_phi<5*M_PI/3.))
-                fValues[AliReducedVarManager::kNGlobalTracksTransverse+icut] += 1.;
-              else if(delta_phi>2*M_PI/3. && delta_phi<4*M_PI/3.)
-                fValues[AliReducedVarManager::kNGlobalTracksAway+icut] += 1.;
+              if(delta_phi<M_PI/3. || delta_phi>5*M_PI/3.) {
+                fValues[AliReducedVarManager::kNGlobalTracksToward+icut] += weight;
+              } else if((delta_phi>  M_PI/3. && delta_phi<2*M_PI/3.) ||
+                        (delta_phi>4*M_PI/3. && delta_phi<5*M_PI/3.)) {
+                fValues[AliReducedVarManager::kNGlobalTracksTransverse+icut] += weight;
+              } else if(delta_phi>2*M_PI/3. && delta_phi<4*M_PI/3.) {
+                fValues[AliReducedVarManager::kNGlobalTracksAway+icut] += weight;
+              }
 
               // Regions relative to leading particle
               Float_t delta_phi_leading = abs(track->Phi()-phiIcut);
-              if(delta_phi_leading<M_PI/3. || delta_phi_leading>5*M_PI/3.) 
+              if(delta_phi_leading<M_PI/3. || delta_phi_leading>5*M_PI/3.) {
                 fValues[(int)AliReducedVarManager::kNGlobalTracksToward+
-                        (int)AliReducedVarManager::kNMaxCutsGlobalTracks+icut] += 1.;
-              else if((delta_phi_leading>  M_PI/3. && delta_phi_leading<2*M_PI/3.) ||
-                      (delta_phi_leading>4*M_PI/3. && delta_phi_leading<5*M_PI/3.))
+                        (int)AliReducedVarManager::kNMaxCutsGlobalTracks+icut] += weight;
+              } else if((delta_phi_leading>  M_PI/3. && delta_phi_leading<2*M_PI/3.) ||
+                        (delta_phi_leading>4*M_PI/3. && delta_phi_leading<5*M_PI/3.)) {
                 fValues[(int)AliReducedVarManager::kNGlobalTracksTransverse+
-                        (int)AliReducedVarManager::kNMaxCutsGlobalTracks+icut] += 1.;
-              else if(delta_phi_leading>2*M_PI/3. && delta_phi_leading<4*M_PI/3.)
+                        (int)AliReducedVarManager::kNMaxCutsGlobalTracks+icut] += weight;
+              } else if(delta_phi_leading>2*M_PI/3. && delta_phi_leading<4*M_PI/3.) {
                 fValues[(int)AliReducedVarManager::kNGlobalTracksAway+
-                        (int)AliReducedVarManager::kNMaxCutsGlobalTracks+icut] += 1.;
+                        (int)AliReducedVarManager::kNMaxCutsGlobalTracks+icut] += weight;
+              }
             }
           }
         }
@@ -1135,8 +1150,16 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions/*= kFALSE*/)
 
       // Get true multiplicity (track has to be true MC (not rec) & selected by at least one true mult cut)
       if(track->IsMCTruth() && IsTrackTrueMultSelected(track, fValues)) {
+        Int_t particleWeight = 1;
+        if(fOptionRunOverMC && fReweightPC) {
+            Float_t weight = GetParticleWeight(track);
+            particleWeight = (Int_t) weight;
+            Float_t rest   = weight - particleWeight;
+            if(gRandom->Rndm() <= rest) particleWeight++;
+        }
+
         if(!regions) {
-          fValues[AliReducedVarManager::kMCNch09] += 1;
+          fValues[AliReducedVarManager::kMCNch09] += particleWeight;
           // Look for leading particle
           if((track->Pt()>fValues[AliReducedVarManager::kPtLeading]) && fRegionsToMCTruth) {
             for(Int_t icut=0; icut<GetNMeasMultCuts(); icut++) {
@@ -1149,23 +1172,25 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions/*= kFALSE*/)
         else {
           // Regions relative to jpsi
           Float_t delta_phi = abs(track->Phi()-phi);
-          if(delta_phi<M_PI/3. || delta_phi>5*M_PI/3.) 
-            fValues[AliReducedVarManager::kMCNch09Toward] += 1.;
-          else if((delta_phi>  M_PI/3. && delta_phi<2*M_PI/3.) ||
-                  (delta_phi>4*M_PI/3. && delta_phi<5*M_PI/3.))
-            fValues[AliReducedVarManager::kMCNch09Transverse] += 1.;
-          else if(delta_phi>2*M_PI/3. && delta_phi<4*M_PI/3.)
-            fValues[AliReducedVarManager::kMCNch09Away] += 1.;
+          if(delta_phi<M_PI/3. || delta_phi>5*M_PI/3.) {
+            fValues[AliReducedVarManager::kMCNch09Toward]     += particleWeight;
+          } else if((delta_phi>  M_PI/3. && delta_phi<2*M_PI/3.) ||
+                    (delta_phi>4*M_PI/3. && delta_phi<5*M_PI/3.)) {
+            fValues[AliReducedVarManager::kMCNch09Transverse] += particleWeight;
+          } else if(delta_phi>2*M_PI/3. && delta_phi<4*M_PI/3.) {
+            fValues[AliReducedVarManager::kMCNch09Away]       += particleWeight;
+          }
 
           // Regions relative to leading particle
           Float_t delta_phi_leading = abs(track->Phi()-fValues[AliReducedVarManager::kPhiLeading]);
-          if(delta_phi_leading<M_PI/3. || delta_phi_leading>5*M_PI/3.) 
-            fValues[AliReducedVarManager::kMCNch09Toward+1] += 1.;
-          else if((delta_phi_leading>  M_PI/3. && delta_phi_leading<2*M_PI/3.) ||
-                  (delta_phi_leading>4*M_PI/3. && delta_phi_leading<5*M_PI/3.))
-            fValues[AliReducedVarManager::kMCNch09Transverse+1] += 1.;
-          else if(delta_phi_leading>2*M_PI/3. && delta_phi_leading<4*M_PI/3.)
-            fValues[AliReducedVarManager::kMCNch09Away+1] += 1.;
+          if(delta_phi_leading<M_PI/3. || delta_phi_leading>5*M_PI/3.) {
+            fValues[AliReducedVarManager::kMCNch09Toward+1]     += particleWeight;
+          } else if((delta_phi_leading>  M_PI/3. && delta_phi_leading<2*M_PI/3.) ||
+                    (delta_phi_leading>4*M_PI/3. && delta_phi_leading<5*M_PI/3.)) {
+            fValues[AliReducedVarManager::kMCNch09Transverse+1] += particleWeight;
+          } else if(delta_phi_leading>2*M_PI/3. && delta_phi_leading<4*M_PI/3.) {
+            fValues[AliReducedVarManager::kMCNch09Away+1]       += particleWeight;
+          }
         }
       }
 
@@ -1634,6 +1659,79 @@ const Char_t* AliReducedAnalysisFilterTrees::GetCandidateLegCutName(Int_t i, Int
   if(leg==2 && IsAsymmetricDecayChannel())
     return (i<fLeg2Cuts.GetEntries() ? fLeg2Cuts.At(i)->GetName() : "");
   return (i<fLeg1Cuts.GetEntries() ? fLeg1Cuts.At(i)->GetName() : "");
+}
+
+
+//___________________________________________________________________________
+Float_t AliReducedAnalysisFilterTrees::GetParticleWeight(AliReducedTrackInfo* track) {
+  //
+  // Get particle weight for multiplicity calculation in MC
+  // The weight depends on pt, species, (multiplicity class)
+  // It is used while reweighting particle composition in MC in order to match it to data
+  // Particle type: pion = 0, proton = 1, kaon = 2, sigma- = 3, sigma+ = 4, rest = 5,
+  //                weight_lambda = weight_xi = weight_sigma+
+  // See $ALICE_PHYSICS/PWG/Tools/AliMCSpectraWeights.h and https://alice-notes.web.cern.ch/node/1311
+  //
+
+  Float_t ptMC = track->Pt();
+  Int_t type = 5;
+  // For now flags are hard-coded
+  if(track->TestMCFlag(7))  type = 0; // pion primary
+  if(track->TestMCFlag(8))  type = 2; // kaon primary
+  if(track->TestMCFlag(9))  type = 1; // proton primary
+  if(track->TestMCFlag(10)) type = 4; // sigma+ primary
+  if(track->TestMCFlag(11)) type = 3; // sigma- primary
+  if(type == 5 && !track->IsMCTruth() && !track->TestMCFlag(6)) {  // TODO 6? is hardcoded
+    // Check if particle is a detected secondary from strange decay
+    // In this case, the particle was put in array 1
+    Int_t pdgmother = track->MCPdg(1);
+    if(abs(pdgmother) == 3222) type = 4;
+    if(abs(pdgmother) == 3112) type = 3;
+    if(abs(pdgmother) == 310)  type = 2;
+    if(abs(pdgmother) == 3122) type = 4;
+
+    if(type != 5) {
+      // The mother is strange primary - we look for its pt in array 1
+      Int_t labelmother = track->MCLabel(1);
+      // loop over the first track array
+      TClonesArray* trackList = fEvent->GetTracks();
+      TIter nextTrack(trackList);
+      AliReducedTrackInfo* mother;
+      for(Int_t it=0; it<trackList->GetEntries(); ++it) {
+        mother = (AliReducedTrackInfo*)nextTrack();
+        if(mother->IsMCTruth() && (mother->MCLabel(0) == labelmother)){
+          // Get the pt of the mother
+          if(mother->TestMCFlag(6))  // mother is primary  // TODO 6? is hardcoded
+            ptMC = mother->PtMC();
+          else type = 5;
+          break;
+        }
+        if(it == trackList->GetEntries()-1) type = 5;  // We did not find the mother: do nothing
+      }
+    }
+  }
+  if(type == 5) return 1;
+
+  // For multiplicity class (only rough value needed, because not so big differences in pp)
+  // TODO correct for p-Pb?
+  Float_t mult = fValues[AliReducedVarManager::kMultEstimatorPercentileV0M];
+  if(mult<0. || mult>100.) mult = 50.; // multiplicity estimator percentile was probably not kept  // TODO correct for p-Pb?
+
+  Int_t iptMC = fMCPCWeights->GetXaxis()->FindBin(ptMC);
+  Int_t imult = fMCPCWeights->GetYaxis()->FindBin(mult);
+  Int_t itype = fMCPCWeights->GetZaxis()->FindBin(type);
+
+  // In case out of the range
+  if(ptMC < fMCPCWeights->GetXaxis()->GetBinLowEdge(1))
+    iptMC = 1;
+  if(ptMC > fMCPCWeights->GetXaxis()->GetBinUpEdge(fMCPCWeights->GetNbinsX()))
+    iptMC = fMCPCWeights->GetNbinsX();
+  if(mult > fMCPCWeights->GetYaxis()->GetBinUpEdge(fMCPCWeights->GetNbinsY()))
+    imult = fMCPCWeights->GetNbinsY();
+
+  Float_t weight = fMCPCWeights->GetBinContent(iptMC, imult, itype);
+
+  return weight;
 }
 
 
