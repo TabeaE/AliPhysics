@@ -45,7 +45,8 @@ public:
 
     void SetMCSpectraWeightObject (AliMCSpectraWeights* weights) {fMCSpectraWeights=weights;}
     
-    static AliMCWeightsTask* AddTaskAliMCWeightsTask (MCGeneratorType gen=MCGeneratorType::NONE, const char* collisionType = 0,  bool fUsePPMB = false, const char* firstTrainPath = 0);
+    static AliMCWeightsTask* AddTaskAliMCWeightsTask (MCGeneratorType gen=MCGeneratorType::NONE,
+      const char* collisionType = 0,  bool fUsePPMB = false, const char* firstTrainPath = 0);
 
 private:
     TList* fOutputList;      //!<! Output list
