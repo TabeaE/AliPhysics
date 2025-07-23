@@ -77,7 +77,6 @@ fSkipMCEvent(kFALSE),
 fJpsiElectronMCcuts(),
 fWeightsTrue(),
 fWeightsMeas(),
-fSharePCCWeights(kFALSE),
 fReweightPC(kFALSE),
 fMCPCWeights(0x0)
 {
@@ -140,14 +139,12 @@ fSkipMCEvent(kFALSE),
 fJpsiElectronMCcuts(),
 fWeightsTrue(),
 fWeightsMeas(),
-fSharePCCWeights(kFALSE),
 fReweightPC(kFALSE),
 fMCPCWeights(0x0)
 {
   //
   // named constructor
   //
-
   fMixingHandlerMult.SetOwner(kTRUE);
   fEventCuts.SetOwner(kTRUE);
   fTrackCuts.SetOwner(kTRUE);
@@ -179,7 +176,6 @@ AliReducedAnalysisFilterTrees::~AliReducedAnalysisFilterTrees()
   //
   // destructor
   //
-
   fEventCuts.Clear("C");          fTrackCuts.Clear("C"); fPairCuts.Clear("C");
   fLeg1Cuts.Clear("C");           fLeg2Cuts.Clear("C");
   fCandidatePairCuts.Clear("C");  fMeasMultTrackCuts.Clear("C");
@@ -1102,7 +1098,7 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions/*= kFALSE*/)
           if(track->TestMultFlag(icut)) {
             TH2F* hWeightsTrack = (TH2F*) fWeightsTrackCuts.At(icut);
             Float_t trackWeight = particleWeight * hWeightsTrack->GetBinContent(hWeightsTrack->FindBin(
-                                                          fValues[AliReducedVarManager::kRunNo],track->Pt()));
+                                    fValues[AliReducedVarManager::kRunNo],track->Pt()));
             Int_t weight = (Int_t) trackWeight;
             Float_t res  = trackWeight - weight;
             if(gRandom->Rndm() <= res) weight++;
@@ -1222,14 +1218,11 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions/*= kFALSE*/)
 
 
 //___________________________________________________________________________
+// Apply event cuts
 Bool_t AliReducedAnalysisFilterTrees::IsEventSelected(AliReducedBaseEvent* event, Float_t* values/*=0x0*/)
 {
-  //
-  // apply event cuts
-  //
-
   if(fEventCuts.GetEntries() == 0) return kTRUE;
-  // loop over all the cuts and make a logical and between all cuts in the list
+  // Loop over all the cuts and make a logical and between all cuts in the list
   for(Int_t i=0; i<fEventCuts.GetEntries(); ++i) {
     AliReducedInfoCut* cut = (AliReducedInfoCut*)fEventCuts.At(i);
     if(values) { if(!cut->IsSelected(event,values)) return kFALSE; }
@@ -1240,12 +1233,9 @@ Bool_t AliReducedAnalysisFilterTrees::IsEventSelected(AliReducedBaseEvent* event
 
 
 //___________________________________________________________________________
+// Apply track cuts
 Bool_t AliReducedAnalysisFilterTrees::IsTrackSelected(AliReducedBaseTrack* track, Float_t* values/*=0x0*/)
 {
-  //
-  // apply track cuts
-  //
-
   if(fTrackCuts.GetEntries() == 0) return kTRUE;
   track->ResetFlags();
   
@@ -1299,13 +1289,10 @@ Bool_t AliReducedAnalysisFilterTrees::IsPairSelected(AliReducedPairInfo* pair, F
 
 
 //___________________________________________________________________________
+// Apply cuts for determining measured multiplicity
 Bool_t AliReducedAnalysisFilterTrees::IsTrackMeasMultSelected(AliReducedBaseTrack* track,
                                                               Float_t* values/*=0x0*/)
 {
-  //
-  // apply cuts for determining measured multiplicity
-  //
-  
   if(fMeasMultTrackCuts.GetEntries() == 0) return kTRUE;
   if(track->IsMCTruth())                   return kFALSE;
   track->ResetMultFlags();
@@ -1320,13 +1307,10 @@ Bool_t AliReducedAnalysisFilterTrees::IsTrackMeasMultSelected(AliReducedBaseTrac
 
 
 //___________________________________________________________________________
+// Apply cuts for determining MC true multiplicity
 Bool_t AliReducedAnalysisFilterTrees::IsTrackTrueMultSelected(AliReducedBaseTrack* track,
                                                               Float_t* values/*=0x0*/)
 {
-  //
-  // apply cuts for determining MC true multiplicity
-  //
-
   if(fTrueMultTrackCuts.GetEntries() == 0) return kTRUE;
   if(!track->IsMCTruth())                  return kFALSE;
   track->ResetMultFlags();
@@ -1479,12 +1463,9 @@ ULong_t AliReducedAnalysisFilterTrees::CheckTrackCompatibility(AliReducedBaseTra
 
 
 //___________________________________________________________________________
+// Setup pair information
 void AliReducedAnalysisFilterTrees::SetupPair(AliReducedPairInfo* pair, Float_t* values)
 {
-  //
-  // setup pair information
-  //
-
   pair->Pt               (values[AliReducedVarManager::kPt]);
   pair->Phi              (values[AliReducedVarManager::kPhi]);
   pair->Eta              (values[AliReducedVarManager::kEta]);
@@ -1674,14 +1655,14 @@ Float_t AliReducedAnalysisFilterTrees::GetParticleWeight(AliReducedTrackInfo* tr
   //
 
   Float_t ptMC = track->Pt();
-  Int_t type = 5;
+  Int_t   type = 5;
   // For now flags are hard-coded
-  if(track->TestMCFlag(7))  type = 0; // pion primary
-  if(track->TestMCFlag(8))  type = 2; // kaon primary
-  if(track->TestMCFlag(9))  type = 1; // proton primary
-  if(track->TestMCFlag(10)) type = 4; // sigma+ primary
-  if(track->TestMCFlag(11)) type = 3; // sigma- primary
-  if(type == 5 && !track->IsMCTruth() && !track->TestMCFlag(6)) {  // TODO 6? is hardcoded
+  if(track->TestMCFlag(7))  type = 0;  // pion   primary
+  if(track->TestMCFlag(8))  type = 2;  // kaon   primary
+  if(track->TestMCFlag(9))  type = 1;  // proton primary
+  if(track->TestMCFlag(10)) type = 4;  // sigma+ primary
+  if(track->TestMCFlag(11)) type = 3;  // sigma- primary
+  if(type == 5 && !track->IsMCTruth() && !track->TestMCFlag(6)) {
     // Check if particle is a detected secondary from strange decay
     // In this case, the particle was put in array 1
     Int_t pdgmother = track->MCPdg(1);
@@ -1699,14 +1680,15 @@ Float_t AliReducedAnalysisFilterTrees::GetParticleWeight(AliReducedTrackInfo* tr
       AliReducedTrackInfo* mother;
       for(Int_t it=0; it<trackList->GetEntries(); ++it) {
         mother = (AliReducedTrackInfo*)nextTrack();
-        if(mother->IsMCTruth() && (mother->MCLabel(0) == labelmother)){
+        if(mother->IsMCTruth() && (mother->MCLabel(0)==labelmother)) {
           // Get the pt of the mother
-          if(mother->TestMCFlag(6))  // mother is primary  // TODO 6? is hardcoded
+          if(mother->TestMCFlag(6))  // mother is primary
             ptMC = mother->PtMC();
           else type = 5;
           break;
         }
-        if(it == trackList->GetEntries()-1) type = 5;  // We did not find the mother: do nothing
+        if(it == trackList->GetEntries()-1)  // We did not find the mother: do nothing
+          type = 5;
       }
     }
   }
@@ -1715,19 +1697,28 @@ Float_t AliReducedAnalysisFilterTrees::GetParticleWeight(AliReducedTrackInfo* tr
   // For multiplicity class (only rough value needed, because not so big differences in pp)
   // TODO correct for p-Pb?
   Float_t mult = fValues[AliReducedVarManager::kMultEstimatorPercentileV0M];
-  if(mult<0. || mult>100.) mult = 50.; // multiplicity estimator percentile was probably not kept  // TODO correct for p-Pb?
+  if(mult<0. || mult>200.) {
+    std::cout << std::endl << "!!!!!!!!!!!!!!!!!!!! V0M missing? !!!!!!!!!!!!!!!!!!!!!!!" << std::endl
+              << std::endl;
+//     mult = 50.; // multiplicity estimator percentile was probably not kept  // TODO correct for p-Pb?
+  }
 
   Int_t iptMC = fMCPCWeights->GetXaxis()->FindBin(ptMC);
   Int_t imult = fMCPCWeights->GetYaxis()->FindBin(mult);
   Int_t itype = fMCPCWeights->GetZaxis()->FindBin(type);
 
   // In case out of the range
-  if(ptMC < fMCPCWeights->GetXaxis()->GetBinLowEdge(1))
+  if(ptMC < fMCPCWeights->GetXaxis()->GetBinLowEdge(1)) {
     iptMC = 1;
-  if(ptMC > fMCPCWeights->GetXaxis()->GetBinUpEdge(fMCPCWeights->GetNbinsX()))
+  } else if(ptMC > fMCPCWeights->GetXaxis()->GetBinUpEdge(fMCPCWeights->GetNbinsX())) {
     iptMC = fMCPCWeights->GetNbinsX();
-  if(mult > fMCPCWeights->GetYaxis()->GetBinUpEdge(fMCPCWeights->GetNbinsY()))
+  }
+
+  if(mult < fMCPCWeights->GetYaxis()->GetBinLowEdge(1)) {
     imult = fMCPCWeights->GetNbinsY();
+  } else if(mult > fMCPCWeights->GetYaxis()->GetBinUpEdge(fMCPCWeights->GetNbinsY())) {
+    imult = fMCPCWeights->GetNbinsY();
+  }
 
   Float_t weight = fMCPCWeights->GetBinContent(iptMC, imult, itype);
 
@@ -1736,11 +1727,9 @@ Float_t AliReducedAnalysisFilterTrees::GetParticleWeight(AliReducedTrackInfo* tr
 
 
 //___________________________________________________________________________
-void AliReducedAnalysisFilterTrees::Finish() {
-  //
-  // run stuff after the event loop
-  //
-  
+// Run stuff after the event loop
+void AliReducedAnalysisFilterTrees::Finish()
+{
   if(fOptionRunMixing && !fOptionRunOverMC) {
     fMixingHandler->RunLeftoverMixing(AliReducedPairInfo::kJpsiToEE);
     if(fOptionRunMixingMult) {  // Mixed event in multiplicity bins
@@ -1794,8 +1783,8 @@ UInt_t AliReducedAnalysisFilterTrees::CheckReconstructedLegMCTruth(AliReducedBas
 {
 // Bool_t AliReducedAnalysisFilterTrees::CheckReconstructedLegMCTruth(AliReducedBaseTrack* ptrack, AliReducedBaseTrack* ntrack) {
   //
-  // check the pair of tracks to see if they match the defined MC cuts and in addition
-  // that they have the same mother
+  // Check the pair of tracks to see if they match the defined MC cuts and in addition
+  //   that they have the same mother
   // NOTE: The condition for the 2 tracks to have the same mother requires information on the MC label,
   //       which is available just in the full track information (AliReducedTrackInfo::fMCLabels[]).
   //       The consequence is that for the jpsi2ee analysis, the reconstructed tracks need to be always
@@ -1845,11 +1834,9 @@ UInt_t AliReducedAnalysisFilterTrees::CheckReconstructedLegMCTruth(AliReducedBas
 
 
 //___________________________________________________________________________
+// Fill histograms with pure signal
 void AliReducedAnalysisFilterTrees::FillMCTruthHistograms() {
-  //
-  // fill histograms with pure signal
-  //   
-  // loop over the first track array
+  // Loop over the first track array
   LoopOverMCTracks(1);
   // and over the second
   // NOTE: In the current model, handling the MC truth info requires the labels, which are properties of the
@@ -1860,10 +1847,9 @@ void AliReducedAnalysisFilterTrees::FillMCTruthHistograms() {
 
 
 //___________________________________________________________________________
-void AliReducedAnalysisFilterTrees::LoopOverMCTracks(Int_t trackArray/*=1*/) {
-  //
-  // loop over the track array and check the pure MC tracks against the defined MC selections
-  //   
+// Loop over the track array and check the pure MC tracks against the defined MC selections
+void AliReducedAnalysisFilterTrees::LoopOverMCTracks(Int_t trackArray/*=1*/)
+{
   AliReducedTrackInfo* mother    = 0x0;
   AliReducedTrackInfo* daughter1 = 0x0;
   AliReducedTrackInfo* daughter2 = 0x0;
@@ -1978,11 +1964,9 @@ void AliReducedAnalysisFilterTrees::LoopOverMCTracks(Int_t trackArray/*=1*/) {
 
 
 //___________________________________________________________________________
-UInt_t AliReducedAnalysisFilterTrees::CheckMotherMCTruth(AliReducedTrackInfo* mother) {
-  //
-  // Check the mother pure MC truth against all defined selections and return a bit map with all decisions
-  //
-  
+// Check the mother pure MC truth against all defined selections and return a bit map with all decisions
+UInt_t AliReducedAnalysisFilterTrees::CheckMotherMCTruth(AliReducedTrackInfo* mother)
+{
   if(fJpsiMotherMCcuts.GetEntries() == 0) return 0;
   
   UInt_t decisionMap = 0;
@@ -1996,11 +1980,9 @@ UInt_t AliReducedAnalysisFilterTrees::CheckMotherMCTruth(AliReducedTrackInfo* mo
 
 
 //___________________________________________________________________________
-UInt_t AliReducedAnalysisFilterTrees::CheckDaughterMCTruth(AliReducedTrackInfo* daughter) {
-  //
-  // Check the daughter pure MC truth against all defined selections and return a bit map with all decisions
-  //
-  
+// Check the daughter pure MC truth against all defined selections and return a bit map with all decisions
+UInt_t AliReducedAnalysisFilterTrees::CheckDaughterMCTruth(AliReducedTrackInfo* daughter)
+{
   if(fJpsiElectronMCcuts.GetEntries() == 0) return 0;
   
   UInt_t decisionMap = 0;
@@ -2014,11 +1996,9 @@ UInt_t AliReducedAnalysisFilterTrees::CheckDaughterMCTruth(AliReducedTrackInfo* 
 
 
 //___________________________________________________________________________
-AliReducedTrackInfo* AliReducedAnalysisFilterTrees::FindTrackByLabel(Int_t label, Bool_t isTruth) {
-  //
-  // search the track list for pure MC track with label and return the track pointer
-  //
-  
+// Search the track list for pure MC track with label and return the track pointer
+AliReducedTrackInfo* AliReducedAnalysisFilterTrees::FindTrackByLabel(Int_t label, Bool_t isTruth)
+{
   AliReducedTrackInfo* track = 0x0;
   TClonesArray* trackList = fEvent->GetTracks();
   TIter nextTrack(trackList);
@@ -2033,13 +2013,10 @@ AliReducedTrackInfo* AliReducedAnalysisFilterTrees::FindTrackByLabel(Int_t label
 
 
 //___________________________________________________________________________
+// Find the jpsi legs in the list of pure MC truth particles
 void AliReducedAnalysisFilterTrees::FindJpsiTruthLegs(AliReducedTrackInfo* mother, Int_t& leg1Label,
                                                       Int_t& leg2Label)
 {
-  //
-  // find the jpsi legs in the list of pure MC truth particles
-  //
-  
   Int_t mLabel = mother->MCLabel(0);
   AliReducedTrackInfo* track = 0x0;
   Int_t legsFound = 0;

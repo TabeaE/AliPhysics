@@ -125,7 +125,6 @@ public:
   void SetRunOverMC          (Bool_t option) {fOptionRunOverMC    = option;}
   void SetMCPCWeights        (TH3F* weights) {fMCPCWeights        = weights;}
   void SetReweightPC         (Bool_t option) {fReweightPC         = option;}
-  void SetSharePCCWeights    (Bool_t option) {fSharePCCWeights    = option;}
 
 
   // -------------------- Getters ------------------------------------------------------------ //
@@ -202,7 +201,6 @@ public:
 protected:
   std::map<int, std::vector<int>> fWeightsTrue;  // Save some weights to be used in next events
   std::map<int, std::vector<int>> fWeightsMeas;  // Save some weights to be used in next events
-  Bool_t fSharePCCWeights;   // Whether to share PCC weights between events
   Bool_t fReweightPC;        // Whether to re-weight the particle composition
   TH3F*  fMCPCWeights;       // The weights used to correct the particle composition
 

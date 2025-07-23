@@ -71,7 +71,7 @@ AliMCWeightsTask::~AliMCWeightsTask()
 
 #ifdef __AliMCWeightsTask_DebugTiming__
   auto t2       = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
   DebugChrono("deletion took " << duration << " microseconds\n");
 #endif
 }
@@ -99,7 +99,7 @@ void AliMCWeightsTask::UserCreateOutputObjects() {
   PostData(1, fOutputList);
 #ifdef __AliMCWeightsTask_DebugTiming__
   auto t2       = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
   DebugChrono("UserCreateOutputObjects took " << duration << " microseconds\n");
 #endif
 }
@@ -170,7 +170,7 @@ void AliMCWeightsTask::UserExec(Option_t* option) {
   PostData(1, fOutputList);
 #ifdef __AliMCWeightsTask_DebugTiming__
   auto t2       = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
   DebugChrono("UserExec took " << duration << " microseconds\n");
 #endif
 }
@@ -269,13 +269,13 @@ AliMCWeightsTask* AliMCWeightsTask::AddTaskAliMCWeightsTask(MCGeneratorType gen,
   //===========================================================================
   std::cout << "attach the task to the manager and configure in and ouput\n";
   mgr->AddTask(task);
-  mgr->ConnectInput(task, 0, mgr->GetCommonInputContainer());
+  mgr->ConnectInput (task, 0, mgr->GetCommonInputContainer());
   mgr->ConnectOutput(task, 1, mgr->CreateContainer("AliMCWeightsTask", TList::Class(),
                                                    AliAnalysisManager::kOutputContainer,fileName.Data()));
 
 #ifdef __AliMCWeightsTask_DebugTiming__
   auto t2       = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
   DebugChrono("AliMCWeightsTask took " << duration << " microseconds\n");
 #endif
 

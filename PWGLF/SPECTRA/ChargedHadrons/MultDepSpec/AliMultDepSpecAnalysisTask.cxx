@@ -816,7 +816,8 @@ bool AliMultDepSpecAnalysisTask::InitCentrality()
  * Function to add this task to a train.
  */
 //**************************************************************************************************
-AliMultDepSpecAnalysisTask* AliMultDepSpecAnalysisTask::AddTaskMultDepSpec(const string& dataSet, TString options, int cutModeLow, int cutModeHigh, bool isMC)
+AliMultDepSpecAnalysisTask* AliMultDepSpecAnalysisTask::AddTaskMultDepSpec(const string& dataSet,
+  TString options, int cutModeLow, int cutModeHigh, bool isMC)
 {
   AliAnalysisManager* mgr = AliAnalysisManager::GetAnalysisManager();
   if (!mgr) {
@@ -853,7 +854,9 @@ AliMultDepSpecAnalysisTask* AliMultDepSpecAnalysisTask::AddTaskMultDepSpec(const
     // hang task in train
     mgr->AddTask(task);
     mgr->ConnectInput(task, 0, mgr->GetCommonInputContainer());
-    mgr->ConnectOutput(task, 1, mgr->CreateContainer(taskName, TList::Class(), AliAnalysisManager::kOutputContainer, "AnalysisResults.root"));
+    mgr->ConnectOutput(task, 1, mgr->CreateContainer(taskName,TList::Class(),
+                                                     AliAnalysisManager::kOutputContainer,
+                                                     "AnalysisResults.root"));
   }
   return returnTask;
 }
@@ -866,10 +869,10 @@ AliMultDepSpecAnalysisTask* AliMultDepSpecAnalysisTask::AddTaskMultDepSpec(const
 void AliMultDepSpecAnalysisTask::SaveTrainMetadata()
 {
   // Save train metadata
-  string trainID = (gSystem->Getenv("TRAIN_ID")) ? gSystem->Getenv("TRAIN_ID") : "";
-  string trainRun = (gSystem->Getenv("TRAIN_RUN_ID")) ? gSystem->Getenv("TRAIN_RUN_ID") : "";
+  string trainID    = (gSystem->Getenv("TRAIN_ID"))        ? gSystem->Getenv("TRAIN_ID")        : "";
+  string trainRun   = (gSystem->Getenv("TRAIN_RUN_ID"))    ? gSystem->Getenv("TRAIN_RUN_ID")    : "";
   string aliPhysTag = (gSystem->Getenv("ALIROOT_VERSION")) ? gSystem->Getenv("ALIROOT_VERSION") : "";
-  if (aliPhysTag.find("::") != string::npos) aliPhysTag = aliPhysTag.substr(aliPhysTag.find("::") + 2);
+  if(aliPhysTag.find("::") != string::npos) aliPhysTag = aliPhysTag.substr(aliPhysTag.find("::") + 2);
   std::map<string, string> trainIdNames = {
     // ESD trains
     {"36", "LF_pp"},
@@ -1023,12 +1026,14 @@ bool AliMultDepSpecAnalysisTask::SetupTask(string dataSet, TString options)
 
   // dataset specific trigger settings
   unsigned int triggerMask = AliVEvent::kINT7; // V0and used in Run2 (non single diffractive!)
-  if (dataSet.find("pp_2TeV") != string::npos || dataSet.find("pp_7TeV") != string::npos || dataSet.find("PbPb_2TeV") != string::npos) {
-    triggerMask = AliVEvent::kMB; // V0or used in Run1
+  if(dataSet.find("pp_2TeV")   != string::npos || dataSet.find("pp_7TeV") != string::npos ||
+     dataSet.find("PbPb_2TeV") != string::npos)
+  {
+    triggerMask = AliVEvent::kMB;  // V0or used in Run1
   }
   SetTriggerMask(triggerMask);
 
-  unsigned int eventCass = EventClass::fiducial; // by default normalize to fiducial event class
+  unsigned int eventCass = EventClass::fiducial;  // by default normalize to fiducial event class
   if (options.Contains("EventClass::triggered")) {
     eventCass = EventClass::triggered;
   } else if (options.Contains("EventClass::inelgt0")) {
