@@ -92,15 +92,24 @@ class AliReducedBaseTrack : public TObject {
     void   SetFlags(ULong_t flags)   {fFlags = flags;}
     Bool_t SetFlag(UShort_t iflag)   {if(iflag >= 8*sizeof(ULong_t)) return kFALSE; fFlags|=(ULong_t(1)<<iflag);
                                       return kTRUE;}
-    Bool_t UnsetFlag(UShort_t iflag) {if(iflag >= 8*sizeof(ULong_t)) return kFALSE;
-                                      if(TestFlag(iflag)) fFlags^=(ULong_t(1)<<iflag); return kTRUE;}
+    Bool_t UnsetFlag(UShort_t iflag) {
+      if(iflag >= 8*sizeof(ULong_t)) return kFALSE;
+      if(TestFlag(iflag)) fFlags^=(ULong_t(1)<<iflag);
+      return kTRUE;
+    }
 
     void   ResetMultFlags()              {fMultFlags = 0;}
     void   SetMultFlags(UInt_t flags)    {fMultFlags = flags;}
-    Bool_t SetMultFlag(UShort_t iflag)   {if(iflag>=8*sizeof(UInt_t)) return kFALSE;
-                                          fMultFlags|=(UInt_t(1)<<iflag); return kTRUE;}
-    Bool_t UnsetMultFlag(UShort_t iflag) {if(iflag>=8*sizeof(UInt_t)) return kFALSE;
-                                          if(TestMultFlag(iflag)) fMultFlags^=(UInt_t(1)<<iflag); return kTRUE;}
+    Bool_t SetMultFlag(UShort_t iflag)   {
+      if(iflag >= 8*sizeof(UInt_t)) return kFALSE;
+      fMultFlags |= (UInt_t(1)<<iflag);
+      return kTRUE;
+    }
+    Bool_t UnsetMultFlag(UShort_t iflag) {
+      if(iflag >= 8*sizeof(UInt_t)) return kFALSE;
+      if(TestMultFlag(iflag)) fMultFlags^=(UInt_t(1)<<iflag);
+      return kTRUE;
+    }
 
     void   ResetQualityFlags()              {fQualityFlags=0;}
     void   SetQualityFlags(ULong_t flags)   {fQualityFlags=flags;}
@@ -111,10 +120,16 @@ class AliReducedBaseTrack : public TObject {
                                              return kTRUE;}
 
     void   SetMCFlags(UInt_t flags)        {fMCFlags = flags;}
-    Bool_t SetMCFlag(UShort_t iflag)       {if(iflag>=8*sizeof(UInt_t)) return kFALSE;
-                                            fMCFlags |= (UInt_t(1)<<iflag); return kTRUE;}
-    Bool_t UnsetMCFlag(UShort_t iflag)     {if(iflag>=8*sizeof(UInt_t)) return kFALSE;
-                                            if(TestMCFlag(iflag)) fMCFlags ^= (UInt_t(1)<<iflag); return kTRUE;}
+    Bool_t SetMCFlag(UShort_t iflag)       {
+      if(iflag >= 8*sizeof(UInt_t)) return kFALSE;
+      fMCFlags |= (UInt_t(1)<<iflag);
+      return kTRUE;
+    }
+    Bool_t UnsetMCFlag(UShort_t iflag)     {
+      if(iflag >= 8*sizeof(UInt_t)) return kFALSE;
+      if(TestMCFlag(iflag)) fMCFlags^=(UInt_t(1)<<iflag);
+      return kTRUE;
+    }
     void   SetIsMCTruth(Bool_t flag=kTRUE) {fIsMCTruth = flag;}
    
   protected:
@@ -163,11 +178,9 @@ inline Float_t AliReducedBaseTrack::Phi() const {
   // Return the azimuthal angle of this particle
   //
   if(!fIsCartesian) return fP[1];
-  Float_t phi=TMath::ATan2(fP[1],fP[0]); 
-  if(phi>=0.0) 
-    return phi;
-  else 
-    return (TMath::TwoPi()+phi);
+  Float_t phi = TMath::ATan2(fP[1],fP[0]);
+  if(phi >= 0.0) return phi;
+  else           return (TMath::TwoPi()+phi);
 }
 
 //_______________________________________________________________________________
@@ -175,11 +188,9 @@ inline Float_t AliReducedBaseTrack::Theta() const {
   //
   // Return the polar angle for this particle
   //
-  Float_t p=P(); 
-  if(p>=1.0e-6) 
-    return TMath::ACos(Pz()/p);
-  else 
-    return 0.0;
+  Float_t p = P();
+  if(p >= 1.0e-6) return TMath::ACos(Pz()/p);
+  else            return 0.0;
 }
 
 //_______________________________________________________________________________
@@ -189,10 +200,8 @@ inline Float_t AliReducedBaseTrack::Eta() const {
   //
   if(!fIsCartesian) return fP[2];
   Float_t eta = TMath::Tan(0.5*Theta());
-  if(eta>1.0e-6) 
-    return -1.0*TMath::Log(eta);
-  else 
-    return 1e3;
+  if(eta > 1.0e-6) return -1.0*TMath::Log(eta);
+  else             return 1e3;
 }
 
 //_______________________________________________________________________________
@@ -200,11 +209,11 @@ inline Float_t AliReducedBaseTrack::Rapidity(Float_t massAssumption) const {
   //
   // Return the rapidity of this particle using a massAssumption
   //
-  Float_t e = Energy(massAssumption);
-  Float_t factor = e-Pz();
-  if(TMath::Abs(factor)<1.0e-6) return 1e3;
-  factor = (e+Pz())/factor;
-  if(factor<1.0e-6) return -1e3;
+  Float_t e      = Energy(massAssumption);
+  Float_t factor = e - Pz();
+  if(TMath::Abs(factor) < 1.0e-6) return 1e3;
+  factor = (e+Pz()) / factor;
+  if(factor < 1.0e-6) return -1e3;
   return 0.5*TMath::Log(factor);
 }
 

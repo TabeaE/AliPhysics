@@ -11,10 +11,9 @@
 #include "THnBase.h"
 #include "TAxis.h"
 
-struct Axis
-{
+struct Axis {
   Axis() = default;
-  Axis(const std::string& name_, const std::string& title_, std::vector<double> binEdges_, int nBins_ = 0)
+  Axis(const std::string& name_, const std::string& title_, std::vector<double> binEdges_, int nBins_=0)
   : name{name_}, title{title_}, binEdges{binEdges_}, nBins{nBins_}
   {}
   std::string name{};

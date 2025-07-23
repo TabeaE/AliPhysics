@@ -45,7 +45,6 @@ class AliReducedVarManager : public TObject {
     kNSpecies
   };
 
-     
   enum Detectors {
     kTPC = 0,
     kVZERO,
@@ -61,10 +60,12 @@ class AliReducedVarManager : public TObject {
     kINT1              = BIT(0), // V0A | V0C | SPD minimum bias trigger
     kINT7              = BIT(1), // V0AND trigger, offline V0 selection
     kMUON              = BIT(2), // Muon trigger, offline SPD or V0 selection
-    kHighMult          = BIT(3), // High-multiplicity trigger (threshold defined online), offline SPD or V0 selection
+    kHighMult          = BIT(3), // High-multiplicity trigger (threshold defined online),
+                                 // offline SPD or V0 selection
     kHighMultSPD       = BIT(3), // offline SPD high multiplicity trigger
     kEMC1              = BIT(4), // EMCAL trigger
-    kCINT5             = BIT(5), // Minimum bias trigger without SPD. i.e. interaction trigger, offline V0 selection
+    kCINT5             = BIT(5), // Minimum bias trigger without SPD. i.e. interaction trigger,
+                                 // offline V0 selection
     kINT5              = BIT(5), // V0OR minimum bias trigger
     kCMUS5             = BIT(6), // Muon trigger, offline V0 selection
     kMUSPB             = BIT(6), // idem for PbPb
@@ -103,21 +104,23 @@ class AliReducedVarManager : public TObject {
     kMuonUnlikeLowPt8  = BIT(25), // Muon trigger : unlike sign muon, low pt, T0 selection, CINT8 suite
     kMuonUnlikeLowPt0  = BIT(26), // Unlike-sign dimuon low-pt, no additional L0 requirement
     kINT6              = BIT(26),
-    kUserDefined       = BIT(27), // Set when custom trigger classes are set in AliPhysicsSelection, offline SPD or V0 selection
+    kUserDefined       = BIT(27), // Set when custom trigger classes are set in AliPhysicsSelection,
+                                  // offline SPD or V0 selection
     kTRD               = BIT(28), // TRD trigger  
     kMuonCalo          = BIT(29), // Muon-calo triggers
     kCaloOnly          = BIT(29), // MB, EMCAL and PHOS triggers in CALO or CALOFAST cluster
     // Bits 28 and above are reserved for FLAGS
-    kFastOnly          = BIT(30), // The fast cluster fired. This bit is set in to addition another trigger bit, e.g. kMB
+    kFastOnly          = BIT(30), // The fast cluster fired. This bit is set in to addition another trigger bit,
+                                  // e.g. kMB
     kAny               = 0xffffffff, // to accept any trigger
-    kAnyINT            = kMB | kINT7 | kCINT5 | kINT8 | kSPI7, // to accept any interaction (aka minimum bias) trigger
+    kAnyINT            = kMB | kINT7 | kCINT5 | kINT8 | kSPI7,  // to accept any interaction (aka minimum bias) trigger
     kNTriggers         = 47
   };
   
   // tracking flags as in AliVTrack.h
   // NOTE: when in doubt check consistency with aliroot
   enum TrackingStatus {
-    kITSin=0, 
+    kITSin = 0,
     kITSout,
     kITSrefit,
     kITSpid,
@@ -154,7 +157,7 @@ class AliReducedVarManager : public TObject {
 
   // to be moved to AliReducedTrackInfo
   enum TrackingFlags {
-    kTpcEP=0,
+    kTpcEP = 0,
     kGammaConv,
     kK0s,
     kLambda,
@@ -170,7 +173,7 @@ class AliReducedVarManager : public TObject {
   };
 
   enum Corrections {
-    kVertexCorrectionGlobal=0,
+    kVertexCorrectionGlobal = 0,
     kVertexCorrectionRunwise,
     kVertexCorrectionGlobalGainLoss,
     kVertexCorrectionRunwiseGainLoss,
@@ -180,14 +183,14 @@ class AliReducedVarManager : public TObject {
   };
 
   enum ReferenceMultiplicities {
-   kMaximumMultiplicity=0,
+   kMaximumMultiplicity = 0,
    kMinimumMultiplicity,
    kMeanMultiplicity,
    kNReferenceMultiplicities
   };
 
   enum SmearingMethods {
-   kNoSmearing=0,
+   kNoSmearing = 0,
    kPoissonSmearing,
    kNSmearingMethods
   };
@@ -197,7 +200,7 @@ class AliReducedVarManager : public TObject {
   static const Float_t fgkPairMass[AliReducedPairInfo::kNMaxCandidateTypes];
 
   enum Ncuts {
-    kNMaxCutsGlobalTracks=8
+    kNMaxCutsGlobalTracks = 8
   };
   
   enum Variables {
@@ -215,59 +218,59 @@ class AliReducedVarManager : public TObject {
     
     // Event wise variables
     kEventTag = kNRunWiseVariables,  // event tag
-    kEventNumberInFile,  // event number in file
-    kL0TriggerInput,     // L0 trigger input
-    kL0TriggerInput2,    // L0 trigger input, used for correlations between inputs
-    kL1TriggerInput,     // L1 trigger input
-    kL1TriggerInput2,    // L1 trigger input, used for correlations between inputs
-    kL2TriggerInput,     // L2 trigger input
-    kL2TriggerInput2,    // L2 trigger input, used for correlations between inputs
-    kRunNo,              // run number
-    kRunID,              // variable for easy filling of histograms vs. run number, without empty bins
-    kBeamEnergy,         // LHC beam energy
-    kInstLumi,           // instantaneous interaction rate
-    kDetectorMask,       // detector mask
-    kNumberOfDetectors,  // nof active detectors
-    kBC,                 // bunch crossing
-    kTimeStamp,          // time stamp of the event
-    kTimeRelativeSOR,    // time relative to the start of run, in minutes
-    kTimeRelativeSORfraction,  // time relative to the start of runs, expressed as fraction of the whole run
-                               //   duration
-    kEventType,            // event type
-    kTriggerMask,          // trigger mask
-    kOnlineTriggersFired,  // 1 if fired, 0 if not fired, for each trigger
+    kEventNumberInFile,         // event number in file
+    kL0TriggerInput,            // L0 trigger input
+    kL0TriggerInput2,           // L0 trigger input, used for correlations between inputs
+    kL1TriggerInput,            // L1 trigger input
+    kL1TriggerInput2,           // L1 trigger input, used for correlations between inputs
+    kL2TriggerInput,            // L2 trigger input
+    kL2TriggerInput2,           // L2 trigger input, used for correlations between inputs
+    kRunNo,                     // run number
+    kRunID,                     // variable for easy filling of histograms vs run number, without empty bins
+    kBeamEnergy,                // LHC beam energy
+    kInstLumi,                  // instantaneous interaction rate
+    kDetectorMask,              // detector mask
+    kNumberOfDetectors,         // nof active detectors
+    kBC,                        // bunch crossing
+    kTimeStamp,                 // time stamp of the event
+    kTimeRelativeSOR,           // time relative to the start of run, in minutes
+    kTimeRelativeSORfraction,   // time relative to the start of runs, expressed as fraction of the whole run
+                                //   duration
+    kEventType,                 // event type
+    kTriggerMask,               // trigger mask
+    kOnlineTriggersFired,       // 1 if fired, 0 if not fired, for each trigger
     kOnlineTrigger=kOnlineTriggersFired+kNTriggers,  // online trigger    
-    kOnlineTriggerFired,   // online trigger fired
-    kOnlineTriggerFired2,  // online trigger if fired, -1 if not fired
-    kIsPhysicsSelection,   // physics selection
-    kIsSPDPileup,          // whether is SPD pileup
-    kIsSPDPileup5,         // whether is SPD pileup (5 vertex contributors)
-    kIsPileupMV,           // pileup from multi vertexer
-    kIsSPDPileupMultBins,  // whether is SPD pileup in multiplicity bins
-    kNSPDpileups,          // nof pileup events from SPD
-    kNTrackPileups,        // nof pileup events from tracks
-    kIRIntClosestIntMap,   // map of closest out of bunch interactions; [0]-Int1, [1]-Int2
+    kOnlineTriggerFired,        // online trigger fired
+    kOnlineTriggerFired2,       // online trigger if fired, -1 if not fired
+    kIsPhysicsSelection,        // physics selection
+    kIsSPDPileup,               // whether is SPD pileup
+    kIsSPDPileup5,              // whether is SPD pileup (5 vertex contributors)
+    kIsPileupMV,                // pileup from multi vertexer
+    kIsSPDPileupMultBins,       // whether is SPD pileup in multiplicity bins
+    kNSPDpileups,               // nof pileup events from SPD
+    kNTrackPileups,             // nof pileup events from tracks
+    kIRIntClosestIntMap,        // map of closest out of bunch interactions; [0]-Int1, [1]-Int2
     kNPMDtracks=kIRIntClosestIntMap+2,  // nof PMD tracks
-    kNTRDtracks,           // nof TRD tracks
-    kNTRDtracklets,        // nof TRD tracklets
-    kNVtxContributors,     // nof vertex contributors
-    kNVtxTPCContributors,  // nof TPC vertex contributors
-    kNVtxSPDContributors,  // nof SPD vertex contributors
-    kVtxX,                 // vtx X
-    kVtxY,                 // vtx Y
-    kVtxZ,                 // vtx Z
-    kVtxXMC,               // vtx X MC
-    kVtxYMC,               // vtx Y MC
-    kVtxZMC,               // vtx Z MC
-    kDeltaVtxZMC,          // vtxZ - vtxZMC
-    kVtxXtpc,              // vtx X from tpc
-    kVtxYtpc,              // vtx Y from tpc
-    kVtxZtpc,              // vtx Z from tpc
-    kDeltaVtxZ,            // vtxZ - vtxZtpc
-    kVtxXspd,              // vtx X from spd
-    kVtxYspd,              // vtx Y from spd
-    kVtxZspd,              // vtx Z from spd
-    kDeltaVtxZspd,         // vtxZ - vtxZspd
+    kNTRDtracks,                // nof TRD tracks
+    kNTRDtracklets,             // nof TRD tracklets
+    kNVtxContributors,          // nof vertex contributors
+    kNVtxTPCContributors,       // nof TPC vertex contributors
+    kNVtxSPDContributors,       // nof SPD vertex contributors
+    kVtxX,                      // vtx X
+    kVtxY,                      // vtx Y
+    kVtxZ,                      // vtx Z
+    kVtxXMC,                    // vtx X MC
+    kVtxYMC,                    // vtx Y MC
+    kVtxZMC,                    // vtx Z MC
+    kDeltaVtxZMC,               // vtxZ - vtxZMC
+    kVtxXtpc,                   // vtx X from tpc
+    kVtxYtpc,                   // vtx Y from tpc
+    kVtxZtpc,                   // vtx Z from tpc
+    kDeltaVtxZ,                 // vtxZ - vtxZtpc
+    kVtxXspd,                   // vtx X from spd
+    kVtxYspd,                   // vtx Y from spd
+    kVtxZspd,                   // vtx Z from spd
+    kDeltaVtxZspd,              // vtxZ - vtxZspd
     kTPCpileupZAC,              // TPC pileup event Z from A&C sides
     kTPCpileupZA,               // TPC pileup event Z from A side
     kTPCpileupZC,               // TPC pileup event Z from C side
@@ -372,7 +375,7 @@ class AliReducedVarManager : public TObject {
     kVZEROACTotalMult,
     kCorrectedMultiplicity,
     kNMultiplicityEstimators = (int)kCorrectedMultiplicity - (int)kMultiplicity,
-    kSPDFiredChips           = (int)kCorrectedMultiplicity + (int)kNMultiplicityEstimators * (1 + (int)kNCorrections * (int)kNReferenceMultiplicities * (int)kNSmearingMethods),  // SPD fired chips in first and second layer
+    kSPDFiredChips           = (int)kCorrectedMultiplicity + (int)kNMultiplicityEstimators*(1+(int)kNCorrections*(int)kNReferenceMultiplicities*(int)kNSmearingMethods),  // SPD fired chips in first and second layer
     kITSnClusters       = kSPDFiredChips+2,  // nof ITS clusters in each layer
     kSPDnSingleClusters = kITSnClusters+6,   // nof clusters in SPD layer 1 not mached to tracklets from layer 2
     kSDDandSSDclusters,                      // nof clusters in the SDD and SSD layers
@@ -383,9 +386,9 @@ class AliReducedVarManager : public TObject {
     kVZEROCurrentChannelMultCalib,  // current VZERO channel calibrated multiplicity
     kVZEROAemptyChannels,           // Nof empty VZERO channels in A side
     kVZEROCemptyChannels,           // Nof empty VZERO channels in C side
-    kVZEROChannelMult,                             // VZERO multiplicity per channel
-    kVZEROChannelMultCalib=kVZEROChannelMult+64,   // VZERO multiplicity per channel calibrated
-    kVZEROChannelEta = kVZEROChannelMultCalib+64,  // pseudo-rapidity of a VZERO channel       
+    kVZEROChannelMult,                              // VZERO multiplicity per channel
+    kVZEROChannelMultCalib = kVZEROChannelMult+64,  // VZERO multiplicity per channel calibrated
+    kVZEROChannelEta = kVZEROChannelMultCalib+64,   // pseudo-rapidity of a VZERO channel
     kVZEROQvecX      = kVZEROChannelEta+64,   // Q-vector components for harmonics 1-6 and  
     kVZEROQvecY      = kVZEROQvecX+6*3,       //  6- n-harmonics; 3- A,C and A&C options
     kVZEROQvecMag    = kVZEROQvecY+6*3,       // magnitude of the Q vector
@@ -422,16 +425,16 @@ class AliReducedVarManager : public TObject {
     kRPdeltaVZEROAtpc = kRPYtpcXvzeroc+6,       
     kRPdeltaVZEROCtpc = kRPdeltaVZEROAtpc+6,    
     // TPC event plane using sub-intervals in pseudo-rapidity
-    kTPCQvecXleft   = kRPdeltaVZEROCtpc+6,      
-    kTPCQvecYleft   = kTPCQvecXleft+6,          
-    kTPCRPleft      = kTPCQvecYleft+6,          
-    kTPCQvecXright  = kTPCRPleft+6,             
-    kTPCQvecYright  = kTPCQvecXright+6,         
-    kTPCRPright     = kTPCQvecYright+6,         
-    kTPCQvecXtotal  = kTPCRPright+6,            
-    kTPCQvecYtotal  = kTPCQvecXtotal+6,         
-    kTPCRPtotal     = kTPCQvecYtotal+6,         
-    kTPCsubResCos   = kTPCRPtotal+6, 
+    kTPCQvecXleft     = kRPdeltaVZEROCtpc+6,
+    kTPCQvecYleft     = kTPCQvecXleft+6,
+    kTPCRPleft        = kTPCQvecYleft+6,
+    kTPCQvecXright    = kTPCRPleft+6,
+    kTPCQvecYright    = kTPCQvecXright+6,
+    kTPCRPright       = kTPCQvecYright+6,
+    kTPCQvecXtotal    = kTPCRPright+6,
+    kTPCQvecYtotal    = kTPCQvecXtotal+6,
+    kTPCRPtotal       = kTPCQvecYtotal+6,
+    kTPCsubResCos     = kTPCRPtotal+6,
     // TPC event plane obtained from the precomputed Q vector in the trees
     kTPCQvecXtree          = kTPCsubResCos+6,
     kTPCQvecYtree          = kTPCQvecXtree+6,
@@ -583,7 +586,7 @@ class AliReducedVarManager : public TObject {
     // Pair-only variables
     kCandidateId = kTPCuQsine+6,
     kPairType,                  // 0 ++; 1 +-; 2 --    
-    kPairTypeSPD,               // 2 (both); 1 (one) 0 (none) of the legs has an hit in the first SPD layer;     
+    kPairTypeSPD,               // 2 (both); 1 (one) 0 (none) of the legs has a hit in the first SPD layer
     kMassV0,                    // masses for all 4 V0 assumptions (0-K0s, 1-Lambda, 2-ALambda, 3-Gamma)
     kPairChisquare = kMassV0+4,     
     kPairLxy, 

@@ -147,47 +147,47 @@ public:
   // setters
   //void Reset();
   // User input
-  void SetHistograms    (THnF* seos, THnF* meos = 0x0, THnF* selsLeg1=0x0, THnF* selsLeg2=0x0,
-                         THnF* melsLeg1=0x0, THnF* melsLeg2=0x0);
-  void SetSEOSHistogram (THnF* hist)               {fSEOS = hist; fMatchingIsDone = kFALSE;};
-  void SetSELSHistograms(THnF* hLeg1, THnF* hLeg2) {fSELSleg1 = hLeg1; fSELSleg2 = hLeg2;
-                                                    fMatchingIsDone = kFALSE;};
-  void SetMEOSHistogram (THnF* hist)               {fMEOS = hist; fMatchingIsDone = kFALSE;};
-  void SetMELSHistograms(THnF* hLeg1, THnF* hLeg2) {fMELSleg1 = hLeg1; fMELSleg2 = hLeg2;
-                                                    fMatchingIsDone = kFALSE;}
-  void SetSEOSMCHistogram(THnF* hist) {fSEOS_MCtruth = hist;}
-  void SetSignalMCshape  (TH1* shape) {fSignalMCshape = shape;}
+  void SetHistograms     (THnF* seos, THnF* meos = 0x0, THnF* selsLeg1=0x0, THnF* selsLeg2=0x0,
+                          THnF* melsLeg1=0x0, THnF* melsLeg2=0x0);
+  void SetSEOSHistogram  (THnF* hist)               {fSEOS = hist; fMatchingIsDone = kFALSE;};
+  void SetSELSHistograms (THnF* hLeg1, THnF* hLeg2) {fSELSleg1 = hLeg1; fSELSleg2 = hLeg2;
+                                                     fMatchingIsDone = kFALSE;};
+  void SetMEOSHistogram  (THnF* hist)               {fMEOS = hist; fMatchingIsDone = kFALSE;};
+  void SetMELSHistograms (THnF* hLeg1, THnF* hLeg2) {fMELSleg1 = hLeg1; fMELSleg2 = hLeg2;
+                                                     fMatchingIsDone = kFALSE;}
+  void SetSEOSMCHistogram (THnF* hist) {fSEOS_MCtruth = hist;}
+  void SetSignalMCshape   (TH1* shape) {fSignalMCshape = shape;}
   
   // add variables and set ranges on the THnF
-  void AddVariables(Int_t nVars, Int_t* vars, Int_t* indices);
-  void AddVariable(Int_t var, Int_t index);
-  void SetVarRange(Int_t var, Double_t* lims);
-  void SetVarRange(Int_t var, Double_t min, Double_t max);
+  void AddVariables (Int_t nVars, Int_t* vars, Int_t* indices);
+  void AddVariable  (Int_t var, Int_t index);
+  void SetVarRange  (Int_t var, Double_t* lims);
+  void SetVarRange  (Int_t var, Double_t min, Double_t max);
   
   // indicate the special mass and pt variables
-  void SetMassVariable(Int_t var) {fMassVariable = var; fMatchingIsDone = kFALSE;}
-  void SetPtVariable  (Int_t var) {fPtVariable = var; fMatchingIsDone = kFALSE;}
+  void SetMassVariable (Int_t var) {fMassVariable = var; fMatchingIsDone = kFALSE;}
+  void SetPtVariable   (Int_t var) {fPtVariable = var;   fMatchingIsDone = kFALSE;}
   
   // set various options (see also defaults)
-  void SetBkgMethod(Int_t method)                 {fOptionBkgMethod   = method; fMatchingIsDone = kFALSE;}
-  void SetMEMatchingMethod(Int_t option)          {fgOptionMEMatching = option; fMatchingIsDone = kFALSE;}
-  void SetUseRfactorCorrection(Bool_t use=kTRUE)  {fOptionUseRfactorCorrection = use;
-                                                   fMatchingIsDone       = kFALSE;}
-  void SetUse2DMatching(Bool_t flag=kTRUE)        {fgOptionUse2DMatching = flag;   fMatchingIsDone = kFALSE;}
-  void SetScalingOption(Int_t option)             {fOptionScale          = option; fMatchingIsDone = kFALSE;}
-  void SetLSmethod(Int_t option)                  {fOptionLSmethod       = option; fMatchingIsDone = kFALSE;}
-  void SetWeightedAveragePower(Double_t power)    {fWeightedAveragePower = power;  fMatchingIsDone = kFALSE;}
-  void SetMinuitFitOption(Float_t option)         {fOptionMinuit         = option; fMatchingIsDone = kFALSE;}
-  void SetUseSignificantZero(Bool_t option)       {fgOptionUseSignificantZero = option;
-                                                   fMatchingIsDone       = kFALSE;}
-  void SetScaleSummedBkg(Bool_t option)           {fOptionScaleSummedBkg = option; fMatchingIsDone = kFALSE;}
-  void SetDebugMode(Bool_t option)                {fOptionDebug          = option; fMatchingIsDone = kFALSE;}
-  void SetSignalFromMC(Bool_t option)             {fOptionSignalFromMC   = option; fMatchingIsDone = kFALSE;}
-  void SetDoMeanPt(Bool_t option)                 {fOptionMeanPt         = option;}
-  void SetFitMeanPtAdditionalError(Bool_t option) {fFitMeanPtAdditionalErrors = option;}
-  void SetBkgFitOption(TString option)            {fBkgFitOption        = option;}
-  void SetBkgFitFunctionCorr(TH1* hBkgCorr)       {fBkgFitFunction_corr = hBkgCorr;}
-  void SetAlphaHistogram(TH1* alpha)              {fAlpha               = alpha;}
+  void SetBkgMethod            (Int_t method)      {fOptionBkgMethod   = method; fMatchingIsDone = kFALSE;}
+  void SetMEMatchingMethod     (Int_t option)      {fgOptionMEMatching = option; fMatchingIsDone = kFALSE;}
+  void SetUseRfactorCorrection (Bool_t use=kTRUE)  {fOptionUseRfactorCorrection = use;
+                                                    fMatchingIsDone       = kFALSE;}
+  void SetUse2DMatching        (Bool_t flag=kTRUE) {fgOptionUse2DMatching = flag;   fMatchingIsDone = kFALSE;}
+  void SetScalingOption        (Int_t option)      {fOptionScale          = option; fMatchingIsDone = kFALSE;}
+  void SetLSmethod             (Int_t option)      {fOptionLSmethod       = option; fMatchingIsDone = kFALSE;}
+  void SetWeightedAveragePower (Double_t power)    {fWeightedAveragePower = power;  fMatchingIsDone = kFALSE;}
+  void SetMinuitFitOption      (Float_t option)    {fOptionMinuit         = option; fMatchingIsDone = kFALSE;}
+  void SetUseSignificantZero   (Bool_t option)     {fgOptionUseSignificantZero = option;
+                                                    fMatchingIsDone       = kFALSE;}
+  void SetScaleSummedBkg       (Bool_t option)     {fOptionScaleSummedBkg = option; fMatchingIsDone = kFALSE;}
+  void SetDebugMode            (Bool_t option)     {fOptionDebug          = option; fMatchingIsDone = kFALSE;}
+  void SetSignalFromMC         (Bool_t option)     {fOptionSignalFromMC   = option; fMatchingIsDone = kFALSE;}
+  void SetDoMeanPt             (Bool_t option)     {fOptionMeanPt         = option;}
+  void SetFitMeanPtAdditionalError (Bool_t option) {fFitMeanPtAdditionalErrors = option;}
+  void SetBkgFitOption       (TString option)      {fBkgFitOption        = option;}
+  void SetBkgFitFunctionCorr (TH1* hBkgCorr)       {fBkgFitFunction_corr = hBkgCorr;}
+  void SetAlphaHistogram     (TH1* alpha)          {fAlpha               = alpha;}
   
   // set various ranges
   void SetMassFitRange(Double_t min, Double_t max) {fgMassFitRange[0] = min+1.0e-6;
@@ -198,7 +198,7 @@ public:
                                                     fgPtFitRange[1] = max-1.0e-6;
                                                     fUserEnabledPtFitRange = kTRUE; fMatchingIsDone = kFALSE;}
   void AddMassExclusionRange(Double_t min, Double_t max) {
-    if(fgNMassExclusionRanges==10) return;        // maximum 10 mass exclusion ranges
+    if(fgNMassExclusionRanges == 10) return;        // maximum 10 mass exclusion ranges
     fgMassExclusionRanges[fgNMassExclusionRanges][0] = min + 1.0e-6;
     fgMassExclusionRanges[fgNMassExclusionRanges][1] = max -1.0e-6;
     fgNMassExclusionRanges++;

@@ -310,9 +310,10 @@ void AliReducedAnalysisFilterTrees::Process() {
       for(Int_t it=0; it<tracklist->GetEntries(); ++it) {
         track = (AliReducedTrackInfo*)nextTrack();
         if(!(track->IsMCTruth()) && IsTrackMeasMultSelected(track,fValues)) {
-          for(Int_t icut=0; icut<GetNMeasMultCuts(); icut++) {
-            if(track->TestFlag(icut)) {
-              fHistosManager->FillHistClass("TrackMult_AfterCuts", fValues);
+          for(Int_t icut=0; icut<nGlobalEstimators; icut++) {
+            if(track->TestMultFlag(icut)) {
+              const char* cutName = GetMeasMultcutName(icut);
+              fHistosManager->FillHistClass(Form("TrackMult_%s_AfterCuts",cutName), fValues);
             }
           }
         }
@@ -424,10 +425,8 @@ void AliReducedAnalysisFilterTrees::CreateFilteredEvent() {
 
 
 //___________________________________________________________________________
+// Select and add filtered pair candidates to the filtered event
 void AliReducedAnalysisFilterTrees::WriteFilteredPairs() {
-  //
-  // select and add filtered pair candidates to the filtered event
-  //
 
   // loop over the pair list in the unfiltered event and evaluate all the pair cuts
   AliReducedPairInfo* pair = 0x0;
@@ -503,10 +502,8 @@ void AliReducedAnalysisFilterTrees::WriteFilteredPairs() {
 
 
 //___________________________________________________________________________
+// Select and add filtered tracks to the filtered event
 void AliReducedAnalysisFilterTrees::WriteFilteredTracks(Int_t array /*=1*/) {
-  //
-  // select and add filtered tracks to the filtered event
-  //
   
   // loop over the track list and evaluate all the track cuts
   AliReducedBaseTrack* track = 0x0;
@@ -609,10 +606,8 @@ void AliReducedAnalysisFilterTrees::WriteFilteredTracks(Int_t array /*=1*/) {
 
 
 //___________________________________________________________________________
+// Build candidate pairs and add them to the filtered event
 void AliReducedAnalysisFilterTrees::BuildCandidatePairs() {
-  //
-  // Build candidate pairs and add them to the filtered event
-  //
 
   // clear the track arrays
   fLeg1Tracks.Clear("C"); fLeg1PrefilteredTracks.Clear("C");
@@ -870,10 +865,8 @@ void AliReducedAnalysisFilterTrees::RunCandidateLegsPrefilter(Int_t leg) {
 
 
 //___________________________________________________________________________
+// Run the same event pairing
 void AliReducedAnalysisFilterTrees::RunSameEventPairing() {
-  //
-  // Run the same event pairing
-  //   
   
   Bool_t isAsymmetricDecayChannel = IsAsymmetricDecayChannel();
   TIter iterLeg1(&fLeg1Tracks);
@@ -1001,10 +994,8 @@ void AliReducedAnalysisFilterTrees::RunSameEventPairing() {
 
 
 //___________________________________________________________________________
+// Fill multiplicity values (global if regions = false; in the regions if regions = true).
 void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions/*= kFALSE*/) {
-  //
-  // Fill multiplicity values (global if regions = false; in the regions if regions = true).
-  //
   
   // Fill global tracks (both signal and MC and MC truth number of Jpsi)
   if(!regions) {
@@ -1111,8 +1102,7 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions/*= kFALSE*/)
                 fValues[AliReducedVarManager::kPhiLeading+icut] = track->Phi();
                 fValues[AliReducedVarManager::kEtaLeading+icut] = track->Eta();
               }
-            }
-            else {
+            } else {
               // Regions relative to jpsi
               Float_t phiIcut   = fValues[AliReducedVarManager::kPhiLeading+icut];
               Float_t delta_phi = abs(track->Phi()-phi);
@@ -1164,8 +1154,7 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions/*= kFALSE*/)
               fValues[AliReducedVarManager::kEtaLeading+icut] = track->Eta();
             }
           }
-        }
-        else {
+        } else {
           // Regions relative to jpsi
           Float_t delta_phi = abs(track->Phi()-phi);
           if(delta_phi<M_PI/3. || delta_phi>5*M_PI/3.) {
@@ -1219,8 +1208,8 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions/*= kFALSE*/)
 
 //___________________________________________________________________________
 // Apply event cuts
-Bool_t AliReducedAnalysisFilterTrees::IsEventSelected(AliReducedBaseEvent* event, Float_t* values/*=0x0*/)
-{
+Bool_t AliReducedAnalysisFilterTrees::IsEventSelected(AliReducedBaseEvent* event, Float_t* values/*=0x0*/) {
+
   if(fEventCuts.GetEntries() == 0) return kTRUE;
   // Loop over all the cuts and make a logical and between all cuts in the list
   for(Int_t i=0; i<fEventCuts.GetEntries(); ++i) {

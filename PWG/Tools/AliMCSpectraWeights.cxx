@@ -605,7 +605,7 @@ bool AliMCSpectraWeights::CalcMCFractions() {
     auto const _multBin1  = fHistMCGenPrimTrackParticle->GetYaxis()->FindBin(_multFront);
     auto const _multBbin2 = fHistMCGenPrimTrackParticle->GetYaxis()->FindBin(_multBack);
 
-    for(int ipart=0; ipart<fNPartTypes; ++ipart) { // calculate pt spectra of pi+k+p+Sigma+Rest
+    for(int ipart=0; ipart<fNPartTypes+1; ++ipart) {  // calculate pt spectra of pi+k+p+Sigma+Rest+Lambda
       int const _iPart    = AliMCSpectraWeights::GetPartTypeNumber(fstPartTypes[ipart]);
       int const _iPartBin = fHistMCGenPrimTrackParticle->GetZaxis()->FindBin(_iPart);
       _histMCFractions[icent][ipart] = static_cast<TH1D*>(fHistMCGenPrimTrackParticle->ProjectionX(
@@ -622,15 +622,15 @@ bool AliMCSpectraWeights::CalcMCFractions() {
         _h1pTMCAll[icent]->Add(_histMCFractions[icent][ipart]);
       }
     }
+
     // all hist calculated
     // ------------------
     // calculate fractions
-    for(int ipart=0; ipart<fNPartTypes; ++ipart) {
+    for(int ipart=0; ipart<fNPartTypes+1; ++ipart) {
       if(nullptr == _histMCFractions[icent][ipart]) {
         std::cerr << "AliMCSpectraWeights::ERROR could not calculate fraction\n";
         continue;
       }
-
       int const _iPart   = AliMCSpectraWeights::GetPartTypeNumber(fstPartTypes[ipart]);
       TH1D* h1MCFraction = (TH1D*)_histMCFractions[icent][ipart]->Clone(Form("%s_fraction",
           _histMCFractions[icent][ipart]->GetName()));
@@ -710,7 +710,7 @@ bool AliMCSpectraWeights::CorrectFractionsforRest() {
                                                                    1, _RestBin-1, "e");
   h1RestCorrFactor->Divide(h1pTMCAll);
   for(int icent=0; icent<fNCentralities; ++icent) {
-    for(int ipart=0; ipart<fNPartTypes; ++ipart) {
+    for(int ipart=0; ipart<fNPartTypes+1; ++ipart) {
       if("Rest" == fstPartTypes[ipart])
         continue;
       for(int ipt=0; ipt<fHistDataFractions->GetNbinsX(); ++ipt) {
@@ -1629,6 +1629,8 @@ int const AliMCSpectraWeights::GetPartTypeNumber(std::string const& Particle) co
     return AliMCSpectraWeights::GetPartTypeNumber(AliMCSpectraWeights::ParticleType::kSigmaPlus);
   } else if(Particle == "Rest")       {
     return AliMCSpectraWeights::GetPartTypeNumber(AliMCSpectraWeights::ParticleType::kRest);
+  } else if(Particle == "Lambda")     {
+    return AliMCSpectraWeights::GetPartTypeNumber(AliMCSpectraWeights::ParticleType::kLambda);
   } else {
     return -1;
   }
