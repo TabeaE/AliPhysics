@@ -1338,7 +1338,7 @@ void AliReducedVarManager::FillITSsharedLayerFlag(TRACK* track, Int_t layer, Flo
 
 
 //_________________________________________________________________
-void AliReducedVarManager::FillL0TriggerInputs(EVENT* event, Int_t input, Float_t* values, Int_t input2 /*=999*/) {
+void AliReducedVarManager::FillL0TriggerInputs(EVENT* event, Int_t input, Float_t* values, Int_t input2/*=999*/) {
   //
   // fill the L0 trigger inputs
   //
@@ -1350,7 +1350,7 @@ void AliReducedVarManager::FillL0TriggerInputs(EVENT* event, Int_t input, Float_
 
 
 //_________________________________________________________________
-void AliReducedVarManager::FillL1TriggerInputs(EVENT* event, Int_t input, Float_t* values, Int_t input2 /*=999*/) {
+void AliReducedVarManager::FillL1TriggerInputs(EVENT* event, Int_t input, Float_t* values, Int_t input2/*=999*/) {
   //
   // fill the L1 trigger inputs
   //
@@ -1362,7 +1362,7 @@ void AliReducedVarManager::FillL1TriggerInputs(EVENT* event, Int_t input, Float_
 
 
 //_________________________________________________________________
-void AliReducedVarManager::FillL2TriggerInputs(EVENT* event, Int_t input, Float_t* values, Int_t input2 /*=999*/) {
+void AliReducedVarManager::FillL2TriggerInputs(EVENT* event, Int_t input, Float_t* values, Int_t input2/*=999*/) {
   //
   // fill the L2 trigger inputs
   //
@@ -1413,7 +1413,7 @@ void AliReducedVarManager::FillTrackingFlag(TRACK* track, UInt_t flag, Float_t* 
 }
 
 //_________________________________________________________________
-void AliReducedVarManager::FillTrackQualityFlag(BASETRACK* track, UShort_t flag, Float_t* values, UShort_t flag2 /*=999*/) {
+void AliReducedVarManager::FillTrackQualityFlag(BASETRACK* track, UShort_t flag, Float_t* values, UShort_t flag2/*=999*/) {
   //
   // fill the track quality flag
   //
@@ -1425,7 +1425,7 @@ void AliReducedVarManager::FillTrackQualityFlag(BASETRACK* track, UShort_t flag,
 
 
 //_________________________________________________________________
-void AliReducedVarManager::FillTrackMCFlag(BASETRACK* track, UShort_t flag, Float_t* values, UShort_t flag2 /*=999*/) {
+void AliReducedVarManager::FillTrackMCFlag(BASETRACK* track, UShort_t flag, Float_t* values, UShort_t flag2/*=999*/) {
    //
    // fill the track MC flag
    //
@@ -1437,7 +1437,7 @@ void AliReducedVarManager::FillTrackMCFlag(BASETRACK* track, UShort_t flag, Floa
 
 
 //_________________________________________________________________
-void AliReducedVarManager::FillPairQualityFlag(PAIR* p, UShort_t flag, Float_t* values, UShort_t flag2 /*=999*/) {
+void AliReducedVarManager::FillPairQualityFlag(PAIR* p, UShort_t flag, Float_t* values, UShort_t flag2/*=999*/) {
   //
   // fill the pair quality flag
   //
@@ -1494,8 +1494,8 @@ void AliReducedVarManager::FillV0Channel(Int_t ich, Float_t* values) {
 
 
 //_________________________________________________________________
-void AliReducedVarManager::FillMCTruthInfo(TRACK* p, Float_t* values, TRACK* leg1 /* = 0x0 */,
-                                           TRACK* leg2 /* = 0x0 */) {
+void AliReducedVarManager::FillMCTruthInfo(TRACK* p, Float_t* values, TRACK* leg1/*=0x0*/, TRACK* leg2/*=0x0*/)
+{
   //
   //  Fill pure MC truth information
   //
@@ -3290,8 +3290,8 @@ Double_t AliReducedVarManager::DeltaPhi(Double_t phi1, Double_t phi2) {
 //____________________________________________________________________________________
 void AliReducedVarManager::GetThetaPhiCM(BASETRACK* leg1, BASETRACK* leg2,
                                          Float_t &thetaHE, Float_t &phiHE, Float_t &thetaCS, Float_t &phiCS,
-                                         Float_t leg1Mass /*=gkParticleMass[kElectron]*/,
-                                         Float_t leg2Mass /*=gkParticleMass[kElectron]*/)
+                                         Float_t leg1Mass/*=gkParticleMass[kElectron]*/,
+                                         Float_t leg2Mass/*=gkParticleMass[kElectron]*/)
 {
   //
   // Calculate theta and phi in helicity and Collins-Soper coordinate frame
@@ -3429,8 +3429,10 @@ void AliReducedVarManager::SetDefaultVarNames() {
   fgVariableNames[kNTRDtracks]           = "Nof TRD tracks";       fgVariableUnits[kNTRDtracks]       = "";
   fgVariableNames[kNTRDtracklets]        = "Nof TRD tracklets";    fgVariableUnits[kNTRDtracklets]    = "";
   fgVariableNames[kNVtxContributors]     = "Nof vtx contributors"; fgVariableUnits[kNVtxContributors] = "";
-  fgVariableNames[kNVtxTPCContributors]  = "Nof TPC vtx contributors"; fgVariableUnits[kNVtxTPCContributors] = "";
-  fgVariableNames[kNVtxSPDContributors]  = "Nof SPD vtx contributors"; fgVariableUnits[kNVtxSPDContributors] = "";
+  fgVariableNames[kNVtxTPCContributors]  = "Nof TPC vtx contributors";
+  fgVariableUnits[kNVtxTPCContributors]  = "";
+  fgVariableNames[kNVtxSPDContributors]  = "Nof SPD vtx contributors";
+  fgVariableUnits[kNVtxSPDContributors]  = "";
   fgVariableNames[kVtxX]                 = "Vtx X";                fgVariableUnits[kVtxX]        = "cm";
   fgVariableNames[kVtxY]                 = "Vtx Y";                fgVariableUnits[kVtxY]        = "cm";
   fgVariableNames[kVtxZ]                 = "Vtx Z";                fgVariableUnits[kVtxZ]        = "cm";
@@ -3510,33 +3512,51 @@ void AliReducedVarManager::SetDefaultVarNames() {
   fgVariableNames[kNV0selected]         = "Nof selected V0s";         fgVariableUnits[kNV0selected]      = "";
   fgVariableNames[kNpairsSelected]      = "Nof pairs per event";      fgVariableUnits[kNpairsSelected]   = "";
   fgVariableNames[kEvAverageTPCchi2]    = "Event TPC <chi2>";         fgVariableUnits[kEvAverageTPCchi2] = "";
-  fgVariableNames[kNDplusToK0sPiplusSelected]     = "Nof D+ ->K0s pi+ pairs per event";     fgVariableUnits[kNDplusToK0sPiplusSelected]     = "";
-  fgVariableNames[kNDplusToK0sKplusSelected]      = "Nof D+ ->K0s K+ pairs per event";      fgVariableUnits[kNDplusToK0sKplusSelected]      = "";
-  fgVariableNames[kNDplusToPhiPiplusSelected]     = "Nof D+ ->phi pi+ pairs per event";     fgVariableUnits[kNDplusToPhiPiplusSelected]     = "";
-  fgVariableNames[kNDminusToK0sPiminusSelected]   = "Nof D- ->K0s pi- pairs per event";     fgVariableUnits[kNDminusToK0sPiminusSelected]   = "";
-  fgVariableNames[kNDminusToK0sKminusSelected]    = "Nof D- ->K0s K- pairs per event";      fgVariableUnits[kNDminusToK0sKminusSelected]    = "";
-  fgVariableNames[kNDminusToPhiPiminusSelected]   = "Nof D- ->phi pi- pairs per event";     fgVariableUnits[kNDminusToPhiPiminusSelected]   = "";  
-  fgVariableNames[kNDzeroToKminusPiplusSelected]  = "Nof D0 ->K- pi+ pairs per event";      fgVariableUnits[kNDzeroToKminusPiplusSelected]  = "";    
-  fgVariableNames[kNADzeroToKplusPiminusSelected] = "Nof anti-D0 ->K+ pi- pairs per event"; fgVariableUnits[kNADzeroToKplusPiminusSelected] = "";
-  fgVariableNames[kNDsplusToK0sKplusSelected]     = "Nof Ds+ ->K0s K+ pairs per event";     fgVariableUnits[kNDsplusToK0sKplusSelected]     = "";
-  fgVariableNames[kNDsminusToK0sKminusSelected]   = "Nof Ds- ->K0s K- pairs per event";     fgVariableUnits[kNDsminusToK0sKminusSelected]   = "";  
+  fgVariableNames[kNDplusToK0sPiplusSelected]     = "Nof D+ ->K0s pi+ pairs per event";
+  fgVariableUnits[kNDplusToK0sPiplusSelected]     = "";
+  fgVariableNames[kNDplusToK0sKplusSelected]      = "Nof D+ ->K0s K+ pairs per event";
+  fgVariableUnits[kNDplusToK0sKplusSelected]      = "";
+  fgVariableNames[kNDplusToPhiPiplusSelected]     = "Nof D+ ->phi pi+ pairs per event";
+  fgVariableUnits[kNDplusToPhiPiplusSelected]     = "";
+  fgVariableNames[kNDminusToK0sPiminusSelected]   = "Nof D- ->K0s pi- pairs per event";
+  fgVariableUnits[kNDminusToK0sPiminusSelected]   = "";
+  fgVariableNames[kNDminusToK0sKminusSelected]    = "Nof D- ->K0s K- pairs per event";
+  fgVariableUnits[kNDminusToK0sKminusSelected]    = "";
+  fgVariableNames[kNDminusToPhiPiminusSelected]   = "Nof D- ->phi pi- pairs per event";
+  fgVariableUnits[kNDminusToPhiPiminusSelected]   = "";
+  fgVariableNames[kNDzeroToKminusPiplusSelected]  = "Nof D0 ->K- pi+ pairs per event";
+  fgVariableUnits[kNDzeroToKminusPiplusSelected]  = "";
+  fgVariableNames[kNADzeroToKplusPiminusSelected] = "Nof anti-D0 ->K+ pi- pairs per event";
+  fgVariableUnits[kNADzeroToKplusPiminusSelected] = "";
+  fgVariableNames[kNDsplusToK0sKplusSelected]     = "Nof Ds+ ->K0s K+ pairs per event";
+  fgVariableUnits[kNDsplusToK0sKplusSelected]     = "";
+  fgVariableNames[kNDsminusToK0sKminusSelected]   = "Nof Ds- ->K0s K- pairs per event";
+  fgVariableUnits[kNDsminusToK0sKminusSelected]   = "";
   fgVariableNames[kNtracksTotal]  = "Nof tracks in original event"; fgVariableUnits[kNtracksTotal]    = "";
   fgVariableNames[kNtracksSelected]        = "Nof selected tracks"; fgVariableUnits[kNtracksSelected] = "";
-  fgVariableNames[kNtracks1Selected]       = "Nof selected tracks (electrons)"; fgVariableUnits[kNtracks1Selected]       = "";
-  fgVariableNames[kNtracks2Selected]       = "Nof selected tracks (not electrons)"; fgVariableUnits[kNtracks2Selected]       = "";
-  fgVariableNames[kNtracksPosAnalyzed]     = "Nof selected positive tracks"; fgVariableUnits[kNtracksPosAnalyzed]     = "";
-  fgVariableNames[kNtracksNegAnalyzed]     = "Nof selected negative tracks"; fgVariableUnits[kNtracksNegAnalyzed]     = "";
-  fgVariableNames[kNtracksPiPlusAnalyzed]  = "Nof selected pos. pions"; fgVariableUnits[kNtracksPiPlusAnalyzed]  = "";
-  fgVariableNames[kNtracksPiMinusAnalyzed] = "Nof selected neg. pions"; fgVariableUnits[kNtracksPiMinusAnalyzed] = "";
-  fgVariableNames[kNtracksKPlusAnalyzed]   = "Nof selected pos. kaons"; fgVariableUnits[kNtracksKPlusAnalyzed]   = "";
-  fgVariableNames[kNtracksKMinusAnalyzed]  = "Nof selected neg. kaons"; fgVariableUnits[kNtracksKMinusAnalyzed]  = "";
-  fgVariableNames[kNK0sAnalyzed]           = "Nof selected K0s candidates"; fgVariableUnits[kNK0sAnalyzed] = "";
-  fgVariableNames[kNPhiAnalyzed]           = "Nof selected phi candidates"; fgVariableUnits[kNPhiAnalyzed] = "";
-  fgVariableNames[kNtracksAnalyzed]        = "Nof selected tracks";         fgVariableUnits[kNtracksAnalyzed] = "";
+  fgVariableNames[kNtracks1Selected]       = "Nof selected tracks (electrons)";
+  fgVariableUnits[kNtracks1Selected]       = "";
+  fgVariableNames[kNtracks2Selected]       = "Nof selected tracks (not electrons)";
+  fgVariableUnits[kNtracks2Selected]       = "";
+  fgVariableNames[kNtracksPosAnalyzed]     = "Nof selected positive tracks";
+  fgVariableUnits[kNtracksPosAnalyzed]     = "";
+  fgVariableNames[kNtracksNegAnalyzed]     = "Nof selected negative tracks";
+  fgVariableUnits[kNtracksNegAnalyzed]     = "";
+  fgVariableNames[kNtracksPiPlusAnalyzed]  = "Nof selected pos. pions";
+  fgVariableUnits[kNtracksPiPlusAnalyzed]  = "";
+  fgVariableNames[kNtracksPiMinusAnalyzed] = "Nof selected neg. pions";
+  fgVariableUnits[kNtracksPiMinusAnalyzed] = "";
+  fgVariableNames[kNtracksKPlusAnalyzed]   = "Nof selected pos. kaons";
+  fgVariableUnits[kNtracksKPlusAnalyzed]   = "";
+  fgVariableNames[kNtracksKMinusAnalyzed]  = "Nof selected neg. kaons";
+  fgVariableUnits[kNtracksKMinusAnalyzed]  = "";
+  fgVariableNames[kNK0sAnalyzed]        = "Nof selected K0s candidates"; fgVariableUnits[kNK0sAnalyzed]    = "";
+  fgVariableNames[kNPhiAnalyzed]        = "Nof selected phi candidates"; fgVariableUnits[kNPhiAnalyzed]    = "";
+  fgVariableNames[kNtracksAnalyzed]     = "Nof selected tracks";         fgVariableUnits[kNtracksAnalyzed] = "";
   for(Int_t i=0; i<18; ++i)
-    fgVariableNames[kNtracksAnalyzedInPhiBins+i] = Form("# selected tracks in #varphi sector %d and #eta<0.",i);
+    fgVariableNames[kNtracksAnalyzedInPhiBins+i] = Form("# selected tracks in #varphi sector %d and #eta<0.", i);
   for(Int_t i=0; i<18; ++i)
-    fgVariableNames[kNtracksAnalyzedInPhiBins+18+i] = Form("# selected tracks in #varphi sector %d and #eta>0.",i);
+    fgVariableNames[kNtracksAnalyzedInPhiBins+18+i] = Form("# selected tracks in #varphi sector %d and #eta>0.", i);
   fgVariableNames[kNtracksSubEvLeft]  = "Nof tracks sub-event left";  fgVariableUnits[kNtracksSubEvLeft]  = "";
   fgVariableNames[kNtracksSubEvRight] = "Nof tracks sub-event right"; fgVariableUnits[kNtracksSubEvRight] = "";
   fgVariableNames[kNtracksEventPlane] = "Nof tracks event plane";     fgVariableUnits[kNtracksEventPlane] = "";
@@ -3781,7 +3801,6 @@ void AliReducedVarManager::SetDefaultVarNames() {
   fgVariableUnits[kMultEstimatorRefMult05]    = "";
   fgVariableUnits[kMultEstimatorRefMult08]    = "";
 
-
   fgVariableNames[kMultEstimatorPercentileV0M]          = "Muliplicity estimator percentile V0M";
   fgVariableNames[kMultEstimatorPercentileV0A]          = "Muliplicity estimator percentile V0A";
   fgVariableNames[kMultEstimatorPercentileV0C]          = "Muliplicity estimator percentile V0C";
@@ -3809,7 +3828,6 @@ void AliReducedVarManager::SetDefaultVarNames() {
   fgVariableUnits[kMultEstimatorPercentileSPDTracklets] = "\%";
   fgVariableUnits[kMultEstimatorPercentileRefMult05]    = "\%";
   fgVariableUnits[kMultEstimatorPercentileRefMult08]    = "\%";
-
 
   fgVariableNames[kINT7Triggered]           = "event was triggered with INT7";
   fgVariableUnits[kINT7Triggered]           = "";
@@ -3997,8 +4015,10 @@ void AliReducedVarManager::SetDefaultVarNames() {
   fgVariableUnits[kRelDiffNchSPDtrklts]        = "";
   fgVariableNames[kRelDiffNchSPDaccSPDtrklts]  = "(N_{ch}^{SPD} - SPD #trklts) / N_{ch}^{SPD}";
   fgVariableUnits[kRelDiffNchSPDaccSPDtrklts]  = "";
-  fgVariableNames[kRelDiff2NchSPDtrklts]       = "2*(N_{ch} (|#eta|<1) - SPD #trklts) / (N_{ch} (|#eta|<1) + SPD #trklts)"; fgVariableUnits[kRelDiff2NchSPDtrklts] = "";
-  fgVariableNames[kRelDiff2NchSPDaccSPDtrklts] = "2*(N_{ch}^{SPD} - SPD #trklts) / (N_{ch}^{SPD} + SPD #trklts)"; fgVariableUnits[kRelDiff2NchSPDaccSPDtrklts] = "";
+  fgVariableNames[kRelDiff2NchSPDtrklts] = "2*(N_{ch}(|#eta|<1)-SPD #trklts) / (N_{ch}(|#eta|<1)+SPD #trklts)";
+  fgVariableUnits[kRelDiff2NchSPDtrklts] = "";
+  fgVariableNames[kRelDiff2NchSPDaccSPDtrklts] = "2*(N_{ch}^{SPD}-SPD #trklts) / (N_{ch}^{SPD}+SPD #trklts)";
+  fgVariableUnits[kRelDiff2NchSPDaccSPDtrklts] = "";
   
   fgVariableNames[kPt]              = "p_{T}";             fgVariableUnits[kPt]              = "GeV/c";
   fgVariableNames[kPtMC]            = "p^{MC}_{T}";        fgVariableUnits[kPtMC]            = "GeV/c";
@@ -4030,21 +4050,23 @@ void AliReducedVarManager::SetDefaultVarNames() {
     fgVariableNames[kSinNPhi+iHarmonic] = Form("sin(%d#varphi)",iHarmonic+1);
     fgVariableUnits[kSinNPhi+iHarmonic] = "";
   }
-  fgVariableNames[kPtSquared]      = "p_{T}^{2}";     fgVariableUnits[kPtSquared]      = "GeV^{2}/c^{2}";
-  fgVariableNames[kOneOverSqrtPt]  = "1/sqrt(p_{T})"; fgVariableUnits[kOneOverSqrtPt]  = "GeV^{-1/2}";
-  fgVariableNames[kMass]           = "m";             fgVariableUnits[kMass]           = "GeV/c^{2}";
-  fgVariableNames[kMassMC]         = "m^{MC}";        fgVariableUnits[kMassMC]         = "GeV/c^{2}";
-  fgVariableNames[kMassMCfromLegs] = "m^{MC-legs}";   fgVariableUnits[kMassMCfromLegs] = "GeV/c^{2}";
-  fgVariableNames[kRap]            = "y";             fgVariableUnits[kRap]         = "";
-  fgVariableNames[kRapAbs]         = "|y|";           fgVariableUnits[kRapAbs]      = "";
-  fgVariableNames[kRapMC]          = "y^{MC}";        fgVariableUnits[kRapMC]       = "";
-  fgVariableNames[kRapMCAbs]       = "|y^{MC}|";      fgVariableUnits[kRapMCAbs]    = "";
-  fgVariableNames[kRapMCfromLegs]  = "y^{MC-legs}";                   fgVariableUnits[kRapMCfromLegs] = "";
-  fgVariableNames[kPdgMC]          = "PDG code";                      fgVariableUnits[kPdgMC]         = "";
-  fgVariableNames[kPdgMC+1]        = "mother's PDG code";             fgVariableUnits[kPdgMC+1]       = "";
-  fgVariableNames[kPdgMC+2]        = "grand-mother's PDG code";       fgVariableUnits[kPdgMC+2]       = "";
-  fgVariableNames[kPdgMC+3]        = "grand-grand-mother's PDG code"; fgVariableUnits[kPdgMC+3]       = "";
-  
+  fgVariableNames[kPtSquared]       = "p_{T}^{2}";     fgVariableUnits[kPtSquared]      = "GeV^{2}/c^{2}";
+  fgVariableNames[kOneOverSqrtPt]   = "1/sqrt(p_{T})"; fgVariableUnits[kOneOverSqrtPt]  = "GeV^{-1/2}";
+  fgVariableNames[kMass]            = "m";             fgVariableUnits[kMass]           = "GeV/c^{2}";
+  fgVariableNames[kMassMC]          = "m^{MC}";        fgVariableUnits[kMassMC]         = "GeV/c^{2}";
+  fgVariableNames[kMassMCfromLegs]  = "m^{MC-legs}";   fgVariableUnits[kMassMCfromLegs] = "GeV/c^{2}";
+  fgVariableNames[kRap]             = "y";             fgVariableUnits[kRap]         = "";
+  fgVariableNames[kRapAbs]          = "|y|";           fgVariableUnits[kRapAbs]      = "";
+  fgVariableNames[kRapMC]           = "y^{MC}";        fgVariableUnits[kRapMC]       = "";
+  fgVariableNames[kRapMCAbs]        = "|y^{MC}|";      fgVariableUnits[kRapMCAbs]    = "";
+  fgVariableNames[kRapMCfromLegs]   = "y^{MC-legs}";                   fgVariableUnits[kRapMCfromLegs]  = "";
+  fgVariableNames[kPdgMC]           = "PDG code";                      fgVariableUnits[kPdgMC]          = "";
+  fgVariableNames[kPdgMC+1]         = "mother's PDG code";             fgVariableUnits[kPdgMC+1]        = "";
+  fgVariableNames[kPdgMC+2]         = "grand-mother's PDG code";       fgVariableUnits[kPdgMC+2]        = "";
+  fgVariableNames[kPdgMC+3]         = "grand-grand-mother's PDG code"; fgVariableUnits[kPdgMC+3]        = "";
+  fgVariableNames[kPCCWeight]       = "PCC weight;";                   fgVariableUnits[kPCCWeight]      = "";
+  fgVariableNames[kPCCnRepetitions] = "nof times track/particle is counted;";
+  fgVariableUnits[kPCCnRepetitions] = "";
   fgVariableNames[kCandidateId]         = "pair id.";              fgVariableUnits[kCandidateId] = "";
   fgVariableNames[kPairType]            = "pair type";             fgVariableUnits[kPairType]    = "";
   fgVariableNames[kPairTypeSPD]         = "pair type spd legs";    fgVariableUnits[kPairTypeSPD] = "";
@@ -4067,8 +4089,10 @@ void AliReducedVarManager::SetDefaultVarNames() {
   fgVariableUnits[kPseudoProperDecayTimeXYZError] = "cm/c";
   fgVariableNames[kPairOpeningAngle]       = "pair opening angle"; fgVariableUnits[kPairOpeningAngle]  = "rad";
   fgVariableNames[kPairPointingAngle]      = "#theta_{pointing}";  fgVariableUnits[kPairPointingAngle] = "rad";
-  fgVariableNames[kPairCosPointingAngle]   = "cos(#theta_{pointing})"; fgVariableUnits[kPairCosPointingAngle] = "";
-  fgVariableNames[kPairCosPointingAngleXY] = "cos(#theta_{pointing xy})"; fgVariableUnits[kPairCosPointingAngleXY] = "";
+  fgVariableNames[kPairCosPointingAngle]   = "cos(#theta_{pointing})";
+  fgVariableUnits[kPairCosPointingAngle]   = "";
+  fgVariableNames[kPairCosPointingAngleXY] = "cos(#theta_{pointing xy})";
+  fgVariableUnits[kPairCosPointingAngleXY] = "";
   fgVariableNames[kPairDCAXY]        = "DCA_{xy,pair KFParticle}"; fgVariableUnits[kPairDCAXY] = "cm";
   fgVariableNames[kPairDCAZ]         = "DCA_{z,pair KFParticle}";  fgVariableUnits[kPairDCAZ]  = "cm";
   fgVariableNames[kPairThetaCS]      = "cos(#theta^{*}_{CS})"; fgVariableUnits[kPairThetaCS]      = "";
@@ -4092,31 +4116,37 @@ void AliReducedVarManager::SetDefaultVarNames() {
      fgVariableUnits[kPairLegEMCALmatchedEnergy+i] = "GeV";
   }
   fgVariableNames[kPairLegPtSum]   = "Pair leg p_{T,1} + p_{T,2}"; fgVariableUnits[kPairLegPtSum] = "GeV/c";
-  fgVariableNames[kPairLegPtMCSum] = "Pair leg p^{MC}_{T,1} + p^{MC}_{T,2}"; fgVariableUnits[kPairLegPtMCSum] = "GeV/c";
+  fgVariableNames[kPairLegPtMCSum] = "Pair leg p^{MC}_{T,1} + p^{MC}_{T,2}";
+  fgVariableUnits[kPairLegPtMCSum] = "GeV/c";
   fgVariableNames[kPairMCMap]      = "Pair MC Map"; fgVariableUnits[kPairMCMap] = "";
   
-  fgVariableNames[kPtTPC]         = "p_{T}^{TPC}";                  fgVariableUnits[kPtTPC]  = "GeV/c";
-  fgVariableNames[kPhiTPC]        = "#varphi^{TPC}";                fgVariableUnits[kPhiTPC] = "rad";
-  fgVariableNames[kEtaTPC]        = "#eta^{TPC}";                   fgVariableUnits[kEtaTPC] = "";
-  fgVariableNames[kPin]           = "p_{IN}";                       fgVariableUnits[kPin]    = "GeV/c";
-  fgVariableNames[kDcaXY]         = "DCA_{xy}";                     fgVariableUnits[kDcaXY]       = "cm";
-  fgVariableNames[kDcaZ]          = "DCA_{z}";                      fgVariableUnits[kDcaZ]        = "cm";
-  fgVariableNames[kPairDca]       = "DCA_{pair}";                   fgVariableUnits[kPairDca]     = "cm";
-  fgVariableNames[kPairDcaXY]     = "DCA_{xy,pair}";                fgVariableUnits[kPairDcaXY]   = "cm";
-  fgVariableNames[kPairDcaZ]      = "DCA_{z,pair}";                 fgVariableUnits[kPairDcaZ]    = "cm";
-  fgVariableNames[kPairDcaSqrt]   = "DCA^{1/2}_{pair}";             fgVariableUnits[kPairDcaSqrt] = "cm^{1/2}";
-  fgVariableNames[kPairDcaXYSqrt] = "DCA^{1/2}_{xy,pair}"; fgVariableUnits[kPairDcaXYSqrt] = "cm^{1/2}";
-  fgVariableNames[kPairDcaZSqrt]  = "DCA^{1/2}_{z,pair}";  fgVariableUnits[kPairDcaZSqrt]  = "cm^{1/2}";
-  fgVariableNames[kMassDcaPtCorr] = "DCA-, p_{T}-corrected mass"; fgVariableUnits[kMassDcaPtCorr] = "GeV/c^{2}";
-  fgVariableNames[kOpAngDcaPtCorr]= "DCA-, p_{T}-corrected opening angle"; fgVariableUnits[kOpAngDcaPtCorr] = "rad";
-  fgVariableNames[kTrackLength]    = "Track length"; fgVariableUnits[kTrackLength] = "cm.";
-  fgVariableNames[kChi2TPCConstrainedVsGlobal] = "#chi^{2} TPC constrained vs global"; fgVariableUnits[kChi2TPCConstrainedVsGlobal] = "";
-  fgVariableNames[kMassUsedForTracking] = "Mass used for tracking"; fgVariableUnits[kMassUsedForTracking] = "GeV/c^{2}";
-  fgVariableNames[kITSncls]            = "Nof ITS clusters";           fgVariableUnits[kITSncls] = "";
-  fgVariableNames[kITSchi2]            = "ITS #chi^{2}";               fgVariableUnits[kITSchi2] = "";
+  fgVariableNames[kPtTPC]          = "p_{T}^{TPC}";               fgVariableUnits[kPtTPC]  = "GeV/c";
+  fgVariableNames[kPhiTPC]         = "#varphi^{TPC}";             fgVariableUnits[kPhiTPC] = "rad";
+  fgVariableNames[kEtaTPC]         = "#eta^{TPC}";                fgVariableUnits[kEtaTPC] = "";
+  fgVariableNames[kPin]            = "p_{IN}";                    fgVariableUnits[kPin]    = "GeV/c";
+  fgVariableNames[kDcaXY]          = "DCA_{xy}";                  fgVariableUnits[kDcaXY]       = "cm";
+  fgVariableNames[kDcaZ]           = "DCA_{z}";                   fgVariableUnits[kDcaZ]        = "cm";
+  fgVariableNames[kPairDca]        = "DCA_{pair}";                fgVariableUnits[kPairDca]     = "cm";
+  fgVariableNames[kPairDcaXY]      = "DCA_{xy,pair}";             fgVariableUnits[kPairDcaXY]   = "cm";
+  fgVariableNames[kPairDcaZ]       = "DCA_{z,pair}";              fgVariableUnits[kPairDcaZ]    = "cm";
+  fgVariableNames[kPairDcaSqrt]    = "DCA^{1/2}_{pair}";          fgVariableUnits[kPairDcaSqrt] = "cm^{1/2}";
+  fgVariableNames[kPairDcaXYSqrt]  = "DCA^{1/2}_{xy,pair}";       fgVariableUnits[kPairDcaXYSqrt] = "cm^{1/2}";
+  fgVariableNames[kPairDcaZSqrt]   = "DCA^{1/2}_{z,pair}";        fgVariableUnits[kPairDcaZSqrt]  = "cm^{1/2}";
+  fgVariableNames[kMassDcaPtCorr]  = "DCA-, p_{T}-corrected mass";
+  fgVariableUnits[kMassDcaPtCorr]  = "GeV/c^{2}";
+  fgVariableNames[kOpAngDcaPtCorr] = "DCA-, p_{T}-corrected opening angle";
+  fgVariableUnits[kOpAngDcaPtCorr] = "rad";
+  fgVariableNames[kTrackLength]    = "Track length"; fgVariableUnits[kTrackLength] = "cm";
+  fgVariableNames[kChi2TPCConstrainedVsGlobal] = "#chi^{2} TPC constrained vs global";
+  fgVariableUnits[kChi2TPCConstrainedVsGlobal] = "";
+  fgVariableNames[kMassUsedForTracking] = "Mass used for tracking";
+  fgVariableUnits[kMassUsedForTracking] = "GeV/c^{2}";
+  fgVariableNames[kITSncls]            = "Nof ITS clusters";           fgVariableUnits[kITSncls]       = "";
+  fgVariableNames[kITSchi2]            = "ITS #chi^{2}";               fgVariableUnits[kITSchi2]       = "";
   fgVariableNames[kITSnclsShared]      = "Nof shared ITS clusters";    fgVariableUnits[kITSnclsShared] = "";
-  fgVariableNames[kNclsSFracITS]       = "Fraction of shared ITS clusters/ITS clusters"; fgVariableUnits[kNclsSFracITS] = "";
-  fgVariableNames[kITSlayerHit]        = "ITS layer";                  fgVariableUnits[kITSlayerHit] = "";
+  fgVariableNames[kNclsSFracITS]       = "Fraction of shared ITS clusters/ITS clusters";
+  fgVariableUnits[kNclsSFracITS]       = "";
+  fgVariableNames[kITSlayerHit]        = "ITS layer";                  fgVariableUnits[kITSlayerHit]    = "";
   fgVariableNames[kITSlayerShared]     = "ITS layer";                  fgVariableUnits[kITSlayerShared] = "";
   fgVariableNames[kITSsignal]          = "ITS dE/dx";                  fgVariableUnits[kITSsignal] = "";
   fgVariableNames[kITSnSig]            = "ITS n_{#sigma}^{e}";         fgVariableUnits[kITSnSig]   = "#sigma";
@@ -4126,18 +4156,22 @@ void AliReducedVarManager::SetDefaultVarNames() {
   fgVariableNames[kTPCncls]            = "Nof TPC clusters";           fgVariableUnits[kTPCncls]           = "";
   fgVariableNames[kTPCchi2]            = "TPC #chi^{2}";               fgVariableUnits[kTPCchi2]           = "";
   fgVariableNames[kTPCclusBitFired]    = "TPC segment";                fgVariableUnits[kTPCclusBitFired]   = "";
-  fgVariableNames[kTPCNclusBitsFired]  = "Nof TPC segments";            fgVariableUnits[kTPCNclusBitsFired] = "";
-  fgVariableNames[kTPCclustersPerBit]  = "Nof TPC clusters/segment";    fgVariableUnits[kTPCclustersPerBit] = "";
-  fgVariableNames[kTPCcrossedRows]     = "Nof TPC crossed rows";        fgVariableUnits[kTPCcrossedRows]    = "";
-  fgVariableNames[kTPCnclsF]           = "Nof TPC findable clusters";   fgVariableUnits[kTPCnclsF]      = "";
-  fgVariableNames[kTPCnclsShared]      = "Nof TPC shared clusters";     fgVariableUnits[kTPCnclsShared] = "";
-  fgVariableNames[kTPCnclsSharedRatio] = "# TPC shared clusters / all TPC clusters"; fgVariableUnits[kTPCnclsSharedRatio] = "fraction";
+  fgVariableNames[kTPCNclusBitsFired]  = "Nof TPC segments";           fgVariableUnits[kTPCNclusBitsFired] = "";
+  fgVariableNames[kTPCclustersPerBit]  = "Nof TPC clusters/segment";   fgVariableUnits[kTPCclustersPerBit] = "";
+  fgVariableNames[kTPCcrossedRows]     = "Nof TPC crossed rows";       fgVariableUnits[kTPCcrossedRows]    = "";
+  fgVariableNames[kTPCnclsF]           = "Nof TPC findable clusters";  fgVariableUnits[kTPCnclsF]      = "";
+  fgVariableNames[kTPCnclsShared]      = "Nof TPC shared clusters";    fgVariableUnits[kTPCnclsShared] = "";
+  fgVariableNames[kTPCnclsSharedRatio] = "# TPC shared clusters / all TPC clusters";
+  fgVariableUnits[kTPCnclsSharedRatio] = "fraction";
   fgVariableNames[kTPCnclsRatio]       = "Nof TPC clusters/findable";     fgVariableUnits[kTPCnclsRatio]  = "";
   fgVariableNames[kTPCnclsRatio2]      = "Nof TPC clusters/crossed rows"; fgVariableUnits[kTPCnclsRatio2] = "";
-  fgVariableNames[kTPCcrossedRowsOverFindableClusters] = "Crossed rows / findable clusters"; fgVariableUnits[kTPCcrossedRowsOverFindableClusters] = "";
-  fgVariableNames[kTPCnclsRatio3]   = "Nof TPC crossed rows/findable clusters"; fgVariableUnits[kTPCnclsRatio3] = "";
+  fgVariableNames[kTPCcrossedRowsOverFindableClusters] = "Crossed rows / findable clusters";
+  fgVariableUnits[kTPCcrossedRowsOverFindableClusters] = "";
+  fgVariableNames[kTPCnclsRatio3]   = "Nof TPC crossed rows/findable clusters";
+  fgVariableUnits[kTPCnclsRatio3]   = "";
   fgVariableNames[kTPCActiveLength] = "Track length in active TPC"; fgVariableUnits[kTPCActiveLength] = "";
-  fgVariableNames[kTPCGeomLength]   = "Track relative geometric length in active TPC";   fgVariableUnits[kTPCGeomLength] = "";
+  fgVariableNames[kTPCGeomLength]   = "Track relative geometric length in active TPC";
+  fgVariableUnits[kTPCGeomLength]   = "";
   fgVariableNames[kTPCsignal]       = "TPC dE/dx";                       fgVariableUnits[kTPCsignal] = "";
   fgVariableNames[kTPCsignalN]      = "Nof TPC clusters PID";            fgVariableUnits[kTPCsignalN] = "";
   fgVariableNames[kTPCdEdxQmax+0]   = "TPC dE/dx Qmax from IROC";        fgVariableUnits[kTPCdEdxQmax+0] = "";
@@ -4152,48 +4186,64 @@ void AliReducedVarManager::SetDefaultVarNames() {
   fgVariableNames[kTPCdEdxQmaxOverQtot+1] = "TPC dE/dx Qmax/Qtot from medium OROC"; fgVariableUnits[kTPCdEdxQmaxOverQtot+1] = "";
   fgVariableNames[kTPCdEdxQmaxOverQtot+2] = "TPC dE/dx Qmax/Qtot from long OROC";   fgVariableUnits[kTPCdEdxQmaxOverQtot+2] = "";
   fgVariableNames[kTPCdEdxQmaxOverQtot+3] = "TPC dE/dx Qmax/Qtot from all OROC";    fgVariableUnits[kTPCdEdxQmaxOverQtot+3] = "";
-  fgVariableNames[kTPCnSig]           = "TPC n_{#sigma}^{e}";           fgVariableUnits[kTPCnSig]   = "#sigma";
-  fgVariableNames[kTPCnSig+1]         = "TPC n_{#sigma}^{#pi}";         fgVariableUnits[kTPCnSig+1] = "#sigma";
-  fgVariableNames[kTPCnSig+2]         = "TPC n_{#sigma}^{K}";           fgVariableUnits[kTPCnSig+2] = "#sigma";
-  fgVariableNames[kTPCnSig+3]         = "TPC n_{#sigma}^{p}";           fgVariableUnits[kTPCnSig+3] = "#sigma";
-  fgVariableNames[kTPCnSigCorrected]  = "TPC n_{#sigma}^{e} - corrected"; fgVariableUnits[kTPCnSigCorrected] = "#sigma";
-  fgVariableNames[kTPCnSigCorrected+1] = "TPC n_{#sigma}^{#pi} - corrected"; fgVariableUnits[kTPCnSigCorrected+1] = "#sigma";
-  fgVariableNames[kTPCnSigCorrected+2] = "TPC n_{#sigma}^{K} - corrected"; fgVariableUnits[kTPCnSigCorrected+2] = "#sigma";
-  fgVariableNames[kTPCnSigCorrected+3] = "TPC n_{#sigma}^{p} - corrected"; fgVariableUnits[kTPCnSigCorrected+3] = "#sigma";
+  fgVariableNames[kTPCnSig]            = "TPC n_{#sigma}^{e}";          fgVariableUnits[kTPCnSig]   = "#sigma";
+  fgVariableNames[kTPCnSig+1]          = "TPC n_{#sigma}^{#pi}";        fgVariableUnits[kTPCnSig+1] = "#sigma";
+  fgVariableNames[kTPCnSig+2]          = "TPC n_{#sigma}^{K}";          fgVariableUnits[kTPCnSig+2] = "#sigma";
+  fgVariableNames[kTPCnSig+3]          = "TPC n_{#sigma}^{p}";          fgVariableUnits[kTPCnSig+3] = "#sigma";
+  fgVariableNames[kTPCnSigCorrected]   = "TPC n_{#sigma}^{e} - corrected";
+  fgVariableUnits[kTPCnSigCorrected]   = "#sigma";
+  fgVariableNames[kTPCnSigCorrected+1] = "TPC n_{#sigma}^{#pi} - corrected";
+  fgVariableUnits[kTPCnSigCorrected+1] = "#sigma";
+  fgVariableNames[kTPCnSigCorrected+2] = "TPC n_{#sigma}^{K} - corrected";
+  fgVariableUnits[kTPCnSigCorrected+2] = "#sigma";
+  fgVariableNames[kTPCnSigCorrected+3] = "TPC n_{#sigma}^{p} - corrected";
+  fgVariableUnits[kTPCnSigCorrected+3] = "#sigma";
   fgVariableNames[kTOFbeta]                = "TOF #beta";           fgVariableUnits[kTOFbeta] = "";
   fgVariableNames[kTOFtime]                = "TOF time";            fgVariableUnits[kTOFtime] = "ps";
   fgVariableNames[kTOFdx]                  = "TOF dx";              fgVariableUnits[kTOFdx]   = "mm";
   fgVariableNames[kTOFdz]                  = "TOF dz";              fgVariableUnits[kTOFdz]   = "mm";
-  fgVariableNames[kTOFmismatchProbability] = "TOF mismatch probab"; fgVariableUnits[kTOFmismatchProbability] = "";
+  fgVariableNames[kTOFmismatchProbability] = "TOF mismatch probab";
+  fgVariableUnits[kTOFmismatchProbability] = "";
   fgVariableNames[kTOFchi2]                = "TOF #chi^{2}";         fgVariableUnits[kTOFchi2]    = "";
   fgVariableNames[kTOFdeltaBC]             = "TOF delta BC";         fgVariableUnits[kTOFdeltaBC] = "";
   fgVariableNames[kTOFnSig]                = "TOF n_{#sigma}^{e}";   fgVariableUnits[kTOFnSig]    = "#sigma";
   fgVariableNames[kTOFnSig+1]              = "TOF n_{#sigma}^{#pi}"; fgVariableUnits[kTOFnSig+1]  = "#sigma";
   fgVariableNames[kTOFnSig+2]              = "TOF n_{#sigma}^{K}";   fgVariableUnits[kTOFnSig+2]  = "#sigma";
   fgVariableNames[kTOFnSig+3]              = "TOF n_{#sigma}^{p}";   fgVariableUnits[kTOFnSig+3]  = "#sigma";
-  fgVariableNames[kTRDntracklets]             = "Nof TRD tracklets";     fgVariableUnits[kTRDntracklets]    = "";
-  fgVariableNames[kTRDntrackletsPID]          = "Nof TRD PID tracklets"; fgVariableUnits[kTRDntrackletsPID] = "";
-  fgVariableNames[kTRDpidProbabilitiesLQ1D]   = "TRD LQ1D electron probability"; fgVariableUnits[kTRDpidProbabilitiesLQ1D]   = "";
-  fgVariableNames[kTRDpidProbabilitiesLQ1D+1] = "TRD LQ1D pion probability"; fgVariableUnits[kTRDpidProbabilitiesLQ1D+1] = "";
-  fgVariableNames[kTRDpidProbabilitiesLQ2D]   = "TRD LQ2D electron probability"; fgVariableUnits[kTRDpidProbabilitiesLQ2D]   = "";
-  fgVariableNames[kTRDpidProbabilitiesLQ2D+1] = "TRD LQ2D pion probability"; fgVariableUnits[kTRDpidProbabilitiesLQ2D+1] = "";
+  fgVariableNames[kTRDntracklets]          = "Nof TRD tracklets";     fgVariableUnits[kTRDntracklets]    = "";
+  fgVariableNames[kTRDntrackletsPID]       = "Nof TRD PID tracklets"; fgVariableUnits[kTRDntrackletsPID] = "";
+  fgVariableNames[kTRDpidProbabilitiesLQ1D]   = "TRD LQ1D electron probability";
+  fgVariableUnits[kTRDpidProbabilitiesLQ1D]   = "";
+  fgVariableNames[kTRDpidProbabilitiesLQ1D+1] = "TRD LQ1D pion probability";
+  fgVariableUnits[kTRDpidProbabilitiesLQ1D+1] = "";
+  fgVariableNames[kTRDpidProbabilitiesLQ2D]   = "TRD LQ2D electron probability";
+  fgVariableUnits[kTRDpidProbabilitiesLQ2D]   = "";
+  fgVariableNames[kTRDpidProbabilitiesLQ2D+1] = "TRD LQ2D pion probability";
+  fgVariableUnits[kTRDpidProbabilitiesLQ2D+1] = "";
   fgVariableNames[kTRDGTUtracklets]         = "No. TRD GTU tracklets";   fgVariableUnits[kTRDGTUtracklets] = "";
   fgVariableNames[kTRDGTUlayermask]         = "No. TRD GTU layer0 cond"; fgVariableUnits[kTRDGTUlayermask] = "";
   fgVariableNames[kTRDGTUpt]                = "No. TRD GTU pt";          fgVariableUnits[kTRDGTUpt]        = "";
   fgVariableNames[kTRDGTUsagitta]           = "No. TRD GTU sagitta";     fgVariableUnits[kTRDGTUsagitta]   = "";
   fgVariableNames[kTRDGTUPID]               = "No. TRD GTU PID";         fgVariableUnits[kTRDGTUPID]       = "";
 
-  fgVariableNames[kEMCALmatchedEnergy]    = "Calo energy";         fgVariableUnits[kEMCALmatchedEnergy] = "GeV";
-  fgVariableNames[kEMCALmatchedClusterId] = "matched Calo cluster id"; fgVariableUnits[kEMCALmatchedClusterId] = "";
+  fgVariableNames[kEMCALmatchedEnergy]         = "Calo energy";
+  fgVariableUnits[kEMCALmatchedEnergy]         = "GeV";
+  fgVariableNames[kEMCALmatchedClusterId]      = "matched Calo cluster id";
+  fgVariableUnits[kEMCALmatchedClusterId]      = "";
   fgVariableNames[kEMCALmatchedEOverP]         = "Calo E/p";       fgVariableUnits[kEMCALmatchedEOverP] = "";
   fgVariableNames[kEMCALmatchedM02]            = "Calo M02";       fgVariableUnits[kEMCALmatchedM02]    = "";
   fgVariableNames[kEMCALmatchedM20]            = "Calo M20";       fgVariableUnits[kEMCALmatchedM20]    = "";
   fgVariableNames[kEMCALmatchedNCells]         = "Calo No. cells"; fgVariableUnits[kEMCALmatchedNCells] = "";
-  fgVariableNames[kEMCALmatchedNMatchedTracks] = "Calo No. matched tracks"; fgVariableUnits[kEMCALmatchedNMatchedTracks] = "";
-  fgVariableNames[kEMCALmatchedDeltaPhi] = "#Delta#varphi track-cluster"; fgVariableUnits[kEMCALmatchedDeltaPhi] = "";
-  fgVariableNames[kEMCALmatchedDeltaEta] = "#Delta#eta track-cluster"; fgVariableUnits[kEMCALmatchedDeltaEta] = "";
-  fgVariableNames[kEMCALmatchedDistance] = "track-cluster distance"; fgVariableUnits[kEMCALmatchedDistance] = "";
-  fgVariableNames[kEMCALmatchedNSigmaElectron] = "EMCal n_{#sigma}^{e}"; fgVariableUnits[kEMCALmatchedNSigmaElectron] = "#sigma";
+  fgVariableNames[kEMCALmatchedNMatchedTracks] = "Calo No. matched tracks";
+  fgVariableUnits[kEMCALmatchedNMatchedTracks] = "";
+  fgVariableNames[kEMCALmatchedDeltaPhi]       = "#Delta#varphi track-cluster";
+  fgVariableUnits[kEMCALmatchedDeltaPhi]       = "";
+  fgVariableNames[kEMCALmatchedDeltaEta]       = "#Delta#eta track-cluster";
+  fgVariableUnits[kEMCALmatchedDeltaEta]       = "";
+  fgVariableNames[kEMCALmatchedDistance]       = "track-cluster distance";
+  fgVariableUnits[kEMCALmatchedDistance]       = "";
+  fgVariableNames[kEMCALmatchedNSigmaElectron] = "EMCal n_{#sigma}^{e}";
+  fgVariableUnits[kEMCALmatchedNSigmaElectron] = "#sigma";
   fgVariableNames[kEMCALclusterEnergy]  = "Calo cls energy"; fgVariableUnits[kEMCALclusterEnergy] = "GeV";
   fgVariableNames[kEMCALclusterDx]      = "Calo cls dx";            fgVariableUnits[kEMCALclusterDx]  = "";
   fgVariableNames[kEMCALclusterDz]      = "Calo cls dz";            fgVariableUnits[kEMCALclusterDz]  = "";
@@ -4202,20 +4252,22 @@ void AliReducedVarManager::SetDefaultVarNames() {
   fgVariableNames[kEMCALm02]            = "Cluster short axis M02"; fgVariableUnits[kEMCALm02]        = "";
   fgVariableNames[kEMCALdispersion]     = "Cluster dispersion";     fgVariableUnits[kEMCALdispersion] = "";
   fgVariableNames[kEMCALnCells]         = "Cluster nof cells";      fgVariableUnits[kEMCALnCells]     = "";
-  fgVariableNames[kEMCALnMatchedTracks] = "Cluster nof matched tracks"; fgVariableUnits[kEMCALnMatchedTracks] = "";
-  fgVariableNames[kEMCALclusterPhi]     = "Cluster #varphi";        fgVariableUnits[kEMCALclusterPhi] = "rad";
-  fgVariableNames[kEMCALclusterEta]     = "Cluster #eta";           fgVariableUnits[kEMCALclusterEta] = "";
-  fgVariableNames[kTrackingFlag]       = "Tracking flag";         fgVariableUnits[kTrackingFlag]   = "";
-  fgVariableNames[kTrackingStatus]     = "Tracking status";       fgVariableUnits[kTrackingStatus] = "";
-  fgVariableNames[kDeltaPhi]           = "#Delta #varphi";        fgVariableUnits[kDeltaPhi] = "rad";
+  fgVariableNames[kEMCALnMatchedTracks] = "Cluster nof matched tracks";
+  fgVariableUnits[kEMCALnMatchedTracks] = "";
+  fgVariableNames[kEMCALclusterPhi]     = "Cluster #varphi";      fgVariableUnits[kEMCALclusterPhi] = "rad";
+  fgVariableNames[kEMCALclusterEta]     = "Cluster #eta";         fgVariableUnits[kEMCALclusterEta] = "";
+  fgVariableNames[kTrackingFlag]       = "Tracking flag";         fgVariableUnits[kTrackingFlag]    = "";
+  fgVariableNames[kTrackingStatus]     = "Tracking status";       fgVariableUnits[kTrackingStatus]  = "";
+  fgVariableNames[kTrackMCFlag]        = "Track MC flag";         fgVariableUnits[kTrackMCFlag]     = "";
+  fgVariableNames[kDeltaPhi]           = "#Delta #varphi";        fgVariableUnits[kDeltaPhi]        = "rad";
   fgVariableNames[kDeltaPhiBoosted]    = "#Delta #varphi";        fgVariableUnits[kDeltaPhiBoosted] = "rad";
-  fgVariableNames[kDeltaPhiSym]        = "#Delta #varphi";        fgVariableUnits[kDeltaPhiSym] = "rad";
+  fgVariableNames[kDeltaPhiSym]        = "#Delta #varphi";        fgVariableUnits[kDeltaPhiSym]     = "rad";
   fgVariableNames[kDeltaPhiSymBoosted] = "#Delta #varphi";        fgVariableUnits[kDeltaPhiSymBoosted] = "rad";
-  fgVariableNames[kDeltaTheta]         = "#Delta #theta";         fgVariableUnits[kDeltaTheta] = "rad";
-  fgVariableNames[kDeltaThetaBoosted]  = "#Delta #theta";         fgVariableUnits[kDeltaThetaBoosted] = "rad";
-  fgVariableNames[kDeltaEta]           = "#Delta #eta";           fgVariableUnits[kDeltaEta]      = "";
-  fgVariableNames[kDeltaEtaBoosted]    = "#Delta #eta";           fgVariableUnits[kDeltaEtaBoosted] = "";
-  fgVariableNames[kDeltaEtaAbs]        = "|#Delta #eta|";         fgVariableUnits[kDeltaEtaAbs] = "";
+  fgVariableNames[kDeltaTheta]         = "#Delta #theta";         fgVariableUnits[kDeltaTheta]         = "rad";
+  fgVariableNames[kDeltaThetaBoosted]  = "#Delta #theta";         fgVariableUnits[kDeltaThetaBoosted]  = "rad";
+  fgVariableNames[kDeltaEta]           = "#Delta #eta";           fgVariableUnits[kDeltaEta]           = "";
+  fgVariableNames[kDeltaEtaBoosted]    = "#Delta #eta";           fgVariableUnits[kDeltaEtaBoosted]    = "";
+  fgVariableNames[kDeltaEtaAbs]        = "|#Delta #eta|";         fgVariableUnits[kDeltaEtaAbs]        = "";
   fgVariableNames[kDeltaEtaAbsBoosted] = "|#Delta #eta|";         fgVariableUnits[kDeltaEtaAbsBoosted] = "";
   fgVariableNames[kTriggerPt]          = "p_{T} trigger particle";    fgVariableUnits[kTriggerPt]     = "GeV/c";
   fgVariableNames[kTriggerRap]         = "#it{y} trigger particle";   fgVariableUnits[kTriggerRap]    = "";
@@ -4224,19 +4276,27 @@ void AliReducedVarManager::SetDefaultVarNames() {
   fgVariableUnits[kTriggerPseudoProperDecayTime] = "cm/c";
   fgVariableNames[kTriggerPairTypeSPD]  = "trigger type spd legs"; fgVariableUnits[kTriggerPairTypeSPD] = "";
   fgVariableNames[kAssociatedPt]        = "p_{T} associated particle"; fgVariableUnits[kAssociatedPt] = "GeV/c";
-  fgVariableNames[kAssociatedPtBoosted] = "p_{T} associated particle (boosted)"; fgVariableUnits[kAssociatedPtBoosted] = "GeV/c";
-  fgVariableNames[kAssociatedPtOverTriggerGammaT] = "p_{T} associated particle / #gamma_{T} trigger particle"; fgVariableUnits[kAssociatedPtOverTriggerGammaT] = "GeV/c";
-  fgVariableNames[kTriggerGammaT]        = "#gamma_{T} trigger particle"; fgVariableUnits[kTriggerGammaT] = "";
-  fgVariableNames[kAssociatedEta]        = "#eta associated particle";    fgVariableUnits[kAssociatedEta] = "";
-  fgVariableNames[kAssociatedEtaBoosted] = "#eta associated particle";    fgVariableUnits[kAssociatedEtaBoosted] = "";
-  fgVariableNames[kAssociatedPhi] = "#varphi associated particle"; fgVariableUnits[kAssociatedPhi] = "rad";
-  fgVariableNames[kAssociatedPhiBoosted] = "#varphi associated particle"; fgVariableUnits[kAssociatedPhiBoosted] = "rad";
+  fgVariableNames[kAssociatedPtBoosted] = "p_{T} associated particle (boosted)";
+  fgVariableUnits[kAssociatedPtBoosted] = "GeV/c";
+  fgVariableNames[kAssociatedPtOverTriggerGammaT] = "p_{T} associated particle / #gamma_{T} trigger particle";
+  fgVariableUnits[kAssociatedPtOverTriggerGammaT] = "GeV/c";
+  fgVariableNames[kTriggerGammaT]         = "#gamma_{T} trigger particle"; fgVariableUnits[kTriggerGammaT] = "";
+  fgVariableNames[kAssociatedEta]         = "#eta associated particle";    fgVariableUnits[kAssociatedEta] = "";
+  fgVariableNames[kAssociatedEtaBoosted]  = "#eta associated particle";
+  fgVariableUnits[kAssociatedEtaBoosted]  = "";
+  fgVariableNames[kAssociatedPhi]         = "#varphi associated particle";
+  fgVariableUnits[kAssociatedPhi]         = "rad";
+  fgVariableNames[kAssociatedPhiBoosted]  = "#varphi associated particle";
+  fgVariableUnits[kAssociatedPhiBoosted]  = "rad";
   fgVariableNames[kTriggerEff]            = "#epsilon_{trigger}";   fgVariableUnits[kTriggerEff]          = "";
   fgVariableNames[kOneOverTriggerEff]     = "1/#epsilon_{trigger}"; fgVariableUnits[kOneOverTriggerEff]   = "";
-  fgVariableNames[kAssocHadronEff]        = "#epsilon_{assoc}";   fgVariableUnits[kAssocHadronEff]        = "";
-  fgVariableNames[kOneOverAssocHadronEff] = "1/#epsilon_{assoc}"; fgVariableUnits[kOneOverAssocHadronEff] = "";
-  fgVariableNames[kTriggerEffTimesAssocHadronEff] = "#epsilon_{trigger} #times #epsilon_{assoc}"; fgVariableUnits[kTriggerEffTimesAssocHadronEff] = "";
-  fgVariableNames[kOneOverTriggerEffTimesAssocHadronEff] = "1/#epsilon_{trigger} #times #epsilon_{assoc}"; fgVariableUnits[kOneOverTriggerEffTimesAssocHadronEff] = "";
+  fgVariableNames[kAssocHadronEff]        = "#epsilon_{assoc}";     fgVariableUnits[kAssocHadronEff]      = "";
+  fgVariableNames[kOneOverAssocHadronEff] = "1/#epsilon_{assoc}";
+  fgVariableUnits[kOneOverAssocHadronEff] = "";
+  fgVariableNames[kTriggerEffTimesAssocHadronEff] = "#epsilon_{trigger} #times #epsilon_{assoc}";
+  fgVariableUnits[kTriggerEffTimesAssocHadronEff] = "";
+  fgVariableNames[kOneOverTriggerEffTimesAssocHadronEff] = "1/#epsilon_{trigger} #times #epsilon_{assoc}";
+  fgVariableUnits[kOneOverTriggerEffTimesAssocHadronEff] = "";
 
 // Added by idstoreh
 // B -> J/psi variables ------------------------------------------
@@ -4288,19 +4348,23 @@ void AliReducedVarManager::SetDefaultVarNames() {
   fgVariableNames[kPhi_PsiPrime]    = "#varphi #psi(2S)"; fgVariableUnits[kPhi_PsiPrime] = "rad";
   fgVariableNames[kEta_PsiPrime]    = "#eta #psi(2S)";    fgVariableUnits[kEta_PsiPrime] = "";
 
-  fgVariableNames[kJPsiPosPionOpeningAngle] = "OpAngle J#psi-#pi^{+}"; fgVariableUnits[kJPsiPosPionOpeningAngle]         = "rad";
-  fgVariableNames[kJPsiNegPionOpeningAngle] = "OpAngle J#psi-#pi^{-}"; fgVariableUnits[kJPsiNegPionOpeningAngle]         = "rad";
-  fgVariableNames[kPionsOpeningAngle] = "OpAngle #pi^{+}-#pi^{+}"; fgVariableUnits[kPionsOpeningAngle] = "rad";
-  fgVariableNames[kJPsiDiPionOpeningAngle] = "OpAngle J#psi-#pi^{+}#pi^{-}"; fgVariableUnits[kJPsiDiPionOpeningAngle] = "rad";
+  fgVariableNames[kJPsiPosPionOpeningAngle] = "OpAngle J#psi-#pi^{+}";
+  fgVariableUnits[kJPsiPosPionOpeningAngle] = "rad";
+  fgVariableNames[kJPsiNegPionOpeningAngle] = "OpAngle J#psi-#pi^{-}";
+  fgVariableUnits[kJPsiNegPionOpeningAngle] = "rad";
+  fgVariableNames[kPionsOpeningAngle]       = "OpAngle #pi^{+}-#pi^{+}";
+  fgVariableUnits[kPionsOpeningAngle]       = "rad";
+  fgVariableNames[kJPsiDiPionOpeningAngle]  = "OpAngle J#psi-#pi^{+}#pi^{-}";
+  fgVariableUnits[kJPsiDiPionOpeningAngle]  = "rad";
 
   fgVariableNames[kJPsiPosPion_NegPionOpeningAngle] = "OpAngle J#psi#pi^{+}-#pi^{-}"; fgVariableUnits[kJPsiPosPion_NegPionOpeningAngle] = "rad";
 
-  fgVariableNames[kDeltaRPosPi]  = "#Delta R"; fgVariableUnits[kDeltaRPosPi]  = "";
-  fgVariableNames[kDeltaRNegPi]  = "#Delta R"; fgVariableUnits[kDeltaRNegPi]  = "";
-  fgVariableNames[kDeltaRJPsi]   = "#Delta R"; fgVariableUnits[kDeltaRJPsi]   = "";
-  fgVariableNames[kDeltaRDiPion] = "#Delta R"; fgVariableUnits[kDeltaRDiPion] = "";
+  fgVariableNames[kDeltaRPosPi]  = "#Delta R";  fgVariableUnits[kDeltaRPosPi]  = "";
+  fgVariableNames[kDeltaRNegPi]  = "#Delta R";  fgVariableUnits[kDeltaRNegPi]  = "";
+  fgVariableNames[kDeltaRJPsi]   = "#Delta R";  fgVariableUnits[kDeltaRJPsi]   = "";
+  fgVariableNames[kDeltaRDiPion] = "#Delta R";  fgVariableUnits[kDeltaRDiPion] = "";
 
-  fgVariableNames[kQValue]  = "Q"; fgVariableUnits[kQValue]  = "";
+  fgVariableNames[kQValue] = "Q";  fgVariableUnits[kQValue] = "";
 }
 
 
@@ -4430,7 +4494,8 @@ void AliReducedVarManager::SetTPCpidCalibDepVars(Variables vars[]) {
 
 
 //____________________________________________________________________________________
-void AliReducedVarManager::SetPairEfficiencyMap(TH1* map, AliReducedVarManager::Variables varX, AliReducedVarManager::Variables varY/*=kNothing*/, AliReducedVarManager::Variables varZ/*=kNothing*/) {
+void AliReducedVarManager::SetPairEfficiencyMap(TH1* map, AliReducedVarManager::Variables varX, AliReducedVarManager::Variables varY/*=kNothing*/, AliReducedVarManager::Variables varZ/*=kNothing*/)
+{
   //
   // initialize the pair efficiency map
   //
@@ -4476,7 +4541,8 @@ void AliReducedVarManager::SetPairEfficiencyMap(TH1* map, AliReducedVarManager::
 
 
 //____________________________________________________________________________________
-void AliReducedVarManager::SetPairEfficiencyMapDependeciesCorrelation(AliReducedVarManager::Variables varX, AliReducedVarManager::Variables varY/*=kNothing*/, AliReducedVarManager::Variables varZ/*=kNothing*/) {
+void AliReducedVarManager::SetPairEfficiencyMapDependeciesCorrelation(AliReducedVarManager::Variables varX, AliReducedVarManager::Variables varY/*=kNothing*/, AliReducedVarManager::Variables varZ/*=kNothing*/)
+{
   //
   // initialize variable dependencies for pair efficiency map used in correlation
   //
@@ -4496,7 +4562,8 @@ void AliReducedVarManager::SetPairEfficiencyMapDependeciesCorrelation(AliReduced
 
 
 //____________________________________________________________________________________
-void AliReducedVarManager::SetAssociatedHadronEfficiencyMap(TH1* map, AliReducedVarManager::Variables varX, AliReducedVarManager::Variables varY/*=kNothing*/, AliReducedVarManager::Variables varZ/*=kNothing*/) {
+void AliReducedVarManager::SetAssociatedHadronEfficiencyMap(TH1* map, AliReducedVarManager::Variables varX, AliReducedVarManager::Variables varY/*=kNothing*/, AliReducedVarManager::Variables varZ/*=kNothing*/)
+{
   //
   // initialize the associated hadron efficiency map, used for correlation analysis
   //
@@ -4546,7 +4613,8 @@ void AliReducedVarManager::SetAssociatedHadronEfficiencyMap(TH1* map, AliReduced
 
 
 //____________________________________________________________________________________
-void AliReducedVarManager::SetLHCDataInfo(TH1F* totalLumi, TH1F* totalInt0, TH1F* totalInt1, TH1I* fillNumber) {
+void AliReducedVarManager::SetLHCDataInfo(TH1F* totalLumi, TH1F* totalInt0, TH1F* totalInt1, TH1I* fillNumber)
+{
   //
   // initialize the LHC data histograms
   //
@@ -4570,7 +4638,8 @@ void AliReducedVarManager::SetLHCDataInfo(TH1F* totalLumi, TH1F* totalInt0, TH1F
 
 
 //____________________________________________________________________________________
-void AliReducedVarManager::SetGRPDataInfo(TH1I* dipolePolarity, TH1I* l3Polarity, TH1I* timeStart, TH1I* timeStop)
+void AliReducedVarManager::SetGRPDataInfo(TH1I* dipolePolarity, TH1I* l3Polarity, TH1I* timeStart,
+                                          TH1I* timeStop)
 {
   //
   // initialize the GRP data histograms
@@ -4620,7 +4689,7 @@ void AliReducedVarManager::SetupGRPinformation(const Char_t* filename) {
 
 
 //____________________________________________________________________________________
-void AliReducedVarManager::SetRunNumbers( TString runNumbers ) {
+void AliReducedVarManager::SetRunNumbers(TString runNumbers) {
   TObjArray* runNumbersArr = runNumbers.Tokenize(";");
   runNumbersArr->SetOwner();
   for(Int_t iRun=0; iRun<runNumbersArr->GetEntries(); ++iRun) {
@@ -4631,8 +4700,7 @@ void AliReducedVarManager::SetRunNumbers( TString runNumbers ) {
 
 
 //___________________________________________________________________________________
-void AliReducedVarManager::SetWeightSpectrum(TH1F *pTspectrum)
-{
+void AliReducedVarManager::SetWeightSpectrum(TH1F *pTspectrum) {
   if(pTspectrum) {
     fgReweightMCpt = pTspectrum;
   } else {
@@ -4654,8 +4722,8 @@ void AliReducedVarManager::SetLegEfficiency(TH3F *LegPIDEfficiency, Bool_t usePi
 
 
 //____________________________________________________________________________________
-Double_t AliReducedVarManager::CalculateWeightFactor(Double_t McpT, Double_t Centrality)
-{
+Double_t AliReducedVarManager::CalculateWeightFactor(Double_t McpT, Double_t Centrality) {
+
   // currently only one pT shape was used, this can be used for pp, more centralitys bins for PbPb
   if(!fgReweightMCpt) {
     cout << "No pT reweight spectra !!" << endl;
@@ -4891,8 +4959,7 @@ AliKFParticle AliReducedVarManager::BuildKFcandidate(TRACK* track1, Float_t mh1,
 
 
 //____________________________________________________________________________________
-AliKFParticle AliReducedVarManager::BuildKFvertex( AliReducedEventInfo * event)
-{
+AliKFParticle AliReducedVarManager::BuildKFvertex( AliReducedEventInfo * event) {
   // 
   // build an AliKF vertex using the cov matrix 
   //

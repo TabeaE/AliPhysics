@@ -571,6 +571,8 @@ class AliReducedVarManager : public TObject {
     kRapMCfromLegs,
     kPdgMC,
     kCharge = kPdgMC+4,
+    kPCCWeight,        // Weight for PCC correction based on particle type
+    kPCCnRepetitions,  // kPCCWeight is applied on a statistical basis: track is either counted as 0, 1 or 2
     kVZEROFlowVn,                                 // v_n using VZERO RP
     kVZERODeltaPhiPsiN = kVZEROFlowVn+6*3,        // delta phi = phi - Psi  for VZERO event plane
     kTPCFlowVn         = kVZERODeltaPhiPsiN+6*3,  // v_n using TPC RP
@@ -1036,7 +1038,7 @@ class AliReducedVarManager : public TObject {
   AliReducedVarManager(AliReducedVarManager const&);
   AliReducedVarManager& operator=(AliReducedVarManager const&);  
   
-  ClassDef(AliReducedVarManager, 19);
+  ClassDef(AliReducedVarManager, 20);
 };
 
 #endif

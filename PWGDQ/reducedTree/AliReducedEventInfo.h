@@ -58,7 +58,7 @@ class AliReducedEventInfo : public AliReducedBaseEvent {
     (side==0 ? 0.5*(fTPCpileupZ[0]+fTPCpileupZ[1]) : fTPCpileupZ[side-1]));}
   Int_t     TPCpileupContributors(Int_t side=0)  const {return (side<0||side>2 ? -999  :
     (side==0 ? fTPCpileupContributors[0]+fTPCpileupContributors[1] : fTPCpileupContributors[side-1]));}
-  Float_t   TPCpileupZ2(Int_t side = 0)          const {return (side<0||side>2 ? -999. :
+  Float_t   TPCpileupZ2(Int_t side=0)            const {return (side<0||side>2 ? -999. :
     (side==0 ? 0.5*(fTPCpileupZ2[0]+fTPCpileupZ2[1]) : fTPCpileupZ2[side-1]));}
   Int_t     TPCpileupContributors2(Int_t side=0) const {return (side<0||side>2 ? -999  :
     (side==0 ? fTPCpileupContributors2[0]+fTPCpileupContributors2[1] : fTPCpileupContributors2[side-1]));}
@@ -80,11 +80,11 @@ class AliReducedEventInfo : public AliReducedBaseEvent {
   Int_t     SPDnSingleClusters()              const {return fSPDnSingle;}
   Int_t     TracksPerTrackingFlag(Int_t flag) const {return (flag>=0 && flag<32 ? fNtracksPerTrackingFlag[flag]
                                                                                 : -999);}
-  Int_t     TracksWithTPCout()                  const {return fNtracksTPCout;}
-  Int_t     Nch16 (Bool_t exclJpsiDau = kFALSE) const {return (exclJpsiDau? fNch[0] : fNch[1]);}
-  Int_t     Nch10 (Bool_t exclJpsiDau = kFALSE) const {return (exclJpsiDau? fNch[2] : fNch[3]);}
-  Int_t     NchV0A(Bool_t exclJpsiDau = kFALSE) const {return (exclJpsiDau? fNch[4] : fNch[5]);}
-  Int_t     NchV0C(Bool_t exclJpsiDau = kFALSE) const {return (exclJpsiDau? fNch[6] : fNch[7]);}
+  Int_t     TracksWithTPCout()                const {return fNtracksTPCout;}
+  Int_t     Nch16 (Bool_t exclJpsiDau=kFALSE) const {return (exclJpsiDau? fNch[0] : fNch[1]);}
+  Int_t     Nch10 (Bool_t exclJpsiDau=kFALSE) const {return (exclJpsiDau? fNch[2] : fNch[3]);}
+  Int_t     NchV0A(Bool_t exclJpsiDau=kFALSE) const {return (exclJpsiDau? fNch[4] : fNch[5]);}
+  Int_t     NchV0C(Bool_t exclJpsiDau=kFALSE) const {return (exclJpsiDau? fNch[6] : fNch[7]);}
   
   Float_t   MultEstimatorOnlineV0M()    const {return fMultiplicityEstimators[0];}
   Float_t   MultEstimatorOnlineV0A()    const {return fMultiplicityEstimators[1];}
@@ -114,11 +114,11 @@ class AliReducedEventInfo : public AliReducedBaseEvent {
   Float_t   MultEstimatorPercentileV0A()          const {return fMultiplicityEstimatorPercentiles[11];}
   Float_t   MultEstimatorPercentileV0C()          const {return fMultiplicityEstimatorPercentiles[12];}
   
-  Float_t   MultChannelVZERO(Int_t channel)         const {return (channel>=0&&channel<=63 ? fVZEROMult[channel]
-                                                                                           : -999.);}
-  Float_t   MultVZEROA (Bool_t fromChannels=kFALSE) const;
-  Float_t   MultVZEROC (Bool_t fromChannels=kFALSE) const;
-  Float_t   MultVZERO  (Bool_t fromChannels=kFALSE) const;
+  Float_t   MultChannelVZERO(Int_t channel)       const {return (channel>=0&&channel<=63 ? fVZEROMult[channel]
+                                                                                         : -999.);}
+  Float_t   MultVZEROA     (Bool_t fromChannels=kFALSE) const;
+  Float_t   MultVZEROC     (Bool_t fromChannels=kFALSE) const;
+  Float_t   MultVZERO      (Bool_t fromChannels=kFALSE) const;
   Float_t   MultRingVZEROA (Int_t ring) const;
   Float_t   MultRingVZEROC (Int_t ring) const;
   
@@ -139,18 +139,23 @@ class AliReducedEventInfo : public AliReducedBaseEvent {
   Float_t   EnergyZDCnTree (UShort_t channel) const {return (channel<10 ? fZDCnEnergy[channel] : -999.);};
   Float_t   EnergyZDCpTree (UShort_t channel) const {return (channel<10 ? fZDCpEnergy[channel] : -999.);};
   Float_t   EnergyZDCn     (Int_t channel)    const;
-  Float_t   EnergyZDCA() const;
-  Float_t   EnergyZDCC() const;
-  Float_t   EnergyZDC () const;
-  TClonesArray* GetFMD() const {return fFMD;}
+  Float_t   EnergyZDCA     ()                 const;
+  Float_t   EnergyZDCC     ()                 const;
+  Float_t   EnergyZDC      ()                 const;
+  TClonesArray* GetFMD     ()                 const {return fFMD;}
   
   Bool_t TestEventTag (UShort_t iflag) const {return (iflag<8*sizeof(ULong64_t) ? fEventTag&(ULong64_t(1)<<iflag)
                                                                                 : kFALSE);}
-  Bool_t SetEventTag  (UShort_t iflag) {if(iflag>=8*sizeof(ULong64_t)) return kFALSE;
-                                        fEventTag|=(ULong64_t(1)<<iflag); return kTRUE;}
+  Bool_t SetEventTag  (UShort_t iflag) {
+    if(iflag >= 8*sizeof(ULong64_t)) return kFALSE;
+    fEventTag |= (ULong64_t(1)<<iflag);
+    return kTRUE;
+  }
 
-  Bool_t IsTriggerFired(UShort_t iflag) {if(iflag>=8*sizeof(ULong64_t)) return kFALSE;
-                                         return (fTriggerMask&(ULong64_t(1)<<iflag) ? kTRUE : kFALSE);}
+  Bool_t IsTriggerFired(UShort_t iflag) {
+    if(iflag >= 8*sizeof(ULong64_t)) return kFALSE;
+    return (fTriggerMask&(ULong64_t(1)<<iflag) ? kTRUE : kFALSE);
+  }
 
   Double_t GetQvectorFMD(Int_t c, Double_t etamin, Double_t etamax);
 
@@ -159,20 +164,20 @@ class AliReducedEventInfo : public AliReducedBaseEvent {
     return (i>=0 && i<fNCaloClusters ? (AliReducedCaloClusterInfo*)fCaloClusters->At(i) : 0x0);}
   AliReducedCaloClusterInfo* GetCaloClusterFromID(Int_t clusterID) const;
   
-  void  GetQvector(Double_t Qvec[][2], Int_t det, Float_t etaMin=-0.8, Float_t etaMax=+0.8,
-                   Bool_t (*IsTrackSelected)(AliReducedTrackInfo*)=NULL);
-  Int_t GetTPCQvector(Double_t Qvec[][2], Int_t det, Float_t etaMin=-0.8, Float_t etaMax=+0.8,
-                      Bool_t (*IsTrackSelected)(AliReducedTrackInfo*)=NULL);
-  void  GetVZEROQvector(Double_t Qvec[][2], Int_t det);
-  void  GetVZEROQvector(Double_t Qvec[][2], Int_t det, Float_t* vzeroMult);
-  void  GetZDCQvector(Double_t Qvec[][2], Int_t det) const;
-  void  GetZDCQvector(Double_t Qvec[][2], Int_t det, const Float_t* zdcEnergy) const;
+  void  GetQvector      (Double_t Qvec[][2], Int_t det, Float_t etaMin=-0.8, Float_t etaMax=+0.8,
+                         Bool_t (*IsTrackSelected)(AliReducedTrackInfo*)=NULL);
+  Int_t GetTPCQvector   (Double_t Qvec[][2], Int_t det, Float_t etaMin=-0.8, Float_t etaMax=+0.8,
+                         Bool_t (*IsTrackSelected)(AliReducedTrackInfo*)=NULL);
+  void  GetVZEROQvector (Double_t Qvec[][2], Int_t det);
+  void  GetVZEROQvector (Double_t Qvec[][2], Int_t det, Float_t* vzeroMult);
+  void  GetZDCQvector   (Double_t Qvec[][2], Int_t det) const;
+  void  GetZDCQvector   (Double_t Qvec[][2], Int_t det, const Float_t* zdcEnergy) const;
   void  SubtractParticleFromQvector(AliReducedTrackInfo* particle, Double_t Qvec[][2], Int_t det,
                                     Float_t etaMin=-0.8, Float_t etaMax=+0.8,
                                     Bool_t (*IsTrackSelected)(AliReducedTrackInfo*)=NULL);
   
   // Event plane information handling for the case when event plane information is written directly in the trees
-  void SetEventPlane(const AliReducedEventPlaneInfo* ep) {if(ep) fEventPlane.CopyEvent(ep);}
+  void     SetEventPlane(const AliReducedEventPlaneInfo* ep) {if(ep) fEventPlane.CopyEvent(ep);}
   Double_t GetEventPlane(Int_t detector, Int_t harmonic) const {
     return fEventPlane.EventPlane(detector, harmonic);};
   Double_t GetQx(Int_t detector, Int_t harmonic) const {return fEventPlane.Qx(detector, harmonic);}

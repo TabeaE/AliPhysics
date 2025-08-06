@@ -16,6 +16,8 @@
 #include "AliReducedTrackInfo.h"
 #include "AliReducedPairInfo.h"
 
+class TRandom3;
+
 //________________________________________________________________
 class AliReducedAnalysisFilterTrees : public AliReducedAnalysisTaskSE {
   
@@ -123,6 +125,7 @@ public:
   void SetDefaultRandomPhi   (Bool_t option) {fDefaultRandomPhi   = option;}
   void SetMinPtLeading       (Float_t minpt) {fMinPtLeading       = minpt;}
   void SetRunOverMC          (Bool_t option) {fOptionRunOverMC    = option;}
+
   void SetMCPCWeights        (TH3F* weights) {fMCPCWeights        = weights;}
   void SetReweightPC         (Bool_t option) {fReweightPC         = option;}
 
@@ -162,8 +165,6 @@ public:
   Int_t         GetNLegCandidateMCcuts     ()         const {return fLegCandidatesMCcuts.GetEntries();}
   const Char_t* GetLegCandidateMCcutName   (Int_t i)  const {return (i<fLegCandidatesMCcuts.GetEntries() ?
                                                              fLegCandidatesMCcuts.At(i)->GetName() : "");}
-//   const Char_t* GetLegCandidateMCcutName()         const {return (fLegCandidatesMCcuts ?
-//                                                           fLegCandidatesMCcuts->GetName() : "");}
   Int_t         GetNJpsiMotherMCCuts       ()         const {return fJpsiMotherMCcuts.GetEntries();}
   const Char_t* GetJpsiMotherMCcutName     (Int_t i)  const {return (i<fJpsiMotherMCcuts.GetEntries() ?
                                                              fJpsiMotherMCcuts.At(i)->GetName() : "");}
@@ -184,11 +185,6 @@ public:
     fLegCandidatesMCcuts.Add(cut);
     fLegCandidatesMCcuts_RequestSameMother[fLegCandidatesMCcuts.GetEntries()-1] = sameMother;
   }
-
-//   void SetLegCandidateMCcut(AliReducedInfoCut* cut) {
-//     //if(fLegCandidatesMCcuts.GetEntries()>=32) return;
-//     fLegCandidatesMCcuts = cut;
-//   }
   
   void AddJpsiMotherMCCut(AliReducedInfoCut* cutMother, AliReducedInfoCut* cutElectron) {
     if(fJpsiMotherMCcuts.GetEntries() >= 32) return;
@@ -199,10 +195,9 @@ public:
   void FillMCTruthHistograms();
   
 protected:
-  std::map<int, std::vector<int>> fWeightsTrue;  // Save some weights to be used in next events
-  std::map<int, std::vector<int>> fWeightsMeas;  // Save some weights to be used in next events
-  Bool_t fReweightPC;        // Whether to re-weight the particle composition
-  TH3F*  fMCPCWeights;       // The weights used to correct the particle composition
+  Bool_t fReweightPC;   // Whether to re-weight the particle composition
+  TH3F*  fMCPCWeights;  // The weights used to correct the particle composition
+  std::unique_ptr<TRandom3>fRand{};  // random generator
 
   AliHistogramManager* fHistosManager;         // Histogram manager
   AliMixingHandler*    fMixingHandler;         // Mixing handler
@@ -310,13 +305,14 @@ protected:
                                        Bool_t isAsymmetricDecayChannel);
   void    FillCandidateLegHistograms  (TString histClass, AliReducedBaseTrack* track, Int_t leg,
                                        Bool_t isAsymmetricDecayChannel);
-//   void FillCandidatePairHistograms(TString histClass, AliReducedPairInfo* pair,
-//                                    Bool_t isAsymmetricDecayChannel);
   void    FillCandidatePairHistograms (ULong_t trackMask, ULong_t pairMask, Int_t pairType, TString pairClass, 
                                        Bool_t isAsymmetricDecayChannel, UInt_t mcDecisions);
-  Float_t GetParticleWeight           (AliReducedTrackInfo* track);
+
+  Float_t       GetParticleWeight     (AliReducedTrackInfo* track);
+  Int_t         GetNRepetitions       (Float_t scalingFactor, Int_t part);
+  unsigned long GetSeed               (Int_t part);
   
-  ClassDef(AliReducedAnalysisFilterTrees, 5);
+  ClassDef(AliReducedAnalysisFilterTrees, 6);
 };
 
 #endif
