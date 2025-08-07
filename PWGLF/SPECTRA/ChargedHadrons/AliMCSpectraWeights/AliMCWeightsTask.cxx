@@ -61,8 +61,7 @@ fMCSpectraWeights(nullptr)
 }
 
 
-AliMCWeightsTask::~AliMCWeightsTask()
-{
+AliMCWeightsTask::~AliMCWeightsTask() {
 #ifdef __AliMCWeightsTask_DebugTiming__
   auto t1 = std::chrono::high_resolution_clock::now();
 #endif
@@ -176,7 +175,7 @@ void AliMCWeightsTask::UserExec(Option_t* option) {
 }
 
 
-AliMCWeightsTask* AliMCWeightsTask::AddTaskAliMCWeightsTask(MCGeneratorType gen,  const char* collisionType,
+AliMCWeightsTask* AliMCWeightsTask::AddTaskAliMCWeightsTask(MCGeneratorType gen, const char* collisionType,
                                                             bool fUsePPMB, const char* firstTrainPath)
 {
 #ifdef __AliMCWeightsTask_DebugTiming__
@@ -247,8 +246,8 @@ AliMCWeightsTask* AliMCWeightsTask::AddTaskAliMCWeightsTask(MCGeneratorType gen,
     default:
       break;
   }
-  if(firstTrainPath) stTrainOutputPath=firstTrainPath;
-  if(collisionType) collisionSystem=collisionType;
+  if(firstTrainPath) stTrainOutputPath = firstTrainPath;
+  if(collisionType)  collisionSystem   = collisionType;
 
   AliMCSpectraWeights* fMCSpectraWeights = new AliMCSpectraWeights(collisionSystem, "fMCSpectraWeights",
                                                                    AliMCSpectraWeights::SysFlag::kNominal);

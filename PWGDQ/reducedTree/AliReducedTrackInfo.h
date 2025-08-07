@@ -131,16 +131,16 @@ class AliReducedTrackInfo : public AliReducedBaseTrack {
   Float_t fTPCDCA[2];           // TPConly DCA xy,z
   Float_t fTrackLength;         // track length
   Float_t fMassForTracking;     // mass hypothesis used for tracking
-  Float_t fChi2TPCConstrainedVsGlobal;   // AliESDtrack::GetChi2TPCConstrainedVsGlobal()
+  Float_t fChi2TPCConstrainedVsGlobal;  // AliESDtrack::GetChi2TPCConstrainedVsGlobal()
   Float_t fHelixCenter[2];      // Helix Center x,y
   Float_t fHelixRadius;         // Radius of the Helix
   
   // ITS
-  UChar_t  fITSclusterMap;      // ITS cluster map
-  UChar_t  fITSSharedClusterMap;  // ITS shared cluster map
-  Float_t  fITSsignal;          // ITS signal
-  Float_t  fITSnSig[4];         // 0-electron; 1-pion; 2-kaon; 3-proton
-  Float_t  fITSchi2;            // ITS chi2 / cls
+  UChar_t fITSclusterMap;        // ITS cluster map
+  UChar_t fITSSharedClusterMap;  // ITS shared cluster map
+  Float_t fITSsignal;            // ITS signal
+  Float_t fITSnSig[4];           // 0-electron; 1-pion; 2-kaon; 3-proton
+  Float_t fITSchi2;              // ITS chi2 / cls
   
   // TPC
   UChar_t fTPCNcls;            // TPC ncls                          
@@ -149,14 +149,14 @@ class AliReducedTrackInfo : public AliReducedBaseTrack {
   UChar_t fTPCNclsShared;      // TPC number of shared clusters
   UChar_t fTPCClusterMap;      // TPC cluster distribution map
   Float_t fTPCsignal;          // TPC de/dx
-  Float_t fTPCsignalTunedOnData;// TPC de/dx (tuned on data)
-  UChar_t fTPCsignalN;         // TPC no clusters de/dx
-  Float_t fTPCnSig[4];         // 0-electron; 1-pion; 2-kaon; 3-proton
-  Float_t fTPCdEdxInfoQmax[4]; // dE/dx info using Qmax, 0 - IROC, 1- medium OROC, 2- long OROC, 3- all OROC
-  Float_t fTPCdEdxInfoQtot[4]; // dE/dx info using Qtot, 0 - IROC, 1- medium OROC, 2- long OROC, 3- all OROC
-  Float_t fTPCchi2;            // TPC chi2 / cls
-  Float_t fTPCActiveLength;   // track length in active parts of the TPC
-  Float_t fTPCGeomLength;   // geometrical track length in the TPC
+  Float_t fTPCsignalTunedOnData;  // TPC de/dx (tuned on data)
+  UChar_t fTPCsignalN;            // TPC no clusters de/dx
+  Float_t fTPCnSig[4];            // 0-electron; 1-pion; 2-kaon; 3-proton
+  Float_t fTPCdEdxInfoQmax[4];    // dE/dx info using Qmax, 0 - IROC, 1- medium OROC, 2- long OROC, 3- all OROC
+  Float_t fTPCdEdxInfoQtot[4];    // dE/dx info using Qtot, 0 - IROC, 1- medium OROC, 2- long OROC, 3- all OROC
+  Float_t fTPCchi2;               // TPC chi2 / cls
+  Float_t fTPCActiveLength;       // track length in active parts of the TPC
+  Float_t fTPCGeomLength;         // geometrical track length in the TPC
     
   // TOF
   Float_t fTOFbeta;             // TOF pid info
@@ -169,9 +169,9 @@ class AliReducedTrackInfo : public AliReducedBaseTrack {
   Short_t fTOFdeltaBC;          // BC(event) - BC(track) estimated by TOF
 
   // TRD
-  UChar_t fTRDntracklets[2];       // 0 - AliESDtrack::GetTRDntracklets(); 1 - AliESDtrack::GetTRDntrackletsPID()   TODO: use only 1 char
-  Float_t fTRDpid[2];              // TRD pid 1D likelihoods, [0]-electron , [1]- pion
-  Float_t fTRDpidLQ2D[2];          // TRD pid 2D likelihoods, [0]-electron , [1]- pion
+  UChar_t fTRDntracklets[2];    // 0 - AliESDtrack::GetTRDntracklets(); 1 - AliESDtrack::GetTRDntrackletsPID()   TODO: use only 1 char
+  Float_t fTRDpid[2];           // TRD pid 1D likelihoods, [0]-electron , [1]- pion
+  Float_t fTRDpidLQ2D[2];       // TRD pid 2D likelihoods, [0]-electron , [1]- pion
 
   // TRD online tracks
   UChar_t  fTRDGTUtracklets;    // TRD online track #tracklets
@@ -181,9 +181,9 @@ class AliReducedTrackInfo : public AliReducedBaseTrack {
   UChar_t  fTRDGTUPID;          // TRD online track pid
 
   // EMCAL/PHOS
-  Float_t fMatchedEMCalClusterEnergy; // EMCal cluster energy for matched cluster
-  Float_t fEMCALnSigEle;        // EMCal n-sigma deviation from expected electron signal
-  Int_t   fCaloClusterId;       // ID for the calorimeter cluster (if any)
+  Float_t fMatchedEMCalClusterEnergy;  // EMCal cluster energy for matched cluster
+  Float_t fEMCALnSigEle;               // EMCal n-sigma deviation from expected electron signal
+  Int_t   fCaloClusterId;              // ID for the calorimeter cluster (if any)
   
   // Track parameters stored at the primary vertex
   Float_t fTrackParam[6];     // parameters: x, y, z, px, py, pz
@@ -191,12 +191,14 @@ class AliReducedTrackInfo : public AliReducedBaseTrack {
   
   
   // Monte-Carlo truth information
-  Float_t fMCMom[3];             // MC truth 3-momentum information in cartezian coordinates
+  Float_t fMCMom[3];          // MC truth 3-momentum information in cartezian coordinates
   Float_t fMCFreezeout[3];    // MC truth 3-position information in cartezian coordinates
-  Int_t    fMCLabels[4];           // MC label for: [0] - the current track, [1] - mother, [2] - grand mother, [3] - grand grand mother 
-  Int_t    fMCPdg[4];                // MC PDG code for: [0] - the current track, [1] - mother, [2] - grand mother, [3] - grand grand mother 
-  Int_t    fHFProc;             // Heavy Flavour Process number in the event for the particle  
-  Short_t fMCGeneratorIndex;    // generator index (used for cocktail generators ?)
+  Int_t   fMCLabels[4];       // MC label for:    [0] - the current track, [1] - mother, [2] - grand mother,
+                              //                  [3] - grand grand mother
+  Int_t   fMCPdg[4];          // MC PDG code for: [0] - the current track, [1] - mother, [2] - grand mother,
+                              //                  [3] - grand grand mother
+  Int_t   fHFProc;            // Heavy Flavour Process number in the event for the particle
+  Short_t fMCGeneratorIndex;  // generator index (used for cocktail generators ?)
 
 
   AliReducedTrackInfo& operator= (const AliReducedTrackInfo &c);

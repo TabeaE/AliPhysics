@@ -36,23 +36,23 @@ public:
   AliMCWeightsTask();
   AliMCWeightsTask(const char* name);
   virtual ~AliMCWeightsTask();
-  AliMCWeightsTask(const AliMCWeightsTask&) = delete;  // not implemented
+  AliMCWeightsTask           (const AliMCWeightsTask&) = delete;  // not implemented
   AliMCWeightsTask& operator=(const AliMCWeightsTask&) = delete;  // not implemented
 
   virtual void UserCreateOutputObjects();
-  virtual void UserExec(Option_t* option);
-  virtual void Terminate(Option_t* option) {}
+  virtual void UserExec  (Option_t* option);
+  virtual void Terminate (Option_t* option) {}
 
   void SetMCSpectraWeightObject (AliMCSpectraWeights* weights) {fMCSpectraWeights=weights;}
 
   static AliMCWeightsTask* AddTaskAliMCWeightsTask (MCGeneratorType gen=MCGeneratorType::NONE,
-    const char* collisionType=0,  bool fUsePPMB=false, const char* firstTrainPath=0);
+    const char* collisionType=0, bool fUsePPMB=false, const char* firstTrainPath=0);
 
 private:
-  TList* fOutputList;      //!<! Output list
-  AliVEvent* fEvent;       //!<! Event object (AliVEvent)
-  AliMCEvent* fMCEvent;    //!<! MC event
-  AliMCSpectraWeights*    fMCSpectraWeights; //-> object to determine efficiency scaling
+  TList*               fOutputList;        //!<! Output list
+  AliVEvent*           fEvent;             //!<! Event object (AliVEvent)
+  AliMCEvent*          fMCEvent;           //!<! MC event
+  AliMCSpectraWeights* fMCSpectraWeights;  //-> object to determine efficiency scaling
 
 
 

@@ -174,7 +174,7 @@ AliAnalysisTaskReducedTreeMaker::AliAnalysisTaskReducedTreeMaker() :
 }
 
 //_________________________________________________________________________________
-AliAnalysisTaskReducedTreeMaker::AliAnalysisTaskReducedTreeMaker(const char *name, Bool_t writeTree /*=kTRUE*/) :
+AliAnalysisTaskReducedTreeMaker::AliAnalysisTaskReducedTreeMaker(const char *name, Bool_t writeTree/*=kTRUE*/) :
   AliAnalysisTaskSE(name),
   fAnalysisUtils(0x0),
   fUseAnalysisUtils(kFALSE),
@@ -1415,7 +1415,8 @@ void AliAnalysisTaskReducedTreeMaker::FillEventInfo()
 }
 
 //_________________________________________________________________________________
-void AliAnalysisTaskReducedTreeMaker::FillCaloClusters() {
+void AliAnalysisTaskReducedTreeMaker::FillCaloClusters()
+{
   //
   // Fill info about the calorimeter clusters
   //
@@ -1456,7 +1457,8 @@ void AliAnalysisTaskReducedTreeMaker::FillCaloClusters() {
 }
 
 //_________________________________________________________________________________
-void AliAnalysisTaskReducedTreeMaker::FillFMDInfo(Bool_t isAOD) {
+void AliAnalysisTaskReducedTreeMaker::FillFMDInfo(Bool_t isAOD)
+{
   //
   // Fill FMD information
   //
@@ -1514,7 +1516,8 @@ void AliAnalysisTaskReducedTreeMaker::FillFMDInfo(Bool_t isAOD) {
 }
 
 //________________________________________________________________________________________
-Double_t AliAnalysisTaskReducedTreeMaker::Rapidity(Double_t r, Double_t z) {
+Double_t AliAnalysisTaskReducedTreeMaker::Rapidity(Double_t r, Double_t z)
+{
   //
   // calculate eta based on radius from beampipe r and distance from interaction point z
   //
@@ -1528,7 +1531,8 @@ Double_t AliAnalysisTaskReducedTreeMaker::Rapidity(Double_t r, Double_t z) {
 }
 
 //________________________________________________________________________________________
-Double_t AliAnalysisTaskReducedTreeMaker::Radius(Double_t eta, Double_t z) {
+Double_t AliAnalysisTaskReducedTreeMaker::Radius(Double_t eta, Double_t z)
+{
   //
   // calculate radius from beampipe based on distance from interaction point z and eta
   //
@@ -1537,7 +1541,8 @@ Double_t AliAnalysisTaskReducedTreeMaker::Radius(Double_t eta, Double_t z) {
 }
 
 //_________________________________________________________________________________
-Bool_t AliAnalysisTaskReducedTreeMaker::CheckPDGcode(AliMCEvent* event, Int_t ipart, AliSignalMC* mcSignal) {
+Bool_t AliAnalysisTaskReducedTreeMaker::CheckPDGcode(AliMCEvent* event, Int_t ipart, AliSignalMC* mcSignal)
+{
   //
   // Check that the particle satisfies the PDG code criteria specified in the mcSignal
   // Work on just 1 pronged MC signals here
@@ -1720,7 +1725,8 @@ Bool_t AliAnalysisTaskReducedTreeMaker::CheckParticleSourceAOD(AliMCEvent* event
 }
 
 //_________________________________________________________________________________
-UInt_t AliAnalysisTaskReducedTreeMaker::MatchMCsignals(Int_t iparticle, Bool_t isAOD) {
+UInt_t AliAnalysisTaskReducedTreeMaker::MatchMCsignals(Int_t iparticle, Bool_t isAOD)
+{
   //
   // check whether the defined MC signals match this particle
   //
@@ -1749,7 +1755,8 @@ UInt_t AliAnalysisTaskReducedTreeMaker::MatchMCsignals(Int_t iparticle, Bool_t i
 }
 
 //_________________________________________________________________________________
-Bool_t AliAnalysisTaskReducedTreeMaker::CheckMCtruthWriteFormat(UInt_t bitMap) {
+Bool_t AliAnalysisTaskReducedTreeMaker::CheckMCtruthWriteFormat(UInt_t bitMap)
+{
   //
   // For the bits which are on, check which writing options were requested
   // If both base and full track formats are requested, the track will be written as full track
@@ -1849,8 +1856,8 @@ void AliAnalysisTaskReducedTreeMaker::FillMCTruthInfo(Bool_t isAOD)
     Int_t currentTrackIdx = tracks.GetEntries();
 
     AliReducedBaseTrack* reducedParticle = NULL;
-    if(writeBaseTrack) reducedParticle = new(tracks[currentTrackIdx]) AliReducedBaseTrack();
-    else               reducedParticle = new(tracks[currentTrackIdx]) AliReducedTrackInfo();
+    if(writeBaseTrack)   reducedParticle = new(tracks[currentTrackIdx]) AliReducedBaseTrack();
+    else                 reducedParticle = new(tracks[currentTrackIdx]) AliReducedTrackInfo();
 
     reducedParticle->fMCFlags   = mcSignalsMap;
     reducedParticle->fIsMCTruth = kTRUE;
@@ -2780,7 +2787,8 @@ void AliAnalysisTaskReducedTreeMaker::FillV0PairInfo()
 
 //_________________________________________________________________________________
 AliReducedPairInfo* AliAnalysisTaskReducedTreeMaker::FillV0PairInfo(AliESDv0* v0, Int_t id,
-    AliESDtrack* legPos, AliESDtrack* legNeg, AliKFVertex* vtxKF, Bool_t chargesAreCorrect) {
+  AliESDtrack* legPos, AliESDtrack* legNeg, AliKFVertex* vtxKF, Bool_t chargesAreCorrect)
+{
   //
   // Create a reduced V0 object and fill it
   //
@@ -3009,7 +3017,8 @@ AliReducedPairInfo* AliAnalysisTaskReducedTreeMaker::FillV0PairInfoAOD(AliAODv0*
 }
 
 //_________________________________________________________________________________
-UChar_t AliAnalysisTaskReducedTreeMaker::EncodeTPCClusterMap(AliVParticle* track, Bool_t isAOD) {
+UChar_t AliAnalysisTaskReducedTreeMaker::EncodeTPCClusterMap(AliVParticle* track, Bool_t isAOD)
+{
   //
   // Encode the TPC cluster map into an UChar_t
   // Divide the 159 bits from the bit map into 8 groups of adiacent clusters

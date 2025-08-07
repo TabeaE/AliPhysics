@@ -500,6 +500,7 @@ class AliReducedVarManager : public TObject {
     kMCNchWoPileup,               // Nof primary charged particles in MC in |eta|<1 w/o pileup tracks. If MC has
                                   //   pileup, kMCNch includes pileup tracks, so Nch is re-calculated in
                                   //   AliReducedAnalysisFilterTrees.
+    kMCNch05,                     // Nof primary charged particles in MC in |eta|<0.5 and pT>0.05GeV/c
     kMCNch09,                     // Nof primary charged particles in MC in |eta|<0.9
                                   // kMCNch09+1: same as kMCNch09 if MC event accepted (|zvtx|<10cm), else -9999
     kMCNch09Toward = kMCNch09+2,  // Nof primary charged particles in regions of phi

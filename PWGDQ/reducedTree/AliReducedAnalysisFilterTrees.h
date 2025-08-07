@@ -308,6 +308,7 @@ protected:
   void    FillCandidatePairHistograms (ULong_t trackMask, ULong_t pairMask, Int_t pairType, TString pairClass, 
                                        Bool_t isAsymmetricDecayChannel, UInt_t mcDecisions);
 
+  void          CountNch05            ();
   Float_t       GetParticleWeight     (AliReducedTrackInfo* track);
   Int_t         GetNRepetitions       (Float_t scalingFactor, Int_t part);
   unsigned long GetSeed               (Int_t part);

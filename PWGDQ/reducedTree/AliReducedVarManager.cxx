@@ -3995,6 +3995,8 @@ void AliReducedVarManager::SetDefaultVarNames() {
   
   fgVariableNames[kMCNch]             = "N_{ch} (|#eta|<1.0)";            fgVariableUnits[kMCNch]         = "";
   fgVariableNames[kMCNchWoPileup]     = "N_{ch} (|#eta|<1.0) w/o pileup"; fgVariableUnits[kMCNchWoPileup] = "";
+  fgVariableNames[kMCNch05]           = "N_{ch} (|#eta|<0.5, p_{T}>0.05GeV/c)";
+  fgVariableUnits[kMCNch09]           = "";
   fgVariableNames[kMCNch09]           = "N_{ch} (|#eta|<0.9)";            fgVariableUnits[kMCNch09]       = "";
   fgVariableNames[kMCNch09+1]         = "N_{ch} (|#eta|<0.9)";            fgVariableUnits[kMCNch09+1]     = "";
   fgVariableNames[kMCNch09Toward]     = "N_{ch} Toward (|#eta|<0.9)";     fgVariableUnits[kMCNch09+2]   = "";
