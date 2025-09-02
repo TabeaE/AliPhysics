@@ -463,7 +463,7 @@ void AliMCSpectraWeights::InitHistos() {
 
 #ifdef __AliMCSpectraWeights_DebugTiming__
   auto t2       = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count();
   DebugChrono("InitHistos took " << duration << " microseconds\n");
 #endif
 }
@@ -643,7 +643,7 @@ bool AliMCSpectraWeights::CalcMCFractions() {
   DebugPCC("\t ...worked\n");
 #ifdef __AliMCSpectraWeights_DebugTiming__
   auto t2       = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count();
   DebugChrono("CalcMCFractions took " << duration << " microseconds\n");
 #endif
   return true;
@@ -673,7 +673,7 @@ bool AliMCSpectraWeights::CorrectFractionsforRest() {
   auto _bin2 = fHistMCGenPrimTrackParticle->GetYaxis()->FindBin(dMultHigh);
 
   auto h1pTMCAll = (TH1D*)fHistMCGenPrimTrackParticle->ProjectionX("h1pTMCAll", _bin1, _bin2,
-                                                        1, fHistMCGenPrimTrackParticle->GetNbinsZ(), "e");
+                      1, fHistMCGenPrimTrackParticle->GetNbinsZ(), "e");
   if(!h1pTMCAll) {
     std::cerr << "AliMCSpectraWeights::ERROR could not create h1pTMCAll\n";
     return false;
@@ -871,7 +871,7 @@ void AliMCSpectraWeights::CountEventMult() {
 
 #ifdef __AliMCSpectraWeights_DebugTiming__
   auto t2       = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count();
   DebugChrono("CountEventMult took " + std::to_string(duration) + " microseconds\n");
 #endif
 }
@@ -891,7 +891,7 @@ void AliMCSpectraWeights::SelectRndSysFlagForEvent() {
             + GetSysVarFromSysFlag(fAllSystematicFlags[_SysIndex]) + "\n");
 #ifdef __AliMCSpectraWeights_DebugTiming__
   auto t2       = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count();
   DebugChrono("SelectRndSysFlagForEvent took " << duration << " microseconds\n");
 #endif
 }
@@ -938,20 +938,20 @@ std::vector<int> const AliMCSpectraWeights::FindBinEntry(float pt, int const par
 
 
   if(fDoInterpolation) {
-    std::array<float, 3> binEntry_low{pt, static_cast<float>(AliMCSpectraWeights::GetMultFromCent(icent_low)),
-                                      static_cast<float>(part)};
+    std::array<float,3> binEntry_low{pt, static_cast<float>(AliMCSpectraWeights::GetMultFromCent(icent_low)),
+                                     static_cast<float>(part)};
     auto const _iBin_low = GetBinFromTH3(fHistMCWeightsSys[AliMCSpectraWeights::SysFlag::kNominal],
                                          binEntry_low);
 
-    std::array<float, 3> binEntry_high{pt, static_cast<float>(AliMCSpectraWeights::GetMultFromCent(icent_high)),
-                                       static_cast<float>(part)};
+    std::array<float,3> binEntry_high{pt, static_cast<float>(AliMCSpectraWeights::GetMultFromCent(icent_high)),
+                                      static_cast<float>(part)};
     auto const _iBin_high = GetBinFromTH3(fHistMCWeightsSys[AliMCSpectraWeights::SysFlag::kNominal],
                                           binEntry_high);
     results.push_back(_iBin_low);
     results.push_back(_iBin_high);
   } else {
-    std::array<float, 3> binEntry{pt, static_cast<float>(AliMCSpectraWeights::GetMultFromCent(fMultClass)),
-                                  static_cast<float>(part)};
+    std::array<float,3> binEntry{pt, static_cast<float>(AliMCSpectraWeights::GetMultFromCent(fMultClass)),
+                                 static_cast<float>(part)};
     auto const _iBin = GetBinFromTH3(fHistMCWeightsSys[AliMCSpectraWeights::SysFlag::kNominal], binEntry);
     results.push_back(_iBin);
   }
@@ -1003,7 +1003,7 @@ float const AliMCSpectraWeights::GetMCSpectraWeightNominal(TParticle* mcGenParti
   DebugPCC("weight: " + std::to_string(_weight_Interpolated) + "\n");
 #ifdef __AliMCSpectraWeights_DebugTiming__
   auto t2       = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count();
   DebugChrono("GetMCSpectraWeightNominal took " << duration << " microseconds\n");
 #endif
   return _weight_Interpolated;
@@ -1072,7 +1072,7 @@ float const AliMCSpectraWeights::GetMCSpectraWeightSystematics(TParticle* mcGenP
   DebugPCC("weight: " + std::to_string(_weight_Interpolated) + "\n");
 #ifdef __AliMCSpectraWeights_DebugTiming__
   auto t2       = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count();
   DebugChrono("GetMCSpectraWeightSystematics took " << duration << " microseconds\n");
 #endif
   return _weight_Interpolated;
@@ -1293,7 +1293,7 @@ void AliMCSpectraWeights::StartNewEvent() {
 
 #ifdef __AliMCSpectraWeights_DebugTiming__
   auto t2       = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count();
   DebugChrono("StartNewEvent took " << duration << " microseconds\n");
 #endif
 }

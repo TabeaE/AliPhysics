@@ -81,39 +81,56 @@ public:
   };
 
   enum Constants {
-    kNMaxProngs=3,        // maximum numbers of prongs allowed for the signal
-    kNMaxGenerations=10,  // maximum number of generations to look back
-    kPDGnotAssigned=0
+    kNMaxProngs      = 3,   // maximum numbers of prongs allowed for the signal
+    kNMaxGenerations = 10,  // maximum number of generations to look back
+    kPDGnotAssigned  = 0
   };
 
-  AliSignalMC(Int_t nProngs = 1, Int_t nGenerations = kNMaxGenerations);
-  AliSignalMC(const Char_t* name, const Char_t* title, Int_t nProngs = 1, Int_t nGenerations = kNMaxGenerations);
+  AliSignalMC(Int_t nProngs=1, Int_t nGenerations=kNMaxGenerations);
+  AliSignalMC(const Char_t* name, const Char_t* title, Int_t nProngs=1, Int_t nGenerations=kNMaxGenerations);
   AliSignalMC(const AliSignalMC &c);
   virtual ~AliSignalMC();
 
-  void SetCommonAncestorIdx(UInt_t idx);
-  void SetProngHistory(UInt_t prong, UInt_t pdgCodes[], Bool_t checkBothCharges[], UInt_t sourceBits[],
-                       Bool_t excludePDG[]=0x0, UInt_t excludeSources[]=0x0, Bool_t useANDonSourceBits[]=0x0);
-  void SetPDGcode(UInt_t prong, UInt_t generation, Int_t pdgCode, Bool_t checkBothCharges = kFALSE,
-                  Bool_t exclude = kFALSE);
-  void SetSources(UInt_t prong, UInt_t generation, UInt_t bits, UInt_t exclude=0,
-                  Bool_t useANDonSourceBits=kTRUE);
-  void SetSourceBit(UInt_t prong, UInt_t generation, UInt_t sourceBit, Bool_t exclude=kFALSE);
-  void SetUseANDonSourceBits(UInt_t prong, UInt_t generation, Bool_t option=kTRUE);
+  void SetCommonAncestorIdx  (UInt_t idx);
+  void SetProngHistory       (UInt_t prong, UInt_t pdgCodes[], Bool_t checkBothCharges[], UInt_t sourceBits[],
+                              Bool_t excludePDG[]=0x0, UInt_t excludeSources[]=0x0,
+                              Bool_t useANDonSourceBits[]=0x0);
+  void SetPDGcode            (UInt_t prong, UInt_t generation, Int_t pdgCode, Bool_t checkBothCharges=kFALSE,
+                              Bool_t exclude=kFALSE);
+  void SetSources            (UInt_t prong, UInt_t generation, UInt_t bits, UInt_t exclude=0,
+                              Bool_t useANDonSourceBits=kTRUE);
+  void SetSourceBit          (UInt_t prong, UInt_t generation, UInt_t sourceBit, Bool_t exclude=kFALSE);
+  void SetUseANDonSourceBits (UInt_t prong, UInt_t generation, Bool_t option=kTRUE);
 
-  UInt_t GetCommonAncestorIdx() const {return fCommonAncestorIdx;}
-  UInt_t GetNProngs() const {return fNProngs;}
-  UInt_t GetNGenerations() const {return fNGenerations;}
-  Int_t GetPDGcode(UInt_t prong, UInt_t generation) const {return (prong<fNProngs && generation<fNGenerations ? fPDGcodes[prong][generation] : 0);}
-  Bool_t GetCheckBothCharges(UInt_t prong, UInt_t generation) const {return (prong<fNProngs && generation<fNGenerations ? fCheckBothCharges[prong][generation] : 0);}
-  Bool_t GetPDGExclude(UInt_t prong, UInt_t generation) const {return (prong<fNProngs && generation<fNGenerations ? fExcludePDG[prong][generation] : 0);}
-  Bool_t CheckSourceBit(UInt_t prong, UInt_t generation, UInt_t sourceBit) const {return (prong<fNProngs && generation<fNGenerations && sourceBit<kNSources ? fSourceBits[prong][generation] & (UInt_t(1)<<sourceBit) : kFALSE);}
-  UInt_t GetSources(UInt_t prong, UInt_t generation) const {return (prong<fNProngs && generation<fNGenerations ? fSourceBits[prong][generation] : 0);}
-  UInt_t GetSourcesExclude(UInt_t prong, UInt_t generation) const {return (prong<fNProngs && generation<fNGenerations ? fExcludeSource[prong][generation] : 0);}
-  Bool_t GetSourceExclude(UInt_t prong, UInt_t generation, UInt_t sourceBit) const {return (prong<fNProngs && generation<fNGenerations && sourceBit<kNSources ? fExcludeSource[prong][generation] & (UInt_t(1)<<sourceBit) : kFALSE);}
-  Bool_t GetUseANDonSourceBits(UInt_t prong, UInt_t generation) const {return (prong<fNProngs && generation<fNGenerations ? fUseANDonSourceBitMap[prong][generation] : kFALSE);}
+  UInt_t GetCommonAncestorIdx  () const {return fCommonAncestorIdx;}
+  UInt_t GetNProngs            () const {return fNProngs;}
+  UInt_t GetNGenerations       () const {return fNGenerations;}
+  Int_t  GetPDGcode            (UInt_t prong, UInt_t generation) const {
+                                return (prong<fNProngs && generation<fNGenerations
+                                        ? fPDGcodes[prong][generation] : 0);}
+  Bool_t GetCheckBothCharges   (UInt_t prong, UInt_t generation) const {
+                                return (prong<fNProngs && generation<fNGenerations
+                                        ? fCheckBothCharges[prong][generation] : 0);}
+  Bool_t GetPDGExclude         (UInt_t prong, UInt_t generation) const {
+                                return (prong<fNProngs && generation<fNGenerations
+                                        ? fExcludePDG[prong][generation] : 0);}
+  Bool_t CheckSourceBit        (UInt_t prong, UInt_t generation, UInt_t sourceBit) const {
+                                return (prong<fNProngs && generation<fNGenerations && sourceBit<kNSources
+                                        ? fSourceBits[prong][generation] & (UInt_t(1)<<sourceBit) : kFALSE);}
+  UInt_t GetSources            (UInt_t prong, UInt_t generation) const {
+                                return (prong<fNProngs && generation<fNGenerations
+                                        ? fSourceBits[prong][generation] : 0);}
+  UInt_t GetSourcesExclude     (UInt_t prong, UInt_t generation) const {
+                                return (prong<fNProngs && generation<fNGenerations
+                                        ? fExcludeSource[prong][generation] : 0);}
+  Bool_t GetSourceExclude      (UInt_t prong, UInt_t generation, UInt_t sourceBit) const {
+                                return (prong<fNProngs && generation<fNGenerations && sourceBit<kNSources
+                                        ? fExcludeSource[prong][generation] & (UInt_t(1)<<sourceBit) : kFALSE);}
+  Bool_t GetUseANDonSourceBits (UInt_t prong, UInt_t generation) const {
+                                return (prong<fNProngs && generation<fNGenerations
+                                        ? fUseANDonSourceBitMap[prong][generation] : kFALSE);}
 
-  Bool_t TestPDG(UInt_t prong, UInt_t generation, Int_t code);
+  Bool_t TestPDG               (UInt_t prong, UInt_t generation, Int_t code);
 
 private:
 
@@ -121,12 +138,18 @@ private:
   UInt_t fNGenerations;  // number of generations to look back in history
 
   Int_t  fPDGcodes[kNMaxProngs][kNMaxGenerations];          // PDG codes for all particles in the defined signal
-  Bool_t fCheckBothCharges[kNMaxProngs][kNMaxGenerations];  // include both charge signs of the specified PDG code
-  Bool_t fExcludePDG[kNMaxProngs][kNMaxGenerations];        // if TRUE, the specified PDG criteria are used to exclude the particle
+  Bool_t fCheckBothCharges[kNMaxProngs][kNMaxGenerations];  // include both charge signs of the specified
+                                                            // PDG code
+  Bool_t fExcludePDG[kNMaxProngs][kNMaxGenerations];        // if TRUE, the specified PDG criteria are used to
+                                                            // exclude the particle
 
-  UInt_t fSourceBits[kNMaxProngs][kNMaxGenerations];     // bit maps encoding physical sources/processes of the particles (see ESource)
-  UInt_t fExcludeSource[kNMaxProngs][kNMaxGenerations];  // if TRUE, the specified source criteria are used to exclude the particle
-  Bool_t fUseANDonSourceBitMap[kNMaxProngs][kNMaxGenerations];  // if TRUE request all enabled source bits (AND); if FALSE request at least one of the enabled source bits (OR)
+  UInt_t fSourceBits[kNMaxProngs][kNMaxGenerations];     // bit maps encoding physical sources/processes of
+                                                         // the particles (see ESource)
+  UInt_t fExcludeSource[kNMaxProngs][kNMaxGenerations];  // if TRUE, the specified source criteria are used to
+                                                         // exclude the particle
+  Bool_t fUseANDonSourceBitMap[kNMaxProngs][kNMaxGenerations];  // if TRUE request all enabled source bits (AND);
+                                                                // if FALSE request at least one of the
+                                                                // enabled source bits (OR)
 
   UInt_t fCommonAncestorIdx;  // index of first common ancestor for all prongs; defaults to -1
   // all older ancestors are considered to be common

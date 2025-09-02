@@ -629,63 +629,63 @@ void AliAnalysisTaskReducedTreeMaker::UserExec(Option_t *option)
                            nCentEstimators);
 
   // TEST
-  // TODO I get non-zero output for GetBGEventReused, but in stdout also it says "AliMCEventHandler::Init: Set subsidiary event#0 path", but I cannot see subsidiary particles, why?
-  fMCPlpEventsHistogram->Fill(0);
-
-  if(AliDielectronMC::Instance()->HasMC()) {
-    AliGenHepMCEventHeader* hepMCHeader = 0x0;  // event header for EPOS
-    TList *lh = new TList();
-    AliMCEvent* mcEvent = AliDielectronMC::Instance()->GetMCEvent();
-    if(mcEvent) {
-      TString genname = mcEvent->GenEventHeader()->ClassName();
-      std::cout << "mcEvent->GenEventHeader()->ClassName(): " << genname << std::endl;
-      if(genname.Contains("AliGenHepMCEventHeader")) {
-        hepMCHeader = (AliGenHepMCEventHeader*)mcEvent->GenEventHeader();
-//         lh = cockhead->GetHeaders();
-        lh->Add(hepMCHeader);
-        std::cout << "hepMCHeader->GetName(): " << hepMCHeader->GetName() << std::endl;
-        std::cout << "mcEvent->GetBGEventReused(): " << mcEvent->GetBGEventReused() << std::endl;
-      }
-      Bool_t  fSelectOnGenerator = kTRUE;
-      TString fGenerToKeep       = "EPOS";  // generator name to analyse
-      TString fGenerToExclude    = "";      // generator name to exclude
-      if(fSelectOnGenerator && lh) {
-        std::cout << "if(fSelectOnGenerator) && lh" << std::endl;
-        Bool_t keep = kTRUE;
-        if(fGenerToExclude.Length() == 0) keep = kFALSE;
-        Int_t nh = lh->GetEntries();
-        std::cout << "lh->GetEntries(): " << nh << std::endl;
-        /*for(Int_t i=0; i<nh; i++) {
-          AliGenEventHeader* gh = (AliGenEventHeader*)lh->At(i);
-          std::cout << "gh: " << gh << std::endl;
-          TString       genname = gh->GetName();
-          std::cout << "gh->GetName(): " << genname << std::endl;
-          if(fGenerToKeep.Length()   >0 && genname.Contains(fGenerToKeep.Data())   ) keep = kTRUE;
-          if(fGenerToExclude.Length()>0 && genname.Contains(fGenerToExclude.Data())) keep = kFALSE;
-        }
-        //if(keep) {
-          fMCPlpEventsHistogram->Fill(1);
-          if(AliAnalysisUtils::IsPileupInGeneratedEvent(mcEvent,"EPOS"))
-            fMCPlpEventsHistogram->Fill(2);
-          if(AliAnalysisUtils::IsSameBunchPileupInGeneratedEvent(mcEvent,"EPOS"))
-            fMCPlpEventsHistogram->Fill(3);
-        //}*/
-      }
-
-      /*for(Int_t iMC=0; iMC<mcEvent->GetNumberOfTracks(); ++iMC) {
-        AliVParticle *part = (AliVParticle*)mcEvent->GetTrack(iMC);
-        fMCPlpParticlesHistogram->Fill(0);
-        if(AliAnalysisUtils::IsParticleFromOutOfBunchPileupCollision(iMC,mcEvent))
-          fMCPlpParticlesHistogram->Fill(1);
-        else 
-          fMCPlpParticlesHistogram->Fill(2);
-        if(fMCEvent->IsPhysicalPrimary(iMC))
-          fMCPlpParticlesHistogram->Fill(3);
-        // if(lh && IsInjectedParticle(iMC,lh))
-        //   fMCPlpParticlesHistogram->Fill(4);
-      }*/
-    }
-  }
+//   // TODO I get non-zero output for GetBGEventReused, but in stdout also it says "AliMCEventHandler::Init: Set subsidiary event#0 path", but I cannot see subsidiary particles, why?
+//   fMCPlpEventsHistogram->Fill(0);
+//
+//   if(AliDielectronMC::Instance()->HasMC()) {
+//     AliGenHepMCEventHeader* hepMCHeader = 0x0;  // event header for EPOS
+//     TList *lh = new TList();
+//     AliMCEvent* mcEvent = AliDielectronMC::Instance()->GetMCEvent();
+//     if(mcEvent) {
+//       TString genname = mcEvent->GenEventHeader()->ClassName();
+//       std::cout << "mcEvent->GenEventHeader()->ClassName(): " << genname << std::endl;
+//       if(genname.Contains("AliGenHepMCEventHeader")) {
+//         hepMCHeader = (AliGenHepMCEventHeader*)mcEvent->GenEventHeader();
+// //         lh = cockhead->GetHeaders();
+//         lh->Add(hepMCHeader);
+//         std::cout << "hepMCHeader->GetName(): " << hepMCHeader->GetName() << std::endl;
+//         std::cout << "mcEvent->GetBGEventReused(): " << mcEvent->GetBGEventReused() << std::endl;
+//       }
+//       Bool_t  fSelectOnGenerator = kTRUE;
+//       TString fGenerToKeep       = "EPOS";  // generator name to analyse
+//       TString fGenerToExclude    = "";      // generator name to exclude
+//       if(fSelectOnGenerator && lh) {
+//         std::cout << "if(fSelectOnGenerator) && lh" << std::endl;
+//         Bool_t keep = kTRUE;
+//         if(fGenerToExclude.Length() == 0) keep = kFALSE;
+//         Int_t nh = lh->GetEntries();
+//         std::cout << "lh->GetEntries(): " << nh << std::endl;
+//         /*for(Int_t i=0; i<nh; i++) {
+//           AliGenEventHeader* gh = (AliGenEventHeader*)lh->At(i);
+//           std::cout << "gh: " << gh << std::endl;
+//           TString       genname = gh->GetName();
+//           std::cout << "gh->GetName(): " << genname << std::endl;
+//           if(fGenerToKeep.Length()   >0 && genname.Contains(fGenerToKeep.Data())   ) keep = kTRUE;
+//           if(fGenerToExclude.Length()>0 && genname.Contains(fGenerToExclude.Data())) keep = kFALSE;
+//         }
+//         //if(keep) {
+//           fMCPlpEventsHistogram->Fill(1);
+//           if(AliAnalysisUtils::IsPileupInGeneratedEvent(mcEvent,"EPOS"))
+//             fMCPlpEventsHistogram->Fill(2);
+//           if(AliAnalysisUtils::IsSameBunchPileupInGeneratedEvent(mcEvent,"EPOS"))
+//             fMCPlpEventsHistogram->Fill(3);
+//         //}*/
+//       }
+//
+//       /*for(Int_t iMC=0; iMC<mcEvent->GetNumberOfTracks(); ++iMC) {
+//         AliVParticle *part = (AliVParticle*)mcEvent->GetTrack(iMC);
+//         fMCPlpParticlesHistogram->Fill(0);
+//         if(AliAnalysisUtils::IsParticleFromOutOfBunchPileupCollision(iMC,mcEvent))
+//           fMCPlpParticlesHistogram->Fill(1);
+//         else
+//           fMCPlpParticlesHistogram->Fill(2);
+//         if(fMCEvent->IsPhysicalPrimary(iMC))
+//           fMCPlpParticlesHistogram->Fill(3);
+//         // if(lh && IsInjectedParticle(iMC,lh))
+//         //   fMCPlpParticlesHistogram->Fill(4);
+//       }*/
+//     }
+//   }
   // end TEST
 
   // rejected due to physics selection

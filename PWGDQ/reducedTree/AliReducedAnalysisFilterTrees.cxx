@@ -972,18 +972,18 @@ void AliReducedAnalysisFilterTrees::RunSameEventPairing()
 
 //_____________________________________________________________________________
 // Fill multiplicity values (regions=false: global; regions=true: in regions).
-void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions/*= kFALSE*/)
+void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions/*=kFALSE*/)
 {
   
   // Fill global tracks (both signal and MC and MC truth number of Jpsi)
+  Float_t phi = 0;
   if(!regions) {
     for(Int_t icut=0; icut<GetNMeasMultCuts(); icut++) fValues[AliReducedVarManager::kNGlobalTracks+icut] = 0.;
     fValues[AliReducedVarManager::kMCNchWoPileup] = 0.;
     fValues[AliReducedVarManager::kMCNch09]       = 0.;
     fValues[AliReducedVarManager::kMCNJpsi]       = 0.;
   }
-  Float_t phi = 0;
-  if(regions) {
+  else {
     // Define the phi reference
     if(fDefaultRandomPhi) phi = TMath::TwoPi() * gRandom->Rndm();
     else                  phi = fValues[AliReducedVarManager::kPhiLeading];
@@ -1003,24 +1003,25 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions/*= kFALSE*/)
           Float_t probJpsi = fJpsiMassDist->Eval(jpsiPair->Mass(0));
           if(probJpsi >= maxProbJpsi) {
             maxProbJpsi = probJpsi;
-            phi = jpsiPair->Phi();
+            phi         = jpsiPair->Phi();
           }
+        } else {
+          phi = jpsiPair->Phi();
         }
-        else phi = jpsiPair->Phi();
       }
       if((fValues[AliReducedVarManager::kMCNJpsi]==1) && (pairs->GetEntries()>0.)) {
-        fValues[AliReducedVarManager::kPhiJpsiMCTruth] = abs(fValues[AliReducedVarManager::kPhiJpsiMCTruth]
-                                                             - phi);
+        fValues[AliReducedVarManager::kPhiJpsiMCTruth] = abs(fValues[AliReducedVarManager::kPhiJpsiMCTruth] -
+                                                             phi);
         fHistosManager->FillHistClass("DeltaPhi_JpsiTruth_JpsiCandidate", fValues);
       }
-    }
-    else if(fRegionsToMCTruth && (fValues[AliReducedVarManager::kMCNJpsi]==1))
+    } else if(fRegionsToMCTruth && (fValues[AliReducedVarManager::kMCNJpsi]==1)) {
       phi = fValues[AliReducedVarManager::kPhiJpsiMCTruth];
+    }
     
     for(Int_t icut=0; icut<GetNMeasMultCuts(); icut++) {
-      fValues[AliReducedVarManager::kNGlobalTracksToward+icut]     = 0.;
-      fValues[AliReducedVarManager::kNGlobalTracksTransverse+icut] = 0.;
-      fValues[AliReducedVarManager::kNGlobalTracksAway+icut]       = 0.;
+      fValues[AliReducedVarManager::kNGlobalTracksToward     +icut] = 0.;
+      fValues[AliReducedVarManager::kNGlobalTracksTransverse +icut] = 0.;
+      fValues[AliReducedVarManager::kNGlobalTracksAway       +icut] = 0.;
       fValues[(int)AliReducedVarManager::kNGlobalTracksToward+
               (int)AliReducedVarManager::kNMaxCutsGlobalTracks+icut] = 0.;
       fValues[(int)AliReducedVarManager::kNGlobalTracksTransverse+
@@ -1029,10 +1030,10 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions/*= kFALSE*/)
               (int)AliReducedVarManager::kNMaxCutsGlobalTracks+icut] = 0.;
     }
     fValues[AliReducedVarManager::kMCNch09Toward]       = 0.;
-    fValues[AliReducedVarManager::kMCNch09Transverse]   = 0.;
-    fValues[AliReducedVarManager::kMCNch09Away]         = 0.;
     fValues[AliReducedVarManager::kMCNch09Toward+1]     = 0.;
+    fValues[AliReducedVarManager::kMCNch09Transverse]   = 0.;
     fValues[AliReducedVarManager::kMCNch09Transverse+1] = 0.;
+    fValues[AliReducedVarManager::kMCNch09Away]         = 0.;
     fValues[AliReducedVarManager::kMCNch09Away+1]       = 0.;
   }
   
@@ -1185,11 +1186,11 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions/*= kFALSE*/)
     }  // end loop over tracks
   }  // end loop over arrays
 
-  // some quantities necessary to compute efficiency/contamination TODO is this implemented properly?
-  if(!regions) {
+  // Fill kMCNch09+1 for MC truth accepted events only
+  // (necessary to compute contamination of events with |vtx_z|>10cm and Nch=0)
+  if(fOptionRunOverMC && !regions) {
     fValues[AliReducedVarManager::kMCNch09+1] = fValues[AliReducedVarManager::kMCNch09];
-    Bool_t isMCAccepted = (abs(fValues[AliReducedVarManager::kVtxZMC])<=10.);
-    if(!isMCAccepted) {
+    if(fValues[AliReducedVarManager::kMCNch09] < 1 || abs(fValues[AliReducedVarManager::kVtxZMC]) > 10.) {
       fValues[AliReducedVarManager::kMCNch09+1] = -9999.;
     }
   }
@@ -1200,7 +1201,6 @@ void AliReducedAnalysisFilterTrees::FillMultiplicity(Bool_t regions/*= kFALSE*/)
 // Apply event cuts
 Bool_t AliReducedAnalysisFilterTrees::IsEventSelected(AliReducedBaseEvent* event, Float_t* values/*=0x0*/)
 {
-
   if(fEventCuts.GetEntries() == 0) return kTRUE;
   // Loop over all the cuts and make a logical and between all cuts in the list
   for(Int_t i=0; i<fEventCuts.GetEntries(); ++i) {
@@ -1273,7 +1273,7 @@ Bool_t AliReducedAnalysisFilterTrees::IsTrackMeasMultSelected(AliReducedBaseTrac
   if(fMeasMultTrackCuts.GetEntries() == 0) return kTRUE;
   if(track->IsMCTruth())                   return kFALSE;
   track->ResetMultFlags();
-  
+
   for(Int_t i=0; i<fMeasMultTrackCuts.GetEntries(); ++i) {
     AliReducedInfoCut* cut = (AliReducedInfoCut*) fMeasMultTrackCuts.At(i);
     if(values) { if(cut->IsSelected(track, values)) track->SetMultFlag(i); }

@@ -502,7 +502,8 @@ class AliReducedVarManager : public TObject {
                                   //   AliReducedAnalysisFilterTrees.
     kMCNch05,                     // Nof primary charged particles in MC in |eta|<0.5 and pT>0.05GeV/c
     kMCNch09,                     // Nof primary charged particles in MC in |eta|<0.9
-                                  // kMCNch09+1: same as kMCNch09 if MC event accepted (|zvtx|<10cm), else -9999
+                                  // kMCNch09+1: same as kMCNch09 if MC event is accepted (|zvtx|<10cm, nch>0),
+                                  //             else -9999
     kMCNch09Toward = kMCNch09+2,  // Nof primary charged particles in regions of phi
                                   //   (toward, away, transverse) relative to
                                   //   1. Jpsi/random phi

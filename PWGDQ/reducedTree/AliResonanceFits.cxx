@@ -35,18 +35,18 @@ using std::setw;
 ClassImp(AliResonanceFits)
 
 // initialization of static members needed by the Minuit fitter
-TH1* AliResonanceFits::fgTempSignal         = 0x0;
-TH1* AliResonanceFits::fgTempBkg            = 0x0;
-TH1* AliResonanceFits::fSignalMCshape       = 0x0;
-TH1* AliResonanceFits::fAlpha               = 0x0;
-TH1* AliResonanceFits::fBkgFitFunction_corr = 0x0;
-TF1* AliResonanceFits::fBkgFitFunction      = 0x0;
-TF1* AliResonanceFits::fSignalFitFunc       = 0x0;
-TF1* AliResonanceFits::fGlobalFitFunction   = 0x0;
-Bool_t   AliResonanceFits::fgOptionUse2DMatching = kFALSE;
-Double_t AliResonanceFits::fgPtFitRange[2]       = {0.0, 100.};
-Double_t AliResonanceFits::fgMassFitRange[2]     = {0.0, 15.};
-Int_t    AliResonanceFits::fgOptionMEMatching    = AliResonanceFits::kMatchSEOS;
+TH1*     AliResonanceFits::fgTempSignal                 = 0x0;
+TH1*     AliResonanceFits::fgTempBkg                    = 0x0;
+TH1*     AliResonanceFits::fSignalMCshape               = 0x0;
+TH1*     AliResonanceFits::fAlpha                       = 0x0;
+TH1*     AliResonanceFits::fBkgFitFunction_corr         = 0x0;
+TF1*     AliResonanceFits::fBkgFitFunction              = 0x0;
+TF1*     AliResonanceFits::fSignalFitFunc               = 0x0;
+TF1*     AliResonanceFits::fGlobalFitFunction           = 0x0;
+Bool_t   AliResonanceFits::fgOptionUse2DMatching        = kFALSE;
+Double_t AliResonanceFits::fgPtFitRange[2]              = {0.0, 100.};
+Double_t AliResonanceFits::fgMassFitRange[2]            = {0.0, 15.};
+Int_t    AliResonanceFits::fgOptionMEMatching           = AliResonanceFits::kMatchSEOS;
 Double_t AliResonanceFits::fgMassExclusionRanges[10][2] = {{0.}};
 Int_t    AliResonanceFits::fgNMassExclusionRanges       = 0;
 Bool_t   AliResonanceFits::fgOptionUseSignificantZero   = kFALSE;
@@ -108,8 +108,8 @@ fBkgFitOption("MEI0")
   //
   for(Int_t i=0; i<kNMaxVariables; ++i) {
     fVariables[i]       = -1;
-    fVarLimits[i][0]    = 0;
-    fVarLimits[i][1]    = 0;
+    fVarLimits[i][0]    =  0;
+    fVarLimits[i][1]    =  0;
     fVarIndices[i]      = -1;
     fIter[i]            = -1;
     fVarBinLimits[i][0] = -1;
@@ -138,9 +138,9 @@ AliResonanceFits::~AliResonanceFits()
 
 
 //_______________________________________________________________________________
-void AliResonanceFits::SetHistograms(THnF* seos, THnF* meos /*=0x0*/, 
-                                     THnF* selsLeg1 /*=0x0*/, THnF* selsLeg2 /*=0x0*/,
-                                     THnF* melsLeg1 /*=0x0*/, THnF* melsLeg2 /*=0x0*/)
+void AliResonanceFits::SetHistograms(THnF* seos, THnF* meos/*=0x0*/,
+                                     THnF* selsLeg1/*=0x0*/, THnF* selsLeg2/*=0x0*/,
+                                     THnF* melsLeg1/*=0x0*/, THnF* melsLeg2/*=0x0*/)
 {
   //
   // Set the multi-dim histograms
@@ -171,8 +171,8 @@ void AliResonanceFits::AddVariables(Int_t nVars, Int_t* vars, Int_t* indices)
     fVariables[fNVariables]  = vars[i];
     fVarIndices[fNVariables] = indices[i];
     if(fSEOS) {
-      fVarLimits[fNVariables][0] = fSEOS->GetAxis(indices[i])->GetXmin()+1.0e-6;
-      fVarLimits[fNVariables][1] = fSEOS->GetAxis(indices[i])->GetXmax()-1.0e-6;
+      fVarLimits[fNVariables][0] = fSEOS->GetAxis(indices[i])->GetXmin() + 1.0e-6;
+      fVarLimits[fNVariables][1] = fSEOS->GetAxis(indices[i])->GetXmax() - 1.0e-6;
     }
     fNVariables++;
   }
@@ -195,8 +195,8 @@ void AliResonanceFits::AddVariable(Int_t var, Int_t index)
   fVariables[fNVariables]  = var;
   fVarIndices[fNVariables] = index;
   if(fSEOS) {
-    fVarLimits[fNVariables][0] = fSEOS->GetAxis(index)->GetXmin()+1.0e-6;
-    fVarLimits[fNVariables][1] = fSEOS->GetAxis(index)->GetXmax()-1.0e-6;
+    fVarLimits[fNVariables][0] = fSEOS->GetAxis(index)->GetXmin() + 1.0e-6;
+    fVarLimits[fNVariables][1] = fSEOS->GetAxis(index)->GetXmax() - 1.0e-6;
   }
   fNVariables++;
   fMatchingIsDone = kFALSE;
@@ -217,8 +217,8 @@ void AliResonanceFits::SetVarRange(Int_t var, Double_t* lims) {
   }
   if(idx == -1) return;
 
-  fVarLimits[idx][0] = lims[0]+1.0e-6;
-  fVarLimits[idx][1] = lims[1]-1.0e-6;
+  fVarLimits[idx][0] = lims[0] + 1.0e-6;
+  fVarLimits[idx][1] = lims[1] - 1.0e-6;
 
   fMatchingIsDone = kFALSE;
 }
@@ -237,8 +237,8 @@ void AliResonanceFits::SetVarRange(Int_t var, Double_t min, Double_t max) {
       idx = i;
   }
   if(idx == -1) return;
-  fVarLimits[idx][0] = min+1.0e-6;
-  fVarLimits[idx][1] = max-1.0e-6;
+  fVarLimits[idx][0] = min + 1.0e-6;
+  fVarLimits[idx][1] = max - 1.0e-6;
 
   fMatchingIsDone = kFALSE;
 }
@@ -254,17 +254,18 @@ void AliResonanceFits::ApplyUserRanges(THnF* h) {
   //
   for(Int_t i=0; i<fNVariables; ++i) {
     if(TMath::Abs(fVarLimits[i][0]-fVarLimits[i][1]) < 1.0e-6) {
-      fVarLimits[i][0] = fSEOS->GetAxis(fVarIndices[i])->GetXmin()+1.0e-6;
-      fVarLimits[i][1] = fSEOS->GetAxis(fVarIndices[i])->GetXmax()-1.0e-6;
+      fVarLimits[i][0] = fSEOS->GetAxis(fVarIndices[i])->GetXmin() + 1.0e-6;
+      fVarLimits[i][1] = fSEOS->GetAxis(fVarIndices[i])->GetXmax() - 1.0e-6;
     }
-
-    if(fVarLimits[i][0] < fSEOS->GetAxis(fVarIndices[i])->GetXmin())
-      fVarLimits[i][0] = fSEOS->GetAxis(fVarIndices[i])->GetXmin()+1.0e-6;
-    if(fVarLimits[i][1] > fSEOS->GetAxis(fVarIndices[i])->GetXmax())
-      fVarLimits[i][1] = fSEOS->GetAxis(fVarIndices[i])->GetXmax()-1.0e-6;
+    if(fVarLimits[i][0] < fSEOS->GetAxis(fVarIndices[i])->GetXmin()) {
+      fVarLimits[i][0] = fSEOS->GetAxis(fVarIndices[i])->GetXmin() + 1.0e-6;
+    }
+    if(fVarLimits[i][1] > fSEOS->GetAxis(fVarIndices[i])->GetXmax()) {
+      fVarLimits[i][1] = fSEOS->GetAxis(fVarIndices[i])->GetXmax() - 1.0e-6;
+    }
     if(fVarLimits[i][0] > fVarLimits[i][1]) {
-      fVarLimits[i][0] = fSEOS->GetAxis(fVarIndices[i])->GetXmin()+1.0e-6;
-      fVarLimits[i][1] = fSEOS->GetAxis(fVarIndices[i])->GetXmax()-1.0e-6;
+      fVarLimits[i][0] = fSEOS->GetAxis(fVarIndices[i])->GetXmin() + 1.0e-6;
+      fVarLimits[i][1] = fSEOS->GetAxis(fVarIndices[i])->GetXmax() - 1.0e-6;
     }
 
     h->GetAxis(fVarIndices[i])->SetRangeUser(fVarLimits[i][0], fVarLimits[i][1]);
@@ -282,14 +283,14 @@ Bool_t AliResonanceFits::Initialize() {
   AliReducedVarManager::SetDefaultVarNames();
 
   // clean up the output histograms
-  if(fSplusB)            {delete fSplusB;            fSplusB = 0;}
-  if(fSig)               {delete fSig;               fSig = 0;}
-  if(fSplusResidualBkg)  {delete fSplusResidualBkg;  fSplusResidualBkg = 0;}
-  if(fSplusBblind)       {delete fSplusBblind;       fSplusBblind = 0;}
-  if(fBkgCombinatorial)  {delete fBkgCombinatorial;  fBkgCombinatorial = 0;}
-  if(fBkgResidual)       {delete fBkgResidual;       fBkgResidual = 0;}
-  if(fBkg)               {delete fBkg;               fBkg = 0;}
-  if(fSoverB)            {delete fSoverB;            fSoverB = 0;}
+  if(fSplusB)            {delete fSplusB;            fSplusB            = 0;}
+  if(fSig)               {delete fSig;               fSig               = 0;}
+  if(fSplusResidualBkg)  {delete fSplusResidualBkg;  fSplusResidualBkg  = 0;}
+  if(fSplusBblind)       {delete fSplusBblind;       fSplusBblind       = 0;}
+  if(fBkgCombinatorial)  {delete fBkgCombinatorial;  fBkgCombinatorial  = 0;}
+  if(fBkgResidual)       {delete fBkgResidual;       fBkgResidual       = 0;}
+  if(fBkg)               {delete fBkg;               fBkg               = 0;}
+  if(fSoverB)            {delete fSoverB;            fSoverB            = 0;}
   if(fSoverBfromMCshape) {delete fSoverBfromMCshape; fSoverBfromMCshape = 0;}
 
   // Check the needed user histograms
@@ -302,7 +303,8 @@ Bool_t AliResonanceFits::Initialize() {
     (fOptionBkgMethod==kBkgLikeSignAndResidualFit && fOptionUseRfactorCorrection))
   {
     if(!fMEOS) {
-      cout << "AliResonanceFits::Initialize() Fatal: No ME-OS histogram provided! This is needed with the current matching options" << endl;
+      cout << "AliResonanceFits::Initialize() Fatal: No ME-OS histogram provided! "
+              "This is needed with the current matching options" << endl;
       return kFALSE;
     }
   }
@@ -311,11 +313,13 @@ Bool_t AliResonanceFits::Initialize() {
     (fOptionBkgMethod==kBkgMixedEvent && fgOptionMEMatching==kMatchSELS))
   {
     if(!fSELSleg1) {
-      cout << "AliResonanceFits::Initialize() Fatal: No SE-LS leg1 histogram provided! This is needed with the current matching options" << endl;
+      cout << "AliResonanceFits::Initialize() Fatal: No SE-LS leg1 histogram provided! "
+              "This is needed with the current matching options" << endl;
       return kFALSE;
     }
     if(!fSELSleg2) {
-      cout << "AliResonanceFits::Initialize() Fatal: No SE-LS leg2 histogram provided! This is needed with the current matching options" << endl;
+      cout << "AliResonanceFits::Initialize() Fatal: No SE-LS leg2 histogram provided! "
+              "This is needed with the current matching options" << endl;
       return kFALSE;
     }
   }
@@ -324,11 +328,13 @@ Bool_t AliResonanceFits::Initialize() {
       fOptionBkgMethod==kBkgMixedEventAndResidualFit || fOptionDebug)
   {
     if(!fMELSleg1) {
-      cout << "AliResonanceFits::Initialize() Fatal: No ME-LS leg1 histogram provided! This is needed with the current matching options" << endl;
+      cout << "AliResonanceFits::Initialize() Fatal: No ME-LS leg1 histogram provided! "
+              "This is needed with the current matching options" << endl;
       return kFALSE;
     }
     if(!fMELSleg2) {
-      cout << "AliResonanceFits::Initialize() Fatal: No ME-LS leg2 histogram provided! This is needed with the current matching options" << endl;
+      cout << "AliResonanceFits::Initialize() Fatal: No ME-LS leg2 histogram provided! "
+              "This is needed with the current matching options" << endl;
       return kFALSE;
     }
   }
@@ -340,11 +346,13 @@ Bool_t AliResonanceFits::Initialize() {
       return kFALSE;
     }
     if(!(fSEOS_MCtruth || fSignalMCshape) && fOptionSignalFromMC) {
-      cout << "AliResonanceFits::Initialize() Fatal: No MC signal shape histogram provided! This is needed with the current options" << endl;
+      cout << "AliResonanceFits::Initialize() Fatal: No MC signal shape histogram provided! "
+              "This is needed with the current options" << endl;
       return kFALSE;
     }
     if(!fSignalFitFunc && !fOptionSignalFromMC) {
-      cout << "AliResonanceFits::Initialize() Fatal: No fit function for signal provided! This is needed with the current options" << endl;
+      cout << "AliResonanceFits::Initialize() Fatal: No fit function for signal provided! "
+              "This is needed with the current options" << endl;
       return kFALSE;
     }
   }
@@ -360,10 +368,10 @@ Bool_t AliResonanceFits::Initialize() {
   Bool_t massVarFound = kFALSE;
   for(Int_t i=0; i<fNVariables; ++i) {
     if(fVariables[i] == fMassVariable) {
-      swap(fVariables[fNVariables-1],    fVariables[i]);
-      swap(fVarIndices[fNVariables-1],   fVarIndices[i]);
-      swap(fVarLimits[fNVariables-1][0], fVarLimits[i][0]);
-      swap(fVarLimits[fNVariables-1][1], fVarLimits[i][1]);
+      swap(fVariables [fNVariables-1],    fVariables[i]);
+      swap(fVarIndices[fNVariables-1],    fVarIndices[i]);
+      swap(fVarLimits [fNVariables-1][0], fVarLimits[i][0]);
+      swap(fVarLimits [fNVariables-1][1], fVarLimits[i][1]);
       massVarFound = kTRUE;
     }
   }
@@ -386,10 +394,10 @@ Bool_t AliResonanceFits::Initialize() {
   Bool_t ptVarFound = kFALSE;
   for(Int_t i=0; i<fNVariables; ++i) {
     if(fVariables[i] == fPtVariable) {
-      swap(fVariables[fNVariables-2],    fVariables[i]);
-      swap(fVarIndices[fNVariables-2],   fVarIndices[i]);
-      swap(fVarLimits[fNVariables-2][0], fVarLimits[i][0]);
-      swap(fVarLimits[fNVariables-2][1], fVarLimits[i][1]);
+      swap(fVariables [fNVariables-2],    fVariables[i]);
+      swap(fVarIndices[fNVariables-2],    fVarIndices[i]);
+      swap(fVarLimits [fNVariables-2][0], fVarLimits[i][0]);
+      swap(fVarLimits [fNVariables-2][1], fVarLimits[i][1]);
       ptVarFound = kTRUE;
       break;
     }
