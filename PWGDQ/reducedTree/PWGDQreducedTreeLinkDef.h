@@ -14,6 +14,7 @@
 #pragma link C++ class AliMixingHandler+;
 #pragma link C++ class AliReducedAnalysisBmeson2JpsiK+;
 #pragma link C++ class AliReducedAnalysisFilterTrees+;
+#pragma link C++ class AliReducedAnalysisMCWeights+;
 #pragma link C++ class AliReducedAnalysisJpsi2ee+;
 #pragma link C++ class AliReducedAnalysisJpsi2eeCorrelations+;
 #pragma link C++ class AliReducedAnalysisJpsi2eeMult+;

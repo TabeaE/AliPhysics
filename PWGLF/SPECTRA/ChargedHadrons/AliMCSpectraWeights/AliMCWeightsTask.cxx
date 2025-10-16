@@ -66,11 +66,11 @@ AliMCWeightsTask::~AliMCWeightsTask() {
   auto t1 = std::chrono::high_resolution_clock::now();
 #endif
   // destructor
-  if (fOutputList) delete fOutputList;
+  if(fOutputList) delete fOutputList;
 
 #ifdef __AliMCWeightsTask_DebugTiming__
   auto t2       = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count();
   DebugChrono("deletion took " << duration << " microseconds\n");
 #endif
 }
@@ -88,7 +88,7 @@ void AliMCWeightsTask::UserCreateOutputObjects() {
   fOutputList->Add((TObject*)fMCSpectraWeights->GetHistDataFraction());
   fOutputList->Add((TObject*)fMCSpectraWeights->GetHistMCFraction());
   fOutputList->Add((TObject*)fMCSpectraWeights->GetHistMCWeights());
-  std::map<AliMCSpectraWeights::SysFlag, TH3F*> weights = fMCSpectraWeights->GetHistMCWeightsSys();
+  std::map<AliMCSpectraWeights::SysFlag,TH3F*> weights = fMCSpectraWeights->GetHistMCWeightsSys();
   for(auto const& hist : weights) {
     fOutputList->Add((TObject*)hist.second);
   }
@@ -98,7 +98,7 @@ void AliMCWeightsTask::UserCreateOutputObjects() {
   PostData(1, fOutputList);
 #ifdef __AliMCWeightsTask_DebugTiming__
   auto t2       = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count();
   DebugChrono("UserCreateOutputObjects took " << duration << " microseconds\n");
 #endif
 }
@@ -148,7 +148,7 @@ void AliMCWeightsTask::UserExec(Option_t* option) {
     auto tmpObject = static_cast<AliMCSpectraWeightsHandler*>(fEvent->FindListObject(fStoredObjectName.Data()));
 #ifdef __AliMCWeightsTask_DebugTiming__
     auto t4        = std::chrono::high_resolution_clock::now();
-    auto duration2 = std::chrono::duration_cast<std::chrono::microseconds>(t4 - t3).count();
+    auto duration2 = std::chrono::duration_cast<std::chrono::microseconds>(t4-t3).count();
     DebugChrono("- Searching fMCSpectraWeights took " << duration2 << " microseconds\n");
 #endif
     if(!tmpObject) {
@@ -157,7 +157,7 @@ void AliMCWeightsTask::UserExec(Option_t* option) {
       fEvent->AddObject(handler);
 #ifdef __AliMCWeightsTask_DebugTiming__
       auto t5        = std::chrono::high_resolution_clock::now();
-      auto duration3 = std::chrono::duration_cast<std::chrono::microseconds>(t5 - t4).count();
+      auto duration3 = std::chrono::duration_cast<std::chrono::microseconds>(t5-t4).count();
       DebugChrono("- Adding fMCSpectraWeights took " << duration3 << " microseconds\n");
 #endif
       DebugPCC("Added fMCSpectraWeights to event\n");
@@ -169,7 +169,7 @@ void AliMCWeightsTask::UserExec(Option_t* option) {
   PostData(1, fOutputList);
 #ifdef __AliMCWeightsTask_DebugTiming__
   auto t2       = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count();
   DebugChrono("UserExec took " << duration << " microseconds\n");
 #endif
 }
@@ -274,7 +274,7 @@ AliMCWeightsTask* AliMCWeightsTask::AddTaskAliMCWeightsTask(MCGeneratorType gen,
 
 #ifdef __AliMCWeightsTask_DebugTiming__
   auto t2       = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count();
   DebugChrono("AliMCWeightsTask took " << duration << " microseconds\n");
 #endif
 

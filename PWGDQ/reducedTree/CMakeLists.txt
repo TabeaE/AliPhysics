@@ -45,6 +45,7 @@ set(SRCS
       AliReducedAnalysisJpsi2ee.cxx
       AliReducedAnalysisJpsi2eeCorrelations.cxx
       AliReducedAnalysisJpsi2eeMult.cxx
+      AliReducedAnalysisMCWeights.cxx
       AliReducedAnalysisSingleTrack.cxx
       AliReducedAnalysisTaskSE.cxx
       AliReducedAnalysisTest.cxx

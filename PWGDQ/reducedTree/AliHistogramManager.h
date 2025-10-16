@@ -34,17 +34,17 @@ class AliHistogramManager : public TObject {
   
   void AddHistClass(const Char_t* histClass);
   void AddHistogram(const Char_t* histClass,
-		    const Char_t* name, const Char_t* title, Bool_t isProfile,
+                    const Char_t* name, const Char_t* title, Bool_t isProfile,
                     Int_t nXbins, Double_t xmin, Double_t xmax, Int_t varX,
-		    Int_t nYbins=0, Double_t ymin=0, Double_t ymax=0, Int_t varY=-1,
-		    Int_t nZbins=0, Double_t zmin=0, Double_t zmax=0, Int_t varZ=-1,
+                    Int_t nYbins=0, Double_t ymin=0, Double_t ymax=0, Int_t varY=-1,
+                    Int_t nZbins=0, Double_t zmin=0, Double_t zmax=0, Int_t varZ=-1,
                     const Char_t* xLabels="", const Char_t* yLabels="", const Char_t* zLabels="",
                     Int_t varT=-1, Int_t varW=-1);
   void AddHistogram(const Char_t* histClass,
-		    const Char_t* name, const Char_t* title, Bool_t isProfile,
+                    const Char_t* name, const Char_t* title, Bool_t isProfile,
                     Int_t nXbins, Double_t* xbins, Int_t varX,
-		    Int_t nYbins=0, Double_t* ybins=0x0, Int_t varY=-1,
-		    Int_t nZbins=0, Double_t* zbins=0x0, Int_t varZ=-1,
+                    Int_t nYbins=0, Double_t* ybins=0x0, Int_t varY=-1,
+                    Int_t nZbins=0, Double_t* zbins=0x0, Int_t varZ=-1,
                     const Char_t* xLabels="", const Char_t* yLabels="", const Char_t* zLabels="",
                     Int_t varT=-1, Int_t varW=-1);
   void AddHistogram(const Char_t* histClass,
@@ -61,12 +61,8 @@ class AliHistogramManager : public TObject {
                     TString* axLabels=0x0,
                     Int_t varW=-1,
                     Bool_t useSparse=kFALSE);
-  static THnF* CreateHistogram(const Char_t* name, const Char_t* title,
-                        Int_t nDimensions,
-                        TArrayD* binLimits);
-  static THnF* CreateHistogram(const Char_t* name, const Char_t* title,
-                        Int_t nDimensions,
-                        TAxis* axis);
+  static THnF* CreateHistogram(const Char_t* name, const Char_t* title, Int_t nDimensions, TArrayD* binLimits);
+  static THnF* CreateHistogram(const Char_t* name, const Char_t* title, Int_t nDimensions, TAxis* axis);
   
   void FillHistClass(const Char_t* className, Float_t* values);
   
@@ -81,30 +77,30 @@ class AliHistogramManager : public TObject {
   THashList* AddHistogramsToOutputList(); // get all histograms on a THashList
   THashList* GetHistogramOutputList() {return &fOutputList;} 
   THashList* GetHistogramList(const Char_t* listname) const;    // get a histogram list
-  TObject* GetHistogram(const Char_t* listname, const Char_t* hname) const;  // get a histogram from an old output
+  TObject*   GetHistogram(const Char_t* listname, const Char_t* hname) const;  // get a histogram from an old output
   const Bool_t* GetUsedVars() const {return fUsedVars;}
     
   ULong_t GetAllocatedBins() const {return fBinsAllocated;}  
-  void Print(Option_t*) const;
+  void    Print(Option_t*) const;
   
  private: 
    AliHistogramManager(const AliHistogramManager& histMan);             
    AliHistogramManager& operator=(const AliHistogramManager& histMan);      
    
-  THashList fMainList;          // master histogram list
-  TString fName;                 // master histogram list name
-  THashList* fMainDirectory;   //! main directory with analysis output (this is used for loading output files and retrieving histograms offline)
-  TFile* fHistFile;                    //! pointer to a TFile opened for reading 
-  THashList fOutputList;        // THashList for output histograms
+  THashList  fMainList;       // master histogram list
+  TString    fName;           // master histogram list name
+  THashList* fMainDirectory;  //! main directory with analysis output (this is used for loading output files and retrieving histograms offline)
+  TFile*     fHistFile;       //! pointer to a TFile opened for reading
+  THashList  fOutputList;     // THashList for output histograms
    
   // Array of bool flags toggled when a variable is used (filled in a histogram)
-  Bool_t fUseDefaultVariableNames;       // toggle the usage of default variable names and units
-  //Bool_t* fUsedVars;                     //! map of used variables
-  Bool_t fUsedVars[AliReducedVarManager::kNVars];           // map of used variables
-  ULong_t fBinsAllocated;                // number of allocated bins
-  TString fVariableNames[AliReducedVarManager::kNVars];               //! variable names
-  TString fVariableUnits[AliReducedVarManager::kNVars];               //! variable units
-  Int_t fNVars;                          // maximum number of variables
+  Bool_t  fUseDefaultVariableNames;                      // toggle the usage of default variable names and units
+  //Bool_t* fUsedVars;                                   //! map of used variables
+  Bool_t  fUsedVars[AliReducedVarManager::kNVars];       // map of used variables
+  ULong_t fBinsAllocated;                                // number of allocated bins
+  TString fVariableNames[AliReducedVarManager::kNVars];  //! variable names
+  TString fVariableUnits[AliReducedVarManager::kNVars];  //! variable units
+  Int_t   fNVars;                                        // maximum number of variables
   
   void MakeAxisLabels(TAxis* ax, const Char_t* labels);
   

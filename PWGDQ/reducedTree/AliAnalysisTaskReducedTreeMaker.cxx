@@ -27,6 +27,7 @@
 #include <TBits.h>
 #include <TRandom.h>
 #include <TTimeStamp.h>
+#include <TParticle.h>
 
 #include <AliAnalysisTaskSE.h>
 #include <AliCFContainer.h>
@@ -83,6 +84,7 @@
 #include "AliGenEventHeader.h"
 #include "AliGenCocktailEventHeader.h"
 #include "AliGenHepMCEventHeader.h"
+#include "AliStack.h"
 
 #include <iostream>
 #include <vector>
@@ -629,63 +631,72 @@ void AliAnalysisTaskReducedTreeMaker::UserExec(Option_t *option)
                            nCentEstimators);
 
   // TEST
-//   // TODO I get non-zero output for GetBGEventReused, but in stdout also it says "AliMCEventHandler::Init: Set subsidiary event#0 path", but I cannot see subsidiary particles, why?
-//   fMCPlpEventsHistogram->Fill(0);
-//
-//   if(AliDielectronMC::Instance()->HasMC()) {
-//     AliGenHepMCEventHeader* hepMCHeader = 0x0;  // event header for EPOS
-//     TList *lh = new TList();
-//     AliMCEvent* mcEvent = AliDielectronMC::Instance()->GetMCEvent();
-//     if(mcEvent) {
-//       TString genname = mcEvent->GenEventHeader()->ClassName();
-//       std::cout << "mcEvent->GenEventHeader()->ClassName(): " << genname << std::endl;
-//       if(genname.Contains("AliGenHepMCEventHeader")) {
-//         hepMCHeader = (AliGenHepMCEventHeader*)mcEvent->GenEventHeader();
-// //         lh = cockhead->GetHeaders();
-//         lh->Add(hepMCHeader);
-//         std::cout << "hepMCHeader->GetName(): " << hepMCHeader->GetName() << std::endl;
-//         std::cout << "mcEvent->GetBGEventReused(): " << mcEvent->GetBGEventReused() << std::endl;
-//       }
-//       Bool_t  fSelectOnGenerator = kTRUE;
+  // TODO I get non-zero output for GetBGEventReused, but in stdout also it says "AliMCEventHandler::Init: Set subsidiary event#0 path", but I cannot see subsidiary particles, why?
+  fMCPlpEventsHistogram->Fill(0);
+
+  if(AliDielectronMC::Instance()->HasMC()) {
+    AliGenHepMCEventHeader* hepMCHeader = 0x0;  // event header for EPOS
+    TList *lh = new TList();
+    AliMCEvent* mcEvent = AliDielectronMC::Instance()->GetMCEvent();
+    if(mcEvent) {
+      AliStack* fStack = mcEvent->Stack();
+      std::cout << "GetBGEventReused(): " << mcEvent->GetBGEventReused() << std::endl;
+      std::cout << "GetMCEmbeddingFlag(): " << fStack->GetMCEmbeddingFlag() << std::endl;
+      std::cout << "GetEmbeddingBKGPathsKey(): " << fStack->GetEmbeddingBKGPathsKey() << std::endl;
+      TString genname = mcEvent->GenEventHeader()->ClassName();
+      // std::cout << "mcEvent->GenEventHeader()->ClassName(): " << genname << std::endl;
+      if(genname.Contains("AliGenHepMCEventHeader")) {
+        hepMCHeader = (AliGenHepMCEventHeader*)mcEvent->GenEventHeader();
+//         lh = cockhead->GetHeaders();
+        lh->Add(hepMCHeader);
+        // std::cout << "hepMCHeader->GetName(): " << hepMCHeader->GetName() << std::endl;
+      }
+      Bool_t  fSelectOnGenerator = kTRUE;
 //       TString fGenerToKeep       = "EPOS";  // generator name to analyse
 //       TString fGenerToExclude    = "";      // generator name to exclude
-//       if(fSelectOnGenerator && lh) {
+      if(fSelectOnGenerator && lh) {
 //         std::cout << "if(fSelectOnGenerator) && lh" << std::endl;
 //         Bool_t keep = kTRUE;
 //         if(fGenerToExclude.Length() == 0) keep = kFALSE;
-//         Int_t nh = lh->GetEntries();
-//         std::cout << "lh->GetEntries(): " << nh << std::endl;
-//         /*for(Int_t i=0; i<nh; i++) {
-//           AliGenEventHeader* gh = (AliGenEventHeader*)lh->At(i);
-//           std::cout << "gh: " << gh << std::endl;
-//           TString       genname = gh->GetName();
-//           std::cout << "gh->GetName(): " << genname << std::endl;
+        Int_t nh = lh->GetEntries();
+        // std::cout << "lh->GetEntries(): " << nh << std::endl;
+        for(Int_t i=0; i<nh; i++) {
+          AliGenEventHeader* gh = (AliGenEventHeader*)lh->At(i);
+          TString       genname = gh->ClassName();
+          // std::cout << "gh->ClassName(): " << genname << std::endl;
 //           if(fGenerToKeep.Length()   >0 && genname.Contains(fGenerToKeep.Data())   ) keep = kTRUE;
 //           if(fGenerToExclude.Length()>0 && genname.Contains(fGenerToExclude.Data())) keep = kFALSE;
-//         }
-//         //if(keep) {
-//           fMCPlpEventsHistogram->Fill(1);
-//           if(AliAnalysisUtils::IsPileupInGeneratedEvent(mcEvent,"EPOS"))
-//             fMCPlpEventsHistogram->Fill(2);
-//           if(AliAnalysisUtils::IsSameBunchPileupInGeneratedEvent(mcEvent,"EPOS"))
+        }
+        //if(keep) {
+          fMCPlpEventsHistogram->Fill(1);
+          TString genname = "EPOS";
+          if(AliAnalysisUtils::IsPileupInGeneratedEvent(lh, genname, kFALSE))
+            fMCPlpEventsHistogram->Fill(2);
+//           if(AliAnalysisUtils::IsSameBunchPileupInGeneratedEvent(lh, genname, kFALSE))
 //             fMCPlpEventsHistogram->Fill(3);
-//         //}*/
-//       }
-//
-//       /*for(Int_t iMC=0; iMC<mcEvent->GetNumberOfTracks(); ++iMC) {
-//         AliVParticle *part = (AliVParticle*)mcEvent->GetTrack(iMC);
-//         fMCPlpParticlesHistogram->Fill(0);
-//         if(AliAnalysisUtils::IsParticleFromOutOfBunchPileupCollision(iMC,mcEvent))
-//           fMCPlpParticlesHistogram->Fill(1);
-//         else
-//           fMCPlpParticlesHistogram->Fill(2);
-//         if(fMCEvent->IsPhysicalPrimary(iMC))
-//           fMCPlpParticlesHistogram->Fill(3);
-//         // if(lh && IsInjectedParticle(iMC,lh))
-//         //   fMCPlpParticlesHistogram->Fill(4);
-//       }*/
-//     }
-//   }
+        //}
+      }
+      
+      for(Int_t i=0; i<fStack->GetNtrack(); i++) {
+        TParticle* MCparticle = fStack->Particle(i);
+        if(mcEvent->IsFromBGEvent(fStack->GetCurrentTrackNumber()))
+          std::cout << "IsFromBGEvent" << std::endl;
+      }
+      for(Int_t iMC=0; iMC<mcEvent->GetNumberOfTracks(); ++iMC) {
+        AliVParticle *part = (AliVParticle*)mcEvent->GetTrack(iMC);
+        fMCPlpParticlesHistogram->Fill(0);
+        if(mcEvent->IsFromBGEvent(part->GetLabel()))
+        // if(AliAnalysisUtils::IsParticleFromOutOfBunchPileupCollision(iMC,mcEvent))
+          fMCPlpParticlesHistogram->Fill(1);
+        else
+          fMCPlpParticlesHistogram->Fill(2);
+        if(mcEvent->IsPhysicalPrimary(iMC))
+          fMCPlpParticlesHistogram->Fill(3);
+        // if(lh && IsInjectedParticle(iMC,lh))
+        //   fMCPlpParticlesHistogram->Fill(4);
+      }
+    }
+  }
   // end TEST
 
   // rejected due to physics selection
@@ -1437,7 +1448,8 @@ void AliAnalysisTaskReducedTreeMaker::FillCaloClusters()
     if(!clusterFilterDecision) continue;
 
     TClonesArray& clusters = *(eventInfo->fCaloClusters);
-    AliReducedCaloClusterInfo *reducedCluster = new(clusters[eventInfo->fNCaloClusters]) AliReducedCaloClusterInfo();
+    AliReducedCaloClusterInfo* reducedCluster = new(clusters[eventInfo->fNCaloClusters])
+                                                  AliReducedCaloClusterInfo();
 
     reducedCluster->fClusterID = iclus;
     reducedCluster->fType      = (cluster->IsEMCAL() ? AliReducedCaloClusterInfo::kEMCAL
@@ -1780,7 +1792,8 @@ void AliAnalysisTaskReducedTreeMaker::FillMCTruthInfo(Bool_t isAOD)
   if(!hasMC) return;
   Int_t nMCsignals = fMCsignals.GetEntries();
   if(!nMCsignals) return;
-  AliInputEventHandler* inputHandler = (AliInputEventHandler*) (AliAnalysisManager::GetAnalysisManager()->GetInputEventHandler());
+  AliInputEventHandler* inputHandler = (AliInputEventHandler*) (
+                                          AliAnalysisManager::GetAnalysisManager()->GetInputEventHandler());
 
   AliMCEvent* event = AliDielectronMC::Instance()->GetMCEvent();
   if(!event) return;
@@ -1924,8 +1937,8 @@ void AliAnalysisTaskReducedTreeMaker::FillTrackInfo()
   // find all the tracks which belong to a V0 stored in the reduced event
   UShort_t trackIdsV0    [4][20000] = {{0}};
   UShort_t trackIdsPureV0[4][20000] = {{0}};
-  Int_t nV0LegsTagged    [4] = {0};
-  Int_t nPureV0LegsTagged[4] = {0};
+  Int_t  nV0LegsTagged    [4] = {0};
+  Int_t  nPureV0LegsTagged[4] = {0};
   Bool_t leg1Found[4];
   Bool_t leg2Found[4];
   for(Int_t iv0=0; iv0<fReducedEvent->fNV0candidates[1]; ++iv0) {
@@ -2091,7 +2104,6 @@ void AliAnalysisTaskReducedTreeMaker::FillTrackInfo()
   if(isAOD) eventVtx = const_cast<AliAODVertex*>(aodEvent->GetPrimaryVertex());
 
   for(Int_t itrack=0; itrack<ntracks; ++itrack) {
-
     AliVParticle *particle = event->GetTrack(itrack);
     if(!particle) continue;
     if(isESD) {

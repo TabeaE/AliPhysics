@@ -1576,6 +1576,7 @@ void AliReducedAnalysisFilterTrees::CountNch05()
   const Double_t eta   = 0.5;
 
   fValues[AliReducedVarManager::kMCNch05] = 0.;
+  // TODO: need to FillTrackInfo()?
 
   // Loop over both arrays
   for(Int_t iArray=1; iArray<=2; iArray++) {

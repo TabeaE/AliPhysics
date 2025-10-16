@@ -575,6 +575,8 @@ class AliReducedVarManager : public TObject {
     kCharge = kPdgMC+4,
     kPCCWeight,        // Weight for PCC correction based on particle type
     kPCCnRepetitions,  // kPCCWeight is applied on a statistical basis: track is either counted as 0, 1 or 2
+    kPCCPartType,      // Particle type for PCC: pion=0, proton=1, kaon=2, sigma-=3, sigma+=4, rest=5, lambda=6
+    kPCCPartRap,       // Particle rapidity for PCC
     kVZEROFlowVn,                                 // v_n using VZERO RP
     kVZERODeltaPhiPsiN = kVZEROFlowVn+6*3,        // delta phi = phi - Psi  for VZERO event plane
     kTPCFlowVn         = kVZERODeltaPhiPsiN+6*3,  // v_n using TPC RP
