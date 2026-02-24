@@ -170,6 +170,8 @@ public:
   TH2I*  fTRDEventsHistogram;       // TRD event statistics histogram
   TH2I*  fEMCalEventsHistogram;     // EMCal event statistics histogram
   TList* fCentEventsList;           // Cent event statistics List of histograms for different estimators
+  TH2I*  fTracksHistogram;          // track statistics histogram
+  TH2I*  fMCSignalsHistogram;       // MC tracks statistics histogram
 
   Bool_t  fFillTrackInfo;           // fill track information
   Bool_t  fFillV0Info;              // fill the V0 information
