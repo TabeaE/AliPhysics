@@ -275,22 +275,11 @@ void AliReducedAnalysisFilterTrees::Process()
   // Fill histograms for multiplicity unfolding
   if(isEventUnbiased) {
     // For MC, only the smearing matrix is important (supposed to be independent of the trigger)
-    // => HM filled even if no HM triggered events
     for(Int_t cutMode=0; cutMode<4*nGlobalEstimators; cutMode=cutMode+4) {
       // MB triggered
       if(fValues[AliReducedVarManager::kINT7Triggered]) {
         fHistosManager->FillHistClass(Form("pPb_5TeV_Data_cutMode_%d",cutMode+100), fValues);
         fHistosManager->FillHistClass(Form("pPb_5TeV_MC_cutMode_%d",  cutMode+100), fValues);
-      }
-      // HM triggered
-      if(fValues[AliReducedVarManager::kHighMultV0Triggered] || GetRunOverMC()) {
-        fHistosManager->FillHistClass(Form("pPb_5TeV_Data_cutMode_%d",cutMode+101), fValues);
-        fHistosManager->FillHistClass(Form("pPb_5TeV_MC_cutMode_%d",  cutMode+101), fValues);
-      }
-      // Inclusive (MB or HM triggered)
-      if(fValues[AliReducedVarManager::kINT7Triggered] || fValues[AliReducedVarManager::kHighMultV0Triggered]) {
-        fHistosManager->FillHistClass(Form("pPb_5TeV_Data_cutMode_%d",cutMode+102), fValues);
-        fHistosManager->FillHistClass(Form("pPb_5TeV_MC_cutMode_%d",  cutMode+102), fValues);
       }
       // Fill for each jpsi counts
       for(Int_t j=0; j<fValues[AliReducedVarManager::kMCNJpsi]; j++) {
