@@ -859,24 +859,21 @@ void AliReducedAnalysisFilterTrees::RunSameEventPairing()
         fValues[AliReducedVarManager::kPairMCMap] = isJpsi+2*isJpsiFromB;
       }
 
-      // TEST
+      UInt_t recLegMCTruthMask = fOptionRunOverMC ? CheckReconstructedLegMCTruth(leg1Track,leg2Track) : 0;
       FillCandidatePairHistograms(compatibilityMask, 0, 1, "Pair_Candidate_AfterPrefilter",
-                                  isAsymmetricDecayChannel,
-                                  (fOptionRunOverMC?CheckReconstructedLegMCTruth(leg1Track,leg2Track):0));
-
+                                  isAsymmetricDecayChannel, recLegMCTruthMask);
       ULong_t pairCutMask = IsCandidatePairSelected(fValues);
       if(!pairCutMask) continue;
-      FillCandidatePairHistograms(compatibilityMask, pairCutMask, 1, "Pair_Candidate", isAsymmetricDecayChannel,
-                                  (fOptionRunOverMC?CheckReconstructedLegMCTruth(leg1Track,leg2Track):0));
+      FillCandidatePairHistograms(compatibilityMask, pairCutMask, 1, "Pair_Candidate",
+                                  isAsymmetricDecayChannel, recLegMCTruthMask);
 
-      if(fOptionRunOverMC && (fLegCandidatesMCcuts.GetEntries()>0) &&
-         (!CheckReconstructedLegMCTruth(leg1Track,leg2Track)))
-        continue;
+      if(fOptionRunOverMC && fLegCandidatesMCcuts.GetEntries()>0 && !recLegMCTruthMask) continue;
 
       TClonesArray& pairs = *(fFilteredEvent->fCandidates);
       AliReducedPairInfo* candidatePair = new(pairs[fFilteredEvent->fNV0candidates[1]]) AliReducedPairInfo();
 
       if(fOptionRunOverMC && isJpsiFromB) {
+        // TODO: understand: why search here for grandmother label?
         AliReducedBaseTrack* jpsimother = FindTrackByLabel(leg1Track->MCLabel(2), kTRUE);
         if(jpsimother) {
           candidatePair->PtMother (jpsimother->Pt());
