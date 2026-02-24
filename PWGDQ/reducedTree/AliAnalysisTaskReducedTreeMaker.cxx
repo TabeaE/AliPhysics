@@ -120,8 +120,6 @@ AliAnalysisTaskReducedTreeMaker::AliAnalysisTaskReducedTreeMaker() :
   fTRDEventsHistogram(0x0),
   fEMCalEventsHistogram(0x0),
   fCentEventsList(0x0),
-  fMCPlpEventsHistogram(0x0),
-  fMCPlpParticlesHistogram(0x0),
   fTracksHistogram(0x0),
   fMCSignalsHistogram(0x0),
   fFillTrackInfo(kTRUE),
@@ -200,8 +198,6 @@ AliAnalysisTaskReducedTreeMaker::AliAnalysisTaskReducedTreeMaker(const char *nam
   fTRDEventsHistogram(0x0),
   fEMCalEventsHistogram(0x0),
   fCentEventsList(0x0),
-  fMCPlpEventsHistogram(0x0),
-  fMCPlpParticlesHistogram(0x0),
   fTracksHistogram(0x0),
   fMCSignalsHistogram(0x0),
   fFillTrackInfo(kTRUE),
@@ -462,25 +458,7 @@ void AliAnalysisTaskReducedTreeMaker::UserCreateOutputObjects()
   }
   fEventsList->Add(fCentEventsList);
 
-  // Event MC pileup statistics histogram
-  fMCPlpEventsHistogram = new TH1F("fMCPlpEventsHistogram", "fMCPlpEventsHistogram", 6, -0.5, 5.5);
-  fMCPlpEventsHistogram->GetXaxis()->SetBinLabel(1, "All events");
-  fMCPlpEventsHistogram->GetXaxis()->SetBinLabel(2, "Generator name selected");
-  fMCPlpEventsHistogram->GetXaxis()->SetBinLabel(3, "Generated Pileup");
-  fMCPlpEventsHistogram->GetXaxis()->SetBinLabel(4, "Generated same-bunch Pileup");
-  fMCPlpEventsHistogram->GetXaxis()->SetBinLabel(5, "MC selected");
-  fMCPlpEventsHistogram->GetXaxis()->SetBinLabel(6, "Reco Selected");
-  fEventsList->Add(fMCPlpEventsHistogram);
-
-  fMCPlpParticlesHistogram = new TH1D("fMCPlpParticlesHistogram", "fMCPlpParticlesHistogram", 5, -0.5, 4.5);
-  fMCPlpParticlesHistogram->GetXaxis()->SetBinLabel(1, "All particles");
-  fMCPlpParticlesHistogram->GetXaxis()->SetBinLabel(2, "Pileup events");
-  fMCPlpParticlesHistogram->GetXaxis()->SetBinLabel(3, "Trigger event");
-  fMCPlpParticlesHistogram->GetXaxis()->SetBinLabel(4, "Phys. Primary");
-  fMCPlpParticlesHistogram->GetXaxis()->SetBinLabel(5, "Injected/UE sel.");
-  fEventsList->Add(fMCPlpParticlesHistogram);
-
-  // track statistics histogram
+  // Track statistics histogram
   fTracksHistogram = new TH2I("TrackStatistics", "Track statistics", fTrackFilter.GetEntries()+15, -1.5,
                               fTrackFilter.GetEntries()+13.5, 3, -0.5, 2.5);
   fTracksHistogram->GetYaxis()->SetBinLabel(3, "base tracks");
@@ -632,80 +610,11 @@ void AliAnalysisTaskReducedTreeMaker::UserExec(Option_t *option)
                  : multSelection->GetMultiplicityPercentile(Form("%s",estimatorNames[i])));
   }
 
-  // event statistics before any selection
-  FillStatisticsHistograms(Bool_t(isPhysSel), isPhysSel, trdtrgtype,  emcaltrgtype, 0., percentileEstimators,
-                           nCentEstimators);
+  // Event statistics before any selection
+  FillStatisticsHistograms(Bool_t(isPhysSel), isPhysSel, trdtrgtype,  emcaltrgtype, 0., 
+                           percentileEstimators, nCentEstimators);
 
-  // TEST
-  // TODO I get non-zero output for GetBGEventReused, but in stdout also it says "AliMCEventHandler::Init: Set subsidiary event#0 path", but I cannot see subsidiary particles, why?
-  fMCPlpEventsHistogram->Fill(0);
-
-  if(AliDielectronMC::Instance()->HasMC()) {
-    AliGenHepMCEventHeader* hepMCHeader = 0x0;  // event header for EPOS
-    TList *lh = new TList();
-    AliMCEvent* mcEvent = AliDielectronMC::Instance()->GetMCEvent();
-    if(mcEvent) {
-      AliStack* fStack = mcEvent->Stack();
-      std::cout << "GetBGEventReused(): " << mcEvent->GetBGEventReused() << std::endl;
-      std::cout << "GetMCEmbeddingFlag(): " << fStack->GetMCEmbeddingFlag() << std::endl;
-      std::cout << "GetEmbeddingBKGPathsKey(): " << fStack->GetEmbeddingBKGPathsKey() << std::endl;
-      TString genname = mcEvent->GenEventHeader()->ClassName();
-      // std::cout << "mcEvent->GenEventHeader()->ClassName(): " << genname << std::endl;
-      if(genname.Contains("AliGenHepMCEventHeader")) {
-        hepMCHeader = (AliGenHepMCEventHeader*)mcEvent->GenEventHeader();
-//         lh = cockhead->GetHeaders();
-        lh->Add(hepMCHeader);
-        // std::cout << "hepMCHeader->GetName(): " << hepMCHeader->GetName() << std::endl;
-      }
-      Bool_t  fSelectOnGenerator = kTRUE;
-//       TString fGenerToKeep       = "EPOS";  // generator name to analyse
-//       TString fGenerToExclude    = "";      // generator name to exclude
-      if(fSelectOnGenerator && lh) {
-//         std::cout << "if(fSelectOnGenerator) && lh" << std::endl;
-//         Bool_t keep = kTRUE;
-//         if(fGenerToExclude.Length() == 0) keep = kFALSE;
-        Int_t nh = lh->GetEntries();
-        // std::cout << "lh->GetEntries(): " << nh << std::endl;
-        for(Int_t i=0; i<nh; i++) {
-          AliGenEventHeader* gh = (AliGenEventHeader*)lh->At(i);
-          TString       genname = gh->ClassName();
-          // std::cout << "gh->ClassName(): " << genname << std::endl;
-//           if(fGenerToKeep.Length()   >0 && genname.Contains(fGenerToKeep.Data())   ) keep = kTRUE;
-//           if(fGenerToExclude.Length()>0 && genname.Contains(fGenerToExclude.Data())) keep = kFALSE;
-        }
-        //if(keep) {
-          fMCPlpEventsHistogram->Fill(1);
-          TString genname = "EPOS";
-          if(AliAnalysisUtils::IsPileupInGeneratedEvent(lh, genname, kFALSE))
-            fMCPlpEventsHistogram->Fill(2);
-//           if(AliAnalysisUtils::IsSameBunchPileupInGeneratedEvent(lh, genname, kFALSE))
-//             fMCPlpEventsHistogram->Fill(3);
-        //}
-      }
-      
-      for(Int_t i=0; i<fStack->GetNtrack(); i++) {
-        TParticle* MCparticle = fStack->Particle(i);
-        if(mcEvent->IsFromBGEvent(fStack->GetCurrentTrackNumber()))
-          std::cout << "IsFromBGEvent" << std::endl;
-      }
-      for(Int_t iMC=0; iMC<mcEvent->GetNumberOfTracks(); ++iMC) {
-        AliVParticle *part = (AliVParticle*)mcEvent->GetTrack(iMC);
-        fMCPlpParticlesHistogram->Fill(0);
-        if(mcEvent->IsFromBGEvent(part->GetLabel()))
-        // if(AliAnalysisUtils::IsParticleFromOutOfBunchPileupCollision(iMC,mcEvent))
-          fMCPlpParticlesHistogram->Fill(1);
-        else
-          fMCPlpParticlesHistogram->Fill(2);
-        if(mcEvent->IsPhysicalPrimary(iMC))
-          fMCPlpParticlesHistogram->Fill(3);
-        // if(lh && IsInjectedParticle(iMC,lh))
-        //   fMCPlpParticlesHistogram->Fill(4);
-      }
-    }
-  }
-  // end TEST
-
-  // rejected due to physics selection
+  // Rejected due to physics selection
   if(fSelectPhysics && !isPhysSel) {
     fEventsHistogram     ->Fill(2., -1.);
     fEventsHistogram     ->Fill(2., -2.);
