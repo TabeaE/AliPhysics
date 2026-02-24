@@ -1357,14 +1357,11 @@ inline void AliDielectronVarManager::FillVarESDtrack(const AliESDtrack *particle
   // nsigma to Electron band
   // TODO: for the moment we set the bethe bloch parameters manually
   //       this should be changed in future!
-  values[AliDielectronVarManager::kTPCnSigmaEleRaw] = fgPIDResponse->NumberOfSigmasTPC(particle,
-                                                                                       AliPID::kElectron);
-  values[AliDielectronVarManager::kTPCnSigmaEle]    = (fgPIDResponse->NumberOfSigmasTPC(particle,
-                                                                                        AliPID::kElectron) -
+  values[AliDielectronVarManager::kTPCnSigmaEleRaw] = fgPIDResponse->NumberOfSigmasTPC(particle,AliPID::kElectron);
+  values[AliDielectronVarManager::kTPCnSigmaEle]    = (fgPIDResponse->NumberOfSigmasTPC(particle,AliPID::kElectron) -
                                                        AliDielectronPID::GetCorrVal() -
-                                                       AliDielectronPID::GetCntrdCorr(particle,
-                                                                                      AliPID::kElectron)) /
-                                                      AliDielectronPID::GetWdthCorr(particle,AliPID::kElectron);
+                                                       AliDielectronPID::GetCntrdCorr(particle,AliPID::kElectron)) /
+                                                       AliDielectronPID::GetWdthCorr(particle,AliPID::kElectron);
 
   values[AliDielectronVarManager::kTPCnSigmaPio] = (fgPIDResponse->NumberOfSigmasTPC(particle,AliPID::kPion)   -
     AliDielectronPID::GetCorrVal() - AliDielectronPID::GetCntrdCorr(particle,AliPID::kPion  )) /
@@ -1669,8 +1666,13 @@ inline void AliDielectronVarManager::FillVarAODTrack(const AliAODTrack *particle
     }
 
     // nsigma for various detectors
-    if(Req(kTPCnSigmaEleRaw)) values[kTPCnSigmaEleRaw]= fgPIDResponse->NumberOfSigmasTPC(particle,AliPID::kElectron);
-    if(Req(kTPCnSigmaEle))    values[kTPCnSigmaEle]   =(fgPIDResponse->NumberOfSigmasTPC(particle,AliPID::kElectron) - AliDielectronPID::GetCorrVal() - AliDielectronPID::GetCntrdCorr(particle,AliPID::kElectron)) / AliDielectronPID::GetWdthCorr(particle,AliPID::kElectron);
+    if(Req(kTPCnSigmaEleRaw))
+      values[kTPCnSigmaEleRaw] =  fgPIDResponse->NumberOfSigmasTPC(particle,AliPID::kElectron);
+    if(Req(kTPCnSigmaEle))
+      values[kTPCnSigmaEle]    = (fgPIDResponse->NumberOfSigmasTPC(particle,AliPID::kElectron) - 
+                                  AliDielectronPID::GetCorrVal() -
+                                  AliDielectronPID::GetCntrdCorr(particle,AliPID::kElectron)) / 
+                                  AliDielectronPID::GetWdthCorr(particle,AliPID::kElectron);
 
     if(Req(kTPCnSigmaPio)) values[kTPCnSigmaPio] = (fgPIDResponse->NumberOfSigmasTPC(particle,AliPID::kPion)   - AliDielectronPID::GetCorrVal() - AliDielectronPID::GetCntrdCorr(particle,AliPID::kPion  )) / AliDielectronPID::GetWdthCorr(particle,AliPID::kPion  );
     if(Req(kTPCnSigmaMuo)) values[kTPCnSigmaMuo] = (fgPIDResponse->NumberOfSigmasTPC(particle,AliPID::kMuon)   - AliDielectronPID::GetCorrVal() - AliDielectronPID::GetCntrdCorr(particle,AliPID::kMuon  )) / AliDielectronPID::GetWdthCorr(particle,AliPID::kMuon  );
@@ -2484,7 +2486,7 @@ inline void AliDielectronVarManager::FillVarDielectronPair(const AliDielectronPa
 
   // check if calculation is requested
   if( Req(kLeg1Eta) || Req(kLeg2Eta) || Req(kLeg1Phi) || Req(kLeg2Phi) || Req(kLeg1Pt) || Req(kLeg2Pt) || Req(kLeg1PIn) || Req(kLeg2PIn) || Req(kLeg1TPCnSigmaEle) || Req(kLeg2TPCnSigmaEle))
-     {
+  {
     // get track references from pair
     AliVParticle* d1 = pair-> GetFirstDaughterP();
     AliVParticle* d2 = pair->GetSecondDaughterP();
@@ -2496,63 +2498,62 @@ inline void AliDielectronVarManager::FillVarDielectronPair(const AliDielectronPa
       if (d1->IsA() == d2->IsA()) { // Don't mix AOD with ESD. Needed because AliAnalysisTaskRandomRejection always creates AliAODTracks (should be fixed).
 
         Double_t feta1=-9999.,fphi1=-9999.,fpt1=-9999.,fpin1=-9999.;
-  	Double_t feta2=-9999.,fphi2=-9999.,fpt2=-9999.,fpin2=-9999.;
+        Double_t feta2=-9999.,fphi2=-9999.,fpt2=-9999.,fpin2=-9999.;
 
-	Double_t ftpcnSigmaEle1=-9999.,ftpcnSigmaEle2=-9999.;
-	
+        Double_t ftpcnSigmaEle1=-9999.,ftpcnSigmaEle2=-9999.;
+
 
         if (isESD) {
-	  feta1 = static_cast<AliESDtrack*>(d1)->Eta(); 
+          feta1 = static_cast<AliESDtrack*>(d1)->Eta(); 
           feta2 = static_cast<AliESDtrack*>(d2)->Eta(); 
 
           fphi1 = TVector2::Phi_0_2pi( static_cast<AliESDtrack*>(d1)->Phi()); 
           fphi2 = TVector2::Phi_0_2pi( static_cast<AliESDtrack*>(d2)->Phi());
 
-	  fpt1 =  static_cast<AliESDtrack*>(d1)->Pt(); 
+          fpt1 =  static_cast<AliESDtrack*>(d1)->Pt(); 
           fpt2 =  static_cast<AliESDtrack*>(d2)->Pt();
 
-	  fpin1 =  static_cast<AliESDtrack*>(d1)->GetTPCmomentum(); 
-	  fpin2 =  static_cast<AliESDtrack*>(d2)->GetTPCmomentum();
+          fpin1 =  static_cast<AliESDtrack*>(d1)->GetTPCmomentum(); 
+          fpin2 =  static_cast<AliESDtrack*>(d2)->GetTPCmomentum();
 
-	  if(fgPIDResponse) {
-	    if(AliDielectronPID::GetWdthCorr(static_cast<AliESDtrack*>(d1),AliPID::kElectron) > 0.) ftpcnSigmaEle1 = (fgPIDResponse->NumberOfSigmasTPC(static_cast<AliESDtrack*>(d1),AliPID::kElectron) - AliDielectronPID::GetCorrVal() - AliDielectronPID::GetCntrdCorr(static_cast<AliESDtrack*>(d1),AliPID::kElectron)) / AliDielectronPID::GetWdthCorr(static_cast<AliESDtrack*>(d1),AliPID::kElectron);
-	    if(AliDielectronPID::GetWdthCorr(static_cast<AliESDtrack*>(d2),AliPID::kElectron) > 0.) ftpcnSigmaEle2 = (fgPIDResponse->NumberOfSigmasTPC(static_cast<AliESDtrack*>(d2),AliPID::kElectron) - AliDielectronPID::GetCorrVal() - AliDielectronPID::GetCntrdCorr(static_cast<AliESDtrack*>(d2),AliPID::kElectron)) / AliDielectronPID::GetWdthCorr(static_cast<AliESDtrack*>(d2),AliPID::kElectron);
-	  }
-	  
-        }
-        else { // AOD
-	  feta1 = static_cast<AliAODTrack*>(d1)->Eta(); 
-          feta2 = static_cast<AliAODTrack*>(d2)->Eta(); 
+          if(fgPIDResponse) {
+            if(AliDielectronPID::GetWdthCorr(static_cast<AliESDtrack*>(d1),AliPID::kElectron) > 0.) ftpcnSigmaEle1 = (fgPIDResponse->NumberOfSigmasTPC(static_cast<AliESDtrack*>(d1),AliPID::kElectron) - AliDielectronPID::GetCorrVal() - AliDielectronPID::GetCntrdCorr(static_cast<AliESDtrack*>(d1),AliPID::kElectron)) / AliDielectronPID::GetWdthCorr(static_cast<AliESDtrack*>(d1),AliPID::kElectron);
+            if(AliDielectronPID::GetWdthCorr(static_cast<AliESDtrack*>(d2),AliPID::kElectron) > 0.) ftpcnSigmaEle2 = (fgPIDResponse->NumberOfSigmasTPC(static_cast<AliESDtrack*>(d2),AliPID::kElectron) - AliDielectronPID::GetCorrVal() - AliDielectronPID::GetCntrdCorr(static_cast<AliESDtrack*>(d2),AliPID::kElectron)) / AliDielectronPID::GetWdthCorr(static_cast<AliESDtrack*>(d2),AliPID::kElectron);
+          }
           
-	  fphi1 = TVector2::Phi_0_2pi( static_cast<AliAODTrack*>(d1)->Phi()); 
+        } else {  // AOD
+          feta1 = static_cast<AliAODTrack*>(d1)->Eta(); 
+          feta2 = static_cast<AliAODTrack*>(d2)->Eta(); 
+                
+          fphi1 = TVector2::Phi_0_2pi( static_cast<AliAODTrack*>(d1)->Phi()); 
           fphi2 = TVector2::Phi_0_2pi( static_cast<AliAODTrack*>(d2)->Phi());
 
-	  fpt1 = static_cast<AliAODTrack*>(d1)->Pt(); 
+          fpt1 = static_cast<AliAODTrack*>(d1)->Pt(); 
           fpt2 = static_cast<AliAODTrack*>(d2)->Pt();
 
-	  fpin1 = static_cast<AliAODTrack*>(d1)->GetTPCmomentum(); 
+          fpin1 = static_cast<AliAODTrack*>(d1)->GetTPCmomentum(); 
           fpin2 = static_cast<AliAODTrack*>(d2)->GetTPCmomentum();
 
-	  if(fgPIDResponse) {
-	    if(AliDielectronPID::GetWdthCorr(static_cast<AliAODTrack*>(d1),AliPID::kElectron) > 0.) ftpcnSigmaEle1 = (fgPIDResponse->NumberOfSigmasTPC(static_cast<AliAODTrack*>(d1),AliPID::kElectron) - AliDielectronPID::GetCorrVal() - AliDielectronPID::GetCntrdCorr(static_cast<AliAODTrack*>(d1),AliPID::kElectron)) / AliDielectronPID::GetWdthCorr(static_cast<AliAODTrack*>(d1),AliPID::kElectron);
-	    if(AliDielectronPID::GetWdthCorr(static_cast<AliAODTrack*>(d2),AliPID::kElectron) > 0.) ftpcnSigmaEle2 = (fgPIDResponse->NumberOfSigmasTPC(static_cast<AliAODTrack*>(d2),AliPID::kElectron) - AliDielectronPID::GetCorrVal() - AliDielectronPID::GetCntrdCorr(static_cast<AliAODTrack*>(d2),AliPID::kElectron)) / AliDielectronPID::GetWdthCorr(static_cast<AliAODTrack*>(d2),AliPID::kElectron);
-	  }
-	   
+          if(fgPIDResponse) {
+            if(AliDielectronPID::GetWdthCorr(static_cast<AliAODTrack*>(d1),AliPID::kElectron) > 0.) ftpcnSigmaEle1 = (fgPIDResponse->NumberOfSigmasTPC(static_cast<AliAODTrack*>(d1),AliPID::kElectron) - AliDielectronPID::GetCorrVal() - AliDielectronPID::GetCntrdCorr(static_cast<AliAODTrack*>(d1),AliPID::kElectron)) / AliDielectronPID::GetWdthCorr(static_cast<AliAODTrack*>(d1),AliPID::kElectron);
+            if(AliDielectronPID::GetWdthCorr(static_cast<AliAODTrack*>(d2),AliPID::kElectron) > 0.) ftpcnSigmaEle2 = (fgPIDResponse->NumberOfSigmasTPC(static_cast<AliAODTrack*>(d2),AliPID::kElectron) - AliDielectronPID::GetCorrVal() - AliDielectronPID::GetCntrdCorr(static_cast<AliAODTrack*>(d2),AliPID::kElectron)) / AliDielectronPID::GetWdthCorr(static_cast<AliAODTrack*>(d2),AliPID::kElectron);
+          }
+      
         }
 
-        values[AliDielectronVarManager::kDeltaEta]     = TMath::Abs(feta1 -feta2 );
-	values[AliDielectronVarManager::kLeg1Eta]      = feta1;
-	values[AliDielectronVarManager::kLeg2Eta]      = feta2;
-  	values[AliDielectronVarManager::kDeltaPhi]     = TMath::Abs(fphi1 -fphi2 );
-	values[AliDielectronVarManager::kAccoplanarity]     = 1. - (TMath::Abs(TVector2::Phi_mpi_pi(fphi1-fphi2)))/TMath::Pi();
-	values[AliDielectronVarManager::kLeg1Phi]      = fphi1;
-	values[AliDielectronVarManager::kLeg2Phi]      = fphi2;
-	values[AliDielectronVarManager::kLeg1Pt]       = fpt1;
-	values[AliDielectronVarManager::kLeg2Pt]       = fpt2;
-	values[AliDielectronVarManager::kLeg1PIn]       = fpin1;
-	values[AliDielectronVarManager::kLeg2PIn]       = fpin2;
-	values[AliDielectronVarManager::kLeg1TPCnSigmaEle]       = ftpcnSigmaEle1;
-	values[AliDielectronVarManager::kLeg2TPCnSigmaEle]       = ftpcnSigmaEle2;
+        values[AliDielectronVarManager::kDeltaEta]         = TMath::Abs(feta1 -feta2 );
+        values[AliDielectronVarManager::kLeg1Eta]          = feta1;
+        values[AliDielectronVarManager::kLeg2Eta]          = feta2;
+        values[AliDielectronVarManager::kDeltaPhi]         = TMath::Abs(fphi1 -fphi2 );
+        values[AliDielectronVarManager::kAccoplanarity]    = 1. - (TMath::Abs(TVector2::Phi_mpi_pi(fphi1-fphi2)))/TMath::Pi();
+        values[AliDielectronVarManager::kLeg1Phi]          = fphi1;
+        values[AliDielectronVarManager::kLeg2Phi]          = fphi2;
+        values[AliDielectronVarManager::kLeg1Pt]           = fpt1;
+        values[AliDielectronVarManager::kLeg2Pt]           = fpt2;
+        values[AliDielectronVarManager::kLeg1PIn]          = fpin1;
+        values[AliDielectronVarManager::kLeg2PIn]          = fpin2;
+        values[AliDielectronVarManager::kLeg1TPCnSigmaEle] = ftpcnSigmaEle1;
+        values[AliDielectronVarManager::kLeg2TPCnSigmaEle] = ftpcnSigmaEle2;
 
       }
     }
@@ -2573,7 +2574,7 @@ inline void AliDielectronVarManager::FillVarDielectronPair(const AliDielectronPa
   	Double_t px1=-9999.,py1=-9999.,pz1=-9999.;
   	Double_t px2=-9999.,py2=-9999.,pz2=-9999.;
   	Double_t e1 =-9999.,e2 =-9999.;
-	Double_t fpt1 =-9999.,fpt2 =-9999.;
+	  Double_t fpt1 =-9999.,fpt2 =-9999.;
   	Double_t feta1=-9999.;//,fphi1=-9999.;
   	Double_t feta2=-9999.;//,fphi2=-9999.;
 

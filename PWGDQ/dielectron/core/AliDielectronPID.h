@@ -74,33 +74,33 @@ public:
   //Analysis cuts interface
   //const
   virtual Bool_t IsSelected(TObject* track);
-  virtual Bool_t IsSelected(TList*   /* list */ ) {return kFALSE;}
+  virtual Bool_t IsSelected(TList* /*list*/) {return kFALSE;}
 
-  static void SetCorrGraph(TGraph * const gr) { fgFitCorr=gr; }
-  static TGraph *GetCorrGraph()  { return fgFitCorr; }
+  static void    SetCorrGraph (TGraph* const gr) {fgFitCorr = gr;}
+  static TGraph* GetCorrGraph ()                 {return fgFitCorr;}
   
-  static void SetCorrVal(Double_t run);
-  static Double_t GetCorrVal()   { return fgCorr; }
-  static Double_t GetCorrValdEdx()   { return fgCorrdEdx; }
+  static void     SetCorrVal     (Double_t run);
+  static Double_t GetCorrVal     () {return fgCorr;}
+  static Double_t GetCorrValdEdx () {return fgCorrdEdx;}
   
-  static void SetCorrGraphdEdx(TGraph * const gr) { fgdEdxRunCorr=gr; }
-  static TGraph *GetCorrGraphdEdx()  { return fgdEdxRunCorr; }
+  static void    SetCorrGraphdEdx (TGraph * const gr) {fgdEdxRunCorr = gr;}
+  static TGraph* GetCorrGraphdEdx ()                  {return fgdEdxRunCorr;}
 
-  static void SetEtaCorrFunction(TF1 *fun) {fgFunEtaCorr=fun;}
-  static TF1* GetEtaCorrFunction() { return fgFunEtaCorr; }
-  static void SetCentroidCorrFunction(TH1 *fun) { fgFunCntrdCorr=fun; }
-  static void SetWidthCorrFunction(TH1 *fun) { fgFunWdthCorr=fun; }
-  static void SetCentroidCorrFunctionITS(TH1 *fun) { fgFunCntrdCorrITS=fun; }
-  static void SetWidthCorrFunctionITS(TH1 *fun) { fgFunWdthCorrITS=fun; }
-  static void SetCentroidCorrFunctionTOF(TH1 *fun) { fgFunCntrdCorrTOF=fun; }
-  static void SetWidthCorrFunctionTOF(TH1 *fun) { fgFunWdthCorrTOF=fun; }
-  static void SetCentroidCorrFunctionPU(Int_t id,Int_t ip,THnBase *fun) { fgFunCntrdCorrPU[id][ip]=fun; }
-  static void SetWidthCorrFunctionPU(Int_t id,Int_t ip,THnBase *fun) { fgFunWdthCorrPU[id][ip]=fun; }
-	static void SetPIDCalibinPU(Bool_t flag) {fgPIDCalibinPU = flag;}
+  static void SetEtaCorrFunction         (TF1 *fun) {fgFunEtaCorr      = fun;}
+  static TF1* GetEtaCorrFunction         ()         {return fgFunEtaCorr;}
+  static void SetCentroidCorrFunction    (TH1 *fun) {fgFunCntrdCorr    = fun;}
+  static void SetWidthCorrFunction       (TH1 *fun) {fgFunWdthCorr     = fun;}
+  static void SetCentroidCorrFunctionITS (TH1 *fun) {fgFunCntrdCorrITS = fun;}
+  static void SetWidthCorrFunctionITS    (TH1 *fun) {fgFunWdthCorrITS  = fun;}
+  static void SetCentroidCorrFunctionTOF (TH1 *fun) {fgFunCntrdCorrTOF = fun;}
+  static void SetWidthCorrFunctionTOF    (TH1 *fun) {fgFunWdthCorrTOF  = fun;}
+  static void SetCentroidCorrFunctionPU  (Int_t id,Int_t ip,THnBase *fun) {fgFunCntrdCorrPU[id][ip] = fun;}
+  static void SetWidthCorrFunctionPU     (Int_t id,Int_t ip,THnBase *fun) {fgFunWdthCorrPU [id][ip] = fun;}
+	static void SetPIDCalibinPU            (Bool_t flag)                    {fgPIDCalibinPU = flag;}
 
   static Double_t GetEtaCorr(const AliVTrack *track);
 
-	static Double_t GetCntrdCorr(const AliVTrack *track, UInt_t partype=AliPID::kElectron){
+	static Double_t GetCntrdCorr(const AliVTrack *track, UInt_t partype=AliPID::kElectron) {
 		if(!fgPIDCalibinPU){
 			if(partype == AliPID::kElectron) return (fgFunCntrdCorr ? GetPIDCorr(track,fgFunCntrdCorr) : 0.0); 
 			else return 0.0;
@@ -108,7 +108,7 @@ public:
 		else return (fgFunCntrdCorrPU[AliDielectronPID::kTPC][partype] ? GetPIDCorr(track,fgFunCntrdCorrPU[AliDielectronPID::kTPC][partype]) : 0.0);
 	}
 
-	static Double_t GetWdthCorr(const AliVTrack *track , UInt_t partype=AliPID::kElectron){
+	static Double_t GetWdthCorr(const AliVTrack *track , UInt_t partype=AliPID::kElectron) {
 		if(!fgPIDCalibinPU){
 			if(partype == AliPID::kElectron) return (fgFunWdthCorr ? GetPIDCorr(track,fgFunWdthCorr) : 1.0); 
 			else return 1.0;
@@ -116,7 +116,7 @@ public:
 		else return (fgFunWdthCorrPU[AliDielectronPID::kTPC][partype] ? GetPIDCorr(track,fgFunWdthCorrPU[AliDielectronPID::kTPC][partype]) : 1.0);
 	}
 
-	static Double_t GetCntrdCorrITS(const AliVTrack *track, UInt_t partype=AliPID::kElectron){
+	static Double_t GetCntrdCorrITS(const AliVTrack *track, UInt_t partype=AliPID::kElectron) {
 		if(!fgPIDCalibinPU){
 			if(partype == AliPID::kElectron) return (fgFunCntrdCorrITS ? GetPIDCorr(track,fgFunCntrdCorrITS) : 0.0); 
 			else return 0.0;
@@ -124,7 +124,7 @@ public:
 		else return (fgFunCntrdCorrPU[AliDielectronPID::kITS][partype] ? GetPIDCorr(track,fgFunCntrdCorrPU[AliDielectronPID::kITS][partype]) : 0.0);
 	}
 
-	static Double_t GetWdthCorrITS(const AliVTrack *track , UInt_t partype=AliPID::kElectron){
+	static Double_t GetWdthCorrITS(const AliVTrack *track , UInt_t partype=AliPID::kElectron) {
 		if(!fgPIDCalibinPU){
 			if(partype == AliPID::kElectron) return (fgFunWdthCorrITS  ? GetPIDCorr(track,fgFunWdthCorrITS) : 1.0); 
 			else return 1.0;	
@@ -132,7 +132,7 @@ public:
 		else return (fgFunWdthCorrPU[AliDielectronPID::kITS][partype] ? GetPIDCorr(track,fgFunWdthCorrPU[AliDielectronPID::kITS][partype]) : 1.0);
 	}
 
-	static Double_t GetCntrdCorrTOF(const AliVTrack *track, UInt_t partype=AliPID::kElectron){
+	static Double_t GetCntrdCorrTOF(const AliVTrack *track, UInt_t partype=AliPID::kElectron) {
 		if(!fgPIDCalibinPU){
 			if(partype == AliPID::kElectron) return (fgFunCntrdCorrTOF ? GetPIDCorr(track,fgFunCntrdCorrTOF) : 0.0);
 			else return 0.0;
@@ -140,7 +140,7 @@ public:
 		else return (fgFunCntrdCorrPU[AliDielectronPID::kTOF][partype] ? GetPIDCorr(track,fgFunCntrdCorrPU[AliDielectronPID::kTOF][partype]) : 0.0);
 	}
 
-	static Double_t GetWdthCorrTOF(const AliVTrack *track , UInt_t partype=AliPID::kElectron){
+	static Double_t GetWdthCorrTOF(const AliVTrack *track , UInt_t partype=AliPID::kElectron) {
 		if(!fgPIDCalibinPU){
 			if(partype == AliPID::kElectron) return (fgFunWdthCorrTOF  ? GetPIDCorr(track,fgFunWdthCorrTOF) : 1.0);
 			else return 1.0;
@@ -151,23 +151,23 @@ public:
 private:
   enum {kNmaxPID=30};
 
-  TBits     *fUsedVars;            // list of used variables
-  DetType  fDetType[kNmaxPID];    //detector type of nsigma cut
+  TBits     *fUsedVars;           // list of used variables
+  DetType  fDetType[kNmaxPID];    // detector type of nsigma cut
   AliPID::EParticleType fPartType[kNmaxPID]; //particle type
-  Float_t  fNsigmaLow[kNmaxPID];  //lower nsigma bound
-  Float_t  fNsigmaUp[kNmaxPID];   //upper nsigma bound
-  Double_t fmin[kNmaxPID];        //lower cut limit for range
-  Double_t fmax[kNmaxPID];        //upper cut limit for range
-  Bool_t   fExclude[kNmaxPID];    //use as exclusion band
-  TF1     *fFunUpperCut[kNmaxPID];//use function as upper cut
-  TF1     *fFunLowerCut[kNmaxPID];//use function as lower cut
-  UChar_t  fNcuts;                //number of cuts
-  UChar_t  fRequirePIDbit[kNmaxPID]; //How to make use of the pid bit (see)
-  UShort_t fActiveCuts[kNmaxPID]; // list of activated cuts
-  Double_t fSigmaFunLow[kNmaxPID]; // lower bound for fFunSigma
-  Double_t fSigmaFunUp[kNmaxPID];  // upper bound for fFunSigma
-  TF1      *fFunSigma[kNmaxPID];   // use function as cut range
-  AliDielectronVarCuts *fVarCuts[kNmaxPID]; // varcuts
+  Float_t  fNsigmaLow[kNmaxPID];  // lower nsigma bound
+  Float_t  fNsigmaUp[kNmaxPID];   // upper nsigma bound
+  Double_t fmin[kNmaxPID];        // lower cut limit for range
+  Double_t fmax[kNmaxPID];        // upper cut limit for range
+  Bool_t   fExclude[kNmaxPID];    // use as exclusion band
+  TF1     *fFunUpperCut[kNmaxPID];// use function as upper cut
+  TF1     *fFunLowerCut[kNmaxPID];// use function as lower cut
+  UChar_t  fNcuts;                // number of cuts
+  UChar_t  fRequirePIDbit[kNmaxPID]; // How to make use of the pid bit (see)
+  UShort_t fActiveCuts[kNmaxPID];   // list of activated cuts
+  Double_t fSigmaFunLow[kNmaxPID];  // lower bound for fFunSigma
+  Double_t fSigmaFunUp[kNmaxPID];   // upper bound for fFunSigma
+  TF1      *fFunSigma[kNmaxPID];    // use function as cut range
+  AliDielectronVarCuts *fVarCuts[kNmaxPID];  // varcuts
 
   AliPIDResponse *fPIDResponse;   //! pid response object
   

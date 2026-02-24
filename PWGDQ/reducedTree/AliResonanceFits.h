@@ -147,15 +147,15 @@ public:
   // setters
   //void Reset();
   // User input
-  void SetHistograms     (THnF* seos, THnF* meos = 0x0, THnF* selsLeg1=0x0, THnF* selsLeg2=0x0,
-                          THnF* melsLeg1=0x0, THnF* melsLeg2=0x0);
-  void SetSEOSHistogram  (THnF* hist)               {fSEOS = hist; fMatchingIsDone = kFALSE;};
-  void SetSELSHistograms (THnF* hLeg1, THnF* hLeg2) {fSELSleg1 = hLeg1; fSELSleg2 = hLeg2;
-                                                     fMatchingIsDone = kFALSE;};
-  void SetMEOSHistogram  (THnF* hist)               {fMEOS = hist; fMatchingIsDone = kFALSE;};
-  void SetMELSHistograms (THnF* hLeg1, THnF* hLeg2) {fMELSleg1 = hLeg1; fMELSleg2 = hLeg2;
-                                                     fMatchingIsDone = kFALSE;}
-  void SetSEOSMCHistogram (THnF* hist) {fSEOS_MCtruth = hist;}
+  void SetHistograms      (THnF* seos, THnF* meos=0x0, THnF* selsLeg1=0x0, THnF* selsLeg2=0x0,
+                           THnF* melsLeg1=0x0, THnF* melsLeg2=0x0);
+  void SetSEOSHistogram   (THnF* hist)               {fSEOS     = hist;  fMatchingIsDone = kFALSE;};
+  void SetSELSHistograms  (THnF* hLeg1, THnF* hLeg2) {fSELSleg1 = hLeg1; fSELSleg2       = hLeg2;
+                                                      fMatchingIsDone = kFALSE;};
+  void SetMEOSHistogram   (THnF* hist)               {fMEOS     = hist;  fMatchingIsDone = kFALSE;};
+  void SetMELSHistograms  (THnF* hLeg1, THnF* hLeg2) {fMELSleg1 = hLeg1; fMELSleg2       = hLeg2;
+                                                      fMatchingIsDone = kFALSE;}
+  void SetSEOSMCHistogram (THnF* hist) {fSEOS_MCtruth  = hist;}
   void SetSignalMCshape   (TH1* shape) {fSignalMCshape = shape;}
   
   // add variables and set ranges on the THnF
@@ -200,13 +200,13 @@ public:
   void AddMassExclusionRange(Double_t min, Double_t max) {
     if(fgNMassExclusionRanges == 10) return;        // maximum 10 mass exclusion ranges
     fgMassExclusionRanges[fgNMassExclusionRanges][0] = min + 1.0e-6;
-    fgMassExclusionRanges[fgNMassExclusionRanges][1] = max -1.0e-6;
+    fgMassExclusionRanges[fgNMassExclusionRanges][1] = max - 1.0e-6;
     fgNMassExclusionRanges++;
     fMatchingIsDone = kFALSE;
   }
   void SetMassExclusionRange(Double_t min, Double_t max) {
     fgMassExclusionRanges[0][0] = min + 1.0e-6;
-    fgMassExclusionRanges[0][1] = max -1.0e-6;
+    fgMassExclusionRanges[0][1] = max - 1.0e-6;
     fgNMassExclusionRanges = 1;
     fMatchingIsDone = kFALSE;
   }

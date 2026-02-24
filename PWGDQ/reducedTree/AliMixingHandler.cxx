@@ -121,12 +121,12 @@ void AliMixingHandler::AddMixingVariable(Int_t var, Int_t nBins, const Float_t* 
   //
   // add a mixing variable
   //
-  if(fNMixingVariables>=kNMaxVariables) {
+  if(fNMixingVariables >= kNMaxVariables) {
     cout << "AliMixingHandler::AddMixingVariable(): ERROR Too many variables for the mixing!" << endl;
     cout << "                  Maximum number of variables: " << kNMaxVariables << endl;
     return;
   }
-  fVariables[fNMixingVariables] = var;
+  fVariables     [fNMixingVariables] = var;
   fVariableLimits[fNMixingVariables].Set(nBins, binLims);
   fNMixingVariables++;
   AliReducedVarManager::SetUseVariable(var);
@@ -135,8 +135,8 @@ void AliMixingHandler::AddMixingVariable(Int_t var, Int_t nBins, const Float_t* 
 //_________________________________________________________________________
 void AliMixingHandler::AddMixingVariable(Int_t var, Int_t nBins, const Double_t* binLims) {
   //
-  // copy of the AddMixingVariable(AliReducedVarManager::Variables var, Int_t nBins, const Float_t* binLims) function
-  //   just to support also Double array as bin limits
+  // copy of the AddMixingVariable(AliReducedVarManager::Variables var, Int_t nBins, const Float_t* binLims) 
+  //   function just to support also Double array as bin limits
   //
   Float_t* bins = new Float_t[nBins];
   for(Int_t i=0; i<nBins; ++i) bins[i] = binLims[i];
@@ -155,7 +155,7 @@ void AliMixingHandler::Init() {
     cout << "AliMixingHandler::Init(): ERROR No histogram manager provided!" << endl;
     return;
   }
-  if(fHistClassNames[0]=='\0') {
+  if(fHistClassNames[0] == '\0') {
     cout << "AliMixingHandler::Init(): ERROR No names for the histogram classes provided!" << endl;
     return;
   }
@@ -163,14 +163,14 @@ void AliMixingHandler::Init() {
   Int_t nClassesPerCut = 0;
   if(fMixingSetup == kMixResonanceLegs) nClassesPerCut = 3;
   if(fMixingSetup == kMixCorrelation)   nClassesPerCut = 1;
-  if(fNParallelPairCuts>1) {
-    if(histClassArr->GetEntries()!=nClassesPerCut*fNParallelCuts*fNParallelPairCuts) {
+  if(fNParallelPairCuts > 1) {
+    if(histClassArr->GetEntries() != nClassesPerCut*fNParallelCuts*fNParallelPairCuts) {
       cout << "AliMixingHandler::Init(): ERROR The number of cuts and the number of hist class names provided do not match!" << endl;
       cout << "                   hist classes: " << histClassArr->GetEntries() << ";    n-parallel cuts: " << fNParallelCuts << ";    n-parallel pair cuts: " << fNParallelPairCuts << endl;
       return;
     }
   } else {
-    if(histClassArr->GetEntries()!=nClassesPerCut*fNParallelCuts) {
+    if(histClassArr->GetEntries() != nClassesPerCut*fNParallelCuts) {
       cout << "AliMixingHandler::Init(): ERROR The number of cuts and the number of hist class names provided do not match!" << endl;
       cout << "                   hist classes: " << histClassArr->GetEntries() << ";    n-parallel cuts: " << fNParallelCuts << endl;
       return;
@@ -221,11 +221,11 @@ void AliMixingHandler::FillEvent(TList* leg1List, TList* leg2List, Float_t* valu
   Int_t category = FindEventCategory(values);
   if(category < 0) return;  // event characteristics outside the defined ranges
 
-  TClonesArray *leg1PoolP = static_cast<TClonesArray*>(fPoolsLeg1.At(category));
-  if(!leg1PoolP) leg1PoolP = new(fPoolsLeg1[category]) TClonesArray("TList",1);
+  TClonesArray*  leg1PoolP = static_cast<TClonesArray*>(fPoolsLeg1.At(category));
+  if(!leg1PoolP) leg1PoolP = new(fPoolsLeg1[category]) TClonesArray("TList", 1);
   leg1PoolP->SetOwner(kTRUE);
-  TClonesArray *leg2PoolP=static_cast<TClonesArray*>(fPoolsLeg2.At(category));
-  if(!leg2PoolP) leg2PoolP = new(fPoolsLeg2[category]) TClonesArray("TList",1);
+  TClonesArray*  leg2PoolP = static_cast<TClonesArray*>(fPoolsLeg2.At(category));
+  if(!leg2PoolP) leg2PoolP = new(fPoolsLeg2[category]) TClonesArray("TList", 1);
   leg2PoolP->SetOwner(kTRUE);
   
   TClonesArray &leg1Pool = *leg1PoolP;
@@ -290,8 +290,9 @@ Int_t AliMixingHandler::FindEventCategory(Float_t* values) {
 
   Int_t bin[kNMaxVariables];
   for(Int_t i=0; i<fNMixingVariables; ++i) {
-    bin[i] = TMath::BinarySearch(fVariableLimits[i].GetSize(), fVariableLimits[i].GetArray(), values[fVariables[i]]);
-    if(bin[i]==-1 || bin[i]==fVariableLimits[i].GetSize()-1) return -1;      // all variables must be inside limits
+    bin[i] = TMath::BinarySearch(fVariableLimits[i].GetSize(), fVariableLimits[i].GetArray(), 
+                                 values[fVariables[i]]);
+    if(bin[i]==-1 || bin[i]==fVariableLimits[i].GetSize()-1) return -1;  // all variables must be inside limits
   }
 
   Int_t category = 0;
@@ -368,23 +369,23 @@ ULong_t AliMixingHandler::IncrementPoolSizes(TList* list1, TList* list2, Int_t e
   //
   // Check which cut bits are on and increment the pool sizes accordingly
   //
-  AliReducedBaseTrack* track=0x0;
-  ULong_t cutsMask=0;
+  AliReducedBaseTrack* track = 0x0;
+  ULong_t cutsMask = 0;
   
   // Check which cuts are fulfilled by the tracks in these lists
   if(list1) {
     TIter trackIter1(list1);
-    for(Int_t i=0; i<list1->GetEntries();++i) {
+    for(Int_t i=0; i<list1->GetEntries(); ++i) {
       track=(AliReducedBaseTrack*)trackIter1();
-      for(UShort_t icut=0;icut<fNParallelCuts;++icut)
+      for(UShort_t icut=0; icut<fNParallelCuts; ++icut)
         if(track->TestFlag(icut)) cutsMask |= (ULong_t(1)<<icut);
     }
   }
   if(list2) {
     TIter trackIter2(list2);
-    for(Int_t i=0; i<list2->GetEntries();++i) {
+    for(Int_t i=0; i<list2->GetEntries(); ++i) {
       track=(AliReducedBaseTrack*)trackIter2();
-      for(UShort_t icut=0;icut<fNParallelCuts;++icut)
+      for(UShort_t icut=0; icut<fNParallelCuts; ++icut)
         if(track->TestFlag(icut)) cutsMask |= (ULong_t(1)<<icut);
     }
   }
@@ -393,10 +394,10 @@ ULong_t AliMixingHandler::IncrementPoolSizes(TList* list1, TList* list2, Int_t e
   Int_t nCategories = 1;
   for(Int_t iVar=0; iVar<fNMixingVariables; ++iVar) nCategories *= (fVariableLimits[iVar].GetSize() - 1);
   Bool_t fullPoolFound = kFALSE;
-  for(Int_t icut=0;icut<fNParallelCuts;++icut) {
+  for(Int_t icut=0; icut<fNParallelCuts; ++icut) {
     if(cutsMask & (ULong_t(1)<<icut))
       fPoolSize[icut*nCategories+eventCategory] += 1;
-    if(fPoolSize[icut*nCategories+eventCategory]==fPoolDepth) 
+    if(fPoolSize[icut*nCategories+eventCategory] == fPoolDepth) 
       fullPoolFound = kTRUE;          
   }
   if(!fullPoolFound) return 0;
@@ -404,8 +405,8 @@ ULong_t AliMixingHandler::IncrementPoolSizes(TList* list1, TList* list2, Int_t e
   // If a completely filled pool is found, then look for the other cuts in this event category
   // to see if any of them is above the mixing threshold (fMixingThreshold)
   ULong_t mixingMask = 0;
-  for(Int_t icut=0;icut<fNParallelCuts;++icut) {
-    if(fPoolSize[icut*nCategories+eventCategory]>=Int_t(fMixingThreshold*fPoolDepth)) 
+  for(Int_t icut=0; icut<fNParallelCuts; ++icut) {
+    if(fPoolSize[icut*nCategories+eventCategory] >= Int_t(fMixingThreshold*fPoolDepth)) 
       mixingMask |= (ULong_t(1)<<icut);
   }
   return mixingMask;
@@ -437,8 +438,8 @@ void AliMixingHandler::RunLeftoverMixing(Int_t type) {
       values[fVariables[iVar]] = 0.5*(fVariableLimits[iVar][bin] + fVariableLimits[iVar][bin+1]);
     }
 
-    RunEventMixing(leg1Pool,leg2Pool,mixingMask,type,values);
-    ResetPoolSizes(mixingMask,icateg);
+    RunEventMixing(leg1Pool, leg2Pool, mixingMask, type, values);
+    ResetPoolSizes(mixingMask, icateg);
   }  // end loop over categories
 }
 
@@ -449,10 +450,11 @@ void AliMixingHandler::RunEventMixing(TClonesArray* leg1Pool, TClonesArray* leg2
   //
   // Run event mixing
   // NOTE: The mixingMask is a bit map with bits toggled for the pools which need mixing
-  //       The type is the pair candidate type. It is used in AliReducedPairInfo::CandidateType, mainly to know which mass assumption to be made for the legs
+  //       The type is the pair candidate type. It is used in AliReducedPairInfo::CandidateType, mainly to 
+  //       know which mass assumption to be made for the legs
   //
   Int_t entries = leg1Pool->GetEntries();
-  if(entries<2) return;
+  if(entries < 2) return;
   TObjArray* histClassArr = fHistClassNames.Tokenize(";");
   
   TIter iterEv1Leg1Pool(leg1Pool);
@@ -469,7 +471,7 @@ void AliMixingHandler::RunEventMixing(TClonesArray* leg1Pool, TClonesArray* leg2
     for(Int_t iev2=0; iev2<entries; ++iev2) {                         // second event loop
       TList* ev2Leg1List = (TList*)iterEv2Leg1Pool();
       TList* ev2Leg2List = (TList*)iterEv2Leg2Pool();
-      if(iev1==iev2) continue;
+      if(iev1 == iev2) continue;
       
       //loop over the ev1-leg1 list
       TIter iterLeg1(ev1Leg1List);
@@ -488,42 +490,50 @@ void AliMixingHandler::RunEventMixing(TClonesArray* leg1Pool, TClonesArray* leg2
           if(!testFlags2) continue;
 
           // fill cross-pairs (leg1 - leg2) for the enabled bits
-          if(fMixingSetup==kMixResonanceLegs) AliReducedVarManager::FillPairInfoME(ev1Leg1, ev2Leg2, type, values);
-          if(fMixingSetup==kMixCorrelation)   AliReducedVarManager::FillCorrelationInfo(ev1Leg1, ev2Leg2, values);
+          if(fMixingSetup == kMixResonanceLegs)
+            AliReducedVarManager::FillPairInfoME(ev1Leg1, ev2Leg2, type, values);
+          if(fMixingSetup == kMixCorrelation)
+            AliReducedVarManager::FillCorrelationInfo(ev1Leg1, ev2Leg2, values);
           ULong_t pairCutMask = IsPairSelected(values, 1);
           if(!pairCutMask) continue;   // fill histograms only if pair cuts are fulfilled
           for(Int_t ibit=0; ibit<fNParallelCuts; ++ibit) {
             if((testFlags2)&(ULong_t(1)<<ibit)) { 
               //AliReducedVarManager::FillPairMEflow(ev1Leg1, ev2Leg2, values, ibit);
-              if(fMixingSetup==kMixResonanceLegs) {
-                if(fNParallelPairCuts>1) {
+              if(fMixingSetup == kMixResonanceLegs) {
+                if(fNParallelPairCuts > 1) {
                   for(Int_t jbit=0; jbit<fNParallelPairCuts; jbit++) {
                     if(!((pairCutMask)&(ULong_t(1)<<jbit))) continue;
-                    fHistos->FillHistClass(histClassArr->At(ibit*3+jbit*3*fNParallelCuts+1)->GetName(), values);
+                    fHistos->FillHistClass(histClassArr->At(ibit*3+jbit*3*fNParallelCuts+1)->GetName(), 
+                                           values);
                   }
                 } else {
                   fHistos->FillHistClass(histClassArr->At(ibit*3+1)->GetName(), values);
                 }
               }
-              if(fMixingSetup==kMixCorrelation) {
+              if(fMixingSetup == kMixCorrelation) {
                 Int_t pairType = (reinterpret_cast<AliReducedPairInfo*>(ev1Leg1))->PairType();
                 if(fNParallelPairCuts>1) {
                   ULong_t pairCutMaskCorr = (reinterpret_cast<AliReducedPairInfo*>(ev1Leg1))->GetQualityFlags();
                   for(Int_t jbit=0; jbit<fNParallelPairCuts; jbit++) {
                     if(!((pairCutMaskCorr)&(ULong_t(1)<<jbit))) continue;
-                    if(fMixLikeSign) fHistos->FillHistClass(histClassArr->At(ibit*3+jbit*fNParallelCuts+pairType)->GetName(), values);
-                    else             fHistos->FillHistClass(histClassArr->At(ibit+jbit*fNParallelCuts)->GetName(), values);
+                    if(fMixLikeSign)
+                      fHistos->FillHistClass(histClassArr->At(ibit*3+jbit*fNParallelCuts+pairType)->GetName(), 
+                                             values);
+                    else
+                      fHistos->FillHistClass(histClassArr->At(ibit+jbit*fNParallelCuts)->GetName(), values);
                   }
                 } else {
-                  if(fMixLikeSign) fHistos->FillHistClass(histClassArr->At(ibit*3+pairType)->GetName(), values);
-                  else             fHistos->FillHistClass(histClassArr->At(ibit)->GetName(), values);
+                  if(fMixLikeSign)
+                    fHistos->FillHistClass(histClassArr->At(ibit*3+pairType)->GetName(), values);
+                  else
+                    fHistos->FillHistClass(histClassArr->At(ibit)->GetName(), values);
                 }
               }
             }
           }  
         }  // end loop over the ev2-leg2 list
 
-        if(fMixingSetup==kMixCorrelation) continue;
+        if(fMixingSetup == kMixCorrelation) continue;
         if(!fMixLikeSign) continue;
         // loop over the ev2-leg1 list
         TIter iterLeg1LS(ev2Leg1List);
@@ -553,7 +563,7 @@ void AliMixingHandler::RunEventMixing(TClonesArray* leg1Pool, TClonesArray* leg2
         }  // end loop over the ev2-leg1 list
       }  // end loop over the ev1-leg1 list
 
-      if(fMixingSetup==kMixCorrelation) continue;
+      if(fMixingSetup == kMixCorrelation) continue;
       if(!fMixLikeSign) continue;
       //loop over the ev1-leg2 list
       TIter iterLeg2(ev1Leg2List);
@@ -624,24 +634,28 @@ void AliMixingHandler::RunEventMixing(TClonesArray* leg1Pool, TClonesArray* leg2
   }  // end loop over events
 
   // clean the tracks which don't have enabled mixing flags anymore
-  AliReducedBaseTrack* track=0x0;
+  AliReducedBaseTrack* track = 0x0;
   // leg1 lists
-  iterEv1Leg1Pool.Reset(); TList* leg1List=0x0;
+  iterEv1Leg1Pool.Reset();
+  TList* leg1List = 0x0;
   while((leg1List=(TList*)iterEv1Leg1Pool())) {
     TIter iterLeg1(leg1List);
     while((track=(AliReducedBaseTrack*)iterLeg1())) {
       if(!track->GetFlags()) {
-        leg1List->Remove(track); delete track;
+        leg1List->Remove(track);
+        delete track;
       }
     }
   }  // end while
   // leg2 lists
-  iterEv1Leg2Pool.Reset(); TList* leg2List=0x0;
+  iterEv1Leg2Pool.Reset();
+  TList* leg2List = 0x0;
   while((leg2List=(TList*)iterEv1Leg2Pool())) {  
     TIter iterLeg2(leg2List);
     while((track=(AliReducedBaseTrack*)iterLeg2())) {
       if(!track->GetFlags()) {
-        leg2List->Remove(track); delete track;
+        leg2List->Remove(track);
+        delete track;
       }
     }
   }  // end while
@@ -699,7 +713,8 @@ void AliMixingHandler::PrintMixingLists(Int_t debugLevel) {
 
   cout << "Printing the event mixing lists contents. Prepare for a long dump ..." << endl;
   for(Int_t iVar=0; iVar<fNMixingVariables; ++iVar) {
-    cout << "Variable #" << iVar << " (" << AliReducedVarManager::fgVariableNames[fVariables[iVar]].Data() << ") intervals: " << flush;
+    cout << "Variable #" << iVar << " (" << AliReducedVarManager::fgVariableNames[fVariables[iVar]].Data()
+         << ") intervals: " << flush;
     for(Int_t i=0; i<fVariableLimits[iVar].GetSize(); ++i)
       cout << fVariableLimits[iVar][i] << (i<fVariableLimits[iVar].GetSize()-1 ? " -- " : "") << flush;
     cout << endl;
@@ -727,7 +742,9 @@ void AliMixingHandler::PrintMixingLists(Int_t debugLevel) {
       cout << bins[iVar] << (iVar<fNMixingVariables-1 ? "/" : "") << flush;
     cout << ")" << endl;
     for(Int_t iVar=0; iVar<fNMixingVariables; ++iVar)
-      cout << "[" << fVariableLimits[iVar][GetBinFromCategory(iVar, iCateg)] << ";" << fVariableLimits[iVar][GetBinFromCategory(iVar, iCateg)+1] << "]" << (iVar<fNMixingVariables-1 ? " -- " : "") << flush;
+      cout << "[" << fVariableLimits[iVar][GetBinFromCategory(iVar, iCateg)] << ";"
+           << fVariableLimits[iVar][GetBinFromCategory(iVar, iCateg)+1] << "]"
+           << (iVar<fNMixingVariables-1 ? " -- " : "") << flush;
     cout << endl;
     cout << "====================================================================================" << endl;
     for(Int_t icut=0; icut<fNParallelCuts; ++icut)

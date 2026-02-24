@@ -147,18 +147,18 @@ AliReducedTrackInfo::AliReducedTrackInfo(const AliReducedTrackInfo &c) :
    //
    // copy constructor
    //
-   fDCA[0] = c.fDCA[0]; fDCA[1]=c.fDCA[1];
-   fTPCDCA[0] = c.fTPCDCA[0]; fTPCDCA[1]=c.fTPCDCA[1];
-   fHelixCenter[0] = c.fHelixCenter[0]; fHelixCenter[1] = c.fHelixCenter[1];
-   fTRDntracklets[0]=c.fTRDntracklets[0]; fTRDntracklets[1]=c.fTRDntracklets[1];
-   fTRDpid[0]=c.fTRDpid[0]; fTRDpid[1]=c.fTRDpid[1];
-   fTRDpidLQ2D[0] = c.fTRDpidLQ2D[0]; fTRDpidLQ2D[1] = c.fTRDpidLQ2D[1];
+   fDCA[0]           = c.fDCA[0];           fDCA[1]           = c.fDCA[1];
+   fTPCDCA[0]        = c.fTPCDCA[0];        fTPCDCA[1]        = c.fTPCDCA[1];
+   fHelixCenter[0]   = c.fHelixCenter[0];   fHelixCenter[1]   = c.fHelixCenter[1];
+   fTRDntracklets[0] = c.fTRDntracklets[0]; fTRDntracklets[1] = c.fTRDntracklets[1];
+   fTRDpid[0]        = c.fTRDpid[0];        fTRDpid[1]        = c.fTRDpid[1];
+   fTRDpidLQ2D[0]    = c.fTRDpidLQ2D[0];    fTRDpidLQ2D[1]    = c.fTRDpidLQ2D[1];
    for(Int_t i=0; i<4; ++i) {fTPCnSig[i]=c.fTPCnSig[i]; fTOFnSig[i]=c.fTOFnSig[i]; fITSnSig[i]=c.fITSnSig[i];}
    for(Int_t i=0; i<4; ++i) {fTPCdEdxInfoQmax[i]=c.fTPCdEdxInfoQmax[i]; fTPCdEdxInfoQtot[i]=c.fTPCdEdxInfoQtot[i];}
-   for(Int_t i=0;i<6;++i) {fTrackParam[i]=c.fTrackParam[i];}
-   for(Int_t i=0;i<21;++i) {fCovMatrix[i]=c.fCovMatrix[i];}
-   for(Int_t i=0;i<3;++i) {fMCMom[i]=c.fMCMom[i]; fMCFreezeout[i]=c.fMCFreezeout[i];}
-   for(Int_t i=0;i<4;++i) {fMCLabels[i]=c.fMCLabels[i]; fMCPdg[i]=c.fMCPdg[i];}
+   for(Int_t i=0; i<6;++i)  {fTrackParam[i]=c.fTrackParam[i];}
+   for(Int_t i=0; i<21;++i) {fCovMatrix[i]=c.fCovMatrix[i];}
+   for(Int_t i=0; i<3;++i)  {fMCMom[i]=c.fMCMom[i]; fMCFreezeout[i]=c.fMCFreezeout[i];}
+   for(Int_t i=0; i<4;++i)  {fMCLabels[i]=c.fMCLabels[i]; fMCPdg[i]=c.fMCPdg[i];}
 }
 
 //_______________________________________________________________________________

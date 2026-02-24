@@ -27,35 +27,36 @@ public:
 
   // reference ('generated') event class for the measurement [this is where multiplicity distributions and mult dep pt spectra will be corrected to]
   enum EventClass : unsigned int {
-    triggered = 0, // mc events that fulfil the (experimental!) trigger condition [varies from dataset to dataset]
-    fiducial,      // mc events that produce at least one charged particle within the fiducial phase space of the measurement [trusting only that trigger eff for these events is modelled properly]
-    inelgt0,       // mc events that produce at least one charged particle in |eta| < 1 [trusting simulation for extrapolation to events with particles produced only in the unmeasured region]
+    triggered = 0,  // mc events that fulfil the (experimental!) trigger condition
+                    //  [varies from dataset to dataset]
+    fiducial,       // mc events that produce at least one charged particle within the fiducial phase space 
+                    //   of the measurement [trusting only that trigger eff for these events is modelled 
+                    //   properly]
+    inelgt0,        // mc events that produce at least one charged particle in |eta| < 1 [trusting 
+                    //   simulation for extrapolation to events with particles produced only in the 
+                    //   unmeasured region]
   };
 
   AliMultDepSpecAnalysisTask() : AliAnalysisTaskSE(){};
   AliMultDepSpecAnalysisTask(const char* name) : AliAnalysisTaskSE(name) { DefineOutput(1, TList::Class()); };
-  ~AliMultDepSpecAnalysisTask()
-  {
-    if (fTrackCuts) delete fTrackCuts;
-  };
+  ~AliMultDepSpecAnalysisTask() {if(fTrackCuts) delete fTrackCuts;};
   void UserCreateOutputObjects();
   void UserExec(Option_t*);
   void Terminate(Option_t*){};
 
   // Setters
-  void SetEventClass(unsigned int eventClass) { fMCEventClass = eventClass; }
-  void SetTriggerMask(unsigned int triggermask) { fTriggerMask = triggermask; }
-  void SetIsNewReco(bool isNewReco = true) { fIsNewReco = isNewReco; }
+  void SetEventClass  (unsigned int eventClass)  {fMCEventClass = eventClass;}
+  void SetTriggerMask (unsigned int triggermask) {fTriggerMask  = triggermask;}
+  void SetIsNewReco   (bool isNewReco = true)    {fIsNewReco    = isNewReco;}
 
-  void SetAxis(unsigned int dim, const std::string name, const std::string title, const std::vector<double>& binEdges, int nBins = 0);
+  void SetAxis(unsigned int dim, const std::string name, const std::string title,
+               const std::vector<double>& binEdges, int nBins=0);
 
-  void SetEtaRange(double minEta, double maxEta)
-  {
+  void SetEtaRange(double minEta, double maxEta) {
     fMinEta = minEta;
     fMaxEta = maxEta;
   }
-  void SetPtRange(double minPt, double maxPt)
-  {
+  void SetPtRange(double minPt, double maxPt) {
     fMinPt = minPt;
     fMaxPt = maxPt;
   }
@@ -79,22 +80,22 @@ protected:
   void LoopTrue(bool count = false);
 
   template <typename T>
-  void BookHistogram(Hist<T>& histContainer, const std::string& histName, const std::vector<unsigned int>& dimensions);
+  void BookHistogram(Hist<T>& histContainer, const std::string& histName,
+                     const std::vector<unsigned int>& dimensions);
 
   bool InitCentrality();
 
-  template <typename Particle_t>
-  bool InitParticle(int particleID);
+  template <typename Particle_t> bool InitParticle(int particleID);
   unsigned long GetSeed();
   int GetNRepetitons(double scalingFactor);
-  AliMultDepSpecAnalysisTask(const AliMultDepSpecAnalysisTask&);            // not implemented
-  AliMultDepSpecAnalysisTask& operator=(const AliMultDepSpecAnalysisTask&); // not implemented
+  AliMultDepSpecAnalysisTask(const AliMultDepSpecAnalysisTask&);             // not implemented
+  AliMultDepSpecAnalysisTask& operator=(const AliMultDepSpecAnalysisTask&);  // not implemented
 
-  std::unique_ptr<TList> fOutputList{};       //!<! output list
-  TList* fQAList{nullptr};                    //!<! QA list
-  std::unique_ptr<AliEventCuts> fEventCuts{}; //!<! event cuts
-  AliESDtrackCuts* fTrackCuts{nullptr};       //-> track cuts
-  std::unique_ptr<TRandom3> fRand{};          //!<! random generator
+  std::unique_ptr<TList>        fOutputList{};        //!<! output list
+  TList*                        fQAList{nullptr};     //!<! QA list
+  std::unique_ptr<AliEventCuts> fEventCuts{};         //!<! event cuts
+  AliESDtrackCuts*              fTrackCuts{nullptr};  //-> track cuts
+  std::unique_ptr<TRandom3>     fRand{};              //!<! random generator
 
   std::string fTrainMetadata{};       ///<  metadata of the train run used to generate the output
   std::string fMCSelectedGenerator{}; ///<  selected generator (used in case of MCs with embedded signal to select the MB event)
@@ -114,8 +115,8 @@ protected:
   double fMaxEta{0.8};                                          ///< maximum eta cut
   double fMinPt{0.15};                                          ///< minimum pT cut
   double fMaxPt{10.0};                                          ///< maximum pT cut
-  int fMaxMultMeas{100};                                        ///< maximum measured multiplicity
-  int fMaxMultTrue{100};                                        ///< maximum true multiplicity
+  int    fMaxMultMeas{100};                                     ///< maximum measured multiplicity
+  int    fMaxMultTrue{100};                                     ///< maximum true multiplicity
 
   std::map<unsigned int, Axis> fAxes{}; //!<! axis definitions used in the histograms
 
@@ -172,25 +173,25 @@ protected:
   AliMCSpectraWeights* fMCSpectraWeights{}; //!<! fMCSpectraWeights for data-driven corrections (particle composition and secondary scaling)
 
   // transient event related properties
-  AliVEvent* fEvent{};    //!<! reconstructed event
+  AliVEvent*  fEvent{};   //!<! reconstructed event
   AliMCEvent* fMCEvent{}; //!<! MC event
-  bool fIsTriggered{};    //!<! if event fired trigger (and passes physics selection)
+  bool   fIsTriggered{};  //!<! if event fired trigger (and passes physics selection)
   double fVtxZ{};         //!<! position of z vertex
   double fMCVtxZ{};       //!<! position of MC truth z vertex
   double fMultMeas{};     //!<! measured central barrel track multiplicity after selections
   double fMultTrue{};     //!<! true multiplicity within kinematic range of measurement
 
-  bool fIsFirstEventInJob{true}; //!<! flag if the current event is the first one in this computing job
-  int fRunNumber{};              //!<! run number
+  bool          fIsFirstEventInJob{true}; //!<! flag if the current event is the first one in this computing job
+  int           fRunNumber{};              //!<! run number
   unsigned long fEventNumber{};  //!<! event number
-  unsigned int fTimeStamp{};     //!<! event time stamp
+  unsigned int  fTimeStamp{};     //!<! event time stamp
   float fCent{};                 //!<! event centrality
-  bool fEventPassesPhysSel{};    //!<! event passes physics selection (usually also including pileup rejection)
-  bool fMCIsGoodZPos{};          //!<! is mc event within acceptance (z < 10 cm)?
-  bool fMCIsGoodEventClass{};    //!<! decision if current event is in specified baseline 'generated' event class
-  bool fAcceptEvent{};           //!<! decision if current event is selected
-  bool fMCAcceptEvent{};         //!<! decision if current event is of 'generated' event class and has good vertex position
-  bool fMCIsINELGT0{};           //!<! decision if this event is in INEL>0 event class (at least one charged particle in abs(eta) < 1)
+  bool  fEventPassesPhysSel{};    //!<! event passes physics selection (usually also including pileup rejection)
+  bool  fMCIsGoodZPos{};          //!<! is mc event within acceptance (z < 10 cm)?
+  bool  fMCIsGoodEventClass{};    //!<! decision if current event is in specified baseline 'generated' event class
+  bool  fAcceptEvent{};           //!<! decision if current event is selected
+  bool  fMCAcceptEvent{};         //!<! decision if current event is of 'generated' event class and has good vertex position
+  bool  fMCIsINELGT0{};           //!<! decision if this event is in INEL>0 event class (at least one charged particle in abs(eta) < 1)
 
   // transient track related properties
   double fPt{};      //!<! track pt

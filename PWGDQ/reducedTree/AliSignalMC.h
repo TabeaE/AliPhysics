@@ -125,7 +125,8 @@ public:
                                         ? fExcludeSource[prong][generation] : 0);}
   Bool_t GetSourceExclude      (UInt_t prong, UInt_t generation, UInt_t sourceBit) const {
                                 return (prong<fNProngs && generation<fNGenerations && sourceBit<kNSources
-                                        ? fExcludeSource[prong][generation] & (UInt_t(1)<<sourceBit) : kFALSE);}
+                                        ? fExcludeSource[prong][generation] & (UInt_t(1)<<sourceBit)
+                                        : kFALSE);}
   Bool_t GetUseANDonSourceBits (UInt_t prong, UInt_t generation) const {
                                 return (prong<fNProngs && generation<fNGenerations
                                         ? fUseANDonSourceBitMap[prong][generation] : kFALSE);}
@@ -137,24 +138,27 @@ private:
   UInt_t fNProngs;       // number of prongs
   UInt_t fNGenerations;  // number of generations to look back in history
 
-  Int_t  fPDGcodes[kNMaxProngs][kNMaxGenerations];          // PDG codes for all particles in the defined signal
-  Bool_t fCheckBothCharges[kNMaxProngs][kNMaxGenerations];  // include both charge signs of the specified
-                                                            // PDG code
-  Bool_t fExcludePDG[kNMaxProngs][kNMaxGenerations];        // if TRUE, the specified PDG criteria are used to
-                                                            // exclude the particle
+  Int_t  fPDGcodes         [kNMaxProngs][kNMaxGenerations];  // PDG codes for all particles in the
+                                                             //  defined signal.
+  Bool_t fCheckBothCharges [kNMaxProngs][kNMaxGenerations];  // Include both charge signs of the specified
+                                                             //  PDG code.
+  Bool_t fExcludePDG       [kNMaxProngs][kNMaxGenerations];  // If TRUE, the specified PDG criteria are
+                                                             //  used to exclude the particle.
 
-  UInt_t fSourceBits[kNMaxProngs][kNMaxGenerations];     // bit maps encoding physical sources/processes of
-                                                         // the particles (see ESource)
-  UInt_t fExcludeSource[kNMaxProngs][kNMaxGenerations];  // if TRUE, the specified source criteria are used to
-                                                         // exclude the particle
-  Bool_t fUseANDonSourceBitMap[kNMaxProngs][kNMaxGenerations];  // if TRUE request all enabled source bits (AND);
-                                                                // if FALSE request at least one of the
-                                                                // enabled source bits (OR)
+  UInt_t fSourceBits           [kNMaxProngs][kNMaxGenerations];  // Bit maps encoding physical
+                                                                 //  sources/processes of the particles
+                                                                 //  (see ESource).
+  UInt_t fExcludeSource        [kNMaxProngs][kNMaxGenerations];  // If TRUE, the specified source criteria
+                                                                 //  are used to exclude the particle.
+  Bool_t fUseANDonSourceBitMap [kNMaxProngs][kNMaxGenerations];  // If TRUE request all enabled source
+                                                                 //  bits (AND).
+                                                                 //  If FALSE request at least one of the
+                                                                 //  enabled source bits (OR).
 
-  UInt_t fCommonAncestorIdx;  // index of first common ancestor for all prongs; defaults to -1
-  // all older ancestors are considered to be common
-  // NOTE: this signal model is not suited for situations where for a given prong there is more than one ancestor
-  // These situations could be encoded by defining more Source bits
+  UInt_t fCommonAncestorIdx;  // Index of first common ancestor for all prongs. Defaults to -1.
+  // All older ancestors are considered to be common.
+  // NOTE: This signal model is not suited for situations where for a given prong there is more than one
+  //       ancestor. These situations could be encoded by defining more Source bits.
 
   AliSignalMC& operator= (const AliSignalMC &c);
 

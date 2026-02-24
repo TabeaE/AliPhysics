@@ -14,7 +14,7 @@
 **************************************************************************/
 
 ///////////////////////////////////////////////////////////////////////////
-//                Dielectron PID                                  //
+//                Dielectron PID                                         //
 //                                                                       //
 //                                                                       //
 /*
@@ -456,7 +456,7 @@ Bool_t AliDielectronPID::IsSelected(TObject* track)
     AliAODPid *pid=const_cast<AliAODPid*>(aodTrack->GetDetPid());
     if (pid) pid->SetTPCsignal(origdEdx);
   }
-  return (fNcuts==0 ? kTRUE :selected);
+  return (fNcuts==0 ? kTRUE : selected);
 }
 
 //______________________________________________

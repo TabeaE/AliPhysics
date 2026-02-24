@@ -18,7 +18,7 @@ ClassImp(AliSignalMC)
 
 
 //________________________________________________________________________________________________________________
-AliSignalMC::AliSignalMC(Int_t nProngs /*=1*/, Int_t nGenerations /*=kNMaxGenerations*/) :
+AliSignalMC::AliSignalMC(Int_t nProngs/*=1*/, Int_t nGenerations/*=kNMaxGenerations*/) :
 TNamed(),
 fNProngs(1),
 fNGenerations(kNMaxGenerations),
@@ -32,20 +32,23 @@ fCommonAncestorIdx(0)
 {
   if(nProngs<1 || nProngs>kNMaxProngs) {
     cout << "WARNING in AliSignalMC(nProngs, nGenerations):  Attempt to build an AliSignalMC object with "
-    << nProngs << " prongs!" << endl;
-    cout << "WARNING in AliSignalMC(nProngs, nGenerations):  Allowed number of prongs: 1 - " << kNMaxProngs << endl;
+         << nProngs << " prongs!" << endl;
+    cout << "WARNING in AliSignalMC(nProngs, nGenerations):  Allowed number of prongs: 1 - "
+         << kNMaxProngs << endl;
     fNProngs = 1;
-  }
-  else
+  } else {
     fNProngs = nProngs;
+  }
+
   if(nGenerations<1 || nGenerations>kNMaxGenerations) {
     cout << "WARNING in AliSignalMC(nProngs, nGenerations):  Attempt to build an AliReducedSignal object with "
-    << nGenerations << " generations!" << endl;
-    cout << "WARNING in AliSignalMC(nProngs, nGenerations):  Allowed number of generations: 1 - " << kNMaxGenerations << endl;
+         << nGenerations << " generations!" << endl;
+    cout << "WARNING in AliSignalMC(nProngs, nGenerations):  Allowed number of generations: 1 - "
+         << kNMaxGenerations << endl;
     fNGenerations = kNMaxGenerations;
-  }
-  else
+  } else {
     fNGenerations = nGenerations;
+  }
 
   for(UInt_t p=0; p<fNProngs; ++p) {
     for(UInt_t g=0; g<fNGenerations; ++g) {
@@ -75,20 +78,23 @@ fCommonAncestorIdx(0)
 {
   if(nProngs<1 || nProngs>kNMaxProngs) {
     cout << "WARNING in AliSignalMC(name, title, nProngs, nGenerations):  Attempt to build an AliSignalMC object with "
-    << nProngs << " prongs!" << endl;
-    cout << "WARNING in AliSignalMC(name, title, nProngs, nGenerations):  Allowed number of prongs: 1 - " << kNMaxProngs << endl;
+         << nProngs << " prongs!" << endl;
+    cout << "WARNING in AliSignalMC(name, title, nProngs, nGenerations):  Allowed number of prongs: 1 - "
+         << kNMaxProngs << endl;
     fNProngs = 1;
-  }
-  else
+  } else {
     fNProngs = nProngs;
+  }
+
   if(nGenerations<1 || nGenerations>kNMaxGenerations) {
     cout << "WARNING in AliSignalMC(name, title, nProngs, nGenerations):  Attempt to build an AliSignalMC object with "
-    << nGenerations << " generations!" << endl;
-    cout << "WARNING in AliSignalMC(name, title, nProngs, nGenerations):  Allowed number of generations: 1 - " << kNMaxGenerations << endl;
+         << nGenerations << " generations!" << endl;
+    cout << "WARNING in AliSignalMC(name, title, nProngs, nGenerations):  Allowed number of generations: 1 - "
+         << kNMaxGenerations << endl;
     fNGenerations = kNMaxGenerations;
-  }
-  else
+  } else {
     fNGenerations = nGenerations;
+  }
 
   for(UInt_t p=0; p<fNProngs; ++p) {
     for(UInt_t g=0; g<fNGenerations; ++g) {
@@ -120,12 +126,12 @@ fCommonAncestorIdx(c.GetCommonAncestorIdx())
   //
   for(UInt_t iprong=0; iprong<fNProngs; ++iprong) {
     for(UInt_t igen=0; igen<fNGenerations; ++igen) {
-      fPDGcodes             [iprong][igen] = c.GetPDGcode(iprong,igen);
-      fCheckBothCharges     [iprong][igen] = c.GetCheckBothCharges(iprong,igen);
-      fExcludePDG           [iprong][igen] = c.GetPDGExclude(iprong, igen);
-      fSourceBits           [iprong][igen] = c.GetSources(iprong,igen);
-      fExcludeSource        [iprong][igen] = c.GetSourcesExclude(iprong, igen);
-      fUseANDonSourceBitMap [iprong][igen] = c.GetUseANDonSourceBits(iprong, igen);
+      fPDGcodes             [iprong][igen] = c.GetPDGcode            (iprong, igen);
+      fCheckBothCharges     [iprong][igen] = c.GetCheckBothCharges   (iprong, igen);
+      fExcludePDG           [iprong][igen] = c.GetPDGExclude         (iprong, igen);
+      fSourceBits           [iprong][igen] = c.GetSources            (iprong, igen);
+      fExcludeSource        [iprong][igen] = c.GetSourcesExclude     (iprong, igen);
+      fUseANDonSourceBitMap [iprong][igen] = c.GetUseANDonSourceBits (iprong, igen);
     }
   }
 }
@@ -143,17 +149,18 @@ void AliSignalMC::SetCommonAncestorIdx(UInt_t idx) {
   // set the common ancestor
   //
   fCommonAncestorIdx = idx;
-  if(idx>=fNGenerations) fCommonAncestorIdx = fNGenerations-1;
+  if(idx >= fNGenerations) fCommonAncestorIdx = fNGenerations - 1;
 }
 
 //________________________________________________________________________________________________________________
 void AliSignalMC::SetProngHistory(UInt_t prong, UInt_t pdgCodes[], Bool_t checkBothCharges[],
-                                  UInt_t sourceBits[], Bool_t excludePDG[]/* = 0x0*/,
-                                  UInt_t excludeSources[]/* = 0x0*/, Bool_t useANDonSourceBits[]/*=0x0*/) {
+                                  UInt_t sourceBits[], Bool_t excludePDG[]/*=0x0*/,
+                                  UInt_t excludeSources[]/*=0x0*/, Bool_t useANDonSourceBits[]/*=0x0*/)
+{
   //
   // set the entire prong history
   //
-  if(prong>=fNProngs) {
+  if(prong >= fNProngs) {
     cout << "WARNING in AliSignalMC::SetProngHistory:  Invalid prong index, should be a number between 0 and " << fNProngs << endl;
     return;
   }
@@ -169,8 +176,9 @@ void AliSignalMC::SetProngHistory(UInt_t prong, UInt_t pdgCodes[], Bool_t checkB
 }
 
 //________________________________________________________________________________________________________________
-void AliSignalMC::SetPDGcode(UInt_t prong, UInt_t generation, Int_t pdgCode, Bool_t checkBothCharges/*= kFALSE*/,
-                             Bool_t exclude/*=kFALSE*/) {
+void AliSignalMC::SetPDGcode(UInt_t prong, UInt_t generation, Int_t pdgCode,
+                             Bool_t checkBothCharges/*=kFALSE*/, Bool_t exclude/*=kFALSE*/)
+{
   //
   // set PDG code for a prong at a given generation
   //
@@ -183,7 +191,8 @@ void AliSignalMC::SetPDGcode(UInt_t prong, UInt_t generation, Int_t pdgCode, Boo
 
 //________________________________________________________________________________________________________________
 void AliSignalMC::SetSources(UInt_t prong, UInt_t generation, UInt_t bits, UInt_t exclude/*=0*/,
-                             Bool_t useANDonSourceBits/*=kTRUE*/) {
+                             Bool_t useANDonSourceBits/*=kTRUE*/)
+{
   //
   // set the entire sources bit map for a prong at a given generation
   //
@@ -195,7 +204,8 @@ void AliSignalMC::SetSources(UInt_t prong, UInt_t generation, UInt_t bits, UInt_
 }
 
 //________________________________________________________________________________________________________________
-void AliSignalMC::SetSourceBit(UInt_t prong, UInt_t generation, UInt_t sourceBit, Bool_t exclude/*=kFALSE*/) {
+void AliSignalMC::SetSourceBit(UInt_t prong, UInt_t generation, UInt_t sourceBit, Bool_t exclude/*=kFALSE*/)
+{
   //
   // set a specific source bit for a prong at a given generation
   //
@@ -214,7 +224,7 @@ void AliSignalMC::SetUseANDonSourceBits(UInt_t prong, UInt_t generation, Bool_t 
   //
   // set the option to be used when evaluating the source bits
   //
-  if(prong<0 || prong>=fNProngs) return;
+  if(prong<0      || prong>=fNProngs)           return;
   if(generation<0 || generation>=fNGenerations) return;
   fUseANDonSourceBitMap[prong][generation] = option;
 }
@@ -224,37 +234,37 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
   //
   // test if the code pdg matches this signal
   //
-  if(prong<0 || prong>=fNProngs) return kFALSE;
+  if(prong<0      || prong>=fNProngs)           return kFALSE;
   if(generation<0 || generation>=fNGenerations) return kFALSE;
 
   Bool_t decision = kTRUE;
-  Int_t absPDG = TMath::Abs(pdg);
+  Int_t  absPDG   = TMath::Abs(pdg);
 
   switch(TMath::Abs(fPDGcodes[prong][generation])) {
     case kPDGnotAssigned:
       // PDG not required (any code will do fine)
       break;
     case 100:     // light flavoured mesons
-      if(fCheckBothCharges[prong][generation])
+      if(fCheckBothCharges[prong][generation]) {
         decision = absPDG>=100 && absPDG<=199;
-    else {
-      if(fPDGcodes[prong][generation]>0) decision = pdg>=100 && pdg<=199;
-      if(fPDGcodes[prong][generation]<0) decision = pdg>=-199 && pdg<=-100;
-    }
+      } else {
+        if(fPDGcodes[prong][generation]>0) decision = pdg>=100  && pdg<=199;
+        if(fPDGcodes[prong][generation]<0) decision = pdg>=-199 && pdg<=-100;
+      }
     break;
     case 1000:     // light flavoured baryons
-      if(fCheckBothCharges[prong][generation])
+      if(fCheckBothCharges[prong][generation]) {
         decision = absPDG>=1000 && absPDG<=1999;
-    else {
-      if(fPDGcodes[prong][generation]>0) decision = pdg>=1000 && pdg<=1999;
-      if(fPDGcodes[prong][generation]<0) decision = pdg>=-1999 && pdg<=-1000;
-    }
+      } else {
+        if(fPDGcodes[prong][generation]>0) decision = pdg>=1000  && pdg<=1999;
+        if(fPDGcodes[prong][generation]<0) decision = pdg>=-1999 && pdg<=-1000;
+      }
     break;
     case 200:     // light flavoured mesons
       if(fCheckBothCharges[prong][generation])
         decision = absPDG>=200 && absPDG<=299;
     else {
-      if(fPDGcodes[prong][generation]>0)decision = pdg>=200 && pdg<=299;
+      if(fPDGcodes[prong][generation]>0)decision = pdg>=200  && pdg<=299;
       if(fPDGcodes[prong][generation]<0)decision = pdg>=-299 && pdg<=-200;
     }
     break;
@@ -262,7 +272,7 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
       if(fCheckBothCharges[prong][generation])
         decision = absPDG>=2000 && absPDG<=2999;
     else {
-      if(fPDGcodes[prong][generation]>0) decision = pdg>=2000 && pdg<=2999;
+      if(fPDGcodes[prong][generation]>0) decision = pdg>=2000  && pdg<=2999;
       if(fPDGcodes[prong][generation]<0) decision = pdg>=-2999 && pdg<=-2000;
     }
     break;
@@ -270,7 +280,7 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
       if(fCheckBothCharges[prong][generation])
         decision = absPDG>=300 && absPDG<=399;
     else {
-      if(fPDGcodes[prong][generation]>0) decision = pdg>=300 && pdg<=399;
+      if(fPDGcodes[prong][generation]>0) decision = pdg>=300  && pdg<=399;
       if(fPDGcodes[prong][generation]<0) decision = pdg>=-399 && pdg<=-300;
     }
     break;
@@ -278,7 +288,7 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
       if(fCheckBothCharges[prong][generation])
         decision = absPDG>=3000 && absPDG<=3999;
     else {
-      if(fPDGcodes[prong][generation]>0) decision = pdg>=3000 && pdg<=3999;
+      if(fPDGcodes[prong][generation]>0) decision = pdg>=3000  && pdg<=3999;
       if(fPDGcodes[prong][generation]<0) decision = pdg>=-3999 && pdg<=-3000;
     }
     break;
@@ -286,7 +296,7 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
       if(fCheckBothCharges[prong][generation])
         decision = absPDG>=400 && absPDG<=499;
     else {
-      if(fPDGcodes[prong][generation]>0) decision = pdg>=400 && pdg<=499;
+      if(fPDGcodes[prong][generation]>0) decision = pdg>=400  && pdg<=499;
       if(fPDGcodes[prong][generation]<0) decision = pdg>=-499 && pdg<=-400;
     }
     break;
@@ -294,7 +304,7 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
       if(fCheckBothCharges[prong][generation])
         decision = absPDG>=400 && absPDG<=439;
     else {
-      if(fPDGcodes[prong][generation]>0) decision = pdg>=400 && pdg<=439;
+      if(fPDGcodes[prong][generation]>0) decision = pdg>=400  && pdg<=439;
       if(fPDGcodes[prong][generation]<0) decision = pdg>=-439 && pdg<=-400;
     }
     break;
@@ -303,7 +313,7 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
         decision = (absPDG>=400 && absPDG<=439) ||
         (absPDG>=4000 && absPDG<=4399);
       else {
-        if(fPDGcodes[prong][generation]>0) decision = (pdg>=400 && pdg<=439) ||
+        if(fPDGcodes[prong][generation]>0) decision = (pdg>=400  && pdg<=439) ||
           (pdg>=4000 && pdg<=4399);
         if(fPDGcodes[prong][generation]<0) decision = (pdg>=-439 && pdg<=-400) ||
           (pdg>=-4399 && pdg<=-4000);
@@ -314,7 +324,7 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
         decision = (absPDG>=400 && absPDG<=499) ||
         (absPDG>=4000 && absPDG<=4999);
       else {
-        if(fPDGcodes[prong][generation]>0) decision = (pdg>=400 && pdg<=499) ||
+        if(fPDGcodes[prong][generation]>0) decision = (pdg>=400  && pdg<=499) ||
           (pdg>=4000 && pdg<=4999);
         if(fPDGcodes[prong][generation]<0) decision = (pdg>=-499 && pdg<=-400) ||
           (pdg>=-4999 && pdg<=-4000);
@@ -324,7 +334,7 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
       if(fCheckBothCharges[prong][generation])
         decision = (absPDG>=410 && absPDG<=419);
     else {
-      if(fPDGcodes[prong][generation]>0) decision = (pdg>=410 && pdg<=419);
+      if(fPDGcodes[prong][generation]>0) decision = (pdg>=410  && pdg<=419);
       if(fPDGcodes[prong][generation]<0) decision = (pdg>=-419 && pdg<=-410);
     }
     break;
@@ -332,7 +342,7 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
       if(fCheckBothCharges[prong][generation])
         decision =absPDG>=420 && absPDG<=429;
     else {
-      if(fPDGcodes[prong][generation]>0) decision = pdg>=420 && pdg<=429 ;
+      if(fPDGcodes[prong][generation]>0) decision = pdg>=420  && pdg<=429 ;
       if(fPDGcodes[prong][generation]<0) decision = pdg>=-429 && pdg<=-420;
     }
     break;
@@ -341,7 +351,7 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
       if(fCheckBothCharges[prong][generation])
         decision = (absPDG>=430 && absPDG<=439);
     else {
-      if(fPDGcodes[prong][generation]>0) decision = (pdg>=430 && pdg<=439);
+      if(fPDGcodes[prong][generation]>0) decision = (pdg>=430  && pdg<=439);
       if(fPDGcodes[prong][generation]<0) decision = (pdg>=-439 && pdg<=-430);
     }
     break;
@@ -350,7 +360,7 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
       if(fCheckBothCharges[prong][generation])
         decision = absPDG>=4000 && absPDG<=4999;
     else {
-      if(fPDGcodes[prong][generation]>0) decision = pdg>=4000 && pdg<=4999;
+      if(fPDGcodes[prong][generation]>0) decision = pdg>=4000  && pdg<=4999;
       if(fPDGcodes[prong][generation]<0) decision = pdg>=-4999 && pdg<=-4000;
     }
     break;
@@ -358,7 +368,7 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
       if(fCheckBothCharges[prong][generation])
         decision = absPDG>=4000 && absPDG<=4399;
     else {
-      if(fPDGcodes[prong][generation]>0) decision = pdg>=4000 && pdg<=4399;
+      if(fPDGcodes[prong][generation]>0) decision = pdg>=4000  && pdg<=4399;
       if(fPDGcodes[prong][generation]<0) decision = pdg>=-4399 && pdg<=-4000;
     }
     break;
@@ -366,7 +376,7 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
       if(fCheckBothCharges[prong][generation])
         decision = absPDG>=500 && absPDG<=599;
     else {
-      if(fPDGcodes[prong][generation]>0) decision = pdg>=500 && pdg<=599;
+      if(fPDGcodes[prong][generation]>0) decision = pdg>=500  && pdg<=599;
       if(fPDGcodes[prong][generation]<0) decision = pdg>=-599 && pdg<=-500;
     }
     break;
@@ -374,7 +384,7 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
       if(fCheckBothCharges[prong][generation])
         decision = absPDG>=500 && absPDG<=549;
     else {
-      if(fPDGcodes[prong][generation]>0) decision = pdg>=500 && pdg<=549;
+      if(fPDGcodes[prong][generation]>0) decision = pdg>=500  && pdg<=549;
       if(fPDGcodes[prong][generation]<0) decision = pdg>=-549 && pdg<=-500;
     }
     break;
@@ -383,7 +393,7 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
         decision = (absPDG>=500 && absPDG<=549) ||
         (absPDG>=5000 && absPDG<=5499);
       else {
-        if(fPDGcodes[prong][generation]>0) decision = (pdg>=500 && pdg<=549) ||
+        if(fPDGcodes[prong][generation]>0) decision = (pdg>=500  && pdg<=549) ||
           (pdg>=5000 && pdg<=5499);
         if(fPDGcodes[prong][generation]<0) decision = (pdg>=-549 && pdg<=-500) ||
           (pdg>=-5499 && pdg<=-5000);
@@ -394,7 +404,7 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
         decision = (absPDG>=500 && absPDG<=599) ||
         (absPDG>=5000 && absPDG<=5999);
       else {
-        if(fPDGcodes[prong][generation]>0) decision = (pdg>=500 && pdg<=599) ||
+        if(fPDGcodes[prong][generation]>0) decision = (pdg>=500  && pdg<=599) ||
           (pdg>=5000 && pdg<=5999);
         if(fPDGcodes[prong][generation]<0) decision = (pdg>=-599 && pdg<=-500) ||
           (pdg>=-5999 && pdg<=-5000);
@@ -405,7 +415,7 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
       if(fCheckBothCharges[prong][generation])
         decision = (absPDG>=510 && absPDG<=519);
     else {
-      if(fPDGcodes[prong][generation]>0) decision = (pdg>=510 && pdg<=519);
+      if(fPDGcodes[prong][generation]>0) decision = (pdg>=510  && pdg<=519);
       if(fPDGcodes[prong][generation]<0) decision = (pdg>=-519 && pdg<=-510);
     }
     break;
@@ -413,7 +423,7 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
       if(fCheckBothCharges[prong][generation])
         decision =absPDG>=520 && absPDG<=529;
     else {
-      if(fPDGcodes[prong][generation]>0) decision = pdg>=520 && pdg<=529 ;
+      if(fPDGcodes[prong][generation]>0) decision = pdg>=520  && pdg<=529 ;
       if(fPDGcodes[prong][generation]<0) decision = pdg>=-529 && pdg<=-520;
     }
     break;
@@ -422,7 +432,7 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
       if(fCheckBothCharges[prong][generation])
         decision = (absPDG>=530 && absPDG<=539);
     else {
-      if(fPDGcodes[prong][generation]>0) decision = (pdg>=530 && pdg<=539);
+      if(fPDGcodes[prong][generation]>0) decision = (pdg>=530  && pdg<=539);
       if(fPDGcodes[prong][generation]<0) decision = (pdg>=-539 && pdg<=-530);
     }
     break;
@@ -431,7 +441,7 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
       if(fCheckBothCharges[prong][generation])
         decision = absPDG>=5000 && absPDG<=5999;
     else {
-      if(fPDGcodes[prong][generation]>0) decision = pdg>=5000 && pdg<=5999;
+      if(fPDGcodes[prong][generation]>0) decision = pdg>=5000  && pdg<=5999;
       if(fPDGcodes[prong][generation]<0) decision = pdg>=-5999 && pdg<=-5000;
     }
     break;
@@ -439,7 +449,7 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
       if(fCheckBothCharges[prong][generation])
         decision = absPDG>=5000 && absPDG<=5499;
     else {
-      if(fPDGcodes[prong][generation]>0) decision = pdg>=5000 && pdg<=5499;
+      if(fPDGcodes[prong][generation]>0) decision = pdg>=5000  && pdg<=5499;
       if(fPDGcodes[prong][generation]<0) decision = pdg>=-5499 && pdg<=-5000;
     }
     break;
@@ -450,7 +460,7 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
         (absPDG>=500 && absPDG<=549) ||
         (absPDG>=5000 && absPDG<=5499);
       else {
-        if(fPDGcodes[prong][generation]>0) decision = (pdg>=400 && pdg<=439) ||
+        if(fPDGcodes[prong][generation]>0) decision = (pdg>=400  && pdg<=439) ||
           (pdg>=4000 && pdg<=4399)      ||
           (pdg>=500 && pdg<=549)        ||
           (pdg>=5000 && pdg<=5499);
@@ -465,7 +475,7 @@ Bool_t AliSignalMC::TestPDG(UInt_t prong, UInt_t generation, Int_t pdg) {
         decision = (absPDG>=100 && absPDG<=599) ||
         (absPDG>=1000 && absPDG<=5999);
       else {
-        if(fPDGcodes[prong][generation]>0) decision = (pdg>=100 && pdg<=599) ||
+        if(fPDGcodes[prong][generation]>0) decision = (pdg>=100  && pdg<=599) ||
           (pdg>=1000 && pdg<=5999);
         if(fPDGcodes[prong][generation]<0) decision = (pdg>=-599 && pdg<=-100) ||
           (pdg>=-5999 && pdg<=-1000);

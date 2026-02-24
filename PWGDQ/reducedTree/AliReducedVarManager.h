@@ -405,13 +405,13 @@ class AliReducedVarManager : public TObject {
     kVZEROQaQcSP     = kVZEROflowV2TPC+64,  // scalar product for VZERO-A Q times VZERO-C Q (just the cosine term)
     kVZEROQaQcSPsine = kVZEROQaQcSP + 6,    // sine term from the scalar product
     // TPC event plane variables
-    kTPCQvecX = kVZEROQaQcSPsine+6,   // TPC Q-vector components for harmonics 1-6
-    kTPCQvecY = kTPCQvecX+6,                                                           
-    kTPCRP    = kTPCQvecY+6,          // Event plane using TPC
-    kTPCRPres = kTPCRP+6,  // Event plane resolution variables sqrt(n*(RPtpc-RPvzeroa)),sqrt(n*(RPtpc-RPvzeroc))
-    kVZEROARPres   = kTPCRPres+6,     // event plane resolution using V0A as reference detector
-    kVZEROCRPres   = kVZEROARPres+6,  // event plane resolution using V0C as reference detector
-    kVZEROTPCRPres = kVZEROCRPres+6,  // event plane resolution using tpc as reference detector
+    kTPCQvecX      = kVZEROQaQcSPsine+6,   // TPC Q-vector components for harmonics 1-6
+    kTPCQvecY      = kTPCQvecX+6,                                                           
+    kTPCRP         = kTPCQvecY+6,     // Event plane using TPC
+    kTPCRPres      = kTPCRP+6,        // Event plane resolution variables sqrt(n*(RPtpc-RPvzeroa)),sqrt(n*(RPtpc-RPvzeroc))
+    kVZEROARPres   = kTPCRPres+6,     // Event plane resolution using V0A as reference detector
+    kVZEROCRPres   = kVZEROARPres+6,  // Event plane resolution using V0C as reference detector
+    kVZEROTPCRPres = kVZEROCRPres+6,  // Event plane resolution using tpc as reference detector
     
     // Correlations between TPC and VZERO event planes
     kRPXtpcXvzeroa    = kVZEROTPCRPres+6*2,          
