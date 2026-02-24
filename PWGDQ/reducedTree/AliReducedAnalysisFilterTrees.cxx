@@ -620,7 +620,6 @@ void AliReducedAnalysisFilterTrees::RunCandidateLegsSelection(Int_t arrayOption/
   //       the track cuts such that these are separated.
 
   Bool_t isAsymmetricDecayChannel = IsAsymmetricDecayChannel();
-//   Bool_t mcDecision = kTRUE;
   UInt_t mcDecisionMap = 1;
   
   // Loop over the track list and evaluate all the track cuts
@@ -639,7 +638,6 @@ void AliReducedAnalysisFilterTrees::RunCandidateLegsSelection(Int_t arrayOption/
     // NOTE: mcDecisionMap is not implemented properly for asymmetric decay channels.
     if(fOptionRunOverMC && (fLegCandidatesMCcuts.GetEntries()>0))
       mcDecisionMap = CheckReconstructedLegMCTruth(track);
-//     if(fOptionRunOverMC && fLegCandidatesMCcuts) mcDecision = CheckReconstructedLegMCTruth(track);
     if(isAsymmetricDecayChannel) {
       if(IsCandidateLegSelected(track,fValues,1)) {
         fLeg1Tracks.Add(track);
