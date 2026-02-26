@@ -230,11 +230,11 @@ void AliReducedVarManager::SetVariableDependencies() {
   //
   // Set as used those variables on which other variables calculation depends
   //
-  if(fgUsedVars[kDeltaVtxZ]) {
+  if(fgUsedVars[kDeltaVtxZ])    {
     fgUsedVars[kVtxZ]    = kTRUE;
     fgUsedVars[kVtxZtpc] = kTRUE;
   }
-  if(fgUsedVars[kDeltaVtxZMC]) {
+  if(fgUsedVars[kDeltaVtxZMC])  {
     fgUsedVars[kVtxZ]   = kTRUE;
     fgUsedVars[kVtxZMC] = kTRUE;
   }
@@ -242,7 +242,7 @@ void AliReducedVarManager::SetVariableDependencies() {
     fgUsedVars[kVtxZ]    = kTRUE;
     fgUsedVars[kVtxZspd] = kTRUE;
   }
-  if(fgUsedVars[kRap] || fgUsedVars[kRapAbs]) {
+  if(fgUsedVars[kRap]        || fgUsedVars[kRapAbs])        {
     fgUsedVars[kMass] = kTRUE;
     fgUsedVars[kP]    = kTRUE;
     fgUsedVars[kEta]  = kTRUE;
@@ -351,7 +351,7 @@ void AliReducedVarManager::SetVariableDependencies() {
   }
   
   
-  if(fgUsedVars[kTriggerEffTimesAssocHadronEff]) {
+  if(fgUsedVars[kTriggerEffTimesAssocHadronEff])        {
     fgUsedVars[kTriggerEff]             = kTRUE;
     fgUsedVars[kAssocHadronEff]         = kTRUE;
   }
@@ -359,12 +359,12 @@ void AliReducedVarManager::SetVariableDependencies() {
     fgUsedVars[kOneOverTriggerEff]      = kTRUE;
     fgUsedVars[kOneOverAssocHadronEff]  = kTRUE;
   }
-  if(fgUsedVars[kPairEff] || fgUsedVars[kOneOverPairEff] || fgUsedVars[kOneOverPairEffSq]) {
+  if(fgUsedVars[kPairEff]        || fgUsedVars[kOneOverPairEff] || fgUsedVars[kOneOverPairEffSq]) {
     fgUsedVars[fgEffMapVarDependencyX] = kTRUE;
     fgUsedVars[fgEffMapVarDependencyY] = kTRUE;
     fgUsedVars[fgEffMapVarDependencyZ] = kTRUE;
   }
-  if(fgUsedVars[kTriggerEff] || fgUsedVars[kOneOverTriggerEff]) {
+  if(fgUsedVars[kTriggerEff]     || fgUsedVars[kOneOverTriggerEff])     {
     fgUsedVars[fgEffMapVarDependencyXCorr] = kTRUE;
     fgUsedVars[fgEffMapVarDependencyYCorr] = kTRUE;
     fgUsedVars[fgEffMapVarDependencyZCorr] = kTRUE;
@@ -380,15 +380,15 @@ void AliReducedVarManager::SetVariableDependencies() {
   
   if(fgUsedVars[kRapMC] || fgUsedVars[kRapMCAbs]) fgUsedVars[kMassMC] = kTRUE;
 
-  if(fgUsedVars[kPairPhiV]) {
+  if(fgUsedVars[kPairPhiV])                       {
     fgUsedVars[kL3Polarity] = kTRUE;
   }
-  if(fgUsedVars[kMassDcaPtCorr]) {
+  if(fgUsedVars[kMassDcaPtCorr])                  {
     fgUsedVars[kMass]          = kTRUE;
     fgUsedVars[kPt]            = kTRUE;
     fgUsedVars[kPairDcaXYSqrt] = kTRUE;
   }
-  if(fgUsedVars[kOpAngDcaPtCorr]) {
+  if(fgUsedVars[kOpAngDcaPtCorr])                 {
     fgUsedVars[kPairOpeningAngle] = kTRUE;
     fgUsedVars[kOneOverSqrtPt]    = kTRUE;
     fgUsedVars[kPt]               = kTRUE;
@@ -398,17 +398,17 @@ void AliReducedVarManager::SetVariableDependencies() {
     fgUsedVars[kNTPCclusters]           = kTRUE;
     fgUsedVars[kNTPCclustersFromPileup] = kTRUE;
   }
-  if(fgUsedVars[kNTracksTPCoutFromPileup]) {
+  if(fgUsedVars[kNTracksTPCoutFromPileup])        {
     fgUsedVars[kNTracksTPCoutBeforeClean]   = kTRUE;
     fgUsedVars[kVZEROTotalMultFromChannels] = kTRUE;
   }
-  if(fgUsedVars[kPairEffDown_weight] || fgUsedVars[kPairEffUp_weight]) {
+  if(fgUsedVars[kPairEffDown_weight]        || fgUsedVars[kPairEffUp_weight]) {
     fgUsedVars[kPairEff_weight] = kTRUE;
   }
   if(fgUsedVars[kPtTimesPairEffDown_weight] || fgUsedVars[kPtTimesPairEffUp_weight]) {
     fgUsedVars[kPtTimesPairEff_weight] = kTRUE;
   }
-  if(fgUsedVars[kPairEff_weight]) {
+  if(fgUsedVars[kPairEff_weight])        {
     fgUsedVars[kPairEffUp_weight]   = kTRUE;
     fgUsedVars[kPairEffDown_weight] = kTRUE;
   }
@@ -1512,33 +1512,34 @@ void AliReducedVarManager::FillMCTruthInfo(TRACK* p, Float_t* values, TRACK* leg
   values[kPxMC] = p->MCmom(0);
   values[kPyMC] = p->MCmom(1);
   values[kPzMC] = p->MCmom(2);
-  if(fgUsedVars[kPt_weight]) values[kPt_weight] =  CalculateWeightFactor(values[kPtMC],values[kCentVZERO]);
+  if(fgUsedVars[kPt_weight])
+    values[kPt_weight] =  CalculateWeightFactor(values[kPtMC], values[kCentVZERO]);
 
   if(fgUsedVars[kThetaMC]) values[kThetaMC] = p->ThetaMC();
   if(fgUsedVars[kEtaMC])   values[kEtaMC]   = p->EtaMC();
   if(fgUsedVars[kPhiMC])   values[kPhiMC]   = p->PhiMC();
   if(fgUsedVars[kMassMC]) {
-    if(TMath::Abs(p->MCPdg(0))==443)
+    if(TMath::Abs(p->MCPdg(0)) == 443)
       values[kMassMC] = fgkPairMass[AliReducedPairInfo::kJpsiToEE];
-    if(TMath::Abs(p->MCPdg(0))==100443)
+    if(TMath::Abs(p->MCPdg(0)) == 100443)
       values[kMassMC] = fgkPairMass[AliReducedPairInfo::kPsi2SToEE];
-    if(TMath::Abs(p->MCPdg(0))==521)
+    if(TMath::Abs(p->MCPdg(0)) == 521)
       values[kMassMC] = fgkPairMass[AliReducedPairInfo::kBToJpsiK];
   }
   if(fgUsedVars[kRapMC]) {
-    if(TMath::Abs(p->MCPdg(0))==443)
+    if(TMath::Abs(p->MCPdg(0)) == 443)
       values[kRapMC] = p->RapidityMC(fgkPairMass[AliReducedPairInfo::kJpsiToEE]);
-    if(TMath::Abs(p->MCPdg(0))==100443)
+    if(TMath::Abs(p->MCPdg(0)) == 100443)
       values[kRapMC] = p->RapidityMC(fgkPairMass[AliReducedPairInfo::kPsi2SToEE]);
-    if(TMath::Abs(p->MCPdg(0))==521)
+    if(TMath::Abs(p->MCPdg(0)) == 521)
       values[kRapMC] = p->RapidityMC(fgkPairMass[AliReducedPairInfo::kBToJpsiK]);
   }
   if(fgUsedVars[kRapMCAbs]) {
-    if(TMath::Abs(p->MCPdg(0))==443)
+    if(TMath::Abs(p->MCPdg(0)) == 443)
       values[kRapMCAbs] = TMath::Abs(p->RapidityMC(fgkPairMass[AliReducedPairInfo::kJpsiToEE]));
-    if(TMath::Abs(p->MCPdg(0))==100443)
+    if(TMath::Abs(p->MCPdg(0)) == 100443)
       values[kRapMCAbs] = TMath::Abs(p->RapidityMC(fgkPairMass[AliReducedPairInfo::kPsi2SToEE]));
-    if(TMath::Abs(p->MCPdg(0))==521)
+    if(TMath::Abs(p->MCPdg(0)) == 521)
       values[kRapMCAbs] = TMath::Abs(p->RapidityMC(fgkPairMass[AliReducedPairInfo::kBToJpsiK])); 
   }
 
@@ -1547,14 +1548,20 @@ void AliReducedVarManager::FillMCTruthInfo(TRACK* p, Float_t* values, TRACK* leg
       EVENT* eventInfo = (EVENT*)fgEvent;
       Double_t lxyMC = ((p->MCFreezeout(0)-eventInfo->VertexMC(0))*p->MCmom(0) +
                         (p->MCFreezeout(1)-eventInfo->VertexMC(1))*p->MCmom(1)) / p->PtMC();
-      if(TMath::Abs(p->MCPdg(0)) == 443)
-        values[kPseudoProperDecayTimeMC] = lxyMC * (fgkPairMass[AliReducedPairInfo::kJpsiToEE]) / p->PtMC();
-      if(TMath::Abs(p->MCPdg(0)) == 521)
-        values[kPseudoProperDecayTimeMC] = lxyMC * (fgkPairMass[AliReducedPairInfo::kBToJpsiK]) / p->PtMC();
+      if(TMath::Abs(p->MCPdg(0)) == 443) {
+        values[kPseudoProperDecayTimeMC] = lxyMC * (fgkPairMass[AliReducedPairInfo::kJpsiToEE]) / 
+                                                    p->PtMC();
+      }
+      if(TMath::Abs(p->MCPdg(0)) == 521) {
+        values[kPseudoProperDecayTimeMC] = lxyMC * (fgkPairMass[AliReducedPairInfo::kBToJpsiK]) / 
+                                                    p->PtMC();
+      }
     }
   }
-  // compute MC truth variables from decay legs, e.g. from the 2 electrons of a J/psi decay
-  // NOTE: this may be different from the kinematics of the mother, if not all decay legs are considered/tracked
+
+  // Compute MC truth variables from decay legs, e.g. from the 2 electrons of a J/psi decay.
+  // NOTE: This may be different from the kinematics of the mother, if not all decay legs are 
+  //       considered/tracked.
   Bool_t requestMCfromLegs = kFALSE;
   if(fgUsedVars[kPtMCfromLegs]  || fgUsedVars[kPMCfromLegs]   || fgUsedVars[kPxMCfromLegs]    ||
      fgUsedVars[kPyMCfromLegs]  || fgUsedVars[kPzMCfromLegs]  || fgUsedVars[kThetaMCfromLegs] ||
@@ -1569,7 +1576,7 @@ void AliReducedVarManager::FillMCTruthInfo(TRACK* p, Float_t* values, TRACK* leg
     values[kPzMCfromLegs]   = leg1->MCmom(2) + leg2->MCmom(2);
     values[kPairLegPtMC+0]  = TMath::Sqrt(leg1->MCmom(0)*leg1->MCmom(0)+leg1->MCmom(1)*leg1->MCmom(1));
     values[kPairLegPtMC+1]  = TMath::Sqrt(leg2->MCmom(0)*leg2->MCmom(0)+leg2->MCmom(1)*leg2->MCmom(1));
-    values[kPairLegPtMCSum] = values[kPairLegPtMC]+values[kPairLegPtMC+1];
+    values[kPairLegPtMCSum] = values[kPairLegPtMC] + values[kPairLegPtMC+1];
     values[kPtMCfromLegs]   = TMath::Sqrt(values[kPxMCfromLegs]*values[kPxMCfromLegs] +
                                           values[kPyMCfromLegs]*values[kPyMCfromLegs]);
     values[kPMCfromLegs]    = TMath::Sqrt(values[kPtMCfromLegs]*values[kPtMCfromLegs] +
@@ -1577,7 +1584,8 @@ void AliReducedVarManager::FillMCTruthInfo(TRACK* p, Float_t* values, TRACK* leg
     values[kThetaMCfromLegs] = (values[kPMCfromLegs]>=1.0e-6
                                 ? TMath::ACos(values[kPzMCfromLegs]/values[kPMCfromLegs]) : 0.0);
     values[kEtaMCfromLegs] = TMath::Tan(0.5*values[kThetaMCfromLegs]);
-    values[kEtaMCfromLegs] = (values[kEtaMCfromLegs]>1.0e-6 ? -1.0*TMath::Log(values[kEtaMCfromLegs]) : 0.0);
+    values[kEtaMCfromLegs] = (values[kEtaMCfromLegs]>1.0e-6 ? -1.0*TMath::Log(values[kEtaMCfromLegs])
+                                                            : 0.0);
     values[kPhiMCfromLegs] = TMath::ATan2(values[kPyMCfromLegs],values[kPxMCfromLegs]);
     values[kPhiMCfromLegs] = (values[kPhiMCfromLegs]<0.0 ? (TMath::TwoPi()+values[kPhiMCfromLegs])
                                                          : values[kPhiMCfromLegs]);
@@ -1592,10 +1600,10 @@ void AliReducedVarManager::FillMCTruthInfo(TRACK* p, Float_t* values, TRACK* leg
              << "   Could be negative due to resolution of Float_t so it will be set to a small positive value."
              << endl;
         cout << "   mass^2: " << values[kMassMCfromLegs] << endl;
-        cout << "p1(p,x,y,z): " << leg1->P() << ", " << leg1->Px() << ", " << leg1->Py() << ", " << leg1->Pz()
-             << endl;
-        cout << "p2(p,x,y,z): " << leg2->P() << ", " << leg2->Px() << ", " << leg2->Py() << ", " << leg2->Pz()
-             << endl;
+        cout << "p1(p,x,y,z): " << leg1->P() << ", " << leg1->Px() << ", " << leg1->Py() << ", "
+             << leg1->Pz() << endl;
+        cout << "p2(p,x,y,z): " << leg2->P() << ", " << leg2->Px() << ", " << leg2->Py() << ", "
+             << leg2->Pz() << endl;
         values[kMassMCfromLegs] = 0.0;
       } else {
         values[kMassMCfromLegs] = TMath::Sqrt(values[kMassMCfromLegs]);
@@ -1604,8 +1612,10 @@ void AliReducedVarManager::FillMCTruthInfo(TRACK* p, Float_t* values, TRACK* leg
       Float_t e      = TMath::Sqrt(values[kPMCfromLegs]*values[kPMCfromLegs] +
                                    values[kMassMCfromLegs]*values[kMassMCfromLegs]);
       Float_t factor = e - values[kPzMCfromLegs];
-      values[kRapMCfromLegs] = (TMath::Abs(factor)>1.0e-6     ? (e+values[kPzMCfromLegs])/factor       : 0.0);
-      values[kRapMCfromLegs] = (values[kRapMCfromLegs]>1.0e-6 ? 0.5*TMath::Log(values[kRapMCfromLegs]) : 0.0);
+      values[kRapMCfromLegs] = (TMath::Abs(factor)>1.0e-6     ? (e+values[kPzMCfromLegs])/factor       
+                                                              : 0.0);
+      values[kRapMCfromLegs] = (values[kRapMCfromLegs]>1.0e-6 ? 0.5*TMath::Log(values[kRapMCfromLegs]) 
+                                                              : 0.0);
     }
   }
 
@@ -1618,7 +1628,7 @@ void AliReducedVarManager::FillMCTruthInfo(TRACK* p, Float_t* values, TRACK* leg
   Bool_t usePolarization = kFALSE;
   if(leg1 && leg2 &&
     (fgUsedVars[kPairThetaCS] || fgUsedVars[kPairThetaHE] || fgUsedVars[kPairPhiCS] || fgUsedVars[kPairPhiHE]))
-  {usePolarization = kTRUE;}
+  { usePolarization = kTRUE; }
   if(usePolarization) {
     GetThetaPhiCM(leg1, leg2, values[kPairThetaHE], values[kPairPhiHE], values[kPairThetaCS],
                   values[kPairPhiCS]);
@@ -1629,10 +1639,10 @@ void AliReducedVarManager::FillMCTruthInfo(TRACK* p, Float_t* values, TRACK* leg
 //_________________________________________________________________
 void AliReducedVarManager::FillMCTruthInfo(TRACK* leg1, TRACK* leg2, Float_t* values) {
   //
-  // Compute MC truth variables from decay legs only, no mother assumption used
-  // NOTE: This function is done specifically for pairs of MC particles which do not have any mother in the
-  //       stack, e.g. electrons from gamma-gamma processes produced with Starlight
-  // All quantities are computed just from the leg kinematics
+  // Compute MC truth variables from decay legs only, no mother assumption used.
+  // NOTE: This function is done specifically for pairs of MC particles which do not have any mother in 
+  //       the stack, e.g. electrons from gamma-gamma processes produced with Starlight.
+  // All quantities are computed just from the leg kinematics.
   //
 
   values[kPxMCfromLegs] = leg1->MCmom(0) + leg2->MCmom(0);
@@ -1908,15 +1918,18 @@ void AliReducedVarManager::FillTrackInfo(BASETRACK* p, Float_t* values) {
   if(fgUsedVars[kITSnclsShared]) values[kITSnclsShared] = pinfo->ITSnSharedCls();
   values[kTPCncls] = pinfo->TPCncls();
 
-  if(fgUsedVars[kNclsSFracITS])
-    values[kNclsSFracITS] = (pinfo->ITSncls()>0 ? Float_t (pinfo->ITSnSharedCls())/Float_t(pinfo->ITSncls())
-                                                 : 0.0) ;
-  if(fgUsedVars[kTPCnclsRatio]) 
-    values[kTPCnclsRatio] = (pinfo->TPCFindableNcls()>0
-                             ? Float_t(pinfo->TPCncls())/Float_t(pinfo->TPCFindableNcls()) : 0.0);
-  if(fgUsedVars[kTPCnclsRatio2]) 
-    values[kTPCnclsRatio2] = (pinfo->TPCCrossedRows()>0
-                              ? Float_t(pinfo->TPCncls())/Float_t(pinfo->TPCCrossedRows()) : 0.0);
+  if(fgUsedVars[kNclsSFracITS]) {
+    values[kNclsSFracITS] = (pinfo->ITSncls()>0 ?
+                             Float_t(pinfo->ITSnSharedCls())/Float_t(pinfo->ITSncls()) : 0.0);
+  }
+  if(fgUsedVars[kTPCnclsRatio]) {
+    values[kTPCnclsRatio] = (pinfo->TPCFindableNcls()>0 ?
+                             Float_t(pinfo->TPCncls())/Float_t(pinfo->TPCFindableNcls()) : 0.0);
+  }
+  if(fgUsedVars[kTPCnclsRatio2]) {
+    values[kTPCnclsRatio2] = (pinfo->TPCCrossedRows()>0 ?
+                              Float_t(pinfo->TPCncls())/Float_t(pinfo->TPCCrossedRows()) : 0.0);
+  }
 
   if(fgUsedVars[kTPCcrossedRowsOverFindableClusters]) { 
     if(pinfo->TPCFindableNcls() > 0)
@@ -1948,8 +1961,8 @@ void AliReducedVarManager::FillTrackInfo(BASETRACK* p, Float_t* values) {
   for(Int_t i=0; i<4; ++i) {
     values[kTPCdEdxQmax+i]         = pinfo->TPCdEdxInfoQmax(i);
     values[kTPCdEdxQtot+i]         = pinfo->TPCdEdxInfoQtot(i);
-    values[kTPCdEdxQmaxOverQtot+i] = (values[kTPCdEdxQtot+i]>1.0e-7
-                                      ? values[kTPCdEdxQmax+i]/values[kTPCdEdxQtot+i] : -999.);
+    values[kTPCdEdxQmaxOverQtot+i] = (values[kTPCdEdxQtot+i]>1.0e-7 ?
+                                      values[kTPCdEdxQmax+i]/values[kTPCdEdxQtot+i] : -999.);
   }
   values[kTPCchi2] = pinfo->TPCchi2();
   if(fgUsedVars[kTPCNclusBitsFired]) values[kTPCNclusBitsFired] = pinfo->TPCClusterMapBitsFired();
@@ -2072,8 +2085,10 @@ void AliReducedVarManager::FillTrackInfo(BASETRACK* p, Float_t* values) {
   values[kPdgMC+3] = pinfo->MCPdg(3);
   
   if(fgUsedVars[kRap]    && pinfo->IsMCKineParticle()) {
-    if(pinfo->MCPdg(0) == 443)    values[kRap] = p->Rapidity(fgkPairMass[AliReducedPairInfo::kJpsiToEE]);
-    if(pinfo->MCPdg(0) == 100443) values[kRap] = p->Rapidity(fgkPairMass[AliReducedPairInfo::kPsi2SToEE]);
+    if(pinfo->MCPdg(0) == 443)
+      values[kRap] = p->Rapidity(fgkPairMass[AliReducedPairInfo::kJpsiToEE]);
+    if(pinfo->MCPdg(0) == 100443)
+      values[kRap] = p->Rapidity(fgkPairMass[AliReducedPairInfo::kPsi2SToEE]);
     if(TMath::Abs(pinfo->MCPdg(0)) == 11)
       values[kRap] = p->Rapidity(fgkParticleMass[AliReducedVarManager::kElectron]);
   }
@@ -2292,7 +2307,7 @@ void AliReducedVarManager::FillPairInfo(BASETRACK* t1, BASETRACK* t2, Int_t type
   
   if(t1->Charge()*t2->Charge() < 0) p.PairType(1);
   else if(t1->Charge() > 0)         p.PairType(0);
-  else                             p.PairType(2);
+  else                              p.PairType(2);
   values[kPairType]    = p.PairType();
   values[kPairTypeSPD] = -1.;
   if(t1->IsA()==TRACK::Class() && t2->IsA()==TRACK::Class()) {
@@ -2341,10 +2356,13 @@ void AliReducedVarManager::FillPairInfo(BASETRACK* t1, BASETRACK* t2, Int_t type
   
   // polarization variables
   Bool_t usePolarization = kFALSE;
-  if(fgUsedVars[kPairThetaCS] || fgUsedVars[kPairThetaHE] || fgUsedVars[kPairPhiCS] || fgUsedVars[kPairPhiHE])
-    usePolarization = kTRUE;
-  if(usePolarization)
-    GetThetaPhiCM(t1, t2, values[kPairThetaHE], values[kPairPhiHE], values[kPairThetaCS], values[kPairPhiCS]);
+  if(fgUsedVars[kPairThetaCS] || fgUsedVars[kPairThetaHE] || fgUsedVars[kPairPhiCS] ||
+     fgUsedVars[kPairPhiHE])
+  { usePolarization = kTRUE; }
+  if(usePolarization) {
+    GetThetaPhiCM(t1, t2, values[kPairThetaHE], values[kPairPhiHE], values[kPairThetaCS],
+                  values[kPairPhiCS]);
+  }
   
   if(fgUsedVars[kDMA] && (t1->IsA()==TRACK::Class()) && (t2->IsA()==TRACK::Class())) {
     TRACK* ti1 = (TRACK*)t1;
@@ -2416,7 +2434,8 @@ void AliReducedVarManager::FillPairInfo(BASETRACK* t1, BASETRACK* t2, Int_t type
   }
 
   if((fgUsedVars[kPairLegEMCALmatchedEnergy] || fgUsedVars[kPairLegEMCALmatchedEnergy+1]) &&
-     (t1->IsA()==TRACK::Class()) && (t2->IsA()==TRACK::Class())) {
+     (t1->IsA()==TRACK::Class()) && (t2->IsA()==TRACK::Class()))
+  {
     TRACK* ti1 = (TRACK*)t1;
     TRACK* ti2 = (TRACK*)t2;
     values[kPairLegEMCALmatchedEnergy]   = ti1->MatchedEMCalClusterEnergy();
@@ -2807,7 +2826,7 @@ void AliReducedVarManager::FillPairInfoME(BASETRACK* t1, BASETRACK* t2, Int_t ty
 
 
 //____________________________________________________________________________________
-void AliReducedVarManager::FillPairMEflow(BASETRACK* t1, BASETRACK* t2, Float_t* values/*, Int_t idx /*=0*/) {
+void AliReducedVarManager::FillPairMEflow(BASETRACK* t1, BASETRACK* t2, Float_t* values/*, Int_t idx/*=0*/) {
   //
   // make flow calculations for mixed event pairs
   // NOTE: this function assumes that the function FillPairInfoME() was run just in front of this one
@@ -2901,7 +2920,9 @@ void AliReducedVarManager::FillPairInfo(PAIR* t1, BASETRACK* t2, Int_t type, Flo
 
 
 //__________________________________________________________________
-void AliReducedVarManager::FillPsiPrimeInfo(BASETRACK* trig, BASETRACK* pion1, BASETRACK* pion2, Float_t* values) {
+void AliReducedVarManager::FillPsiPrimeInfo(BASETRACK* trig, BASETRACK* pion1, BASETRACK* pion2, 
+                                            Float_t* values)
+{
   //
   // Fill psi prime information
   // NOTE: decay channel used here is psi' -> jpsi + pi + pi
@@ -3013,7 +3034,8 @@ void AliReducedVarManager::FillPsiPrimeInfo(BASETRACK* trig, BASETRACK* pion1, B
 
 //__________________________________________________________________
 void AliReducedVarManager::FillBcandidateInfo(BASETRACK* trig, BASETRACK* leg1, BASETRACK* leg2,
-                                              BASETRACK* assoc, Float_t* values) {
+                                              BASETRACK* assoc, Float_t* values)
+{
 // fill info on B candidate (Jpsi+K) by idstoreh
 
   if(!((leg1->IsA()==TRACK::Class()) && (leg2->IsA()==TRACK::Class()) &&
@@ -3332,9 +3354,8 @@ Double_t AliReducedVarManager::DeltaPhi(Double_t phi1, Double_t phi2) {
 
 //____________________________________________________________________________________
 void AliReducedVarManager::GetThetaPhiCM(BASETRACK* leg1, BASETRACK* leg2,
-                                         Float_t &thetaHE, Float_t &phiHE, Float_t &thetaCS, Float_t &phiCS,
-                                         Float_t leg1Mass/*=gkParticleMass[kElectron]*/,
-                                         Float_t leg2Mass/*=gkParticleMass[kElectron]*/)
+  Float_t &thetaHE, Float_t &phiHE, Float_t &thetaCS, Float_t &phiCS,
+  Float_t leg1Mass/*=gkParticleMass[kElectron]*/, Float_t leg2Mass/*=gkParticleMass[kElectron]*/)
 {
   //
   // Calculate theta and phi in helicity and Collins-Soper coordinate frame
@@ -4527,8 +4548,7 @@ TChain* AliReducedVarManager::GetChain(const Char_t* filename, Int_t howMany, In
 
 //____________________________________________________________________________________
 void AliReducedVarManager::SetTPCelectronCorrectionMaps(TH2F* centroidMap, TH2F* widthMap,
-                                                        AliReducedVarManager::Variables varX,
-                                                        AliReducedVarManager::Variables varY)
+  AliReducedVarManager::Variables varX, AliReducedVarManager::Variables varY)
 {
   //
   // initialize the electron TPC pid correction maps
@@ -4557,7 +4577,9 @@ void AliReducedVarManager::SetTPCelectronCorrectionMaps(TH2F* centroidMap, TH2F*
 
 
 //____________________________________________________________________________________
-void AliReducedVarManager::SetTPCpidCalibMaps(Int_t pid, THnF* centroidMap, THnF* widthMap, THnI* statusMap) {
+void AliReducedVarManager::SetTPCpidCalibMaps(Int_t pid, THnF* centroidMap, THnF* widthMap,
+                                              THnI* statusMap)
+{
   //
   // initialize the 4D calibration histograms for a given particle (pid = 0-electron, 1-pion, 2-proton)
   //
@@ -4597,7 +4619,8 @@ void AliReducedVarManager::SetTPCpidCalibDepVars(Variables vars[]) {
 
 
 //____________________________________________________________________________________
-void AliReducedVarManager::SetPairEfficiencyMap(TH1* map, AliReducedVarManager::Variables varX, AliReducedVarManager::Variables varY/*=kNothing*/, AliReducedVarManager::Variables varZ/*=kNothing*/)
+void AliReducedVarManager::SetPairEfficiencyMap(TH1* map, AliReducedVarManager::Variables varX, 
+  AliReducedVarManager::Variables varY/*=kNothing*/, AliReducedVarManager::Variables varZ/*=kNothing*/)
 {
   //
   // initialize the pair efficiency map
@@ -4644,7 +4667,9 @@ void AliReducedVarManager::SetPairEfficiencyMap(TH1* map, AliReducedVarManager::
 
 
 //____________________________________________________________________________________
-void AliReducedVarManager::SetPairEfficiencyMapDependeciesCorrelation(AliReducedVarManager::Variables varX, AliReducedVarManager::Variables varY/*=kNothing*/, AliReducedVarManager::Variables varZ/*=kNothing*/)
+void AliReducedVarManager::SetPairEfficiencyMapDependeciesCorrelation(
+  AliReducedVarManager::Variables varX, AliReducedVarManager::Variables varY/*=kNothing*/, 
+  AliReducedVarManager::Variables varZ/*=kNothing*/)
 {
   //
   // initialize variable dependencies for pair efficiency map used in correlation
@@ -4665,7 +4690,9 @@ void AliReducedVarManager::SetPairEfficiencyMapDependeciesCorrelation(AliReduced
 
 
 //____________________________________________________________________________________
-void AliReducedVarManager::SetAssociatedHadronEfficiencyMap(TH1* map, AliReducedVarManager::Variables varX, AliReducedVarManager::Variables varY/*=kNothing*/, AliReducedVarManager::Variables varZ/*=kNothing*/)
+void AliReducedVarManager::SetAssociatedHadronEfficiencyMap(TH1* map,
+  AliReducedVarManager::Variables varX, AliReducedVarManager::Variables varY/*=kNothing*/, 
+  AliReducedVarManager::Variables varZ/*=kNothing*/)
 {
   //
   // initialize the associated hadron efficiency map, used for correlation analysis
@@ -4716,7 +4743,8 @@ void AliReducedVarManager::SetAssociatedHadronEfficiencyMap(TH1* map, AliReduced
 
 
 //____________________________________________________________________________________
-void AliReducedVarManager::SetLHCDataInfo(TH1F* totalLumi, TH1F* totalInt0, TH1F* totalInt1, TH1I* fillNumber)
+void AliReducedVarManager::SetLHCDataInfo(TH1F* totalLumi, TH1F* totalInt0, TH1F* totalInt1,
+                                          TH1I* fillNumber)
 {
   //
   // initialize the LHC data histograms
@@ -4849,7 +4877,8 @@ Double_t AliReducedVarManager::CalculateWeightFactor(Double_t McpT, Double_t Cen
 
 
 //____________________________________________________________________________________
-Float_t AliReducedVarManager::GetPairEffWeightFactor(Float_t Cent, Float_t P1, Float_t P2, Float_t Eta1, Float_t Eta2, Int_t type)
+Float_t AliReducedVarManager::GetPairEffWeightFactor(Float_t Cent, Float_t P1, Float_t P2,
+                                                     Float_t Eta1, Float_t Eta2, Int_t type)
 // type 1 is for standard propagation, type 0 returns weight when setting leg PID efficiency to its value - 1 sigma,
 // type 2 returns weight when setting leg PID efficiency to its value + 1 sigma
 {
@@ -5020,7 +5049,7 @@ void AliReducedVarManager::SetEventResolution(Bool_t option) {
 
 
 //____________________________________________________________________________________
-Int_t AliReducedVarManager::GetCorrectedMultiplicity(Int_t estimator,  Int_t correction, Int_t reference,
+Int_t AliReducedVarManager::GetCorrectedMultiplicity(Int_t estimator, Int_t correction, Int_t reference,
                                                      Int_t smearing)
 {
   //
@@ -5041,7 +5070,9 @@ Int_t AliReducedVarManager::GetCorrectedMultiplicity(Int_t estimator,  Int_t cor
 
 
 //____________________________________________________________________________________
-AliKFParticle AliReducedVarManager::BuildKFcandidate(TRACK* track1, Float_t mh1, TRACK* track2, Float_t mh2) {
+AliKFParticle AliReducedVarManager::BuildKFcandidate(TRACK* track1, Float_t mh1, TRACK* track2,
+                                                     Float_t mh2)
+{
   //
   // build a KF pair from the 2 legs
   //
@@ -5068,7 +5099,7 @@ AliKFParticle AliReducedVarManager::BuildKFcandidate(TRACK* track1, Float_t mh1,
 
 
 //____________________________________________________________________________________
-AliKFParticle AliReducedVarManager::BuildKFvertex( AliReducedEventInfo * event) {
+AliKFParticle AliReducedVarManager::BuildKFvertex(AliReducedEventInfo * event) {
   // 
   // build an AliKF vertex using the cov matrix 
   //
@@ -5084,7 +5115,9 @@ AliKFParticle AliReducedVarManager::BuildKFvertex( AliReducedEventInfo * event) 
 
 
 //____________________________________________________________________________________
-AliKFParticle AliReducedVarManager::BuildKFtriplet(TRACK* track1, Float_t mh1, TRACK* track2, Float_t mh2, TRACK* track3, Float_t mh3, Double_t& doubletAssocDistance, Double_t& doubletAssocDeviation)
+AliKFParticle AliReducedVarManager::BuildKFtriplet(TRACK* track1, Float_t mh1, TRACK* track2,
+  Float_t mh2, TRACK* track3, Float_t mh3, Double_t& doubletAssocDistance,
+  Double_t& doubletAssocDeviation)
 {
   //
   // build a KF pair from the 3 legs, to be used in Jpsi+K analysis (idstoreh)

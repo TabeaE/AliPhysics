@@ -212,17 +212,16 @@ class AliReducedTrackInfo : public AliReducedBaseTrack {
 };
 
 //_______________________________________________________________________________
-inline Float_t AliReducedTrackInfo::MCmom(Int_t dim) {  // {}
+inline Float_t AliReducedTrackInfo::MCmom(Int_t dim) {
   //
   // return momentum component
   //
   if(dim<0 || dim>2) return 0.0;
-  if(fIsMCTruth) {     // pure MC track -> use the fP vector
-    if(dim==0) return Px();
-    if(dim==1) return Py();
-    if(dim==2) return Pz();
-  }
-  else
+  if(fIsMCTruth) {  // pure MC track -> use the fP vector
+    if(dim == 0) return Px();
+    if(dim == 1) return Py();
+    if(dim == 2) return Pz();
+  } else
     return fMCMom[dim];
 
   return 0.0;

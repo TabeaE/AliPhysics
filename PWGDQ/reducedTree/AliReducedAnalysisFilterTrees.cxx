@@ -28,55 +28,56 @@ ClassImp(AliReducedAnalysisFilterTrees);
 AliReducedAnalysisFilterTrees::AliReducedAnalysisFilterTrees() :
 AliReducedAnalysisTaskSE(),
 fHistosManager(new AliHistogramManager("Histogram Manager", AliReducedVarManager::kNVars)),
-fMixingHandler(new AliMixingHandler("J/psi signal extraction", "", AliMixingHandler::kMixResonanceLegs)),
-fMixingHandlerMult(),
-fMultBinsMixing(),
-fNMultBinsMixing(0),
-fEventCuts(),
-fTrackCuts(),
-fWriteFilteredTracks(kTRUE),
-fWriteFilteredTracksCandidatesOnly(kFALSE),
-fFillTrackV0Histograms(kFALSE),
-fOptionRunMixing(kTRUE),
-fOptionRunMixingMult(kFALSE),
-fComputeMult(kTRUE),
-fPairCuts(),
-fWriteFilteredPairs(kTRUE),
-fRejectEmptyEvents(kFALSE),
-fBuildCandidatePairs(kFALSE),
-fBuildCandidateLikePairs(kFALSE),
-fMCTruthJpsi2eeOnly(kFALSE),
-fRegionsToMCTruth(kFALSE),
-fDefaultRandomPhi(kTRUE),
-fMinPtLeading(0.0),
-fReweightCut(-1),
-fCandidateType(AliReducedPairInfo::kJpsiToEE),
-fLeg1Cuts(),
-fLeg2Cuts(),
-fCandidatePairCuts(),
-fRunCandidatePrefilter(kFALSE),
-fRunCandidatePrefilterOnSameCharge(kFALSE),
-fJpsiMassDist(),
-fMeasMultTrackCuts(),
-fWeightsTrackCuts(),
-fTrueMultTrackCuts(),
-fLeg1PrefilterCuts(),
-fLeg2PrefilterCuts(),
-fLeg1PairPrefilterCuts(),
-fLeg2PairPrefilterCuts(),
-fLeg1Tracks(),
-fLeg2Tracks(),
-fLeg1PrefilteredTracks(),
-fLeg2PrefilteredTracks(),
-fOptionRunOverMC(kFALSE),
-fLegCandidatesMCcuts(),
-fLegCandidatesMCcuts_RequestSameMother(),
-fJpsiMotherMCcuts(),
-fMCJpsiPtWeights(0x0),
-fSkipMCEvent(kFALSE),
-fJpsiElectronMCcuts(),
-fReweightPC(kFALSE),
-fMCPCWeights(0x0)
+fMixingHandler(new AliMixingHandler("J/psi signal extraction", "", 
+                   AliMixingHandler::kMixResonanceLegs)),
+fMixingHandlerMult                  (),
+fMultBinsMixing                     (),
+fNMultBinsMixing                    (0),
+fEventCuts                          (),
+fTrackCuts                          (),
+fWriteFilteredTracks                (kTRUE),
+fWriteFilteredTracksCandidatesOnly  (kFALSE),
+fFillTrackV0Histograms              (kFALSE),
+fOptionRunMixing                    (kTRUE),
+fOptionRunMixingMult                (kFALSE),
+fComputeMult                        (kTRUE),
+fPairCuts                           (),
+fWriteFilteredPairs                 (kTRUE),
+fRejectEmptyEvents                  (kFALSE),
+fBuildCandidatePairs                (kFALSE),
+fBuildCandidateLikePairs            (kFALSE),
+fMCTruthJpsi2eeOnly                 (kFALSE),
+fRegionsToMCTruth                   (kFALSE),
+fDefaultRandomPhi                   (kTRUE),
+fMinPtLeading                       (0.0),
+fReweightCut                        (-1),
+fCandidateType                      (AliReducedPairInfo::kJpsiToEE),
+fLeg1Cuts                           (),
+fLeg2Cuts                           (),
+fCandidatePairCuts                  (),
+fRunCandidatePrefilter              (kFALSE),
+fRunCandidatePrefilterOnSameCharge  (kFALSE),
+fJpsiMassDist                       (),
+fMeasMultTrackCuts                  (),
+fWeightsTrackCuts                   (),
+fTrueMultTrackCuts                  (),
+fLeg1PrefilterCuts                  (),
+fLeg2PrefilterCuts                  (),
+fLeg1PairPrefilterCuts              (),
+fLeg2PairPrefilterCuts              (),
+fLeg1Tracks                         (),
+fLeg2Tracks                         (),
+fLeg1PrefilteredTracks              (),
+fLeg2PrefilteredTracks              (),
+fOptionRunOverMC                    (kFALSE),
+fLegCandidatesMCcuts                (),
+fLegCandidatesMCcuts_RequestSameMother (),
+fJpsiMotherMCcuts                   (),
+fMCJpsiPtWeights                    (0x0),
+fSkipMCEvent                        (kFALSE),
+fJpsiElectronMCcuts                 (),
+fReweightPC                         (kFALSE),
+fMCPCWeights                        (0x0)
 {
   //
   // default constructor
@@ -88,7 +89,8 @@ fMCPCWeights(0x0)
 AliReducedAnalysisFilterTrees::AliReducedAnalysisFilterTrees(const Char_t* name, const Char_t* title) :
 AliReducedAnalysisTaskSE(name, title),
 fHistosManager(new AliHistogramManager("Histogram Manager", AliReducedVarManager::kNVars)),
-fMixingHandler(new AliMixingHandler("J/psi signal extraction", "", AliMixingHandler::kMixResonanceLegs)),
+fMixingHandler(new AliMixingHandler("J/psi signal extraction", "", 
+                   AliMixingHandler::kMixResonanceLegs)),
 fMixingHandlerMult(),  
 fMultBinsMixing(),
 fNMultBinsMixing(0),  
@@ -576,7 +578,6 @@ void AliReducedAnalysisFilterTrees::WriteFilteredTracks(Int_t array/*=1*/)
 // Build candidate pairs and add them to the filtered event
 void AliReducedAnalysisFilterTrees::BuildCandidatePairs()
 {
-
   // Clear the track arrays
   fLeg1Tracks.Clear("C"); fLeg1PrefilteredTracks.Clear("C");
   fLeg2Tracks.Clear("C"); fLeg2PrefilteredTracks.Clear("C");
@@ -648,7 +649,8 @@ void AliReducedAnalysisFilterTrees::RunCandidateLegsSelection(Int_t arrayOption/
         FillCandidateLegHistograms("Track_LEG2_BeforePrefilter", track, 2, isAsymmetricDecayChannel);
       }
     } else {
-      // mcDecisionMap is by default true, it can be false only if running on MC and the track fails the test
+      // mcDecisionMap is by default true, it can be false only if running on MC and the track fails 
+      // the test
       if(IsCandidateLegSelected(track,fValues,1) && mcDecisionMap) {
         if(track->Charge() > 0) {
           fLeg1Tracks.Add(track);
@@ -1467,8 +1469,8 @@ Bool_t AliReducedAnalysisFilterTrees::IsAsymmetricDecayChannel()
 
 //_____________________________________________________________________________
 // Fill track histogram lists according to the track flags
-void AliReducedAnalysisFilterTrees::FillCandidateLegHistograms(TString histClass, AliReducedBaseTrack* track,
-                                                               Int_t leg, Bool_t isAsymmetricDecayChannel)
+void AliReducedAnalysisFilterTrees::FillCandidateLegHistograms(TString histClass,
+  AliReducedBaseTrack* track, Int_t leg, Bool_t isAsymmetricDecayChannel)
 {
   for(Int_t icut=0; icut<fLeg1Cuts.GetEntries(); ++icut) {
     if(track->TestFlag(leg==2 && isAsymmetricDecayChannel ? icut+32 : icut)) {
@@ -1720,14 +1722,14 @@ UInt_t AliReducedAnalysisFilterTrees::CheckReconstructedLegMCTruth(AliReducedBas
 
 //_____________________________________________________________________________
 // Check the pair of tracks to see if they match the defined MC cuts and in addition
-// that they have the same mother.
+// that they have the same mother, if requested.
 UInt_t AliReducedAnalysisFilterTrees::CheckReconstructedLegMCTruth(AliReducedBaseTrack* ptrack,
                                                                    AliReducedBaseTrack* ntrack)
 {
-  // NOTE: The condition for the two tracks to have the same mother requires information on the MC label,
-  //       which is available just in the full track information (AliReducedTrackInfo::fMCLabels[]).
-  //       The consequence is that for the jpsi2ee analysis, the reconstructed tracks need to be always
-  //       written as full tracks.
+  // NOTE: The condition for the two tracks to have the same mother requires information on the MC 
+  //       label, which is available just in the full track information
+  //       (AliReducedTrackInfo::fMCLabels[]). The consequence is that for the jpsi2ee analysis, the 
+  //       reconstructed tracks need to be always written as full tracks.
 
   // Check that both tracks are full tracks
   if(ptrack->IsA() != AliReducedTrackInfo::Class()) return 0;
@@ -1739,12 +1741,21 @@ UInt_t AliReducedAnalysisFilterTrees::CheckReconstructedLegMCTruth(AliReducedBas
   if(!pTrackDecisions) return 0;
   UInt_t nTrackDecisions = CheckReconstructedLegMCTruth(ntrack);
 
+  // If the tracks have the same mother, check that the mother fullfills any MC truth requirement
+  if(TMath::Abs(((AliReducedTrackInfo*)ptrack)->MCLabel(1)) ==
+     TMath::Abs(((AliReducedTrackInfo*)ntrack)->MCLabel(1)))
+  {
+    AliReducedTrackInfo* mother = FindTrackByLabel(((AliReducedTrackInfo*)ptrack)->MCLabel(1), kTRUE);
+    UInt_t motherDecisions = CheckMotherMCTruth(mother);
+    if(!motherDecisions) return 0;
+  }
+
+  // Check the tracks agains the leg MCtruth cuts
   UInt_t decisions = 0;
   for(Int_t i=0; i<fLegCandidatesMCcuts.GetEntries(); ++i) {
     Bool_t pDecision = (pTrackDecisions & (UInt_t(1)<<i));
     Bool_t nDecision = (nTrackDecisions & (UInt_t(1)<<i));
-
-    // If needed, check that the tracks have the same mother
+    // If requested, check that the tracks have the same mother
     Bool_t sameMotherDecision = kTRUE;
     if(fLegCandidatesMCcuts_RequestSameMother[i])
       sameMotherDecision = (TMath::Abs(((AliReducedTrackInfo*)ptrack)->MCLabel(1)) ==
@@ -1904,7 +1915,8 @@ UInt_t AliReducedAnalysisFilterTrees::CheckMotherMCTruth(AliReducedTrackInfo* mo
 
 
 //_____________________________________________________________________________
-// Check the daughter pure MC truth against all defined selections and return a bit map with all decisions
+// Check the daughter pure MC truth against all defined selections and return a bit map with all 
+// decisions
 UInt_t AliReducedAnalysisFilterTrees::CheckDaughterMCTruth(AliReducedTrackInfo* daughter)
 {
   if(fJpsiElectronMCcuts.GetEntries() == 0) return 0;
