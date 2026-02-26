@@ -60,7 +60,7 @@ Bool_t AliReducedBaseTrackCut::IsSelected(TObject* obj) {
   
   AliReducedBaseTrack* track = (AliReducedBaseTrack*)obj;
   
-  if(fCutOnPt && (track->Pt()<fPtRange[0] || track->Pt()>fPtRange[1])) return kFALSE;
+  if(fCutOnPt  && (track->Pt()<fPtRange[0]   || track->Pt()>fPtRange[1]))   return kFALSE;
   if(fCutOnEta && (track->Eta()<fEtaRange[0] || track->Eta()>fEtaRange[1])) return kFALSE;
   if(fCutOnPhi && (track->Phi()<fPhiRange[0] || track->Phi()>fPhiRange[1])) return kFALSE;
   

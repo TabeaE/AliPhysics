@@ -233,6 +233,7 @@ void AliReducedAnalysisFilterTrees::Process()
   
   // Fill event information before applying event cuts
   AliReducedVarManager::FillEventInfo(fEvent, fValues);
+  
   if(fComputeMult) {
     CountNch05();
     FillMultiplicity(kFALSE);
@@ -875,7 +876,6 @@ void AliReducedAnalysisFilterTrees::RunSameEventPairing()
       AliReducedPairInfo* candidatePair = new(pairs[fFilteredEvent->fNV0candidates[1]]) AliReducedPairInfo();
 
       if(fOptionRunOverMC && isJpsiFromB) {
-        // TODO: understand: why search here for grandmother label?
         AliReducedBaseTrack* jpsimother = FindTrackByLabel(leg1Track->MCLabel(2), kTRUE);
         if(jpsimother) {
           candidatePair->PtMother (jpsimother->Pt());
@@ -1872,25 +1872,6 @@ void AliReducedAnalysisFilterTrees::LoopOverMCTracks(Int_t trackArray/*=1*/)
         fHistosManager->FillHistClass(Form("JpsiPtMultCorrel_%s_%s", GetMeasMultcutName(jcut),
                                            fJpsiMotherMCcuts.At(iCut)->GetName()), fValues);
       }
-      // Fill histograms for reconstructed MCTruth jpsi daughters
-      AliReducedTrackInfo* daughter1Det = FindTrackByLabel(daughter1Label, kFALSE);
-      if(!daughter1Det) continue;
-      if(!IsCandidateLegSelected(daughter1Det)) continue;
-      AliReducedTrackInfo* daughter2Det = FindTrackByLabel(daughter2Label, kFALSE);
-      if(!daughter2Det) continue;
-      if(!IsCandidateLegSelected(daughter2Det)) continue;
-      AliReducedVarManager::FillPairInfo(daughter1Det, daughter2Det, fCandidateType, fValues);
-      for(Int_t icutleg=0; icutleg<GetNCandidateLegCuts(); icutleg++) {
-        if(!daughter1Det->TestFlag(icutleg) || !daughter2Det->TestFlag(icutleg)) continue;
-        fHistosManager->FillHistClass(Form("PureMCTRUTH_DetectedDaughters_%s_%s",
-                                           fJpsiMotherMCcuts.At(iCut)->GetName(),
-                                           GetCandidateLegCutName(icutleg,1)), fValues);
-        for(Int_t jcut=0; jcut<GetNMeasMultCuts(); jcut++) {
-          fHistosManager->FillHistClass(Form("JpsiPtMultCorrelMeas_%s_%s_%s",GetMeasMultcutName(jcut),
-                                             fJpsiMotherMCcuts.At(iCut)->GetName(),
-                                             GetCandidateLegCutName(icutleg,1)), fValues);
-        }
-      }  // end loop over fLeg1Cuts
     }  // end loop over fJpsiMotherMCcuts
   }  // end loop over tracks
 

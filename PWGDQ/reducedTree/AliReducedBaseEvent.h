@@ -83,8 +83,8 @@ class AliReducedBaseEvent : public TObject {
   Int_t     NTracks1()                        const {return (fTracks  ? fTracks->GetEntries()  : 0);}
   Int_t     NTracks2()                        const {return (fTracks2 ? fTracks2->GetEntries() : 0);}
   Int_t     NGlobalTracks (Int_t icut=0)      const {return fNGlobalTracks[icut];}
-  Int_t     NTracksRegions(Int_t iRegion, bool regionToJpsi=true, Int_t icut=0)
-            const {return ((iRegion>=0 && iRegion<=2) ? fNTracksRegions[16*iRegion+8*(!regionToJpsi)+icut] : 0);}
+  Int_t     NTracksRegions(Int_t iRegion, bool regionToJpsi=true, Int_t icut=0) const {
+    return ((iRegion>=0 && iRegion<=2) ? fNTracksRegions[16*iRegion+8*(!regionToJpsi)+icut] : 0);}
   Float_t   GetLeadingPt (Int_t icut=0)   const {return fLeading[3*icut];}
   Float_t   GetLeadingPhi(Int_t icut=0)   const {return fLeading[3*icut+1];}
   Float_t   GetLeadingEta(Int_t icut=0)   const {return fLeading[3*icut+2];}
@@ -96,8 +96,8 @@ class AliReducedBaseEvent : public TObject {
                                                  (AliReducedBaseTrack*)fTracks->At(i) : 0x0);}
   AliReducedBaseTrack* GetTrack2(Int_t i) const {return (fTracks2 && i>=0 && i<fTracks2->GetEntries() ?
                                                  (AliReducedBaseTrack*)fTracks2->At(i) : 0x0);}
-  TClonesArray*        GetTracks ()       const {return fTracks;}
-  TClonesArray*        GetTracks2()       const {return fTracks2;}
+  TClonesArray*        GetTracks  ()      const {return fTracks;}
+  TClonesArray*        GetTracks2 ()      const {return fTracks2;}
 
   AliReducedPairInfo*  GetV0Pair(Int_t i) const {return (i>=0 && i<fNV0candidates[1] ?
                                                  (AliReducedPairInfo*)fCandidates->At(i) : 0x0);}
@@ -125,16 +125,16 @@ class AliReducedBaseEvent : public TObject {
   Int_t     fRunNo;               // run number
   Float_t   fVtx[3];              // global event vertex vector in cm
   Int_t     fNVtxContributors;    // global event vertex contributors
-  Float_t   fCentrality[16];      // centrality; 0-V0M, 1-CL1, 2-TRK, 3-ZEMvsZDC, 4-V0A, 5-V0C, 6-ZNA, 7-VOMNew,
-                                  //             8-V0MNewPlus05, 9-V0MNewMinus05, 10-V0MNewPlus10,
-                                  //            11-V0MNewMinus10, 12-V0MPlus05, 13-V0MMinus05, 14-V0MPlus10,
-                                  //            15-V0MMinus10,
+  Float_t   fCentrality[16];      // centrality;  0-V0M, 1-CL1, 2-TRK, 3-ZEMvsZDC, 4-V0A, 5-V0C, 6-ZNA, 
+                                  //              7-VOMNew, 8-V0MNewPlus05, 9-V0MNewMinus05, 
+                                  //             10-V0MNewPlus10, 11-V0MNewMinus10, 12-V0MPlus05, 
+                                  //             13-V0MMinus05, 14-V0MPlus10, 15-V0MMinus10,
   Int_t     fCentQuality;         // quality flag for the centrality
   Int_t     fNtracks[2];          // number of tracks, [0]-total, [1]-selected for the tree
   Int_t     fNV0candidates[2];    // number of V0 candidates, [0]-total, [1]-selected for the tree
   Int_t     fNGlobalTracks[8];    // number of global tracks, depending on the multiplicity estimator
-  Int_t     fNTracksRegions[48];  // 0 to 15 is toward (0 to 8 regions to Jpsi, 9 to 15 region to leading pt),
-                                  // 16 to 31 is transverse, 32 to 47 is away
+  Int_t     fNTracksRegions[48];  // 0-15: toward (0-8: regions to Jpsi, 9-15: region to leading pt),
+                                  // 16-31: transverse, 32-47: away
   Float_t   fLeading[24];         // pt phi eta of the leading particle in the event,
                                   // depending of the cutset (0,1,2 for the first cutset, etc...)
 

@@ -87,16 +87,17 @@ AliReducedVarCut::~AliReducedVarCut() {
 
 //____________________________________________________________________________
 void AliReducedVarCut::AddCut(Int_t var, Float_t cutLow, Float_t cutHigh, Bool_t exclude/*= kFALSE*/, 
-  Int_t dependentVar/*=AliReducedVarManager::kNothing*/,  Float_t depCutLow/*=0.*/,  Float_t depCutHigh/*=0.*/,
-  Bool_t depCutExclude/*=kFALSE*/,
-  Int_t dependentVar2/*=AliReducedVarManager::kNothing*/, Float_t depCut2Low/*=0.*/, Float_t depCut2High/*=0.*/,
-  Bool_t depCut2Exclude/*=kFALSE*/)
+  Int_t dependentVar/*=AliReducedVarManager::kNothing*/,
+  Float_t depCutLow/*=0.*/,  Float_t depCutHigh/*=0.*/, Bool_t depCutExclude/*=kFALSE*/,
+  Int_t dependentVar2/*=AliReducedVarManager::kNothing*/,
+  Float_t depCut2Low/*=0.*/, Float_t depCut2High/*=0.*/, Bool_t depCut2Exclude/*=kFALSE*/)
 {
   //
   //  Add a cut
   //
-  if(fNCuts==kNMaxCuts) {
-    cout << "AliReducedVarCut::AddCut() Too many cuts added! Reduce the number of cuts in your config macro or increase the maximum allowed limit!" << endl;
+  if(fNCuts == kNMaxCuts) {
+    cout << "AliReducedVarCut::AddCut() Too many cuts added! Reduce the number of cuts in your config "
+            "macro or increase the maximum allowed limit!" << endl;
     cout << "                  Cut not added !!" << endl;
     return;
   }
@@ -127,43 +128,45 @@ void AliReducedVarCut::AddCut(Int_t var, Float_t cutLow, Float_t cutHigh, Bool_t
 
 //____________________________________________________________________________
 void AliReducedVarCut::AddCut(Int_t var, Float_t cutLow, TF1* funcCutHigh, Bool_t exclude/*= kFALSE*/,
-  Int_t dependentVar/*=AliReducedVarManager::kNothing*/,  Float_t depCutLow/*=0.*/,  Float_t depCutHigh/*=0.*/,
-  Bool_t depCutExclude/*=kFALSE*/,
-  Int_t dependentVar2/*=AliReducedVarManager::kNothing*/, Float_t depCut2Low/*=0.*/, Float_t depCut2High/*=0.*/,
-  Bool_t depCut2Exclude/*=kFALSE*/)
+  Int_t dependentVar/*=AliReducedVarManager::kNothing*/,
+  Float_t depCutLow/*=0.*/,  Float_t depCutHigh/*=0.*/, Bool_t depCutExclude/*=kFALSE*/,
+  Int_t dependentVar2/*=AliReducedVarManager::kNothing*/,
+  Float_t depCut2Low/*=0.*/, Float_t depCut2High/*=0.*/, Bool_t depCut2Exclude/*=kFALSE*/)
 {
   //
   // Add a cut with a function as a high cut
   //
-  if(fNCuts==kNMaxCuts) {
-    cout << "AliReducedVarCut::AddCut() Too many cuts added! Reduce the number of cuts in your config macro or increase the maximum allowed limit!" << endl;
+  if(fNCuts == kNMaxCuts) {
+    cout << "AliReducedVarCut::AddCut() Too many cuts added! Reduce the number of cuts in your config "
+            "macro or increase the maximum allowed limit!" << endl;
     cout << "                  Cut not added !!" << endl;
     return;
   }
   if(dependentVar == AliReducedVarManager::kNothing) {
-    cout << "AliReducedVarCut::AddCut() When adding a cut with a function as high limit, the dependentVar must be set otherwise this does not make sense!" << endl;
+    cout << "AliReducedVarCut::AddCut() When adding a cut with a function as high limit, the "
+            "dependentVar must be set otherwise this does not make sense!" << endl;
     cout << "                  Cut not added !!" << endl;
     return;
   }
-  fCutVariables[fNCuts] = var;
-  fCutLow[fNCuts]       = cutLow;
-  fFuncCutHigh[fNCuts]  = funcCutHigh;
-  fCutExclude[fNCuts]   = exclude;
+  fCutVariables [fNCuts] = var;
+  fCutLow       [fNCuts] = cutLow;
+  fFuncCutHigh  [fNCuts] = funcCutHigh;
+  fCutExclude   [fNCuts] = exclude;
   AliReducedVarManager::SetUseVariable(var);
       
-  fCutHasDependentVariable[fNCuts]  = kTRUE;
-  fDependentVariable[fNCuts]        = dependentVar; 
-  fDependentVariableCutLow[fNCuts]  = depCutLow;
-  fDependentVariableCutHigh[fNCuts] = depCutHigh; 
-  fDependentVariableExclude[fNCuts] = depCutExclude;
+  fCutHasDependentVariable  [fNCuts] = kTRUE;
+  fDependentVariable        [fNCuts] = dependentVar; 
+  fDependentVariableCutLow  [fNCuts] = depCutLow;
+  fDependentVariableCutHigh [fNCuts] = depCutHigh; 
+  fDependentVariableExclude [fNCuts] = depCutExclude;
   AliReducedVarManager::SetUseVariable(dependentVar);
 
-  if(dependentVar2!=AliReducedVarManager::kNothing) {
-    fCutHasDependentVariable2[fNCuts]  = kTRUE;
-    fDependentVariable2[fNCuts]        = dependentVar2;
-    fDependentVariable2CutLow[fNCuts]  = depCut2Low;
-    fDependentVariable2CutHigh[fNCuts] = depCut2High;
-    fDependentVariable2Exclude[fNCuts] = depCut2Exclude;
+  if(dependentVar2 != AliReducedVarManager::kNothing) {
+    fCutHasDependentVariable2  [fNCuts] = kTRUE;
+    fDependentVariable2        [fNCuts] = dependentVar2;
+    fDependentVariable2CutLow  [fNCuts] = depCut2Low;
+    fDependentVariable2CutHigh [fNCuts] = depCut2High;
+    fDependentVariable2Exclude [fNCuts] = depCut2Exclude;
     AliReducedVarManager::SetUseVariable(dependentVar2);
   }
       
@@ -173,43 +176,45 @@ void AliReducedVarCut::AddCut(Int_t var, Float_t cutLow, TF1* funcCutHigh, Bool_
 
 //____________________________________________________________________________
 void AliReducedVarCut::AddCut(Int_t var, TF1* funcCutLow, Float_t cutHigh, Bool_t exclude /*= kFALSE*/,
-  Int_t dependentVar/*=AliReducedVarManager::kNothing*/,  Float_t depCutLow/*=0.*/,  Float_t depCutHigh/*=0.*/,
-  Bool_t depCutExclude/*=kFALSE*/,
-  Int_t dependentVar2/*=AliReducedVarManager::kNothing*/, Float_t depCut2Low/*=0.*/, Float_t depCut2High/*=0.*/,
-  Bool_t depCut2Exclude/*=kFALSE*/)
+  Int_t dependentVar/*=AliReducedVarManager::kNothing*/,
+  Float_t depCutLow/*=0.*/,  Float_t depCutHigh/*=0.*/, Bool_t depCutExclude/*=kFALSE*/,
+  Int_t dependentVar2/*=AliReducedVarManager::kNothing*/,
+  Float_t depCut2Low/*=0.*/, Float_t depCut2High/*=0.*/, Bool_t depCut2Exclude/*=kFALSE*/)
 {
   //
   // Add a cut with a function as a low cut
   //
-  if(fNCuts==kNMaxCuts) {
-    cout << "AliReducedVarCut::AddCut() Too many cuts added! Reduce the number of cuts in your config macro or increase the maximum allowed limit!" << endl;
+  if(fNCuts == kNMaxCuts) {
+    cout << "AliReducedVarCut::AddCut() Too many cuts added! Reduce the number of cuts in your config "
+            "macro or increase the maximum allowed limit!" << endl;
     cout << "                  Cut not added !!" << endl;
     return;
   }
   if(dependentVar == AliReducedVarManager::kNothing) {
-    cout << "AliReducedVarCut::AddCut() When adding a cut with a function as low limit, the dependentVar must be set otherwise this does not make sense!" << endl;
+    cout << "AliReducedVarCut::AddCut() When adding a cut with a function as low limit, the "
+            "dependentVar must be set otherwise this does not make sense!" << endl;
     cout << "                  Cut not added !!" << endl;
     return;
   }
-  fCutVariables[fNCuts] = var;
-  fFuncCutLow[fNCuts]   = funcCutLow;
-  fCutHigh[fNCuts]      = cutHigh;
-  fCutExclude[fNCuts]   = exclude;
+  fCutVariables [fNCuts] = var;
+  fFuncCutLow   [fNCuts] = funcCutLow;
+  fCutHigh      [fNCuts] = cutHigh;
+  fCutExclude   [fNCuts] = exclude;
   AliReducedVarManager::SetUseVariable(var);
   
-  fCutHasDependentVariable[fNCuts]  = kTRUE;
-  fDependentVariable[fNCuts]        = dependentVar; 
-  fDependentVariableCutLow[fNCuts]  = depCutLow;
-  fDependentVariableCutHigh[fNCuts] = depCutHigh; 
-  fDependentVariableExclude[fNCuts] = depCutExclude;
+  fCutHasDependentVariable  [fNCuts] = kTRUE;
+  fDependentVariable        [fNCuts] = dependentVar; 
+  fDependentVariableCutLow  [fNCuts] = depCutLow;
+  fDependentVariableCutHigh [fNCuts] = depCutHigh; 
+  fDependentVariableExclude [fNCuts] = depCutExclude;
   AliReducedVarManager::SetUseVariable(dependentVar);
   
-  if(dependentVar2!=AliReducedVarManager::kNothing) {
-    fCutHasDependentVariable2[fNCuts]  = kTRUE;
-    fDependentVariable2[fNCuts]        = dependentVar2;
-    fDependentVariable2CutLow[fNCuts]  = depCut2Low;
-    fDependentVariable2CutHigh[fNCuts] = depCut2High;
-    fDependentVariable2Exclude[fNCuts] = depCut2Exclude;
+  if(dependentVar2 != AliReducedVarManager::kNothing) {
+    fCutHasDependentVariable2  [fNCuts] = kTRUE;
+    fDependentVariable2        [fNCuts] = dependentVar2;
+    fDependentVariable2CutLow  [fNCuts] = depCut2Low;
+    fDependentVariable2CutHigh [fNCuts] = depCut2High;
+    fDependentVariable2Exclude [fNCuts] = depCut2Exclude;
     AliReducedVarManager::SetUseVariable(dependentVar2);
   }
   
@@ -219,43 +224,45 @@ void AliReducedVarCut::AddCut(Int_t var, TF1* funcCutLow, Float_t cutHigh, Bool_
 
 //____________________________________________________________________________
 void AliReducedVarCut::AddCut(Int_t var, TF1* funcCutLow, TF1* funcCutHigh, Bool_t exclude/*= kFALSE*/,
-  Int_t dependentVar/*=AliReducedVarManager::kNothing*/,  Float_t depCutLow/*=0.*/,  Float_t depCutHigh/*=0.*/, 
-  Bool_t depCutExclude/*=kFALSE*/,
-  Int_t dependentVar2/*=AliReducedVarManager::kNothing*/, Float_t depCut2Low/*=0.*/, Float_t depCut2High/*=0.*/, 
-  Bool_t depCut2Exclude/*=kFALSE*/)
+  Int_t dependentVar/*=AliReducedVarManager::kNothing*/,
+  Float_t depCutLow/*=0.*/,  Float_t depCutHigh/*=0.*/, Bool_t depCutExclude/*=kFALSE*/,
+  Int_t dependentVar2/*=AliReducedVarManager::kNothing*/,
+  Float_t depCut2Low/*=0.*/, Float_t depCut2High/*=0.*/, Bool_t depCut2Exclude/*=kFALSE*/)
 {
   //
   // Add a cut with functions as low and high cuts
   //
   if(fNCuts == kNMaxCuts) {
-    cout << "AliReducedVarCut::AddCut() Too many cuts added! Reduce the number of cuts in your config macro or increase the maximum allowed limit!" << endl;
+    cout << "AliReducedVarCut::AddCut() Too many cuts added! Reduce the number of cuts in your config "
+            "macro or increase the maximum allowed limit!" << endl;
     cout << "                  Cut not added !!" << endl;
     return;
   }
   if(dependentVar == AliReducedVarManager::kNothing) {
-    cout << "AliReducedVarCut::AddCut() When adding a cut with functions as low and high limits, the dependentVar must be set otherwise this does not make sense!" << endl;
+    cout << "AliReducedVarCut::AddCut() When adding a cut with functions as low and high limits, the "
+            "dependentVar must be set otherwise this does not make sense!" << endl;
     cout << "                  Cut not added !!" << endl;
     return;
   }
-  fCutVariables[fNCuts] = var;
-  fFuncCutLow  [fNCuts] = funcCutLow;
-  fFuncCutHigh [fNCuts] = funcCutHigh;
-  fCutExclude  [fNCuts] = exclude;
+  fCutVariables [fNCuts] = var;
+  fFuncCutLow   [fNCuts] = funcCutLow;
+  fFuncCutHigh  [fNCuts] = funcCutHigh;
+  fCutExclude   [fNCuts] = exclude;
   AliReducedVarManager::SetUseVariable(var);
   
-  fCutHasDependentVariable [fNCuts] = kTRUE;
-  fDependentVariable       [fNCuts] = dependentVar; 
-  fDependentVariableCutLow [fNCuts] = depCutLow;
-  fDependentVariableCutHigh[fNCuts] = depCutHigh; 
-  fDependentVariableExclude[fNCuts] = depCutExclude;
+  fCutHasDependentVariable  [fNCuts] = kTRUE;
+  fDependentVariable        [fNCuts] = dependentVar; 
+  fDependentVariableCutLow  [fNCuts] = depCutLow;
+  fDependentVariableCutHigh [fNCuts] = depCutHigh; 
+  fDependentVariableExclude [fNCuts] = depCutExclude;
   AliReducedVarManager::SetUseVariable(dependentVar);
   
   if(dependentVar2 != AliReducedVarManager::kNothing) {
-    fCutHasDependentVariable2 [fNCuts] = kTRUE;
-    fDependentVariable2       [fNCuts] = dependentVar2;
-    fDependentVariable2CutLow [fNCuts] = depCut2Low;
-    fDependentVariable2CutHigh[fNCuts] = depCut2High;
-    fDependentVariable2Exclude[fNCuts] = depCut2Exclude;
+    fCutHasDependentVariable2  [fNCuts] = kTRUE;
+    fDependentVariable2        [fNCuts] = dependentVar2;
+    fDependentVariable2CutLow  [fNCuts] = depCut2Low;
+    fDependentVariable2CutHigh [fNCuts] = depCut2High;
+    fDependentVariable2Exclude [fNCuts] = depCut2Exclude;
     AliReducedVarManager::SetUseVariable(dependentVar2);
   }
   

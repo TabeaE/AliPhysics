@@ -17,9 +17,9 @@ class AliReducedBaseTrackCut : public AliReducedInfoCut {
   
   virtual Bool_t IsSelected(TObject* obj);
   
-  void SetPtRange(Float_t min, Float_t max) {fPtRange[0] = min; fPtRange[1]=max; fCutOnPt=kTRUE;}
-  void SetEtaRange(Float_t min, Float_t max) {fEtaRange[0] = min; fEtaRange[1]=max; fCutOnEta=kTRUE;}
-  void SetPhiRange(Float_t min, Float_t max) {fPhiRange[0] = min; fPhiRange[1]=max; fCutOnPhi=kTRUE;}
+  void SetPtRange  (Float_t min, Float_t max) {fPtRange[0]=min;  fPtRange[1]=max;  fCutOnPt=kTRUE;}
+  void SetEtaRange (Float_t min, Float_t max) {fEtaRange[0]=min; fEtaRange[1]=max; fCutOnEta=kTRUE;}
+  void SetPhiRange (Float_t min, Float_t max) {fPhiRange[0]=min; fPhiRange[1]=max; fCutOnPhi=kTRUE;}
   
  protected: 
    
