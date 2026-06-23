@@ -616,12 +616,12 @@ void AliAnalysisTaskReducedTreeMaker::UserExec(Option_t *option)
 
   // Rejected due to physics selection
   if(fSelectPhysics && !isPhysSel) {
-    fEventsHistogram     ->Fill(2., -1.);
-    fEventsHistogram     ->Fill(2., -2.);
-    fTRDEventsHistogram  ->Fill(2., -1.);
-    fTRDEventsHistogram  ->Fill(2., -2.);
-    fEMCalEventsHistogram->Fill(2., -1.);
-    fEMCalEventsHistogram->Fill(2., -2.);
+    fEventsHistogram      ->Fill(2., -1.);
+    fEventsHistogram      ->Fill(2., -2.);
+    fTRDEventsHistogram   ->Fill(2., -1.);
+    fTRDEventsHistogram   ->Fill(2., -2.);
+    fEMCalEventsHistogram ->Fill(2., -1.);
+    fEMCalEventsHistogram ->Fill(2., -2.);
     for(Int_t i=0; i<nCentEstimators; ++i)
       ((TH2I*)fCentEventsList->At(i))->Fill(2., percentileEstimators[i]);
     PostData(3, fEventsList);

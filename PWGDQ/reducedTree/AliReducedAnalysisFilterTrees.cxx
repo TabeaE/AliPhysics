@@ -848,7 +848,8 @@ void AliReducedAnalysisFilterTrees::RunSameEventPairing()
       leg2Track = (AliReducedTrackInfo*)iterLeg2();
 
       // Verify that the two current tracks have at least 1 common bit
-      ULong_t compatibilityMask = CheckTrackCompatibility(leg1Track, leg2Track, isAsymmetricDecayChannel);
+      ULong_t compatibilityMask = CheckTrackCompatibility(leg1Track, leg2Track, 
+                                                          isAsymmetricDecayChannel);
       if(!compatibilityMask) continue;
       AliReducedVarManager::FillPairInfo(leg1Track, leg2Track, fCandidateType, fValues);
       
@@ -862,7 +863,8 @@ void AliReducedAnalysisFilterTrees::RunSameEventPairing()
         fValues[AliReducedVarManager::kPairMCMap] = isJpsi+2*isJpsiFromB;
       }
 
-      UInt_t recLegMCTruthMask = fOptionRunOverMC ? CheckReconstructedLegMCTruth(leg1Track,leg2Track) : 0;
+      UInt_t recLegMCTruthMask = fOptionRunOverMC ? CheckReconstructedLegMCTruth(leg1Track,leg2Track)
+                                                  : 0;
       FillCandidatePairHistograms(compatibilityMask, 0, 1, "Pair_Candidate_AfterPrefilter",
                                   isAsymmetricDecayChannel, recLegMCTruthMask);
       ULong_t pairCutMask = IsCandidatePairSelected(fValues);
@@ -892,7 +894,6 @@ void AliReducedAnalysisFilterTrees::RunSameEventPairing()
       candidatePair->SetFlags(compatibilityMask);
       SetupPair(candidatePair, fValues);
       fFilteredEvent->fNV0candidates[1] += 1;
-//       FillCandidatePairHistograms("Pair_Candidate12", candidatePair, fValues, isAsymmetricDecayChannel);
     }  // end loop over leg2 tracks
 
     if(fBuildCandidateLikePairs) {
@@ -900,7 +901,8 @@ void AliReducedAnalysisFilterTrees::RunSameEventPairing()
         leg1Track_2 = (AliReducedTrackInfo*)fLeg1Tracks.At(it1_2);
         
         // verify that the two current tracks have at least 1 common bit
-        ULong_t compatibilityMask = CheckTrackCompatibility(leg1Track, leg1Track_2, isAsymmetricDecayChannel);
+        ULong_t compatibilityMask = CheckTrackCompatibility(leg1Track, leg1Track_2, 
+                                                            isAsymmetricDecayChannel);
         if(!compatibilityMask) continue;
         AliReducedVarManager::FillPairInfo(leg1Track, leg1Track_2, fCandidateType, fValues);
         fValues[AliReducedVarManager::kPairMCMap] = 0;
@@ -1501,17 +1503,18 @@ void AliReducedAnalysisFilterTrees::FillCandidatePairHistograms(ULong_t trackMas
         for(Int_t iPairCut=0; iPairCut<fPairCuts.GetEntries(); ++iPairCut) {
           // Check if the pair fulfills the pair cut
           if(pairMask & (ULong_t(1)<<iPairCut)) {
-            fHistosManager->FillHistClass(Form("%s%s_%s%s_%s", pairClass.Data(), typeStr[pairType].Data(),
-                fLeg1Cuts.At(iTrackCut)->GetName(),
-                (isAsymmetricDecayChannel?Form("_%s",fLeg2Cuts.At(iTrackCut)->GetName()):""),
-                fPairCuts.At(iPairCut)->GetName()), fValues);
+            fHistosManager->FillHistClass(Form("%s%s_%s%s_%s", pairClass.Data(),
+              typeStr[pairType].Data(), fLeg1Cuts.At(iTrackCut)->GetName(),
+              (isAsymmetricDecayChannel?Form("_%s",fLeg2Cuts.At(iTrackCut)->GetName()):""),
+              fPairCuts.At(iPairCut)->GetName()), fValues);
             if(mcDecisions && pairType==1) {
               for(Int_t iMC=0; iMC<=fLegCandidatesMCcuts.GetEntries(); ++iMC) {
                 if(mcDecisions & (UInt_t(1)<<iMC))
                   fHistosManager->FillHistClass(Form("%s%s_%s%s_%s_%s", pairClass.Data(),
-                      typeStr[pairType].Data(), fLeg1Cuts.At(iTrackCut)->GetName(),
-                      (isAsymmetricDecayChannel?Form("_%s",fLeg2Cuts.At(iTrackCut)->GetName()):""),
-                      fPairCuts.At(iPairCut)->GetName(), fLegCandidatesMCcuts.At(iMC)->GetName()), fValues);
+                    typeStr[pairType].Data(), fLeg1Cuts.At(iTrackCut)->GetName(),
+                    (isAsymmetricDecayChannel?Form("_%s",fLeg2Cuts.At(iTrackCut)->GetName()):""),
+                    fPairCuts.At(iPairCut)->GetName(), fLegCandidatesMCcuts.At(iMC)->GetName()), 
+                    fValues);
               }
             }
           }
@@ -1527,8 +1530,8 @@ void AliReducedAnalysisFilterTrees::FillCandidatePairHistograms(ULong_t trackMas
         if(mcDecisions && pairType==1) {
           for(Int_t iMC=0; iMC<=fLegCandidatesMCcuts.GetEntries(); ++iMC) {
             if(mcDecisions & (UInt_t(1)<<iMC)) {
-              fHistosManager->FillHistClass(Form("%s%s_%s%s_%s", pairClass.Data(), typeStr[pairType].Data(),
-                fLeg1Cuts.At(iTrackCut)->GetName(),
+              fHistosManager->FillHistClass(Form("%s%s_%s%s_%s", pairClass.Data(),
+                typeStr[pairType].Data(), fLeg1Cuts.At(iTrackCut)->GetName(),
                 (isAsymmetricDecayChannel?Form("_%s",fLeg2Cuts.At(iTrackCut)->GetName()):""),
                 fLegCandidatesMCcuts.At(iMC)->GetName()), fValues);
             }
