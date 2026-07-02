@@ -1192,11 +1192,8 @@ void AliResonanceFits::FitInvMass() {
   if(fGlobalFitFunction) delete fGlobalFitFunction;
   if(fOptionSignalFromMC) {
     fGlobalFitFunction = new TF1("GlobalFitFunction",
-                                 fOptionMeanPt&&fAlpha ? GlobalFitFunctionMeanPt : GlobalFitFunction,
-                                 0.0, 10.0, 1+fBkgFitFunction->GetNpar());
-  } else { // TODO: Gauthier commented it out
-    fGlobalFitFunction = new TF1("GlobalFitFunction", GlobalFitFunctionCrystalBall, 0.0, 10.0,
-                                  1+fSignalFitFunc->GetNpar()+fBkgFitFunction->GetNpar());
+                                fOptionMeanPt&&fAlpha ? GlobalFitFunctionMeanPt : GlobalFitFunction,
+                                0.0, 10.0, 1+fBkgFitFunction->GetNpar());
   }
   fGlobalFitFunction->SetParameter(0, 1.);  // TODO: Gauthier: 0, 3.
   fGlobalFitFunction->SetNpx(10000.);

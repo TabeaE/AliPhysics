@@ -33,8 +33,8 @@ responsability of the user.
 400 - charmed mesons in the code range           400-499
 401 - open charm mesons (all D and D* mesons)    400-439
 402 - open charm mesons and baryons together     400-439, 4000-4399
-403 - all (open- or hidden-) charm hadrons (mesons and baryons) in the range  400-499, 4000-4999    (! 
-      no psi' here)
+403 - all (open- or hidden-) charm hadrons (mesons and baryons) in the range 400-499, 4000-4999
+      (! no psi' here)
 500 - beauty mesons in the code range            500-599
 501 - open beauty mesons                         500-549
 502 - open beauty mesons and baryons             500-549, 5000-5499
@@ -78,16 +78,16 @@ public:
     kSecondaryFromWeakDecay,  // AliMCEvent::IsSecondaryFromWeakDecay()
     kSecondaryFromMaterial,   // AliMCEvent::IsSecondaryFromMaterial()
     kFromSubsidiaryEvent,     // AliMCEvent::IsFromSubsidiaryEvent()
-    kRadiativeDecay,          // particle decayed in QED radiative process (e.g. J/psi -> e+e- + photons)
-    kFirstInStack,            // first particle in stack
-    kSecondInStack,           // second particle in stack
-    kFirstTenInStack,         // one of the first ten particles in stack
+    kRadiativeDecay,          // Particle decayed in QED radiative process (e.g. J/psi -> e+e- + photons)
+    kFirstInStack,            // First particle in stack
+    kSecondInStack,           // Second particle in stack
+    kFirstTenInStack,         // One of the first ten particles in stack
     kNSources
   };
 
   enum Constants {
-    kNMaxProngs      = 3,   // maximum numbers of prongs allowed for the signal
-    kNMaxGenerations = 10,  // maximum number of generations to look back
+    kNMaxProngs      = 3,   // Maximum numbers of prongs allowed for the signal
+    kNMaxGenerations = 10,  // Maximum number of generations to look back
     kPDGnotAssigned  = 0
   };
 
@@ -141,8 +141,8 @@ public:
 
 private:
 
-  UInt_t fNProngs;       // number of prongs
-  UInt_t fNGenerations;  // number of generations to look back in history
+  UInt_t fNProngs;       // Number of prongs
+  UInt_t fNGenerations;  // Number of generations to look back in history
 
   Int_t  fPDGcodes         [kNMaxProngs][kNMaxGenerations];  // PDG codes for all particles in the
                                                              //  defined signal.
