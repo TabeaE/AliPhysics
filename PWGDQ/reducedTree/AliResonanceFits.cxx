@@ -126,18 +126,18 @@ AliResonanceFits::~AliResonanceFits()
   // De-constructor
   //
 
-  if(fMinuitFitter)      delete fMinuitFitter;
-  if(fResidualFitFunc)   delete fResidualFitFunc;
-  if(fSplusResidualBkg)  delete fSplusResidualBkg;
-  if(fSplusBblind)       delete fSplusBblind;
-  if(fSplusB)            delete fSplusB;
-  if(fSoverBfromMCshape) delete fSoverBfromMCshape;
-  if(fAlpha)             delete fAlpha;
-  if(fSig)               delete fSig;
-  if(fBkg)               delete fBkg;
-  if(fBkgResidual)       delete fBkgResidual;
-  if(fBkgCombinatorial)  delete fBkgCombinatorial;
-  if(fSoverB)            delete fSoverB;
+  if(fMinuitFitter)      { delete fMinuitFitter;      fMinuitFitter      = 0;}
+  if(fResidualFitFunc)   { delete fResidualFitFunc;   fResidualFitFunc   = 0;}
+  if(fSplusResidualBkg)  { delete fSplusResidualBkg;  fSplusResidualBkg  = 0;}
+  if(fSplusBblind)       { delete fSplusBblind;       fSplusBblind       = 0;}
+  if(fSplusB)            { delete fSplusB;            fSplusB            = 0;}
+  if(fSoverBfromMCshape) { delete fSoverBfromMCshape; fSoverBfromMCshape = 0;}
+  if(fAlpha)             { delete fAlpha;             fAlpha             = 0;}
+  if(fSig)               { delete fSig;               fSig               = 0;}
+  if(fBkg)               { delete fBkg;               fBkg               = 0;}
+  if(fBkgResidual)       { delete fBkgResidual;       fBkgResidual       = 0;}
+  if(fBkgCombinatorial)  { delete fBkgCombinatorial;  fBkgCombinatorial  = 0;}
+  if(fSoverB)            { delete fSoverB;            fSoverB            = 0;}
 }
 
 
