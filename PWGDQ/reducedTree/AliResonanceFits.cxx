@@ -1221,10 +1221,9 @@ void AliResonanceFits::FitInvMass() {
   if(fOptionBkgMethod == kBkgFitFunction) {
     // Fit of S+B
     if(!fOptionMeanPt || !fFitMeanPtAdditionalErrors) {
-      fFitResult = fSplusB->Fit(fGlobalFitFunction, fBkgFitOption.Data(), "Q", fgMassFitRange[0],
-                                fgMassFitRange[1]);
-    }
-    if(fOptionMeanPt && fFitMeanPtAdditionalErrors) {
+      fFitResult = fSplusB->Fit(fGlobalFitFunction, Form("S%s",fBkgFitOption.Data()), "Q", 
+                                fgMassFitRange[0], fgMassFitRange[1]);
+    } else if(fOptionMeanPt && fFitMeanPtAdditionalErrors) {
       fgTempSignal = fSplusB;
       Int_t npar = fGlobalFitFunction->GetNpar();
 
