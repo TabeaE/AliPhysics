@@ -278,7 +278,7 @@ void AliAnalysisTaskReducedTreeMaker::UserCreateOutputObjects()
     fTree = new TTree("DstTree", "Reduced ESD information");
   }
 
-  // check for tension between fTreeWritingOption and individual choices from AddTrackFilter
+  // Check for tension between fTreeWritingOption and individual choices from AddTrackFilter
   if(fTreeWritingOption==kBaseEventsWithBaseTracks || fTreeWritingOption==kFullEventsWithBaseTracks) {
     for(UInt_t i=0; i<fWriteBaseTrack.size(); i++) {
       if(!fWriteBaseTrack.at(i)) {
@@ -289,7 +289,7 @@ void AliAnalysisTaskReducedTreeMaker::UserCreateOutputObjects()
     }
   }
 
-  // check for tension between fTreeWritingOption and individual choices for MC signals
+  // Check for tension between fTreeWritingOption and individual choices for MC signals
   if(fTreeWritingOption==kBaseEventsWithBaseTracks || fTreeWritingOption==kFullEventsWithBaseTracks) {
     for(Int_t i=0; i<kMaxMCsignals; i++) {
       if(fMCsignalsWritingOptions[i] == kFullTrack) {
@@ -300,14 +300,14 @@ void AliAnalysisTaskReducedTreeMaker::UserCreateOutputObjects()
     }
   }
 
-  // print active filters
+  // Print active filters
   for(Int_t i=0; i<fTrackFilter.GetEntries(); i++) {
     cout << "AliAnalysisTaskReducedTreeMaker::UserCreateOutputObjects() filter " << i << ", base track = "
          << fWriteBaseTrack.at(i);
     cout << ", min tracks: " << fMinSelectedTracks[i] << ", max tracks: " << fMaxSelectedTracks[i] << endl;
   }
 
-  // check if second track array is needed, i.e. fTracks contains full tracks, fTracks2 contains base tracks
+  // Check if second track array is needed, i.e. fTracks contains full tracks, fTracks2 contains base tracks
   if(fTreeWritingOption==kBaseEventsWithFullTracks || fTreeWritingOption==kFullEventsWithFullTracks) {
     // data
     if(std::find(fWriteBaseTrack.begin(),fWriteBaseTrack.end(),kTRUE) != fWriteBaseTrack.end()) {
@@ -378,7 +378,7 @@ void AliAnalysisTaskReducedTreeMaker::UserCreateOutputObjects()
     if(fFillCaloClusterInfo) fTree->SetBranchStatus("fCaloClusters.fClusterID", 1);
   }
 
-  // enable all variables in the VarManager
+  // Enable all variables in the VarManager
   fUsedVars = new TBits(AliDielectronVarManager::kNMaxValues);
   for(Int_t i=0; i<AliDielectronVarManager::kParticleMax; ++i) fUsedVars->SetBitNumber(i, kTRUE);
 
@@ -388,26 +388,26 @@ void AliAnalysisTaskReducedTreeMaker::UserCreateOutputObjects()
   fEventsList = new TList();
   fEventsList->SetOwner();
 
-  // event statistics histogram
+  // Event statistics histogram
   const Int_t kNEventSelectionNames   = 14;
   const Int_t kNOfflineTriggerAliases = 34;
   fEventsHistogram = new TH2I("EventStatistics", "Event statistics",
                               kNEventSelectionNames,   -0.5, -0.5+kNEventSelectionNames,
                               kNOfflineTriggerAliases, -2.5, -2.5+kNOfflineTriggerAliases);
-  const Char_t* offlineTriggerNames[kNOfflineTriggerAliases] = {"Total", "No Phys Sel", "MB/INT1", "INT7",
-    "MUON", "HighMult/HighMultSPD", "EMC1", "CINT5/INT5", "CMUS5/MUSPB/INT7inMUON",
-    "MuonSingleHighPt7/MUSH7/MUSHPB", "MuonLikeLowPt7/MUL7/MuonLikePB", "MuonUnlikeLowPt7/MUU7/MuonUnlikePB",
-    "EMC7/EMC8", "MUS7/MuonSingleLowPt7", "PHI1", "PHI7/PHI8/PHOSPb", "EMCEJE", "EMCEGA",
-    "Central/HighMultV0", "SemiCentral", "DG/DG5", "ZED", "SPI7/SPI", "INT8", "MuonSingleLowPt8", 
-    "MuonSingleHighPt8", "MuonLikeLowPt8", "MuonUnlikeLowPt8", "MuonUnlikeLowPt0/INT6", "UserDefined", "TRD", 
-    "MuonCalo/CaloOnly", "FastOnly", "N/A"};
+  const Char_t* offlineTriggerNames[kNOfflineTriggerAliases] = {"Total", "No Phys Sel", "MB/INT1", 
+    "INT7", "MUON", "HighMult/HighMultSPD", "EMC1", "CINT5/INT5", "CMUS5/MUSPB/INT7inMUON",
+    "MuonSingleHighPt7/MUSH7/MUSHPB", "MuonLikeLowPt7/MUL7/MuonLikePB",
+    "MuonUnlikeLowPt7/MUU7/MuonUnlikePB", "EMC7/EMC8", "MUS7/MuonSingleLowPt7", "PHI1",
+    "PHI7/PHI8/PHOSPb", "EMCEJE", "EMCEGA", "Central/HighMultV0", "SemiCentral", "DG/DG5", "ZED",
+    "SPI7/SPI", "INT8", "MuonSingleLowPt8", "MuonSingleHighPt8", "MuonLikeLowPt8", "MuonUnlikeLowPt8", 
+    "MuonUnlikeLowPt0/INT6", "UserDefined", "TRD", "MuonCalo/CaloOnly", "FastOnly", "N/A"};
   const Char_t* selectionNames[kNEventSelectionNames] = {"All events",
     "TR and Physics Selection events (PS)",   "Rejected due to PS",
     "PS and Trigger Selected (TS)",           "Rejected due to TS",
     "TS and Pileup Checked (PC)",             "Rejected due to PC",
     "PC and Event cuts Checked (EC)",         "Rejected due to EC",
     "EC and Time Range accepted events (TR)", "Rejected due to TR",
-    "Written ev. (track filters passed)", "Written ev. (unbiased)", "Written ev. (has V0s)"};
+    "Written ev. (track filters passed)",     "Written ev. (unbiased)", "Written ev. (has V0s)"};
   for(Int_t i=1;i<=kNOfflineTriggerAliases;++i)
      fEventsHistogram->GetYaxis()->SetBinLabel(i, offlineTriggerNames[i-1]);
   for(Int_t i=1;i<=kNEventSelectionNames;++i)
@@ -491,7 +491,7 @@ void AliAnalysisTaskReducedTreeMaker::UserCreateOutputObjects()
     fNSelectedBaseTracks.push_back(0);
   }
   for(Int_t i=0; i<8; i++) fNSelectedFullTracks.push_back(0);
-  // add counters for the MC tracks (full and base tracks)
+  // Add counters for the MC tracks (full and base tracks)
   fNSelectedFullTracks.push_back(0);
   fNSelectedBaseTracks.push_back(0);
 
@@ -510,7 +510,7 @@ void AliAnalysisTaskReducedTreeMaker::UserCreateOutputObjects()
   }
   if(fFillMCInfo) fEventsList->Add(fMCSignalsHistogram);
 
-  // set a seed for the random number generator
+  // Set a seed for the random number generator
   TTimeStamp ts;
   gRandom->SetSeed(ts.GetNanoSec());
 

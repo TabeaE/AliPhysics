@@ -126,7 +126,8 @@ public:
                                    //  shape for signal
     kBkgFitFunction,               // Fit of the SE-OS with a user function for bkg and MC signal
                                    //  shape for signal
-    kMatchSEOS,                    // Match to same-event opposite-sign outside signal region (side bands)
+    kMatchSEOS,                    // Match to same-event opposite-sign outside signal region
+                                   //  (side bands)
     kMatchSELS,                    // Match to same-event like-sign
     kScaleEntries,                 // Scale using the bin counts
     kScaleWeightedAverage,         // Scale using weighted average of ratios in individual bins
@@ -219,7 +220,7 @@ public:
   void SetDoMeanPt                 (Bool_t option)     {fOptionMeanPt               = option;}
   void SetFitMeanPtAdditionalError (Bool_t option)     {fFitMeanPtAdditionalErrors  = option;}
   void SetBkgFitOption             (TString option)    {fBkgFitOption               = option;}
-  void SetBkgFitFunctionCorr       (TH1* hBkgCorr)     {fBkgFitFunction_corr        = hBkgCorr;}
+  void SetBkgFitFunctionCorr       (TH1* hBkgCorr)     {fBkgFitFunctionCorr         = hBkgCorr;}
   void SetAlphaHistogram           (TH1* alpha)        {fAlpha                      = alpha;}
   
   // Set various ranges
@@ -331,8 +332,8 @@ private:
   static TH1* fgTempBkg;     // Pointer to temporary bkg histogram used during fitting
   
   // User options --------------------------------------------------------------------------------------
-  static Bool_t fgOptionUse2DMatching;  // FALSE (default): match inv.mass projections;
-                                        // TRUE: match (m,pt) projections
+  static Bool_t fgOptionUse2DMatching;  // FALSE (default): match invariant mass projections;
+                                        // TRUE:            match (m,pt) projections
   Int_t         fOptionBkgMethod;       // Either one of these: kBkgMixedEvent (default), kBkgLikeSign,
                                         //                      kBkgFunction
   static Int_t  fgOptionMEMatching;     // Either one of these: kMatchSEOS (default), kMatchSELS
@@ -375,8 +376,8 @@ private:
   TH1* fBkg;     // Background projection
   TH1* fSig;     // Signal projection
 
-  static TH1* fAlpha;                // fAlpha=S/S+B from previous fit (used for fit of mean pt)
-  static TH1* fBkgFitFunction_corr;  // Background fit function can be multiplied by a fit function
+  static TH1* fAlpha;               // fAlpha=S/S+B from previous fit (used for fit of mean pt)
+  static TH1* fBkgFitFunctionCorr;  // Background fit function can be multiplied by a fit function
   
   TH1* fBkgLikeSign;
   TH1* fBkgLikeSignLeg1;
@@ -388,10 +389,10 @@ private:
   TFitResultPtr fFitResult;  // Fit result of the residual fit
   
   /////////////////////////////////
-  TH1* fSplusResidualBkg;  // combinatorial bkg subtracted minv distribution (signal + residual bkg)   
-  TH1* fSplusBblind;       // bkg minv distribution; signal blind (area around signal excluded)   
-  TH1* fBkgCombinatorial;  // combinatorial bkg (used when the residual bkg fit option is switched on)
-  TH1* fBkgResidual;       // residual bkg obtained after fitting the combinatorial bkg subtracted distr
+  TH1* fSplusResidualBkg;  // Combinatorial bkg subtracted minv distribution (signal + residual bkg)   
+  TH1* fSplusBblind;       // Bkg minv distribution; signal blind (area around signal excluded)   
+  TH1* fBkgCombinatorial;  // Combinatorial bkg (used when the residual bkg fit option is switched on)
+  TH1* fBkgResidual;       // Residual bkg obtained after fitting the combinatorial bkg subtracted distr
   ////////////////////////////////
   
   TH1*        fSoverB;                  // S/B projection
@@ -401,7 +402,7 @@ private:
   Bool_t      fMatchingIsDone;          // Set to true if the matching procedure was succesfully run;
                                         //  false if the object is in any other state
   
-  TMinuit* fMinuitFitter;  // used if fit option is required
+  TMinuit* fMinuitFitter;  // Used if fit option is required
   ///////////////////////////////////////////////////
   TF1*        fResidualFitFunc;  // Fit function used to fit the combinatorial bkg subtracted minv 
                                  //  distribution
@@ -434,7 +435,7 @@ private:
                                                 Int_t iflag);
   
   
-  ClassDef(AliResonanceFits, 7);
+  ClassDef(AliResonanceFits, 8);
 };
 
 #endif
