@@ -1655,7 +1655,7 @@ Double_t* AliResonanceFits::ComputeOutputValues(Double_t minMass, Double_t maxMa
     // Compute the chi2 between the MC signal shape and the signal
     Double_t oldExclRange[2]    = {fgMassExclusionRanges[0][0], fgMassExclusionRanges[0][1]};
     fgMassExclusionRanges[0][0] = -1.;
-    fgMassExclusionRanges[0][1] = -1;  // to allow computing the Chi2 over the full mass range
+    fgMassExclusionRanges[0][1] = -1;  // To allow computing the Chi2 over the full mass range
     if(fOptionBkgMethod==kBkgMixedEvent || fOptionBkgMethod==kBkgLikeSign) {
       fFitValues[kChisqMCTotal] = Chi2(fSig, fSignalMCshape, 1.0, 0.0);
     }

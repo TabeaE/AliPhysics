@@ -49,33 +49,39 @@ class AliReducedVarCut : public AliReducedInfoCut {
               Int_t dependentVar2=AliReducedVarManager::kNothing, Float_t depCut2Low=0.,
               Float_t depCut2High=0., Bool_t depCut2Exclude=kFALSE);
 
-  virtual Bool_t IsSelected(TObject* obj);
-  virtual Bool_t IsSelected(Float_t* values);
-  virtual Bool_t IsSelected(TObject* obj, Float_t* values);
+  virtual Bool_t IsSelected (TObject* obj);
+  virtual Bool_t IsSelected (Float_t* values);
+  virtual Bool_t IsSelected (TObject* obj, Float_t* values);
   
  protected: 
   
-   Int_t   fNCuts;                          // number of enabled cuts
-   Short_t fCutVariables      [kNMaxCuts];  // list of variables enabled to cut on
-   Short_t fDependentVariable [kNMaxCuts];  // one can specify that a cut is applied only if a specified 
-                                            //   variable is within a given range (or outside)   
-   Short_t fDependentVariable2[kNMaxCuts];  // one can specify that a cut is applied only if a specified 
-                                            //   variable is within a given range (or outside)
-   Float_t fCutLow    [kNMaxCuts];  // lower limit for all quantities defined in the AliReducedVarManager
-   Float_t fCutHigh   [kNMaxCuts];  // higher limit for all quantities defined in the AliReducedVarManager 
-   Bool_t  fCutExclude[kNMaxCuts];  // if true, then use the selection range for exclusion
-   Bool_t  fCutHasDependentVariable  [kNMaxCuts];  // if true, check the requirements of the dependent variable
-   Bool_t  fCutHasDependentVariable2 [kNMaxCuts];  // if true, check the requirements of the dependent variable
-   Float_t fDependentVariableCutLow  [kNMaxCuts];  // lower limit for the dependent variable
-   Float_t fDependentVariable2CutLow [kNMaxCuts];  // lower limit for the dependent variable
-   Float_t fDependentVariableCutHigh [kNMaxCuts];  // higher limit for the dependent variable
-   Float_t fDependentVariable2CutHigh[kNMaxCuts];  // higher limit for the dependent variable
-   Bool_t  fDependentVariableExclude [kNMaxCuts];  // if true, then use the dependent variable range as 
-                                                   //   exclusion
-   Bool_t  fDependentVariable2Exclude[kNMaxCuts];  // if true, then use the dependent variable range as 
-                                                   //   exclusion
-   TF1*    fFuncCutLow[kNMaxCuts];                 // low cut functions
-   TF1*    fFuncCutHigh[kNMaxCuts];                // high cut functions
+   Int_t   fNCuts;                                  // Number of enabled cuts
+   Short_t fCutVariables              [kNMaxCuts];  // List of variables enabled to cut on
+   Short_t fDependentVariable         [kNMaxCuts];  // One can specify that a cut is applied only if a
+                                                    //  specified variable is within a given range
+                                                    //  (or outside)   
+   Short_t fDependentVariable2        [kNMaxCuts];  // One can specify that a cut is applied only if a
+                                                    //  specified variable is within a given range
+                                                    //  (or outside)
+   Float_t fCutLow                    [kNMaxCuts];  // Lower limit for all quantities defined in the
+                                                    //  AliReducedVarManager
+   Float_t fCutHigh                   [kNMaxCuts];  // Higher limit for all quantities defined in the
+                                                    // AliReducedVarManager 
+   Bool_t  fCutExclude                [kNMaxCuts];  // If true, then use the selection range for exclusion
+   Bool_t  fCutHasDependentVariable   [kNMaxCuts];  // If true, check the requirements of the dependent
+                                                    //  variable
+   Bool_t  fCutHasDependentVariable2  [kNMaxCuts];  // If true, check the requirements of the dependent
+                                                    //  variable
+   Float_t fDependentVariableCutLow   [kNMaxCuts];  // Lower  limit for the dependent variable
+   Float_t fDependentVariable2CutLow  [kNMaxCuts];  // Lower  limit for the dependent variable
+   Float_t fDependentVariableCutHigh  [kNMaxCuts];  // Higher limit for the dependent variable
+   Float_t fDependentVariable2CutHigh [kNMaxCuts];  // Higher limit for the dependent variable
+   Bool_t  fDependentVariableExclude  [kNMaxCuts];  // If true, then use the dependent variable range as 
+                                                    //  exclusion
+   Bool_t  fDependentVariable2Exclude [kNMaxCuts];  // If true, then use the dependent variable range as 
+                                                    //  exclusion
+   TF1*    fFuncCutLow                [kNMaxCuts];  // Low cut functions
+   TF1*    fFuncCutHigh               [kNMaxCuts];  // High cut functions
       
   AliReducedVarCut(const AliReducedVarCut &c);
   AliReducedVarCut& operator= (const AliReducedVarCut &c);

@@ -272,7 +272,6 @@ public:
   /* void SetEffHistogram    (TH2D* eff)     {fEffVsPtCent  = eff;}
    * void SetWeightHistogram (TH1D* weights) {fWeightVsCent = weights;}
    * void SetEventsHistogram (TH1F* events)  {fEventVsCent  = events;}
-   *  
    */
   
   // Getters

@@ -30,22 +30,22 @@ AliReducedVarCut::AliReducedVarCut() :
   // default constructor
   //
   for(Int_t i=0; i<kNMaxCuts; ++i) { 
-    fCutVariables[i]       = AliReducedVarManager::kNothing;
-    fDependentVariable[i]  = AliReducedVarManager::kNothing;
-    fDependentVariable2[i] = AliReducedVarManager::kNothing;
-    fCutLow[i]  = 0.;
-    fCutHigh[i] = 0.;
-    fCutExclude[i] = kFALSE;
-    fCutHasDependentVariable[i]   = kFALSE;
-    fCutHasDependentVariable2[i]  = kFALSE;
-    fDependentVariableCutLow[i]   = 0.;
-    fDependentVariable2CutLow[i]  = 0.;
-    fDependentVariableCutHigh[i]  = 0.;
-    fDependentVariable2CutHigh[i] = 0.;
-    fDependentVariableExclude[i]  = kFALSE;
-    fDependentVariable2Exclude[i] = kFALSE;
-    fFuncCutLow[i]  = 0x0;
-    fFuncCutHigh[i] = 0x0;
+    fCutVariables              [i] = AliReducedVarManager::kNothing;
+    fDependentVariable         [i] = AliReducedVarManager::kNothing;
+    fDependentVariable2        [i] = AliReducedVarManager::kNothing;
+    fCutLow                    [i] = 0.;
+    fCutHigh                   [i] = 0.;
+    fCutExclude                [i] = kFALSE;
+    fCutHasDependentVariable   [i] = kFALSE;
+    fCutHasDependentVariable2  [i] = kFALSE;
+    fDependentVariableCutLow   [i] = 0.;
+    fDependentVariable2CutLow  [i] = 0.;
+    fDependentVariableCutHigh  [i] = 0.;
+    fDependentVariable2CutHigh [i] = 0.;
+    fDependentVariableExclude  [i] = kFALSE;
+    fDependentVariable2Exclude [i] = kFALSE;
+    fFuncCutLow                [i] = 0x0;
+    fFuncCutHigh               [i] = 0x0;
   }
 }
 
@@ -58,22 +58,22 @@ AliReducedVarCut::AliReducedVarCut(const Char_t* name, const Char_t* title) :
   // named constructor
   //
   for(Int_t i=0; i<kNMaxCuts; ++i) { 
-    fCutVariables[i]       = AliReducedVarManager::kNothing;
-    fDependentVariable[i]  = AliReducedVarManager::kNothing;
-    fDependentVariable2[i] = AliReducedVarManager::kNothing;
-    fCutLow[i]     = 0.;
-    fCutHigh[i]    = 0.;
-    fCutExclude[i] = kFALSE;
-    fCutHasDependentVariable[i]   = kFALSE;
-    fCutHasDependentVariable2[i]  = kFALSE;
-    fDependentVariableCutLow[i]   = 0.;
-    fDependentVariable2CutLow[i]  = 0.;
-    fDependentVariableCutHigh[i]  = 0.;
-    fDependentVariable2CutHigh[i] = 0.;
-    fDependentVariableExclude[i]  = kFALSE;
-    fDependentVariable2Exclude[i] = kFALSE;
-    fFuncCutLow[i]  = 0x0;
-    fFuncCutHigh[i] = 0x0;
+    fCutVariables              [i] = AliReducedVarManager::kNothing;
+    fDependentVariable         [i] = AliReducedVarManager::kNothing;
+    fDependentVariable2        [i] = AliReducedVarManager::kNothing;
+    fCutLow                    [i] = 0.;
+    fCutHigh                   [i] = 0.;
+    fCutExclude                [i] = kFALSE;
+    fCutHasDependentVariable   [i] = kFALSE;
+    fCutHasDependentVariable2  [i] = kFALSE;
+    fDependentVariableCutLow   [i] = 0.;
+    fDependentVariable2CutLow  [i] = 0.;
+    fDependentVariableCutHigh  [i] = 0.;
+    fDependentVariable2CutHigh [i] = 0.;
+    fDependentVariableExclude  [i] = kFALSE;
+    fDependentVariable2Exclude [i] = kFALSE;
+    fFuncCutLow                [i] = 0x0;
+    fFuncCutHigh               [i] = 0x0;
   }
 }
 
@@ -86,7 +86,7 @@ AliReducedVarCut::~AliReducedVarCut() {
 
 
 //____________________________________________________________________________
-void AliReducedVarCut::AddCut(Int_t var, Float_t cutLow, Float_t cutHigh, Bool_t exclude/*= kFALSE*/, 
+void AliReducedVarCut::AddCut(Int_t var, Float_t cutLow, Float_t cutHigh, Bool_t exclude/*=kFALSE*/, 
   Int_t dependentVar/*=AliReducedVarManager::kNothing*/,
   Float_t depCutLow/*=0.*/,  Float_t depCutHigh/*=0.*/, Bool_t depCutExclude/*=kFALSE*/,
   Int_t dependentVar2/*=AliReducedVarManager::kNothing*/,
@@ -101,25 +101,25 @@ void AliReducedVarCut::AddCut(Int_t var, Float_t cutLow, Float_t cutHigh, Bool_t
     cout << "                  Cut not added !!" << endl;
     return;
   }
-  fCutVariables[fNCuts] = var;
-  fCutLow[fNCuts]       = cutLow;
-  fCutHigh[fNCuts]      = cutHigh;
-  fCutExclude[fNCuts]   = exclude;
+  fCutVariables [fNCuts] = var;
+  fCutLow       [fNCuts] = cutLow;
+  fCutHigh      [fNCuts] = cutHigh;
+  fCutExclude   [fNCuts] = exclude;
   AliReducedVarManager::SetUseVariable(var);
   if(dependentVar != AliReducedVarManager::kNothing) {
-    fCutHasDependentVariable[fNCuts]  = kTRUE;
-    fDependentVariable[fNCuts]        = dependentVar; 
-    fDependentVariableCutLow[fNCuts]  = depCutLow;
-    fDependentVariableCutHigh[fNCuts] = depCutHigh; 
-    fDependentVariableExclude[fNCuts] = depCutExclude;
+    fCutHasDependentVariable  [fNCuts] = kTRUE;
+    fDependentVariable        [fNCuts] = dependentVar; 
+    fDependentVariableCutLow  [fNCuts] = depCutLow;
+    fDependentVariableCutHigh [fNCuts] = depCutHigh; 
+    fDependentVariableExclude [fNCuts] = depCutExclude;
     AliReducedVarManager::SetUseVariable(dependentVar);
   }
   if(dependentVar2 != AliReducedVarManager::kNothing) {
-    fCutHasDependentVariable2[fNCuts]  = kTRUE;
-    fDependentVariable2[fNCuts]        = dependentVar2;
-    fDependentVariable2CutLow[fNCuts]  = depCut2Low;
-    fDependentVariable2CutHigh[fNCuts] = depCut2High;
-    fDependentVariable2Exclude[fNCuts] = depCut2Exclude;
+    fCutHasDependentVariable2  [fNCuts] = kTRUE;
+    fDependentVariable2        [fNCuts] = dependentVar2;
+    fDependentVariable2CutLow  [fNCuts] = depCut2Low;
+    fDependentVariable2CutHigh [fNCuts] = depCut2High;
+    fDependentVariable2Exclude [fNCuts] = depCut2Exclude;
     AliReducedVarManager::SetUseVariable(dependentVar2);
   }
   fNCuts++;
@@ -127,7 +127,7 @@ void AliReducedVarCut::AddCut(Int_t var, Float_t cutLow, Float_t cutHigh, Bool_t
 
 
 //____________________________________________________________________________
-void AliReducedVarCut::AddCut(Int_t var, Float_t cutLow, TF1* funcCutHigh, Bool_t exclude/*= kFALSE*/,
+void AliReducedVarCut::AddCut(Int_t var, Float_t cutLow, TF1* funcCutHigh, Bool_t exclude/*=kFALSE*/,
   Int_t dependentVar/*=AliReducedVarManager::kNothing*/,
   Float_t depCutLow/*=0.*/,  Float_t depCutHigh/*=0.*/, Bool_t depCutExclude/*=kFALSE*/,
   Int_t dependentVar2/*=AliReducedVarManager::kNothing*/,
@@ -175,7 +175,7 @@ void AliReducedVarCut::AddCut(Int_t var, Float_t cutLow, TF1* funcCutHigh, Bool_
 
 
 //____________________________________________________________________________
-void AliReducedVarCut::AddCut(Int_t var, TF1* funcCutLow, Float_t cutHigh, Bool_t exclude /*= kFALSE*/,
+void AliReducedVarCut::AddCut(Int_t var, TF1* funcCutLow, Float_t cutHigh, Bool_t exclude /*=kFALSE*/,
   Int_t dependentVar/*=AliReducedVarManager::kNothing*/,
   Float_t depCutLow/*=0.*/,  Float_t depCutHigh/*=0.*/, Bool_t depCutExclude/*=kFALSE*/,
   Int_t dependentVar2/*=AliReducedVarManager::kNothing*/,
@@ -310,23 +310,18 @@ Bool_t AliReducedVarCut::IsSelected(Float_t* values) {
     if(fCutHasDependentVariable[i]) {
       Bool_t inRangeDep = (values[fDependentVariable[i]]>=fDependentVariableCutLow[i] && 
                            values[fDependentVariable[i]]<=fDependentVariableCutHigh[i]);
-      // do not apply this cut if outside of the applicability range
+      // Do not apply this cut if outside of the applicability range
       if(!inRangeDep && !fDependentVariableExclude[i]) continue;
       if( inRangeDep &&  fDependentVariableExclude[i]) continue;
     }
     if(fCutHasDependentVariable2[i]) {
-      //cout << "AliReducedVarCut::IsSelected() has second dependent var " << endl;
       Bool_t inRangeDep = (values[fDependentVariable2[i]]>=fDependentVariable2CutLow[i] && 
                            values[fDependentVariable2[i]]<=fDependentVariable2CutHigh[i]);
-      //cout << "AliReducedVarCut::IsSelected() inRangeDep/fDepVar/val/cutLow/cutHigh: " << inRangeDep
-      //        << "/" << fDependentVariable2[i] << "/" << values[fDependentVariable2[i]] << "/"
-      //        << fDependentVariable2CutLow[i] << "/" << fDependentVariable2CutHigh[i] << endl;
-      //cout << "AliReducedVarCut::IsSelected() fDependentVariable2Exclude: " << fDependentVariable2Exclude[i] << endl;
-      // do not apply this cut if outside of the applicability range
+      // Do not apply this cut if outside of the applicability range
       if(!inRangeDep && !fDependentVariable2Exclude[i]) continue;
       if( inRangeDep &&  fDependentVariable2Exclude[i]) continue;
     }
-    if(fFuncCutLow[i])  fCutLow[i]  = fFuncCutLow[i] ->Eval(values[fDependentVariable[i]]);
+    if(fFuncCutLow[i])  fCutLow[i]  = fFuncCutLow [i]->Eval(values[fDependentVariable[i]]);
     if(fFuncCutHigh[i]) fCutHigh[i] = fFuncCutHigh[i]->Eval(values[fDependentVariable[i]]);  
     Bool_t inRange = (values[fCutVariables[i]]>=fCutLow[i] && values[fCutVariables[i]]<=fCutHigh[i]);
     if(!inRange && !fCutExclude[i]) return kFALSE;
