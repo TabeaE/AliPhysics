@@ -71,6 +71,7 @@ fNLoopingVariables          (0),
 fCurrentVariable            (0),
 fIter                       (),
 fOptionBkgMethod            (kBkgMixedEvent),
+fOptionUseLSMatching        (kFALSE),
 fOptionUseRfactorCorrection (kFALSE),
 fOptionScale                (kScaleEntries),
 fOptionLSmethod             (kLSGeometricMean),
@@ -416,7 +417,7 @@ Bool_t AliResonanceFits::Initialize() {
       cout << "AliResonanceFits::Initialize() Fatal: Pt dimension needed with the current options but "
               "was not found in the list of user defined dimensions  !" << endl;
       cout << "              The current needed pt variable is "
-          << AliReducedVarManager::fgVariableNames[fPtVariable] << endl;
+           << AliReducedVarManager::fgVariableNames[fPtVariable] << endl;
       cout << "              Use SetPtVariable() to change the desired pt variable, or define the pt "
               "dimension via AddVariable(s)()." << endl;
       return kFALSE;
@@ -434,7 +435,7 @@ Bool_t AliResonanceFits::Initialize() {
     fgPtFitRange[1] = fVarLimits[fNVariables-2][1];
   }
 
-  // =======================================================
+  // ================================================================
   // Initialize looping variables.
   // NOTE: These variables are used in the Slice() function, please make sure you know
   //       what you are doing.
@@ -443,7 +444,7 @@ Bool_t AliResonanceFits::Initialize() {
   fNLoopingVariables = (fPtVariable==-1 ? fNVariables-1 : fNVariables-2);
   fCurrentVariable   = 0;
   for(Int_t i=0; i<fNLoopingVariables; ++i) fIter[i] = 0;
-  // =======================================================
+  // ================================================================
 
   ApplyUserRanges(fSEOS);
 
@@ -512,16 +513,19 @@ void AliResonanceFits::Slice() {
 void AliResonanceFits::AddSlice() {
   //
   // Take mass or (mass,pt) projections in the innermost loop, add them to the permanent histograms,
-  // construct backgrounds. (mass,pt) 2D projections taken in the following cases:
+  // construct backgrounds.
+  // (mass,pt) 2D projections are taken in the following cases:
   // 1) explicit 2D matching is requested by the user
   // 2) 1D matching requested, but the pt range for matching is different from the one used
   //    for signal counting.
   //
 
-  TH1* projSEOS     = nullptr; TH1* projMEOS     = nullptr;
-  TH1* projSELSleg1 = nullptr; TH1* projMELSleg1 = nullptr;
-  TH1* projSELSleg2 = nullptr; TH1* projMELSleg2 = nullptr;
-  // Below are projections needed if a user pt range for the matching has been specified
+  // --------------- Get projections for current slice ------------------------- //
+
+  TH1* projSEOS     = nullptr;  TH1* projMEOS     = nullptr;
+  TH1* projSELSleg1 = nullptr;  TH1* projMELSleg1 = nullptr;
+  TH1* projSELSleg2 = nullptr;  TH1* projMELSleg2 = nullptr;
+  // Projections below are needed if a user pt range for the matching has been specified
   // (no 2D matching).
   TH1* projSEOS_ptRange     = nullptr;
   TH1* projMEOS_ptRange     = nullptr;
@@ -530,9 +534,11 @@ void AliResonanceFits::AddSlice() {
   TH1* projMELSleg1_ptRange = nullptr;
   TH1* projMELSleg2_ptRange = nullptr;
 
+  Bool_t is2DMatchingOrUserPtRange    = ( fgOptionUse2DMatching || fUserEnabledPtFitRange);
+  Bool_t isNo2DMatchingAndUserPtRange = (!fgOptionUse2DMatching && fUserEnabledPtFitRange);
   // NOTE: Last variable in array is mass (fNVariables-1), and next to last, if its the case,
   //       is pt (fNVariables-2).
-  if(fgOptionUse2DMatching || fUserEnabledPtFitRange) {
+  if(is2DMatchingOrUserPtRange) {
     // SE-OS slices
     projSEOS = (TH2D*)fSEOS->Projection(fVarIndices[fNVariables-2], fVarIndices[fNVariables-1]);
     projSEOS->SetName(Form("projSEOS_%.6f", gRandom->Rndm()));
@@ -601,8 +607,8 @@ void AliResonanceFits::AddSlice() {
           projMELSleg2->GetYaxis()->FindBin(fgPtFitRange[1]), "eo");
       }
     }
-  }  // end if fgOptionUse2DMatching || fUserEnabledPtFitRange
-  else {  // use just 1D matching
+  }  // end if is2DMatchingOrUserPtRange
+  else {  // use 1D matching
     projSEOS = (TH1D*)fSEOS->Projection(fVarIndices[fNVariables-1]);
     projSEOS->SetName(Form("projSEOS_%.6f", gRandom->Rndm()));
 
@@ -649,43 +655,51 @@ void AliResonanceFits::AddSlice() {
     }
   }
 
+  // --------------- Construct background ------------------------- //
+
   TH1* bkgSlice = nullptr;
 
-  // Construct the mixed event background
+  // Construct ME background
   if(fOptionBkgMethod==kBkgMixedEvent || fOptionBkgMethod==kBkgMixedEventAndResidualFit) {
     TH1* scaleHist = nullptr;
     // Scale to the SE-OS in the mass bands
     if(fgOptionMEMatching == kMatchSEOS)
-      scaleHist = (!fgOptionUse2DMatching&&fUserEnabledPtFitRange ? projSEOS_ptRange : projSEOS);
+      scaleHist = (isNo2DMatchingAndUserPtRange ? projSEOS_ptRange : projSEOS);
     // Scale to the SE-LS in the full allowed mass range
-    if(fgOptionMEMatching == kMatchSELS) {
-      if(!fgOptionUse2DMatching && fUserEnabledPtFitRange) {
+    else if(fgOptionMEMatching == kMatchSELS) {
+      if(isNo2DMatchingAndUserPtRange) {
         scaleHist = BuildLSbkg(projSELSleg1_ptRange, projSELSleg2_ptRange, projMEOS_ptRange,
                                projMELSleg1_ptRange, projMELSleg2_ptRange);
       } else {
         scaleHist = BuildLSbkg(projSELSleg1, projSELSleg2, projMEOS, projMELSleg1, projMELSleg2);
       }
+      // If requested, scale the LS background to the SE-OS in the mass side-bands
+      if(fOptionUseLSMatching) {
+        TH1* scaleHistLS = (isNo2DMatchingAndUserPtRange ? projSEOS_ptRange : projSEOS);
+        ComputeScale(scaleHistLS, scaleHist);
+        scaleHist->Scale(fFitValues[kBkgScale]);
+      }
     }
-    TH1* bkgHist = projMEOS;
-    if(!fgOptionUse2DMatching && fUserEnabledPtFitRange) bkgHist = projMEOS_ptRange;
-    // Compute background scale factor; scale factor is temporarily stored in fFitValues[kBkgScale]
+    TH1* bkgHist = (isNo2DMatchingAndUserPtRange ? projMEOS_ptRange : projMEOS);
+    // Compute background scale factor. The scale factor is temporarily stored in fFitValues[kBkgScale].
     ComputeScale(scaleHist, bkgHist);
     // Scale the current bkg projection with the scale factor obtained above
     projMEOS->Scale(fFitValues[kBkgScale]);
     bkgSlice = projMEOS;
   }  // end if mixed event bkg
 
-  // Construct the like-sign background
+  // Construct LS background
   if(fOptionBkgMethod==kBkgLikeSign || fOptionBkgMethod==kBkgLikeSignAndResidualFit) {
-    if(!fgOptionUse2DMatching && fUserEnabledPtFitRange) {
+    if(isNo2DMatchingAndUserPtRange) {
       bkgSlice = BuildLSbkg(projSELSleg1_ptRange, projSELSleg2_ptRange, projMEOS_ptRange,
                             projMELSleg1_ptRange, projMELSleg2_ptRange);
     } else {
       bkgSlice = BuildLSbkg(projSELSleg1, projSELSleg2, projMEOS, projMELSleg1, projMELSleg2);
-      // Compute background scale factor
-      TH1* scaleHist =  projSEOS;
-      TH1* bkgHist   = bkgSlice;
-      ComputeScale(scaleHist, bkgHist);
+    }
+    // If requested, scale the LS background to the SE-OS in the mass side-bands
+    if(fOptionUseLSMatching) {
+      TH1* scaleHist = (isNo2DMatchingAndUserPtRange ? projSEOS_ptRange : projSEOS);
+      ComputeScale(scaleHist, bkgSlice);
       bkgSlice->Scale(fFitValues[kBkgScale]);
     }
   }
@@ -700,7 +714,7 @@ void AliResonanceFits::AddSlice() {
     }
   }
 
-  delete projSEOS;
+  if(projSEOS)             delete projSEOS;
   if(projMEOS)             delete projMEOS;
   if(projSELSleg1)         delete projSELSleg1;
   if(projSELSleg2)         delete projSELSleg2;
@@ -726,6 +740,8 @@ TH1* AliResonanceFits::BuildLSbkg(TH1* selsLeg1, TH1* selsLeg2, TH1* meos/*=null
   TH1* sels = nullptr;
   if(fgOptionUse2DMatching) sels = (TH2D*)selsLeg1->Clone(Form("sels%.6f", gRandom->Rndm()));
   else                      sels = (TH1D*)selsLeg1->Clone(Form("sels%.6f", gRandom->Rndm()));
+  sels     ->Sumw2();
+  selsLeg2 ->Sumw2();
   sels     ->Sumw2();
   selsLeg2 ->Sumw2();
 
@@ -830,16 +846,19 @@ void AliResonanceFits::ComputeEntryScale(TH1* sig, TH1* bkg) {
   Double_t entriesSigExcl = 0.; Double_t entriesSigExclErr = 0.;
   Double_t entriesBkg     = 0.; Double_t entriesBkgErr     = 0.;
   Double_t entriesBkgExcl = 0.; Double_t entriesBkgExclErr = 0.;
+
   if(fgOptionUse2DMatching) {
     entriesSig = ((TH2*)sig)->IntegralAndError(sig->GetXaxis()->FindBin(fgMassFitRange[0]),
                                                sig->GetXaxis()->FindBin(fgMassFitRange[1]),
                                                sig->GetYaxis()->FindBin(fgPtFitRange[0]),
-                                               sig->GetYaxis()->FindBin(fgPtFitRange[1]), entriesSigErr);
+                                               sig->GetYaxis()->FindBin(fgPtFitRange[1]), 
+                                               entriesSigErr);
     entriesBkg = ((TH2*)bkg)->IntegralAndError(bkg->GetXaxis()->FindBin(fgMassFitRange[0]),
                                                bkg->GetXaxis()->FindBin(fgMassFitRange[1]),
                                                bkg->GetYaxis()->FindBin(fgPtFitRange[0]),
-                                               bkg->GetYaxis()->FindBin(fgPtFitRange[1]), entriesBkgErr);
-    if(fgOptionMEMatching == kMatchSEOS) {
+                                               bkg->GetYaxis()->FindBin(fgPtFitRange[1]), 
+                                               entriesBkgErr);
+    if(fgOptionMEMatching==kMatchSEOS) {
       for(Int_t i=0; i<fgNMassExclusionRanges; ++i) {  // sum over all defined mass exclusion ranges
         Double_t tempErr = 0.0;
         entriesSigExcl += ((TH2*)sig)->IntegralAndError(
@@ -863,7 +882,7 @@ void AliResonanceFits::ComputeEntryScale(TH1* sig, TH1* bkg) {
     entriesBkg = bkg->IntegralAndError(bkg->GetXaxis()->FindBin(fgMassFitRange[0]),
                                        bkg->GetXaxis()->FindBin(fgMassFitRange[1]), entriesBkgErr);
 
-    if(fgOptionMEMatching == kMatchSEOS) {
+    if(fgOptionMEMatching==kMatchSEOS) {
       for(Int_t i=0; i<fgNMassExclusionRanges; ++i) {  // Sum over all defined mass exclusion ranges
         Double_t tempErr = 0.0;
         entriesSigExcl += sig->IntegralAndError(sig->GetXaxis()->FindBin(fgMassExclusionRanges[i][0]),
@@ -878,9 +897,10 @@ void AliResonanceFits::ComputeEntryScale(TH1* sig, TH1* bkg) {
       }
     }
   }
+
   // If not matching to the SE-LS subtract the yield in the exclusion range from the total;
   // recompute uncertainty using quadrature
-  if(fgOptionMEMatching == kMatchSEOS) {
+  if(fgOptionMEMatching==kMatchSEOS) {
     entriesSig   -= entriesSigExcl;
     entriesBkg   -= entriesBkgExcl;
     entriesSigErr = TMath::Sqrt(entriesSigErr*entriesSigErr - entriesSigExclErr);
@@ -925,7 +945,7 @@ void AliResonanceFits::ComputeWeightedScale(TH1* sig, TH1* bkg) {
     for(Int_t im=1; im<=sig->GetXaxis()->GetNbins(); ++im) {
       Double_t m = soverb->GetXaxis()->GetBinCenter(im);
       if(m<fgMassFitRange[0] || m>fgMassFitRange[1]) continue;  // Only the selected mass fit range
-      if(fgOptionMEMatching == kMatchSEOS) {
+      if(fgOptionMEMatching==kMatchSEOS) {
         // Exclude the region around the peak only if matching to SE-OS
         Bool_t exclude = kFALSE;
         for(Int_t i=0; i<fgNMassExclusionRanges; ++i) {
@@ -937,8 +957,10 @@ void AliResonanceFits::ComputeWeightedScale(TH1* sig, TH1* bkg) {
         if(exclude) continue;
       }
 
-      Double_t s    = (fgOptionUse2DMatching ? soverb->GetBinContent(im,ipt) : soverb->GetBinContent(im));
-      Double_t sErr = (fgOptionUse2DMatching ? soverb->GetBinError(im,ipt)   : soverb->GetBinError(im));
+      Double_t s    = (fgOptionUse2DMatching ? soverb->GetBinContent(im,ipt)
+                                             : soverb->GetBinContent(im));
+      Double_t sErr = (fgOptionUse2DMatching ? soverb->GetBinError(im,ipt)
+                                             : soverb->GetBinError(im));
       if(sErr < 1.0e-5) continue;  // 1.0e-5 is supposed to mean a very small number; here we actually 
                                    //   deal with counts, so numbers of 1 or above
 
@@ -1032,8 +1054,8 @@ Double_t AliResonanceFits::Chi2(TH1* sig, TH1* bkg, Double_t scale, Double_t sca
     for(Int_t im=1; im<=sig->GetXaxis()->GetNbins(); ++im) {
       Double_t m = sig->GetXaxis()->GetBinCenter(im);
       if(m<fgMassFitRange[0] || m>fgMassFitRange[1]) continue;  // only the selected mass fit range
-      if(fgOptionMEMatching == kMatchSEOS) {
-        // exclude the region around the peak only if matching to SE-OS
+      // Exclude the region around the peak if matching to SE-OS
+      if(fgOptionMEMatching==kMatchSEOS) {
         Bool_t exclude = kFALSE;
         for(Int_t i=0; i<fgNMassExclusionRanges; ++i) {
           if(m>fgMassExclusionRanges[i][0] && m<fgMassExclusionRanges[i][1]) {
@@ -1593,10 +1615,12 @@ Double_t* AliResonanceFits::ComputeOutputValues(Double_t minMass, Double_t maxMa
                            (fFitValues[kSig]/(TMath::Sqrt(fFitValues[kSig]+fFitValues[kBkg]))) : 0.0);
   }
   // TODO: Gauthier has for ME:
-  // fFitValues[kSignif] = ((fFitValues[kSplusBerr]>0.001) ? (fFitValues[kSig]/fFitValues[kSplusBerr]) : 0.0);
+  // fFitValues[kSignif] = (fFitValues[kSplusBerr]>0.001 ? fFitValues[kSig]/fFitValues[kSplusBerr]
+  //                                                     : 0.0);
   if(fOptionBkgMethod==kBkgLikeSign || fOptionBkgMethod==kBkgLikeSignAndResidualFit) {
-    fFitValues[kSignif] = ((fFitValues[kSig]+2.0*fFitValues[kBkg]>0.001) ?
-                           (fFitValues[kSig]/(TMath::Sqrt(fFitValues[kSig]+2.0*fFitValues[kBkg]))) : 0.0);
+    fFitValues[kSignif] = (fFitValues[kSig]+2.0*fFitValues[kBkg]>0.001
+                           ? fFitValues[kSig]/(TMath::Sqrt(fFitValues[kSig]+2.0*fFitValues[kBkg]))
+                           : 0.0);
   }
   if(fOptionBkgMethod == kBkgFitFunction) {
     fFitValues[kSignif] = (fFitValues[kSigErr]>0.001 ? fFitValues[kSig]/fFitValues[kSigErr] : 0.0);
@@ -1688,12 +1712,12 @@ void AliResonanceFits::Print()
 {
   cout << endl;
   cout << "AliResonanceFits summary of all user options ======================================" << endl;
-  cout               << "fSEOS ::\t"     << fSEOS     << endl;
-  if(fMEOS)     cout << "fMEOS ::\t"     << fMEOS     << endl;
-  if(fSELSleg1) cout << "fSELSleg1 ::\t" << fSELSleg1 << endl;
-  if(fSELSleg2) cout << "fSELSleg2 ::\t" << fSELSleg2 << endl;
-  if(fMELSleg1) cout << "fMELSleg1 ::\t" << fMELSleg1 << endl;
-  if(fMELSleg2) cout << "fMELSleg2 ::\t" << fMELSleg2 << endl;
+  cout                   << "fSEOS ::\t"         << fSEOS         << endl;
+  if(fMEOS)         cout << "fMEOS ::\t"         << fMEOS         << endl;
+  if(fSELSleg1)     cout << "fSELSleg1 ::\t"     << fSELSleg1     << endl;
+  if(fSELSleg2)     cout << "fSELSleg2 ::\t"     << fSELSleg2     << endl;
+  if(fMELSleg1)     cout << "fMELSleg1 ::\t"     << fMELSleg1     << endl;
+  if(fMELSleg2)     cout << "fMELSleg2 ::\t"     << fMELSleg2     << endl;
   if(fSEOS_MCtruth) cout << "fSEOS_MCtruth ::\t" << fSEOS_MCtruth << endl;
   cout << "fNVariables ::\t" << fNVariables << endl << endl;
   for(Int_t i=0; i<fNVariables; ++i) {
@@ -1710,22 +1734,27 @@ void AliResonanceFits::Print()
        << AliReducedVarManager::fgVariableNames[fMassVariable] << endl;
   cout << std::left << setw(43) << "fPtVariable" << " :: "
        << AliReducedVarManager::fgVariableNames[fPtVariable] << endl;
-  cout << std::left << setw(43) << "fNLoopingVariables" << " :: " << fNLoopingVariables << endl;
-  cout << std::left << setw(43) << "Use 2D matching" << " :: " << fgOptionUse2DMatching << endl;
-  cout << std::left << setw(43) << "Bkg method" << " :: "
-       << (fOptionBkgMethod==kBkgMixedEvent ? "Mixed event" : (fOptionBkgMethod==kBkgLikeSign ? "Like-sign" : "Fit function")) << endl;
+  cout << std::left << setw(43) << "fNLoopingVariables" << " :: " << fNLoopingVariables    << endl;
+  cout << std::left << setw(43) << "Use 2D matching"    << " :: " << fgOptionUse2DMatching << endl;
+  cout << std::left << setw(43) << "Bkg method"         << " :: "
+       << (fOptionBkgMethod==kBkgMixedEvent ? "Mixed event" :
+          (fOptionBkgMethod==kBkgLikeSign   ? "Like-sign"   : "Fit function")) << endl;
   if(fOptionBkgMethod==kBkgMixedEvent)
     cout << std::left << setw(43) << "Mixed event bkg matching" << " :: "
          << (fgOptionMEMatching==kMatchSEOS ? "Sidebands of SE-OS" : "Full range of SE-LS") << endl;
-  if(fOptionBkgMethod==kBkgLikeSign || fgOptionMEMatching==kMatchSELS)
-    cout << std::left << setw(43) << "Use R-factor correction for LS bkg" << " :: "
+  if(fOptionBkgMethod==kBkgLikeSign || fgOptionMEMatching==kMatchSELS) {
+    cout << std::left << setw(43)       << "Use R-factor correction for LS bkg"   << " :: "
          << fOptionUseRfactorCorrection << endl;
+    cout << std::left << setw(43)       << "Use matching to SEOS/SELS for LS bkg" << " :: "
+         << fOptionUseLSMatching        << endl;
+  }
   if(fOptionBkgMethod==kBkgMixedEvent)
     cout << std::left << setw(43) << "Bkg scaling option" << " :: "
-         << (fOptionScale==kScaleEntries ? "Counts" : (fOptionScale==kScaleWeightedAverage ? "Weighted average" : "Fit")) << endl;
+         << (fOptionScale==kScaleEntries         ? "Counts"           :
+            (fOptionScale==kScaleWeightedAverage ? "Weighted average" : "Fit")) << endl;
   if(fOptionBkgMethod==kBkgMixedEvent && fOptionScale==kScaleWeightedAverage)
-    cout << std::left << setw(43) << "Stat error weights inverse power" << " :: " << fWeightedAveragePower
-         << endl;
+    cout << std::left << setw(43) << "Stat error weights inverse power" << " :: "
+        << fWeightedAveragePower  << endl;
   if(fOptionBkgMethod==kBkgMixedEvent && fOptionScale==kScaleFit)
     cout << std::left << setw(43) << "Minuit fit method" << " :: "
          << (fOptionMinuit==kMinuitMethodChi2 ? "Chi2 minimization" : "Likelihood maximization") << endl;

@@ -45,11 +45,11 @@ public:
     fWeightsTrackCuts.Add(hWeights);
   }
 
-  void SetComputeMult                 (Bool_t option)                {fComputeMult      = option;}
-  void SetRunOverMC                   (Bool_t option)                {fOptionRunOverMC  = option;}
-  void SetReweightPC                  (Bool_t option)                {fReweightPC       = option;}
-  void SetMCPCWeights                 (TH3F* weights)                {fMCPCWeights      = weights;}
-  void SetMCSpectraWeightObject       (AliMCSpectraWeights* weights) {fMCSpectraWeights = weights;}
+  void SetComputeMult           (Bool_t option)                {fComputeMult      = option;}
+  void SetRunOverMC             (Bool_t option)                {fOptionRunOverMC  = option;}
+  void SetReweightPC            (Bool_t option)                {fReweightPC       = option;}
+  void SetMCPCWeights           (TH3F* weights)                {fMCPCWeights      = weights;}
+  void SetMCSpectraWeightObject (AliMCSpectraWeights* weights) {fMCSpectraWeights = weights;}
 
 
   // -------------------- Getters ------------------------------------------------------------ //
@@ -93,9 +93,9 @@ protected:
 
   AliReducedTrackInfo* FindTrackByLabel (Int_t label, Bool_t isTruth=true);
 
-  void   FillMultiplicity               ();
-  Bool_t IsTrackMeasMultSelected        (AliReducedBaseTrack* track, Float_t* values=0x0);
-  Bool_t IsTrackTrueMultSelected        (AliReducedBaseTrack* track, Float_t* values=0x0);
+  void   FillMultiplicity             ();
+  Bool_t IsTrackMeasMultSelected      (AliReducedBaseTrack* track, Float_t* values=0x0);
+  Bool_t IsTrackTrueMultSelected      (AliReducedBaseTrack* track, Float_t* values=0x0);
 
   void          CountNch05            ();
   Float_t       GetParticleWeight     (AliReducedTrackInfo* track);

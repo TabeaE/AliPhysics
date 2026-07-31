@@ -123,11 +123,11 @@ public:
     kBkgLikeSign,                  // Same-event like-sign bkg
     kBkgLikeSignAndResidualFit,
     kBkgMixedEventAndResidualFit,  // Fit of residual bkg with a user function for bkg and MC signal 
-                                   //  shape for signal
+                                   //   shape for signal
     kBkgFitFunction,               // Fit of the SE-OS with a user function for bkg and MC signal
-                                   //  shape for signal
+                                   //   shape for signal
     kMatchSEOS,                    // Match to same-event opposite-sign outside signal region
-                                   //  (side bands)
+                                   //   (side bands)
     kMatchSELS,                    // Match to same-event like-sign
     kScaleEntries,                 // Scale using the bin counts
     kScaleWeightedAverage,         // Scale using weighted average of ratios in individual bins
@@ -146,7 +146,7 @@ public:
     kBkg,              // bkg counts
     kBkgErr,           // bkg counts error
     kBkgResidual,      // residual bkg obtained after fitting the combinatorial bkg subtracted minv 
-                       //  distribution
+                       //   distribution
     kBkgResidualErr,
     kSplusB,           // S+B counts
     kSplusBerr,        // S+B counts error
@@ -176,7 +176,7 @@ public:
   void SetSEOSHistogram   (THnF* hist)               {fSEOS     = hist;  fMatchingIsDone = kFALSE;}
   void SetSELSHistograms  (THnF* hLeg1, THnF* hLeg2) {fSELSleg1 = hLeg1; fSELSleg2       = hLeg2;
                                                       fMatchingIsDone = kFALSE;}
-  void SetMEOSHistogram   (THnF* hist)               {fMEOS     = hist;  fMatchingIsDone = kFALSE;};
+  void SetMEOSHistogram   (THnF* hist)               {fMEOS     = hist;  fMatchingIsDone = kFALSE;}
   void SetMELSHistograms  (THnF* hLeg1, THnF* hLeg2) {fMELSleg1 = hLeg1; fMELSleg2       = hLeg2;
                                                       fMatchingIsDone = kFALSE;}
   void SetSEOSMCHistogram (THnF* hist)               {fSEOS_MCtruth   = hist;}
@@ -196,6 +196,8 @@ public:
   void SetBkgMethod                (Int_t method)      {fOptionBkgMethod            = method; 
                                                         fMatchingIsDone             = kFALSE;}
   void SetMEMatchingMethod         (Int_t option)      {fgOptionMEMatching          = option;
+                                                        fMatchingIsDone             = kFALSE;}
+  void SetUseLSMatching            (Bool_t use=kTRUE)  {fOptionUseLSMatching        = use;
                                                         fMatchingIsDone             = kFALSE;}
   void SetUseRfactorCorrection     (Bool_t use=kTRUE)  {fOptionUseRfactorCorrection = use;
                                                         fMatchingIsDone             = kFALSE;}
@@ -266,13 +268,8 @@ public:
   Bool_t    Process();
   Double_t* ComputeOutputValues(Double_t minMass, Double_t maxMass, Double_t minPt=-1.,
                                 Double_t maxPt=-1.);
-  void Print();  // Print a summary of all user options
-  void PrintFitValues(); 
-  
-  /* void SetEffHistogram    (TH2D* eff)     {fEffVsPtCent  = eff;}
-   * void SetWeightHistogram (TH1D* weights) {fWeightVsCent = weights;}
-   * void SetEventsHistogram (TH1F* events)  {fEventVsCent  = events;}
-   */
+  void Print          ();  // Print a summary of all user options
+  void PrintFitValues ();
   
   // Getters
   TH1* GetSplusB () const {return (fMatchingIsDone ? fSplusB : nullptr);}
@@ -316,8 +313,8 @@ private:
                                            //  (or mass-pt) distribution
   // NOTE: These limits are the most inclusive, such that both signal counting, 
   //       plotting and fit ranges are included.
-  Int_t fVarBinLimits[kNMaxVariables][2];
-  Int_t fVarIndices  [kNMaxVariables];  // Indices of variables in the THnF
+  Int_t fVarBinLimits [kNMaxVariables][2];
+  Int_t fVarIndices   [kNMaxVariables];  // Indices of variables in the THnF
   
   Int_t fMassVariable;  // The mass variable among the fNVariables (default: AliReducedVarManager::kMass)
   Int_t fPtVariable;    // The transverse momentum variable among the fNVariables
@@ -331,16 +328,22 @@ private:
   static TH1* fgTempBkg;     // Pointer to temporary bkg histogram used during fitting
   
   // User options --------------------------------------------------------------------------------------
-  static Bool_t fgOptionUse2DMatching;       // FALSE (default): match invariant mass projections;
-                                             // TRUE:            match (m,pt) projections
-  Int_t         fOptionBkgMethod;            // Either one of these: kBkgMixedEvent (default), 
-                                             //                      kBkgLikeSign, kBkgFunction
-  static Int_t  fgOptionMEMatching;          // Either one of these: kMatchSEOS (default), kMatchSELS
-  Bool_t        fOptionUseRfactorCorrection; // If true, apply R-factor correction; default: FALSE
-  Int_t         fOptionScale;                // Either one of these: kScaleEntries (default), 
-                                             //                      kScaleWeightedAverage, kScaleFit
-  Int_t         fOptionLSmethod;             // Either one of these: kLSGeometricMean (default),
-                                             //   kLSArithmeticMean (used for low stat situations)
+  static Bool_t fgOptionUse2DMatching;       // kFALSE:  Match invariant mass  (default)
+                                             // kTRUE:   Match (m,pt) projections
+  Int_t         fOptionBkgMethod;            // Options: kBkgMixedEvent (default)
+                                             //          kBkgLikeSign
+                                             //          kBkgLikeSignAndResidualFit
+                                             //          kBkgMixedEventAndResidualFit
+                                             //          kBkgFitFunction
+  static Int_t  fgOptionMEMatching;          // Options: kMatchSEOS (default), kMatchSELS
+  Bool_t        fOptionUseLSMatching;        // kTRUE:   Scale LS bkg by SEOS/SELS ratio
+                                             // kFALSE:  Do not apply scaling (default)
+  Bool_t        fOptionUseRfactorCorrection; // kTRUE:   Apply R-factor correction
+                                             // kFALSE:  Do not apply R-factor correction (default)
+  Int_t         fOptionScale;                // Options: kScaleEntries (default), 
+                                             //          kScaleWeightedAverage, kScaleFit
+  Int_t         fOptionLSmethod;             // Options: kLSGeometricMean (default),
+                                             //          kLSArithmeticMean (used for low stat situations)
   Double_t      fWeightedAveragePower;       // Power of the inverse statistical error used as weights 
                                              //  for the weighted average (default: 2.0)
   Int_t         fOptionMinuit;               // Either kMinuitMethodChi2 (default) or 
@@ -367,7 +370,6 @@ private:
                                                  //  the fit procedure
   Bool_t          fUserEnabledPtFitRange;        // Default: false, enabled when SetPtFitRange() is 
                                                  //  called
-//   static Double_t fgMassExclusionRange[2];    // Mass exclusion range, used in matching / fitting
   static Double_t fgMassExclusionRanges[10][2];  // Mass exclusion range, used in matching / fitting
   static Int_t    fgNMassExclusionRanges;        // Number of mass exclusion ranges
   
@@ -435,7 +437,7 @@ private:
                                                 Int_t iflag);
   
   
-  ClassDef(AliResonanceFits, 8);
+  ClassDef(AliResonanceFits, 9);
 };
 
 #endif

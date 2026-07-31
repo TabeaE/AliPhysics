@@ -208,12 +208,15 @@ void AliReducedAnalysisJpsi2eeCorrelations::AddAssociatedTrackCut(AliReducedInfo
   } else {
     TString histClassNames = fCorrelationsMixingHandler->GetHistClassNames();
     if(fOptionUseLikeSignPairs)
-      histClassNames += Form("CorrMEPP_%s_%s;",fTrackCuts.At(fAssociatedTrackCuts.GetEntries()-1)->GetName(),
+      histClassNames += Form("CorrMEPP_%s_%s;",
+                             fTrackCuts.At(fAssociatedTrackCuts.GetEntries()-1)->GetName(),
                              cut->GetName());
-    histClassNames += Form("CorrMEPM_%s_%s;",fTrackCuts.At(fAssociatedTrackCuts.GetEntries()-1)->GetName(),
+    histClassNames += Form("CorrMEPM_%s_%s;",
+                           fTrackCuts.At(fAssociatedTrackCuts.GetEntries()-1)->GetName(),
                            cut->GetName());
     if(fOptionUseLikeSignPairs)
-      histClassNames += Form("CorrMEMM_%s_%s;",fTrackCuts.At(fAssociatedTrackCuts.GetEntries()-1)->GetName(),
+      histClassNames += Form("CorrMEMM_%s_%s;",
+                             fTrackCuts.At(fAssociatedTrackCuts.GetEntries()-1)->GetName(),
                              cut->GetName());
     fCorrelationsMixingHandler->SetHistClassNames(histClassNames.Data());
   }
@@ -243,20 +246,20 @@ Bool_t AliReducedAnalysisJpsi2eeCorrelations::IsAssociatedTrackSelected(AliReduc
   track->ResetFlags();
   for(Int_t i=0; i<fAssociatedTrackCuts.GetEntries(); ++i) {
     AliReducedInfoCut* cut = (AliReducedInfoCut*)fAssociatedTrackCuts.At(i);
-    if(values){ if(cut->IsSelected(track,values)) track->SetFlag(i); }
-    else      { if(cut->IsSelected(track))        track->SetFlag(i); }
+    if(values) { if(cut->IsSelected(track,values)) track->SetFlag(i); }
+    else       { if(cut->IsSelected(track))        track->SetFlag(i); }
   }
   return (track->GetFlags()>0 ? kTRUE : kFALSE);
 }
 
 //___________________________________________________________________________
-void AliReducedAnalysisJpsi2eeCorrelations::RunAssociatedTrackSelection(Bool_t fillHistograms /*=kTRUE*/, Bool_t fillMBTracks /*=kFALSE*/) {
+void AliReducedAnalysisJpsi2eeCorrelations::RunAssociatedTrackSelection(Bool_t fillHistograms/*=kTRUE*/, Bool_t fillMBTracks/*=kFALSE*/) {
   //
   // select associated tracks
   //
   // clear the track arrays
-  if (!fillMBTracks)  fAssociatedTracks.Clear("C");
-  else                fAssociatedTracksMB.Clear("C");
+  if(!fillMBTracks)  fAssociatedTracks.Clear("C");
+  else               fAssociatedTracksMB.Clear("C");
   // loop over the track list and evaluate all the track cuts
   LoopOverAssociatedTracks(1, fillHistograms, fillMBTracks);
   LoopOverAssociatedTracks(2, fillHistograms, fillMBTracks);
@@ -265,7 +268,7 @@ void AliReducedAnalysisJpsi2eeCorrelations::RunAssociatedTrackSelection(Bool_t f
 }
 
 //___________________________________________________________________________
-void AliReducedAnalysisJpsi2eeCorrelations::LoopOverAssociatedTracks(Int_t arrayOption /*=1*/, Bool_t fillHistograms /*=kTRUE*/, Bool_t fillMBTracks /*=kFALSE*/) {
+void AliReducedAnalysisJpsi2eeCorrelations::LoopOverAssociatedTracks(Int_t arrayOption/*=1*/, Bool_t fillHistograms/*=kTRUE*/, Bool_t fillMBTracks/*=kFALSE*/) {
   //
   // loop over the given track array, select tracks and fill histograms
   //
@@ -342,7 +345,7 @@ void AliReducedAnalysisJpsi2eeCorrelations::RunSameEventCorrelation(TString pair
 }
 
 //___________________________________________________________________________
-void AliReducedAnalysisJpsi2eeCorrelations::FillAssociatedTrackHistograms(TString trackClass /*="AssociatedTrack"*/) {
+void AliReducedAnalysisJpsi2eeCorrelations::FillAssociatedTrackHistograms(TString trackClass/*="AssociatedTrack"*/) {
   //
   // fill associated track histograms
   //
@@ -357,16 +360,16 @@ void AliReducedAnalysisJpsi2eeCorrelations::FillAssociatedTrackHistograms(TStrin
 }
 
 //___________________________________________________________________________
-void AliReducedAnalysisJpsi2eeCorrelations::FillAssociatedTrackHistograms(AliReducedTrackInfo* track, TString trackClass  /*="AssociatedTrack"*/) {
+void AliReducedAnalysisJpsi2eeCorrelations::FillAssociatedTrackHistograms(AliReducedTrackInfo* track, TString trackClass/*="AssociatedTrack"*/) {
   //
   // fill associated track histograms
   //
   //Bool_t isMCTruth = fOptionRunOverMC && track->IsMCTruth();
-  Bool_t isMCTruth = kFALSE;     // TODO: handle the MC info if needed
+  Bool_t isMCTruth = kFALSE;  // TODO: handle the MC info if needed
   for(Int_t icut=0; icut<fAssociatedTrackCuts.GetEntries(); ++icut) {
     if(track->TestFlag(icut)) {
-      fHistosManager->FillHistClass(Form("%s_%s",trackClass.Data(),fAssociatedTrackCuts.At(icut)->GetName()),
-                                    fValues);
+      fHistosManager->FillHistClass(
+        Form("%s_%s",trackClass.Data(),fAssociatedTrackCuts.At(icut)->GetName()), fValues);
       //if(isMCTruth) fHistosManager->FillHistClass(Form("%s_%s_MCTruth", trackClass.Data(), fAssociatedTrackCuts.At(icut)->GetName()), fValues);
       for(UInt_t iflag=0; iflag<AliReducedVarManager::kNTrackingFlags; ++iflag) {
         AliReducedVarManager::FillTrackingFlag(track, iflag, fValues);
@@ -425,7 +428,8 @@ void AliReducedAnalysisJpsi2eeCorrelations::FillCorrelationHistograms(AliReduced
       fHistosManager->FillHistClass(Form("%s_%s_%s", corrClass.Data(), fTrackCuts.At(iCut)->GetName(),
                                          fAssociatedTrackCuts.At(iCut)->GetName()), fValues);
       if(isMCTruth)
-        fHistosManager->FillHistClass(Form("%s_%s_%s_MCTruth",corrClass.Data(),fTrackCuts.At(iCut)->GetName(),
+        fHistosManager->FillHistClass(Form("%s_%s_%s_MCTruth",corrClass.Data(),
+                                           fTrackCuts.At(iCut)->GetName(),
                                            fAssociatedTrackCuts.At(iCut)->GetName()), fValues);
     }
   }
