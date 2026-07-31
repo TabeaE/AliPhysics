@@ -25,7 +25,7 @@ AliReducedEventPlaneInfo::AliReducedEventPlaneInfo() :
     for(Int_t ih=0; ih<fgkNMaxHarmonics; ++ih) {
       fEventPlaneStatus[idet][ih] = kUnset;
       for(Int_t ic=0; ic<2; ++ic)
-	fQvector[idet][ih][ic] = 0.0;
+	      fQvector[idet][ih][ic] = 0.0;
     }
   }
 }
@@ -50,7 +50,7 @@ void AliReducedEventPlaneInfo::ClearEvent() {
     for(Int_t ih=0; ih<fgkNMaxHarmonics; ++ih) {
       fEventPlaneStatus[idet][ih] = kUnset;
       for(Int_t ic=0; ic<2; ++ic)
-	fQvector[idet][ih][ic] = 0.0;
+	      fQvector[idet][ih][ic] = 0.0;
     }
   }
 }
@@ -63,9 +63,9 @@ void AliReducedEventPlaneInfo::CopyEvent(const AliReducedEventPlaneInfo* event) 
   //
   for(Int_t idet=0; idet<kNdetectors; ++idet) {
     for(Int_t ih=0; ih<fgkNMaxHarmonics; ++ih) {
-      fQvector[idet][ih][0] = event->Qx(idet, ih+1);
-      fQvector[idet][ih][1] = event->Qy(idet, ih+1);
-      fEventPlaneStatus[idet][ih] = event->GetEventPlaneStatus(idet, ih+1);
+      fQvector          [idet][ih][0] = event->Qx(idet, ih+1);
+      fQvector          [idet][ih][1] = event->Qy(idet, ih+1);
+      fEventPlaneStatus [idet][ih]    = event->GetEventPlaneStatus(idet, ih+1);
     }
   }
 }

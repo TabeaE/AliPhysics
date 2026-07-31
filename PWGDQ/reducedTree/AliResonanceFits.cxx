@@ -674,31 +674,7 @@ void AliResonanceFits::AddSlice() {
     projMEOS->Scale(fFitValues[kBkgScale]);
     bkgSlice = projMEOS;
   }  // end if mixed event bkg
-  /*
-   // Construct the mixed event background from LS pairs
-   if(fOptionBkgMethod==kBkgMixedEventAndResidualFit) {
-     TH1* scaleHist = (!fgOptionUse2DMatching && fUserEnabledPtFitRange ? projSELSleg1_ptRange : projSELSleg1);
-     TH1* bkgHist = (!fgOptionUse2DMatching && fUserEnabledPtFitRange ? projMELSleg1_ptRange : projMELSleg1);
-     ComputeScale(scaleHist, bkgHist);
-     projMELSleg1->Scale(fFitValues[kBkgScale]);
 
-     scaleHist = (!fgOptionUse2DMatching && fUserEnabledPtFitRange ? projSELSleg2_ptRange : projSELSleg2);
-     bkgHist = (!fgOptionUse2DMatching && fUserEnabledPtFitRange ? projMELSleg2_ptRange : projMELSleg2);
-     ComputeScale(scaleHist, bkgHist);
-     projMELSleg2->Scale(fFitValues[kBkgScale]);
-
-     if(fOptionLSmethod==kLSGeometricMean) {
-       bkgSlice = projMELSleg1;
-       bkgSlice->Multiply(projMELSleg2);
-       SqrtTH1(bkgSlice);
-}
-else {
-  bkgSlice = projMELSleg1;
-  bkgSlice->Add(projMELSleg2);
-}
-}  // end if mixed event and residual fit
-*/
-  
   // Construct the like-sign background
   if(fOptionBkgMethod==kBkgLikeSign || fOptionBkgMethod==kBkgLikeSignAndResidualFit) {
     if(!fgOptionUse2DMatching && fUserEnabledPtFitRange) {
@@ -706,6 +682,11 @@ else {
                             projMELSleg1_ptRange, projMELSleg2_ptRange);
     } else {
       bkgSlice = BuildLSbkg(projSELSleg1, projSELSleg2, projMEOS, projMELSleg1, projMELSleg2);
+      // Compute background scale factor
+      TH1* scaleHist =  projSEOS;
+      TH1* bkgHist   = bkgSlice;
+      ComputeScale(scaleHist, bkgHist);
+      bkgSlice->Scale(fFitValues[kBkgScale]);
     }
   }
 
@@ -745,15 +726,12 @@ TH1* AliResonanceFits::BuildLSbkg(TH1* selsLeg1, TH1* selsLeg2, TH1* meos/*=null
   TH1* sels = nullptr;
   if(fgOptionUse2DMatching) sels = (TH2D*)selsLeg1->Clone(Form("sels%.6f", gRandom->Rndm()));
   else                      sels = (TH1D*)selsLeg1->Clone(Form("sels%.6f", gRandom->Rndm()));
+  sels     ->Sumw2();
+  selsLeg2 ->Sumw2();
 
   if(fOptionUseRfactorCorrection) {
     if(fgOptionUse2DMatching) mels = (TH2D*)melsLeg1->Clone(Form("mels%.6f", gRandom->Rndm()));
     else                      mels = (TH1D*)melsLeg1->Clone(Form("mels%.6f", gRandom->Rndm()));
-  }
-
-  sels     ->Sumw2();
-  selsLeg2 ->Sumw2();
-  if(fOptionUseRfactorCorrection) {
     mels     ->Sumw2();
     meos     ->Sumw2();
     melsLeg2 ->Sumw2();
@@ -800,7 +778,7 @@ TH1* AliResonanceFits::BuildLSbkg(TH1* selsLeg1, TH1* selsLeg2, TH1* meos/*=null
     delete mels;
     delete rFactor;
     return sels;
-  }  // end if(geometric mean)
+  }  // end if geometric mean
 
   return nullptr;
 }
@@ -1049,7 +1027,7 @@ Double_t AliResonanceFits::Chi2(TH1* sig, TH1* bkg, Double_t scale, Double_t sca
   for(Int_t ipt=1; ipt<=(fgOptionUse2DMatching ? sig->GetYaxis()->GetNbins() : 1); ++ipt) {
     Float_t pt = (fgOptionUse2DMatching ? sig->GetYaxis()->GetBinCenter(ipt) : 0.0);
     if(fgOptionUse2DMatching && (pt<fgPtFitRange[0] || pt>fgPtFitRange[1]))
-      continue;  // only the selected pt fit range
+      continue;  // Only the selected pt fit range
 
     for(Int_t im=1; im<=sig->GetXaxis()->GetNbins(); ++im) {
       Double_t m = sig->GetXaxis()->GetBinCenter(im);

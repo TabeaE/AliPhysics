@@ -92,7 +92,8 @@ Bool_t AliReducedEventCut::IsSelected(TObject* obj, Float_t* values) {
    if(fEventTagFilterEnabled && (fEventTagFilterExclude & fEventFilter) &&
      (fEventTagFilterExclude & (event->EventTag() & fEventFilter)))
    { return kFALSE; }  // exclusion selection
-   if(fEventTagFilterEnabled && !(fEventTagFilterExclude & fEventFilter) && !(event->EventTag() & fEventFilter))
+   if(fEventTagFilterEnabled && !(fEventTagFilterExclude & fEventFilter) &&
+      !(event->EventTag() & fEventFilter))
    { return kFALSE; }  // inclusion selection
 
    if(fEventTriggerMaskEnabled) {
@@ -105,7 +106,7 @@ Bool_t AliReducedEventCut::IsSelected(TObject* obj, Float_t* values) {
     if(!obj->InheritsFrom(AliReducedEventInfo::Class())) return kFALSE;
     AliReducedEventInfo* eventInfo = (AliReducedEventInfo*)obj;
     TString trgClasses = eventInfo->TriggerClass();
-    Int_t counter = 0;
+    Int_t   counter    = 0;
     for(Int_t i=0; i<fEventTriggerClass.size(); ++i) {
       if(trgClasses.Contains(fEventTriggerClass[i].Data())) counter++;
     }

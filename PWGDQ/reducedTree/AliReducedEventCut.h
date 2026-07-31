@@ -34,20 +34,24 @@ class AliReducedEventCut : public AliReducedVarCut {
     fEventTagFilterEnabled  = kTRUE;
   };
   
-  void AddEventTriggerFilter      (ULong64_t filter)     {fEventTriggerMask |= filter;
-                                                          fEventTriggerMaskEnabled = kTRUE;};
-  void AddEventTriggerFilterBit   (UShort_t bit)         {if(bit>63) return;
-                                                          fEventTriggerMask |= (ULong64_t(1)<<bit);
-                                                          fEventTriggerMaskEnabled = kTRUE;};
-  void AddEventTriggerClassFilter (TString triggerClass) {fEventTriggerClass.push_back(triggerClass);
-                                                          fEventTriggerClassEnabled = kTRUE;};
-  void EventTriggerClassFilterUseOr() {fEventTriggerClassLogicalOr = kTRUE;};
+  void AddEventTriggerFilter        (ULong64_t filter)     {fEventTriggerMask |= filter;
+                                                            fEventTriggerMaskEnabled = kTRUE;};
+  void AddEventTriggerFilterBit     (UShort_t bit)         {if(bit>63) return;
+                                                            fEventTriggerMask |= (ULong64_t(1)<<bit);
+                                                            fEventTriggerMaskEnabled = kTRUE;};
+  void AddEventTriggerClassFilter   (TString triggerClass) {fEventTriggerClass.push_back(triggerClass);
+                                                            fEventTriggerClassEnabled   = kTRUE;};
+  void EventTriggerClassFilterUseOr ()                     {fEventTriggerClassLogicalOr = kTRUE;};
   
-  void AddEventL1InputFilter    (UInt_t filter) {fEventL1Mask |= filter; fEventL1MaskEnabled = kTRUE;};
-  void AddEventL1InputFilterBit (UShort_t bit)  {if(bit>31) return; fEventL1Mask |= (UInt_t(1)<<bit);
+  void AddEventL1InputFilter    (UInt_t filter) {fEventL1Mask       |= filter;
                                                  fEventL1MaskEnabled = kTRUE;};
-  void AddEventL0InputFilter    (UInt_t filter) {fEventL0Mask |= filter; fEventL0MaskEnabled = kTRUE;};
-  void AddEventL0InputFilterBit (UShort_t bit)  {if(bit>31) return; fEventL0Mask |= (UInt_t(1)<<bit);
+  void AddEventL1InputFilterBit (UShort_t bit)  {if(bit>31) return;
+                                                 fEventL1Mask       |= (UInt_t(1)<<bit);
+                                                 fEventL1MaskEnabled = kTRUE;};
+  void AddEventL0InputFilter    (UInt_t filter) {fEventL0Mask       |= filter;
+                                                 fEventL0MaskEnabled = kTRUE;};
+  void AddEventL0InputFilterBit (UShort_t bit)  {if(bit>31) return;
+                                                 fEventL0Mask       |= (UInt_t(1)<<bit);
                                                  fEventL0MaskEnabled = kTRUE;};
   
   virtual Bool_t IsSelected(TObject* obj);

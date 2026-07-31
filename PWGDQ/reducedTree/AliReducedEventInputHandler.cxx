@@ -40,14 +40,14 @@ Bool_t AliReducedEventInputHandler::Init(TTree* tree, Option_t* opt)
 {
   // Initialisation necessary for each new tree
   fTree = tree;
-  if (!fTree) return kFALSE;
+  if(!fTree) return kFALSE;
   fTree->GetEntries();
 
   SwitchOffBranches();
   SwitchOnBranches();
 
   // Get pointer to the event
-  if (!fReducedEvent) {
+  if(!fReducedEvent) {
     switch(fEventInputOption) {
       case kReducedEventInfo:
         fReducedEvent = new AliReducedEventInfo();
@@ -68,7 +68,7 @@ Bool_t AliReducedEventInputHandler::BeginEvent(Long64_t entry)
 {
   // Begin event
   static Int_t prevRunNumber = -1;
-  if (prevRunNumber != fReducedEvent->RunNo() ) {
+  if(prevRunNumber != fReducedEvent->RunNo() ) {
     prevRunNumber = fReducedEvent->RunNo();
   }
   fTree->GetTree()->GetEvent(entry);
@@ -97,6 +97,6 @@ Bool_t AliReducedEventInputHandler::Notify(const char* path)
 Bool_t AliReducedEventInputHandler::FinishEvent()
 {
   // Finish event
-  if (fReducedEvent) fReducedEvent->ClearEvent();
+  if(fReducedEvent) fReducedEvent->ClearEvent();
   return kTRUE;
 }

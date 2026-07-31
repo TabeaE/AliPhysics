@@ -19,28 +19,28 @@ ClassImp(AliReducedTrackCut)
 //____________________________________________________________________________
 AliReducedTrackCut::AliReducedTrackCut() :
   AliReducedVarCut(),
-  fRejectKinks(kFALSE),
-  fRejectTaggedGamma(kFALSE),
-  fRejectTaggedPureGamma(kFALSE),
-  fCutOnTrackQualityMap(0),
-  fCutOnTrackQualityMapExclude(0),
-  fUseANDonTrackQualityMap(kTRUE),
-  fCutOnTrackFilterMap(0),
-  fUseANDonTrackFilterMap(kTRUE),
-  fRejectPureMC(kFALSE),
-  fReweightMCpt(kTRUE),
-  fCutOnMCFilterMap(0),
-  fUseANDonMCFilterMap(kTRUE),
-  fRequestITSrefit(kFALSE),
-  fCutOnITShitMap(0),
-  fUseANDonITShitMap(kFALSE),
-  fRequestCutOnITShitMap(kFALSE),  
-  fCutOnITSsharedClsMap(0),
-  fUseANDonITSsharedClsMap(kFALSE),
-  fRequestCutOnITSsharedClsMap(kFALSE),
-  fRequestTPCrefit(kFALSE),
-  fRequestTOFout(kFALSE),
-  fRequestTRDonlineMatch(kFALSE)
+  fRejectKinks                 (kFALSE),
+  fRejectTaggedGamma           (kFALSE),
+  fRejectTaggedPureGamma       (kFALSE),
+  fCutOnTrackQualityMap        (0),
+  fCutOnTrackQualityMapExclude (0),
+  fUseANDonTrackQualityMap     (kTRUE),
+  fCutOnTrackFilterMap         (0),
+  fUseANDonTrackFilterMap      (kTRUE),
+  fRejectPureMC                (kFALSE),
+  fReweightMCpt                (kTRUE),
+  fCutOnMCFilterMap            (0),
+  fUseANDonMCFilterMap         (kTRUE),
+  fRequestITSrefit             (kFALSE),
+  fCutOnITShitMap              (0),
+  fUseANDonITShitMap           (kFALSE),
+  fRequestCutOnITShitMap       (kFALSE),  
+  fCutOnITSsharedClsMap        (0),
+  fUseANDonITSsharedClsMap     (kFALSE),
+  fRequestCutOnITSsharedClsMap (kFALSE),
+  fRequestTPCrefit             (kFALSE),
+  fRequestTOFout               (kFALSE),
+  fRequestTRDonlineMatch       (kFALSE)
 {
   //
   // default constructor
@@ -94,8 +94,8 @@ Bool_t AliReducedTrackCut::IsSelected(TObject* obj) {
   
   //Fill values
   Float_t values[AliReducedVarManager::kNVars];
-  AliReducedVarManager::FillTrackInfo((AliReducedBaseTrack*)obj, values);
-  AliReducedVarManager::FillClusterMatchedTrackInfo((AliReducedBaseTrack*)obj, values);
+  AliReducedVarManager::FillTrackInfo               ((AliReducedBaseTrack*)obj, values);
+  AliReducedVarManager::FillClusterMatchedTrackInfo ((AliReducedBaseTrack*)obj, values);
 
   return IsSelected(obj, values);
 }

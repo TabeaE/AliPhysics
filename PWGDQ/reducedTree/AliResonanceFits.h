@@ -279,7 +279,7 @@ public:
   TH1* GetBkg    () const {return (fMatchingIsDone ? fBkg    : nullptr);}
   TH1* GetSignal () const {return (fMatchingIsDone ? fSig    : nullptr);}
   TH1* GetSoverB (Bool_t fromMCshape=kFALSE) const {return (fMatchingIsDone ?
-                                                   (fromMCshape?fSoverBfromMCshape:fSoverB) : nullptr);}
+                                        (fromMCshape?fSoverBfromMCshape:fSoverB) : nullptr);}
   TH1* GetSplusResidualBkg () const {return (fMatchingIsDone ? fSplusResidualBkg : nullptr);}
   TH1* GetBkgCombinatorial () const {return (fMatchingIsDone ? fBkgCombinatorial : nullptr);}
   TH1* GetResidualBkg      () const {return (fMatchingIsDone ? fBkgResidual      : nullptr);}
@@ -317,7 +317,7 @@ private:
   // NOTE: These limits are the most inclusive, such that both signal counting, 
   //       plotting and fit ranges are included.
   Int_t fVarBinLimits[kNMaxVariables][2];
-  Int_t fVarIndices[kNMaxVariables];  // Indices of variables in the THnF
+  Int_t fVarIndices  [kNMaxVariables];  // Indices of variables in the THnF
   
   Int_t fMassVariable;  // The mass variable among the fNVariables (default: AliReducedVarManager::kMass)
   Int_t fPtVariable;    // The transverse momentum variable among the fNVariables
@@ -331,19 +331,20 @@ private:
   static TH1* fgTempBkg;     // Pointer to temporary bkg histogram used during fitting
   
   // User options --------------------------------------------------------------------------------------
-  static Bool_t fgOptionUse2DMatching;  // FALSE (default): match invariant mass projections;
-                                        // TRUE:            match (m,pt) projections
-  Int_t         fOptionBkgMethod;       // Either one of these: kBkgMixedEvent (default), kBkgLikeSign,
-                                        //                      kBkgFunction
-  static Int_t  fgOptionMEMatching;     // Either one of these: kMatchSEOS (default), kMatchSELS
-  Bool_t        fOptionUseRfactorCorrection;  // If true, apply R-factor correction; default: FALSE
-  Int_t         fOptionScale;           // Either one of these: kScaleEntries (default), 
-                                        //                      kScaleWeightedAverage, kScaleFit
-  Int_t         fOptionLSmethod;        // Either one of these: kLSGeometricMean (default),
-                                        //   kLSArithmeticMean (used for low stat situations)
-  Double_t      fWeightedAveragePower;  // Power of the inverse statistical error used as weights for 
-                                        //  the weighted average (default: 2.0)
-  Int_t         fOptionMinuit;          // Either kMinuitMethodChi2 (default) or kMinuitMethodLikelihood
+  static Bool_t fgOptionUse2DMatching;       // FALSE (default): match invariant mass projections;
+                                             // TRUE:            match (m,pt) projections
+  Int_t         fOptionBkgMethod;            // Either one of these: kBkgMixedEvent (default), 
+                                             //                      kBkgLikeSign, kBkgFunction
+  static Int_t  fgOptionMEMatching;          // Either one of these: kMatchSEOS (default), kMatchSELS
+  Bool_t        fOptionUseRfactorCorrection; // If true, apply R-factor correction; default: FALSE
+  Int_t         fOptionScale;                // Either one of these: kScaleEntries (default), 
+                                             //                      kScaleWeightedAverage, kScaleFit
+  Int_t         fOptionLSmethod;             // Either one of these: kLSGeometricMean (default),
+                                             //   kLSArithmeticMean (used for low stat situations)
+  Double_t      fWeightedAveragePower;       // Power of the inverse statistical error used as weights 
+                                             //  for the weighted average (default: 2.0)
+  Int_t         fOptionMinuit;               // Either kMinuitMethodChi2 (default) or 
+                                             //  kMinuitMethodLikelihood
   static Bool_t fgOptionUseSignificantZero;  // If true, assume zero entries as significant and error
                                              //  of 1 during the chi2 calculation
   Bool_t        fOptionScaleSummedBkg;       // If true, run the matching procedure on the summed S+B
