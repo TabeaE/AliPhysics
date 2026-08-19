@@ -193,11 +193,11 @@ public:
   void SetPtVariable   (Int_t var) {fPtVariable   = var; fMatchingIsDone = kFALSE;}
   
   // Set various options (see also defaults)
-  void SetBkgMethod                (Int_t method)      {fOptionBkgMethod            = method; 
+  void SetBkgMethod                (Int_t method)      {fgOptionBkgMethod           = method; 
                                                         fMatchingIsDone             = kFALSE;}
   void SetMEMatchingMethod         (Int_t option)      {fgOptionMEMatching          = option;
                                                         fMatchingIsDone             = kFALSE;}
-  void SetUseLSMatching            (Bool_t use=kTRUE)  {fOptionUseLSMatching        = use;
+  void SetUseLSMatching            (Bool_t use=kTRUE)  {fgOptionUseLSMatching       = use;
                                                         fMatchingIsDone             = kFALSE;}
   void SetUseRfactorCorrection     (Bool_t use=kTRUE)  {fOptionUseRfactorCorrection = use;
                                                         fMatchingIsDone             = kFALSE;}
@@ -283,7 +283,7 @@ public:
   TH1* GetSignalMC         () const {return (fMatchingIsDone ? fSignalMCshape    : nullptr);}
   TH1* GetAlpha            () const {return (fMatchingIsDone ? fAlpha            : nullptr);}
   
-  Int_t     GetBkgMethod            ()          const {return fOptionBkgMethod;}
+  Int_t     GetBkgMethod            ()          const {return fgOptionBkgMethod;}
   Int_t     GetScalingOption        ()          const {return fOptionScale;}
   Int_t     GetMEMatchingMethod     ()          const {return fgOptionMEMatching;}
   Int_t     GetMinuitFitOption      ()          const {return fOptionMinuit;}
@@ -330,13 +330,13 @@ private:
   // User options --------------------------------------------------------------------------------------
   static Bool_t fgOptionUse2DMatching;       // kFALSE:  Match invariant mass  (default)
                                              // kTRUE:   Match (m,pt) projections
-  Int_t         fOptionBkgMethod;            // Options: kBkgMixedEvent (default)
+  static Int_t  fgOptionBkgMethod;           // Options: kBkgMixedEvent (default)
                                              //          kBkgLikeSign
                                              //          kBkgLikeSignAndResidualFit
                                              //          kBkgMixedEventAndResidualFit
                                              //          kBkgFitFunction
   static Int_t  fgOptionMEMatching;          // Options: kMatchSEOS (default), kMatchSELS
-  Bool_t        fOptionUseLSMatching;        // kTRUE:   Scale LS bkg by SEOS/SELS ratio
+  static Bool_t fgOptionUseLSMatching;       // kTRUE:   Scale LS bkg by SEOS/SELS ratio
                                              // kFALSE:  Do not apply scaling (default)
   Bool_t        fOptionUseRfactorCorrection; // kTRUE:   Apply R-factor correction
                                              // kFALSE:  Do not apply R-factor correction (default)
@@ -437,7 +437,7 @@ private:
                                                 Int_t iflag);
   
   
-  ClassDef(AliResonanceFits, 9);
+  ClassDef(AliResonanceFits, 10);
 };
 
 #endif
