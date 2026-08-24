@@ -55,20 +55,20 @@ Bool_t   AliResonanceFits::fgOptionUseSignificantZero   = kFALSE;
 
 //_______________________________________________________________________________
 AliResonanceFits::AliResonanceFits() :
-fSEOS         (nullptr),
-fSELSleg1     (nullptr),
-fSELSleg2     (nullptr),
-fMEOS         (nullptr),
-fMELSleg1     (nullptr),
-fMELSleg2     (nullptr),
-fSEOS_MCtruth (nullptr),
-fNVariables   (0),
-fVariables    (),
-fVarLimits    (),
-fVarBinLimits (),
-fVarIndices   (),
-fMassVariable (AliReducedVarManager::kMass),
-fPtVariable   (AliReducedVarManager::kPt),
+fSEOS                       (nullptr),
+fSELSleg1                   (nullptr),
+fSELSleg2                   (nullptr),
+fMEOS                       (nullptr),
+fMELSleg1                   (nullptr),
+fMELSleg2                   (nullptr),
+fSEOS_MCtruth               (nullptr),
+fNVariables                 (0),
+fVariables                  (),
+fVarLimits                  (),
+fVarBinLimits               (),
+fVarIndices                 (),
+fMassVariable               (AliReducedVarManager::kMass),
+fPtVariable                 (AliReducedVarManager::kPt),
 fNLoopingVariables          (0),
 fCurrentVariable            (0),
 fIter                       (),
@@ -84,29 +84,30 @@ fUserEnabledMassFitRange    (kFALSE),
 fUserEnabledPtFitRange      (kFALSE),
 fOptionMeanPt               (kFALSE),
 fFitMeanPtAdditionalErrors  (kFALSE),
-fSplusB           (nullptr),
-fBkg              (nullptr),
-fSig              (nullptr),
-fBkgLikeSign      (nullptr),
-fBkgLikeSignLeg1  (nullptr),
-fBkgLikeSignLeg2  (nullptr),
-fBkgMixedEvent    (nullptr),
-fFitResult        (0),
-fSplusResidualBkg (nullptr),
-fSplusBblind      (nullptr),
-fBkgCombinatorial (nullptr),
-fBkgResidual      (nullptr),
-fSoverB           (nullptr),
-fSoverBfromMCshape(nullptr),
-fFitValues        (),
-fMatchingIsDone   (kFALSE),
-fMinuitFitter     (nullptr),
-fResidualFitFunc  (nullptr),
-fBkgFitOption     ("MEI0")
+fSplusB                     (nullptr),
+fBkg                        (nullptr),
+fSig                        (nullptr),
+fBkgLikeSign                (nullptr),
+fBkgLikeSignLeg1            (nullptr),
+fBkgLikeSignLeg2            (nullptr),
+fBkgMixedEvent              (nullptr),
+fFitResult                  (0),
+fSplusResidualBkg           (nullptr),
+fSplusBblind                (nullptr),
+fBkgCombinatorial           (nullptr),
+fBkgResidual                (nullptr),
+fSoverB                     (nullptr),
+fSoverBfromMCshape          (nullptr),
+fFitValues                  (),
+fMatchingIsDone             (kFALSE),
+fMinuitFitter               (nullptr),
+fResidualFitFunc            (nullptr),
+fBkgFitOption               ("MEI0")
 {
   //
   // Default constructor
   //
+
   for(Int_t i=0; i<kNMaxVariables; ++i) {
     fVariables    [i]    = -1;
     fVarLimits    [i][0] =  0;
@@ -207,6 +208,8 @@ void AliResonanceFits::SetVarRange(Int_t var, Double_t* lims) {
   // NOTE: Variable var is encoded using the AliReducedVarManager::Variables enum
   // NOTE: If the var is not found in fVariables, nothing happens
   // NOTE: The user provided limits are slightly modified to avoid bin edge problems
+  //
+
   Int_t idx = -1;
   for(Int_t i=0; i<fNVariables; ++i) {
     if(fVariables[i] == var) idx = i;
@@ -227,6 +230,8 @@ void AliResonanceFits::SetVarRange(Int_t var, Double_t min, Double_t max) {
   // NOTE: Variable var is encoded using the AliReducedVarManager::Variables enum.
   // NOTE: If the var is not found in fVariables, nothing happens.
   // NOTE: The user provided limits are slightly modified to avoid bin edge problems.
+  //
+
   Int_t idx = -1;
   for(Int_t i=0; i<fNVariables; ++i) {
     if(fVariables[i] == var) idx = i;
@@ -247,6 +252,7 @@ void AliResonanceFits::ApplyUserRanges(THnF* h) {
   //       The THnF may contain more than fNVariables, but those unspecified will be automatically
   //       integrated over.
   //
+
   for(Int_t i=0; i<fNVariables; ++i) {
     if(TMath::Abs(fVarLimits[i][0]-fVarLimits[i][1]) < 1.0e-6) {
       fVarLimits[i][0] = fSEOS->GetAxis(fVarIndices[i])->GetXmin() + 1.0e-6;
@@ -275,6 +281,7 @@ Bool_t AliResonanceFits::Initialize() {
   //
   // Make sure all prerequisites for signal extraction are met.
   //
+  
   AliReducedVarManager::SetDefaultVarNames();
 
   // Clean up the output histograms
@@ -295,12 +302,12 @@ Bool_t AliResonanceFits::Initialize() {
     return kFALSE;
   }
 
-  if(fgOptionBkgMethod==kBkgMixedEvent                                             ||
-     fgOptionBkgMethod==kBkgMixedEventAndResidualFit                               || 
-     fOptionDebug                                                                  ||
-    (fgOptionBkgMethod==kBkgLikeSign               && fOptionUseRfactorCorrection) ||
-    (fgOptionBkgMethod==kBkgLikeSignAndResidualFit && fOptionUseRfactorCorrection))
-  {
+  Bool_t isBkgMethodLSany = (fgOptionBkgMethod==kBkgLikeSign   || 
+                             fgOptionBkgMethod==kBkgLikeSignAndResidualFit);
+  Bool_t isBkgMethodMEany = (fgOptionBkgMethod==kBkgMixedEvent || 
+                             fgOptionBkgMethod==kBkgMixedEventAndResidualFit);
+
+  if(isBkgMethodMEany || fOptionDebug || (isBkgMethodLSany && fOptionUseRfactorCorrection)) {
     if(!fMEOS) {
       cout << "AliResonanceFits::Initialize() Fatal: No ME-OS histogram provided!"
               "This is needed with the current matching options." << endl;
@@ -308,11 +315,8 @@ Bool_t AliResonanceFits::Initialize() {
     }
   }
 
-  if(fgOptionBkgMethod==kBkgLikeSign                 ||
-     fgOptionBkgMethod==kBkgLikeSignAndResidualFit   ||
-     fgOptionBkgMethod==kBkgMixedEventAndResidualFit ||
-     fOptionDebug                                    ||
-    (fgOptionBkgMethod==kBkgMixedEvent && fgOptionMEMatching==kMatchSELS))
+  if(isBkgMethodLSany || fOptionDebug || fgOptionBkgMethod==kBkgMixedEventAndResidualFit ||
+     (fgOptionBkgMethod==kBkgMixedEvent && fgOptionMEMatching==kMatchSELS))
   {
     if(!fSELSleg1) {
       cout << "AliResonanceFits::Initialize() Fatal: No SE-LS leg1 histogram provided!"
@@ -1370,22 +1374,24 @@ Bool_t AliResonanceFits::Process() {
   //
 
   fMatchingIsDone = kFALSE;
+  Bool_t isBkgMethodUsingFit = (fgOptionBkgMethod==kBkgFitFunction              || 
+                                fgOptionBkgMethod==kBkgMixedEventAndResidualFit ||
+                                fgOptionBkgMethod==kBkgLikeSignAndResidualFit     );
+
   // Initialize and make sure all prerequisites are met
   Bool_t initState = Initialize();
   if(!initState) return kFALSE;
   // Loop over the defined dimensions and build the SplusB and bkg histograms
-  if(fgOptionBkgMethod==kBkgMixedEvent             || fgOptionBkgMethod==kBkgMixedEventAndResidualFit ||
-     fgOptionBkgMethod==kBkgFitFunction            || fgOptionBkgMethod==kBkgLikeSign                 ||
-     fgOptionBkgMethod==kBkgLikeSignAndResidualFit || fOptionDebug)
+  if(fgOptionBkgMethod==kBkgMixedEvent || fgOptionBkgMethod==kBkgLikeSign ||
+     isBkgMethodUsingFit               || fOptionDebug)
   { Slice(); }
 
-  if(!fgOptionUse2DMatching &&
-     (fgOptionBkgMethod==kBkgFitFunction || fgOptionBkgMethod==kBkgMixedEventAndResidualFit ||
-      fgOptionBkgMethod==kBkgLikeSignAndResidualFit))
-  { FitInvMass(); }
+  if(!fgOptionUse2DMatching && isBkgMethodUsingFit) {
+    FitInvMass();
+  }
 
   if(fOptionScaleSummedBkg &&
-    !(fgOptionBkgMethod==kBkgFitFunction || fgOptionBkgMethod==kBkgMixedEventAndResidualFit))
+     !(fgOptionBkgMethod==kBkgFitFunction || fgOptionBkgMethod==kBkgMixedEventAndResidualFit))
   {
     ComputeScale(fSplusB, fBkg);
     fBkg->Scale(fFitValues[kBkgScale]);
@@ -1395,9 +1401,7 @@ Bool_t AliResonanceFits::Process() {
   if(fSoverB)            {delete fSoverB;            fSoverB            = 0;}
   if(fSoverBfromMCshape) {delete fSoverBfromMCshape; fSoverBfromMCshape = 0;}
 
-  if(!(fgOptionBkgMethod==kBkgFitFunction || fgOptionBkgMethod==kBkgMixedEventAndResidualFit ||
-       fgOptionBkgMethod==kBkgLikeSignAndResidualFit))
-  {
+  if(!isBkgMethodUsingFit) {
     // Build the signal projection
     if(fgOptionUse2DMatching) fSig = (TH2D*)fSplusB->Clone(Form("fSig_%.6f", gRandom->Rndm()));
     else                      fSig = (TH1D*)fSplusB->Clone(Form("fSig_%.6f", gRandom->Rndm()));
